@@ -1,0 +1,26 @@
+% Makra matematyczne dla wyjścia PDF (LaTeX).
+% Odpowiednik dla HTML (MathJax) znajduje się w pliku _macros-html.html.
+% Przy dodawaniu nowego makra zaktualizuj OBA pliki.
+
+% --- Zbiory i operatory probabilistyczne ---
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\Nrozk}{\mathcal{N}}
+\newcommand{\ind}{\mathbb{1}}
+
+% --- Wektory i macierze ---
+\newcommand{\x}{\mathbf{x}}
+\newcommand{\X}{\mathbf{X}}
+
+% --- Teoria decyzji ---
+\newcommand{\Loss}{L}                        % funkcja straty
+\newcommand{\Risk}{R}                        % ryzyko
+\newcommand{\Bayes}{g^{*}}                   % klasyfikator bayesowski
+\newcommand{\fopt}{f^{*}}                    % optymalna funkcja predykcji
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\med}{med}
