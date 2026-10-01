@@ -21,7 +21,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -308,6 +328,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#wymagania" id="toc-wymagania" class="nav-link" data-scroll-target="#wymagania">Wymagania</a></li>
   <li><a href="#kod-w-książce" id="toc-kod-w-książce" class="nav-link" data-scroll-target="#kod-w-książce">Kod w książce</a></li>
+  <li><a href="#literatura" id="toc-literatura" class="nav-link" data-scroll-target="#literatura">Literatura</a></li>
   <li><a href="#zasady-zaliczenia" id="toc-zasady-zaliczenia" class="nav-link" data-scroll-target="#zasady-zaliczenia">Zasady zaliczenia</a></li>
   <li><a href="#konwencje-notacyjne" id="toc-konwencje-notacyjne" class="nav-link" data-scroll-target="#konwencje-notacyjne">Konwencje notacyjne</a></li>
   </ul></li>
@@ -386,6 +407,16 @@ window.Quarto = {
 <h2 class="unnumbered anchored" data-anchor-id="kod-w-książce">Kod w książce</h2>
 <p>Fragmenty kodu są w pełni reprodukowalne: wszystkie losowania mają ustalone ziarno. Kod każdego rysunku można rozwinąć i skopiować. Do jego uruchomienia wystarczy Python 3.12 z pakietami <code>numpy</code>, <code>scipy</code>, <code>pandas</code>, <code>matplotlib</code>, <code>scikit-learn</code> i <code>statsmodels</code>.</p>
 </section>
+<section id="literatura" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="literatura">Literatura</h2>
+<p>Pierwsze dwie pozycje reprezentują ujęcie statystyczne, dwie kolejne – probabilistyczne, w dużej mierze oparte na metodach bayesowskich.</p>
+<ul>
+<li><strong>ISLP</strong> <span class="citation" data-cites="islp">(<a href="references.html#ref-islp" role="doc-biblioref">James i in. 2023</a>)</span> – podstawowy podręcznik uzupełniający, z przykładami w Pythonie.</li>
+<li><strong>ESL</strong> <span class="citation" data-cites="esl">(<a href="references.html#ref-esl" role="doc-biblioref">Hastie, Tibshirani, i Friedman 2009</a>)</span> – szerszy zakres i głębsze, bardziej precyzyjne ujęcie tego samego materiału.</li>
+<li><strong>PRML</strong> <span class="citation" data-cites="bishop2006">(<a href="references.html#ref-bishop2006" role="doc-biblioref">Bishop 2006</a>)</span> i <strong>PML</strong> <span class="citation" data-cites="murphy2022">(<a href="references.html#ref-murphy2022" role="doc-biblioref">Murphy 2022</a>)</span> – uczenie maszynowe budowane konsekwentnie na modelach probabilistycznych i wnioskowaniu bayesowskim.</li>
+<li><span class="citation" data-cites="devroye1996">Devroye, Györfi, i Lugosi (<a href="references.html#ref-devroye1996" role="doc-biblioref">1996</a>)</span> i <span class="citation" data-cites="gyorfi2002">Györfi i in. (<a href="references.html#ref-gyorfi2002" role="doc-biblioref">2002</a>)</span> – teoria klasyfikacji i regresji nieparametrycznej dla Czytelników zainteresowanych ścisłymi dowodami.</li>
+</ul>
+</section>
 <section id="zasady-zaliczenia" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="zasady-zaliczenia">Zasady zaliczenia</h2>
 <p>Kurs składa się z dwóch części, zaliczanych oddzielnie.</p>
@@ -461,6 +492,26 @@ window.Quarto = {
 <p>Rozkład warunkowy zapisujemy <span class="math inline">\(Y \mid \X = \x\)</span>, a wartości oczekiwane względem niego – <span class="math inline">\(\E[\,\cdot \mid \X = \x]\)</span>.</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-bishop2006" class="csl-entry" role="listitem">
+Bishop, Christopher M. 2006. <em>Pattern Recognition and Machine Learning</em>. Information Science i Statistics. Springer.
+</div>
+<div id="ref-devroye1996" class="csl-entry" role="listitem">
+Devroye, Luc, László Györfi, i Gábor Lugosi. 1996. <em>A Probabilistic Theory of Pattern Recognition</em>. T. 31. Stochastic Modelling i Applied Probability. Springer. <a href="https://doi.org/10.1007/978-1-4612-0711-5">https://doi.org/10.1007/978-1-4612-0711-5</a>.
+</div>
+<div id="ref-gyorfi2002" class="csl-entry" role="listitem">
+Györfi, László, Michael Kohler, Adam Krzyżak, i Harro Walk. 2002. <em>A Distribution-Free Theory of Nonparametric Regression</em>. Springer Series w Statistics. Springer. <a href="https://doi.org/10.1007/b97848">https://doi.org/10.1007/b97848</a>.
+</div>
+<div id="ref-esl" class="csl-entry" role="listitem">
+Hastie, Trevor, Robert Tibshirani, i Jerome Friedman. 2009. <em>The Elements of Statistical Learning: Data Mining, Inference, and Prediction</em>. 2. wyd. Springer.
+</div>
+<div id="ref-islp" class="csl-entry" role="listitem">
+James, Gareth, Daniela Witten, Trevor Hastie, Robert Tibshirani, i Jonathan Taylor. 2023. <em>An Introduction to Statistical Learning with Applications in Python</em>. Springer Texts w Statistics. Springer.
+</div>
+<div id="ref-murphy2022" class="csl-entry" role="listitem">
+Murphy, Kevin P. 2022. <em>Probabilistic Machine Learning: An Introduction</em>. MIT Press.
+</div>
+</div>
 </section>
 </section>
 

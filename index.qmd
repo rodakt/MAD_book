@@ -22,6 +22,21 @@ ziarno. Kod każdego rysunku można rozwinąć i skopiować. Do jego uruchomieni
 wystarczy Python 3.12 z pakietami `numpy`, `scipy`, `pandas`, `matplotlib`,
 `scikit-learn` i `statsmodels`.
 
+## Literatura {.unnumbered}
+
+Pierwsze dwie pozycje reprezentują ujęcie statystyczne, dwie kolejne --
+probabilistyczne, w dużej mierze oparte na metodach bayesowskich.
+
+- **ISLP** [@islp] -- podstawowy podręcznik uzupełniający, z przykładami
+  w Pythonie.
+- **ESL** [@esl] -- szerszy zakres i głębsze, bardziej precyzyjne ujęcie
+  tego samego materiału.
+- **PRML** [@bishop2006] i **PML** [@murphy2022] -- uczenie maszynowe
+  budowane konsekwentnie na modelach probabilistycznych i wnioskowaniu
+  bayesowskim.
+- @devroye1996 i @gyorfi2002 -- teoria klasyfikacji i regresji
+  nieparametrycznej dla Czytelników zainteresowanych ścisłymi dowodami.
+
 ## Zasady zaliczenia {.unnumbered}
 
 Kurs składa się z dwóch części, zaliczanych oddzielnie.
