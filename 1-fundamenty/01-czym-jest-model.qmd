@@ -17,9 +17,9 @@ tej okazji powiedzenie brzmi: „wszystkie modele są błędne, ale niektóre s�
 użyteczne” [@boxdraper1987].
 
 Uproszczenie ma jeszcze jedną konsekwencję. Ponieważ każdy model pomija pewne
-aspekty rzeczywistości, żaden nie jest jej absolutnie prawdziwym obrazem.
+aspekty rzeczywistości, żaden nie jest jej doskonale wiernym obrazem.
 Może być natomiast mniej lub bardziej trafny oraz użyteczny w określonym
-kontekście. Prawdziwość absolutna nie może więc stanowić praktycznego
+kontekście. Doskonała wierność nie może więc stanowić praktycznego
 kryterium oceny modelu. Zastępują ją kryteria trafności, zakresu
 stosowalności i użyteczności.
 
@@ -333,8 +333,9 @@ Pierwszemu poświęcona jest ta sekcja, drugiemu -- @sec-strata-ryzyko.
 Aby odpowiedzieć na pierwsze pytanie, posłużymy się probabilistycznym opisem
 danych. Przyjmujemy, że zarówno cechy, jak i wynik są losowe: $\X$ jest wektorem losowym cech,
 $Y$ -- losową zmienną wyjściową, a para $(\X,Y)$ ma pewien **rozkład łączny**
-$P$. Kolejne obserwacje $(\x_i,y_i)$ są niezależnymi losowaniami z tego
-rozkładu. Rozkład $P$ opisuje populację, z której pochodzą dane: określa
+$P$. Próbę opisujemy parami $(\X_1,Y_1),\dots,(\X_n,Y_n)$, niezależnymi
+i o tym samym rozkładzie $P$; zaobserwowane dane $(\x_i,y_i)$ są
+realizacjami tych par. Rozkład $P$ opisuje populację, z której pochodzą dane: określa
 prawdopodobieństwa wartości cech i wyniku oraz zależności między nimi.
 W przyjętym opisie cała informacja o danych jest zawarta w $P$.
 Wiedza o znaczeniu zmiennych i kontekście ich pomiaru pozostaje poza tym
@@ -360,6 +361,42 @@ $$ {#eq-rozklad-laczny}
 
 gdzie $p(y\mid\x)$ jest funkcją prawdopodobieństwa lub gęstością warunkową
 wyniku przy ustalonych cechach.
+
+::: {.callout-note collapse="true"}
+## Przypomnienie: zmienna losowa
+
+**Intuicja.** Wyobraźmy sobie, że losujemy jeden obiekt z populacji -- na
+przykład pacjenta -- i mierzymy na nim pewną wielkość, powiedzmy ciśnienie
+krwi. Zanim losowanie się odbędzie, nie wiemy, jaki wynik otrzymamy; wiemy
+jedynie, które wyniki są możliwe i jak często się pojawiają. **Zmienna
+losowa** to właśnie ten pomiar rozważany *przed* losowaniem: reguła, która
+każdemu możliwemu wynikowi losowania przypisuje liczbę. Opis tego, jak
+często pojawiają się poszczególne wartości, nazywamy **rozkładem** zmiennej.
+
+Losowanie obiektu nie jest jedynym źródłem niepewności. Ciśnienie
+konkretnego, znanego nam pacjenta również nie jest z góry ustalone: zmienia
+się w ciągu dnia, zależy od warunków pomiaru, a sam pomiar obarczony jest
+błędem. Zmienną losową możemy więc rozumieć ogólniej -- jako wielkość,
+której wartości nie znamy przed obserwacją, a rozkład -- jako opis tego,
+które wartości są bardziej, a które mniej prawdopodobne.
+
+**Zmienna a jej realizacja.** Wielką literą oznaczamy zmienną losową, małą
+-- wartość, którą przyjęła w konkretnym losowaniu, czyli jej
+**realizację**. $Y$ to „ciśnienie pacjenta, którego dopiero wylosujemy”,
+$y$ to konkretna liczba odczytana z aparatu. Tak samo $\X$ jest wektorem
+losowym cech, a $\x$ -- ustalonym wektorem liczb. Zapis $\Prob(Y\le y)$
+łączy oba obiekty: pyta o prawdopodobieństwo, że zmienna $Y$ przyjmie
+wartość nie większą od ustalonej liczby $y$.
+
+**Funkcje zmiennych losowych.** Jeżeli $Y$ jest zmienną losową, a $g$ --
+zwykłą funkcją, to $g(Y)$ również jest zmienną losową: najpierw losujemy
+obiekt, potem odczytujemy $Y$, a na końcu obliczamy $g$. Z tego prostego
+spostrzeżenia będziemy stale korzystać. Na przykład $\fopt(\X)$ jest
+zmienną losową, choć $\fopt$ jest ustaloną funkcją, a strata
+$\Loss\big(Y,f(\X)\big)$ z @sec-strata-ryzyko jest zmienną losową, bo
+zależy od wylosowanej pary $(\X,Y)$. Wartość oczekiwana takiej zmiennej
+jest już liczbą.
+:::
 
 ::: {.callout-note collapse="true"}
 ## Przypomnienie: rozkłady dyskretne i ciągłe
@@ -489,9 +526,6 @@ nieprawidłowo.
 
 ::: {.callout-note}
 ## Po co nam ten podział
-Rozdzielenie wzoru ([-@eq-rozklad-laczny]) na dwa czynniki wróci w książce
-wielokrotnie, dlatego warto od razu zauważyć, co z niego wynika.
-
 Modelując zależność, interesujemy się drugim czynnikiem. Optymalna
 predykcja w punkcie $\x$ -- w sensie, który sprecyzujemy w
 @sec-strata-ryzyko -- zależy wyłącznie od rozkładu warunkowego --
@@ -542,8 +576,7 @@ tę funkcję nazywamy funkcją regresji.
 
 **Dwa zapisy, dwa różne obiekty.** Podstawiając w miejsce $\x$ losowy wektor
 $\X$, otrzymujemy $\E(Y\mid\X)=\fopt(\X)$, czyli **zmienną losową**: jej
-wartość zmienia się wraz z wylosowanym obiektem. Różnica jest istotna, bo
-oba zapisy występują w tym rozdziale. Wzór ([-@eq-funkcja-regresji-wstep]) mówi
+wartość zmienia się wraz z wylosowanym obiektem. Wzór ([-@eq-funkcja-regresji-wstep]) mówi
 o liczbie przypisanej ustalonym cechom, natomiast warunek
 $\E(\varepsilon\mid\X)=0$ we wzorze ([-@eq-rozklad-addytywny]) jest równością zmiennych
 losowych -- znaczy tyle, że dla **każdego** $\x$ zachodzi
@@ -672,7 +705,15 @@ ustaleniu wszystkich dostępnych cech.
 ::: {.callout-note collapse="true"}
 ## Dla Czytelników z przygotowaniem z teorii miary
 
-Zapis wprowadzony w tej sekcji jest uproszczony w dwóch miejscach.
+Zapis wprowadzony w tej sekcji jest uproszczony w kilku miejscach.
+
+**Zmienna losowa.** Formalnie zmienna losowa to funkcja mierzalna
+$Y\colon\Omega\to\R$ określona na przestrzeni probabilistycznej
+$(\Omega,\mathcal F,\Prob)$; wektor losowy $\X$ przyjmuje wartości
+w $\R^p$. Elementy $\Omega$ odpowiadają wynikom losowania, a rozkład
+zmiennej $Y$ to miara $\Prob\circ Y^{-1}$ na $\R$. W całej książce
+przestrzeń $\Omega$ pozostaje w tle: wszystkie rozważane wielkości zależą
+od niej wyłącznie przez łączny rozkład rozważanych zmiennych.
 
 **Rozkład warunkowy.** Gdy zmienna $\X$ ma rozkład ciągły, zdarzenie
 $\{\X=\x\}$ ma prawdopodobieństwo zero i rozkładu $Y\mid\X=\x$ nie można

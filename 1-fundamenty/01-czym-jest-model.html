@@ -432,7 +432,7 @@ window.Quarto = {
 <h2 data-number="1.1" class="anchored" data-anchor-id="sec-pojecie-modelu"><span class="header-section-number">1.1</span> Pojęcie modelu</h2>
 <p>Ogólny termin <em>model</em> oznacza abstrakcyjny, uproszczony obraz pewnego fragmentu rzeczywistości. Prostym przykładem jest mapa – model geograficzny reprezentujący terytorium. Uproszczenie sprawia, że model nie jest wierną kopią rzeczywistości, lecz w pewien sposób ją zniekształca. Jest ono jednak konieczne: model doskonale wierny musiałby być kompletną kopią modelowanej rzeczywistości, a wskutek tego byłby równie przeładowany nieistotnymi szczegółami i równie trudny do zrozumienia jak ona sama.</p>
 <p>Model jest więc kompromisem między wiernością a użytecznością – narzędziem poznawczym, które pozwala lepiej zrozumieć rzeczywistość właśnie dzięki temu, że ją upraszcza. Myśl tę wyraził George Box <span class="citation" data-cites="box1976">(<a href="../references.html#ref-box1976" role="doc-biblioref">Box 1976</a>)</span>, a powtarzane dziś przy tej okazji powiedzenie brzmi: „wszystkie modele są błędne, ale niektóre są użyteczne” <span class="citation" data-cites="boxdraper1987">(<a href="../references.html#ref-boxdraper1987" role="doc-biblioref">Box i Draper 1987</a>)</span>.</p>
-<p>Uproszczenie ma jeszcze jedną konsekwencję. Ponieważ każdy model pomija pewne aspekty rzeczywistości, żaden nie jest jej absolutnie prawdziwym obrazem. Może być natomiast mniej lub bardziej trafny oraz użyteczny w określonym kontekście. Prawdziwość absolutna nie może więc stanowić praktycznego kryterium oceny modelu. Zastępują ją kryteria trafności, zakresu stosowalności i użyteczności.</p>
+<p>Uproszczenie ma jeszcze jedną konsekwencję. Ponieważ każdy model pomija pewne aspekty rzeczywistości, żaden nie jest jej doskonale wiernym obrazem. Może być natomiast mniej lub bardziej trafny oraz użyteczny w określonym kontekście. Doskonała wierność nie może więc stanowić praktycznego kryterium oceny modelu. Zastępują ją kryteria trafności, zakresu stosowalności i użyteczności.</p>
 <p>Poniższa lista zbiera własności, które w praktyce charakteryzują dobry model.</p>
 <ul>
 <li><p><strong>Celowość.</strong> Model nie powstaje bez określonego celu – jest projektowany pod konkretne pytanie lub klasę zadań. Ten sam obiekt rzeczywisty, na przykład miasto, ma zupełnie inny model dla urbanisty, inny dla epidemiologa, a jeszcze inny dla nawigacji satelitarnej.</p></li>
@@ -531,7 +531,7 @@ window.Quarto = {
 <li><strong>Jak wycenić rozbieżność</strong> między predykcją a tym, co zaobserwowaliśmy?</li>
 </ol>
 <p>Pierwszemu poświęcona jest ta sekcja, drugiemu – <a href="#sec-strata-ryzyko" class="quarto-xref"><span>Sekcja 1.6</span></a>.</p>
-<p>Aby odpowiedzieć na pierwsze pytanie, posłużymy się probabilistycznym opisem danych. Przyjmujemy, że zarówno cechy, jak i wynik są losowe: <span class="math inline">\(\X\)</span> jest wektorem losowym cech, <span class="math inline">\(Y\)</span> – losową zmienną wyjściową, a para <span class="math inline">\((\X,Y)\)</span> ma pewien <strong>rozkład łączny</strong> <span class="math inline">\(P\)</span>. Kolejne obserwacje <span class="math inline">\((\x_i,y_i)\)</span> są niezależnymi losowaniami z tego rozkładu. Rozkład <span class="math inline">\(P\)</span> opisuje populację, z której pochodzą dane: określa prawdopodobieństwa wartości cech i wyniku oraz zależności między nimi. W przyjętym opisie cała informacja o danych jest zawarta w <span class="math inline">\(P\)</span>. Wiedza o znaczeniu zmiennych i kontekście ich pomiaru pozostaje poza tym opisem, o ile nie wprowadzimy jej do niego za pomocą dodatkowych założeń. Rozkład <span class="math inline">\(P\)</span> nie jest nam znany – dysponujemy jedynie obserwacjami pochodzącymi z tego rozkładu.</p>
+<p>Aby odpowiedzieć na pierwsze pytanie, posłużymy się probabilistycznym opisem danych. Przyjmujemy, że zarówno cechy, jak i wynik są losowe: <span class="math inline">\(\X\)</span> jest wektorem losowym cech, <span class="math inline">\(Y\)</span> – losową zmienną wyjściową, a para <span class="math inline">\((\X,Y)\)</span> ma pewien <strong>rozkład łączny</strong> <span class="math inline">\(P\)</span>. Próbę opisujemy parami <span class="math inline">\((\X_1,Y_1),\dots,(\X_n,Y_n)\)</span>, niezależnymi i o tym samym rozkładzie <span class="math inline">\(P\)</span>; zaobserwowane dane <span class="math inline">\((\x_i,y_i)\)</span> są realizacjami tych par. Rozkład <span class="math inline">\(P\)</span> opisuje populację, z której pochodzą dane: określa prawdopodobieństwa wartości cech i wyniku oraz zależności między nimi. W przyjętym opisie cała informacja o danych jest zawarta w <span class="math inline">\(P\)</span>. Wiedza o znaczeniu zmiennych i kontekście ich pomiaru pozostaje poza tym opisem, o ile nie wprowadzimy jej do niego za pomocą dodatkowych założeń. Rozkład <span class="math inline">\(P\)</span> nie jest nam znany – dysponujemy jedynie obserwacjami pochodzącymi z tego rozkładu.</p>
 <p>Warto od razu zaznaczyć, że niezależność kolejnych obserwacji jest <strong>założeniem</strong>, a nie własnością danych. Bywa ono naruszone, na przykład gdy obserwacje są uporządkowane w czasie, pochodzą z sąsiadujących lokalizacji albo dotyczą powtarzanych pomiarów tego samego pacjenta. W dalszym ciągu przyjmujemy je milcząco, wskazując w razie potrzeby konsekwencje jego złamania.</p>
 <p>Rozkład <span class="math inline">\(P\)</span> opisujemy za pomocą funkcji prawdopodobieństwa lub gęstości, zależnie od rodzaju zmiennych. Oznaczmy tę funkcję przez <span class="math inline">\(p(\x,y)\)</span>, a funkcję opisującą rozkład samych cech – przez <span class="math inline">\(p(\x)\)</span>. Dla <span class="math inline">\(p(\x)&gt;0\)</span> zachodzi</p>
 <p><span id="eq-rozklad-laczny"><span class="math display">\[
@@ -544,11 +544,30 @@ p(\x,y)=p(\x)\cdot p(y\mid\x),
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Adnotacja</span>Przypomnienie: rozkłady dyskretne i ciągłe
+<span class="screen-reader-only">Adnotacja</span>Przypomnienie: zmienna losowa
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Intuicja.</strong> Wyobraźmy sobie, że losujemy jeden obiekt z populacji – na przykład pacjenta – i mierzymy na nim pewną wielkość, powiedzmy ciśnienie krwi. Zanim losowanie się odbędzie, nie wiemy, jaki wynik otrzymamy; wiemy jedynie, które wyniki są możliwe i jak często się pojawiają. <strong>Zmienna losowa</strong> to właśnie ten pomiar rozważany <em>przed</em> losowaniem: reguła, która każdemu możliwemu wynikowi losowania przypisuje liczbę. Opis tego, jak często pojawiają się poszczególne wartości, nazywamy <strong>rozkładem</strong> zmiennej.</p>
+<p>Losowanie obiektu nie jest jedynym źródłem niepewności. Ciśnienie konkretnego, znanego nam pacjenta również nie jest z góry ustalone: zmienia się w ciągu dnia, zależy od warunków pomiaru, a sam pomiar obarczony jest błędem. Zmienną losową możemy więc rozumieć ogólniej – jako wielkość, której wartości nie znamy przed obserwacją, a rozkład – jako opis tego, które wartości są bardziej, a które mniej prawdopodobne.</p>
+<p><strong>Zmienna a jej realizacja.</strong> Wielką literą oznaczamy zmienną losową, małą – wartość, którą przyjęła w konkretnym losowaniu, czyli jej <strong>realizację</strong>. <span class="math inline">\(Y\)</span> to „ciśnienie pacjenta, którego dopiero wylosujemy”, <span class="math inline">\(y\)</span> to konkretna liczba odczytana z aparatu. Tak samo <span class="math inline">\(\X\)</span> jest wektorem losowym cech, a <span class="math inline">\(\x\)</span> – ustalonym wektorem liczb. Zapis <span class="math inline">\(\Prob(Y\le y)\)</span> łączy oba obiekty: pyta o prawdopodobieństwo, że zmienna <span class="math inline">\(Y\)</span> przyjmie wartość nie większą od ustalonej liczby <span class="math inline">\(y\)</span>.</p>
+<p><strong>Funkcje zmiennych losowych.</strong> Jeżeli <span class="math inline">\(Y\)</span> jest zmienną losową, a <span class="math inline">\(g\)</span> – zwykłą funkcją, to <span class="math inline">\(g(Y)\)</span> również jest zmienną losową: najpierw losujemy obiekt, potem odczytujemy <span class="math inline">\(Y\)</span>, a na końcu obliczamy <span class="math inline">\(g\)</span>. Z tego prostego spostrzeżenia będziemy stale korzystać. Na przykład <span class="math inline">\(\fopt(\X)\)</span> jest zmienną losową, choć <span class="math inline">\(\fopt\)</span> jest ustaloną funkcją, a strata <span class="math inline">\(\Loss\big(Y,f(\X)\big)\)</span> z <a href="#sec-strata-ryzyko" class="quarto-xref"><span>Sekcja 1.6</span></a> jest zmienną losową, bo zależy od wylosowanej pary <span class="math inline">\((\X,Y)\)</span>. Wartość oczekiwana takiej zmiennej jest już liczbą.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Przypomnienie: rozkłady dyskretne i ciągłe
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>Rozkład dyskretny.</strong> Zmienna <span class="math inline">\(Y\)</span> ma rozkład dyskretny, jeżeli przyjmuje wartości ze zbioru <span class="math inline">\(\mathcal{Y}\)</span> skończonego lub przeliczalnego, zwanego <strong>nośnikiem</strong>. Rozkład opisuje wtedy <strong>funkcja prawdopodobieństwa</strong></p>
 <p><span class="math display">\[
@@ -574,7 +593,7 @@ F(y)=\Prob(Y\le y),
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -583,7 +602,7 @@ F(y)=\Prob(Y\le y),
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Literą <span class="math inline">\(p\)</span> oznaczamy, tak jak wyżej, funkcję prawdopodobieństwa albo gęstość – zależnie od tego, czy zmienna jest dyskretna, czy ciągła.</p>
 <p><strong>Rozkład łączny</strong> opisuje parę <span class="math inline">\((\X,Y)\)</span> traktowaną jako całość: przypisuje prawdopodobieństwa zdarzeniom dotyczącym cech i wyniku naraz. Dla zmiennych dyskretnych <span class="math inline">\(p(\x,y)=\Prob(\X=\x,\,Y=y)\)</span>; w przypadku ciągłym <span class="math inline">\(p(\x,y)\)</span> jest gęstością, a prawdopodobieństwa otrzymujemy przez całkowanie.</p>
@@ -619,7 +638,6 @@ Y\mid\X=\x .
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Rozdzielenie wzoru (<a href="#eq-rozklad-laczny" class="quarto-xref"><span>1.1</span></a>) na dwa czynniki wróci w książce wielokrotnie, dlatego warto od razu zauważyć, co z niego wynika.</p>
 <p>Modelując zależność, interesujemy się drugim czynnikiem. Optymalna predykcja w punkcie <span class="math inline">\(\x\)</span> – w sensie, który sprecyzujemy w <a href="#sec-strata-ryzyko" class="quarto-xref"><span>Sekcja 1.6</span></a> – zależy wyłącznie od rozkładu warunkowego – rozkład brzegowy cech nie wpływa na nią w żaden sposób. Wpływa natomiast na to, jak bardzo opłaca się być dokładnym w danym obszarze przestrzeni cech, bo obszary rzadko odwiedzane wnoszą do przeciętnej straty niewiele. Do tej obserwacji wracamy w <a href="02-predyktory-optymalne.html" class="quarto-xref"><span>Rozdział 2</span></a>.</p>
 <p>Wzdłuż tego samego podziału przebiega też granica między dwiema rodzinami metod. Modele <strong>dyskryminacyjne</strong>, takie jak regresja logistyczna, opisują wyłącznie <span class="math inline">\(p(y\mid\x)\)</span> i o rozkładzie cech nie mówią nic. Modele <strong>generatywne</strong>, takie jak analiza dyskryminacyjna czy naiwny klasyfikator bayesowski, opisują cały rozkład łączny, docierając do zależności okrężną drogą – przez rozkłady cech wewnątrz klas. Różnicę tę omówimy szczegółowo w <a href="../3-probabilistyka/11-modele-generatywne.html" class="quarto-xref"><span>Rozdział 11</span></a>.</p>
 </div>
@@ -632,7 +650,7 @@ Y\mid\X=\x .
 \tag{1.2}\]</span></span></p>
 <p>Oznacza ona przeciętną wartość zmiennej wyjściowej wśród obiektów o cechach <span class="math inline">\(\x\)</span>. Gwiazdka oznacza predyktor optymalny – w jakim sensie, wyjaśniamy niżej – a więc wielkość teoretyczną, opisującą badaną populację, a nie funkcję wyznaczoną z danych; symbolu <span class="math inline">\(f\)</span> bez gwiazdki będziemy używać dla dowolnego predyktora, a <span class="math inline">\(\widehat f\)</span> – dla predyktora dopasowanego do konkretnego zbioru obserwacji.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -641,7 +659,7 @@ Y\mid\X=\x .
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Wartość oczekiwana rozkładu warunkowego <span class="math inline">\(Y\mid\X=\x\)</span> to średnia wartość <span class="math inline">\(Y\)</span> wśród obiektów o cechach <span class="math inline">\(\x\)</span>:</p>
 <p><span class="math display">\[
@@ -650,7 +668,7 @@ Y\mid\X=\x .
 \E(Y\mid\X=\x)=\int y\,p(y\mid\x)\,dy .
 \]</span></p>
 <p>Jest to <strong>liczba</strong> zależna od <span class="math inline">\(\x\)</span>, a więc funkcja zmiennej <span class="math inline">\(\x\)</span> – i właśnie tę funkcję nazywamy funkcją regresji.</p>
-<p><strong>Dwa zapisy, dwa różne obiekty.</strong> Podstawiając w miejsce <span class="math inline">\(\x\)</span> losowy wektor <span class="math inline">\(\X\)</span>, otrzymujemy <span class="math inline">\(\E(Y\mid\X)=\fopt(\X)\)</span>, czyli <strong>zmienną losową</strong>: jej wartość zmienia się wraz z wylosowanym obiektem. Różnica jest istotna, bo oba zapisy występują w tym rozdziale. Wzór (<a href="#eq-funkcja-regresji-wstep" class="quarto-xref"><span>1.2</span></a>) mówi o liczbie przypisanej ustalonym cechom, natomiast warunek <span class="math inline">\(\E(\varepsilon\mid\X)=0\)</span> we wzorze (<a href="#eq-rozklad-addytywny" class="quarto-xref"><span>1.3</span></a>) jest równością zmiennych losowych – znaczy tyle, że dla <strong>każdego</strong> <span class="math inline">\(\x\)</span> zachodzi <span class="math inline">\(\E(\varepsilon\mid\X=\x)=0\)</span>.</p>
+<p><strong>Dwa zapisy, dwa różne obiekty.</strong> Podstawiając w miejsce <span class="math inline">\(\x\)</span> losowy wektor <span class="math inline">\(\X\)</span>, otrzymujemy <span class="math inline">\(\E(Y\mid\X)=\fopt(\X)\)</span>, czyli <strong>zmienną losową</strong>: jej wartość zmienia się wraz z wylosowanym obiektem. Wzór (<a href="#eq-funkcja-regresji-wstep" class="quarto-xref"><span>1.2</span></a>) mówi o liczbie przypisanej ustalonym cechom, natomiast warunek <span class="math inline">\(\E(\varepsilon\mid\X)=0\)</span> we wzorze (<a href="#eq-rozklad-addytywny" class="quarto-xref"><span>1.3</span></a>) jest równością zmiennych losowych – znaczy tyle, że dla <strong>każdego</strong> <span class="math inline">\(\x\)</span> zachodzi <span class="math inline">\(\E(\varepsilon\mid\X=\x)=0\)</span>.</p>
 <p><strong>Prawo iterowanej wartości oczekiwanej.</strong> Uśrednienie funkcji <span class="math inline">\(\fopt(\X)\)</span> po rozkładzie cech odtwarza zwykłą wartość oczekiwaną:</p>
 <p><span class="math display">\[
 \E\big[\E(Y\mid\X)\big]=\E(Y).
@@ -708,7 +726,7 @@ Y\mid\X=\x\sim\operatorname{Bernoulli}\big(\eta(\x)\big).
 </div>
 <p>W praktyce funkcje <span class="math inline">\(\eta_k\)</span>, podobnie jak <span class="math inline">\(\fopt\)</span>, nie są znane i zastępujemy je oszacowaniami <span class="math inline">\(\widehat\eta_k\)</span> wyznaczonymi z danych. W obu zadaniach mamy więc do czynienia z tym samym układem: nieznaną zależnością występującą w populacji, jej oszacowaniem zbudowanym na skończonej próbie oraz zmiennością wyniku, która pozostaje nawet po ustaleniu wszystkich dostępnych cech.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -717,9 +735,10 @@ Y\mid\X=\x\sim\operatorname{Bernoulli}\big(\eta(\x)\big).
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Zapis wprowadzony w tej sekcji jest uproszczony w dwóch miejscach.</p>
+<p>Zapis wprowadzony w tej sekcji jest uproszczony w kilku miejscach.</p>
+<p><strong>Zmienna losowa.</strong> Formalnie zmienna losowa to funkcja mierzalna <span class="math inline">\(Y\colon\Omega\to\R\)</span> określona na przestrzeni probabilistycznej <span class="math inline">\((\Omega,\mathcal F,\Prob)\)</span>; wektor losowy <span class="math inline">\(\X\)</span> przyjmuje wartości w <span class="math inline">\(\R^p\)</span>. Elementy <span class="math inline">\(\Omega\)</span> odpowiadają wynikom losowania, a rozkład zmiennej <span class="math inline">\(Y\)</span> to miara <span class="math inline">\(\Prob\circ Y^{-1}\)</span> na <span class="math inline">\(\R\)</span>. W całej książce przestrzeń <span class="math inline">\(\Omega\)</span> pozostaje w tle: wszystkie rozważane wielkości zależą od niej wyłącznie przez łączny rozkład rozważanych zmiennych.</p>
 <p><strong>Rozkład warunkowy.</strong> Gdy zmienna <span class="math inline">\(\X\)</span> ma rozkład ciągły, zdarzenie <span class="math inline">\(\{\X=\x\}\)</span> ma prawdopodobieństwo zero i rozkładu <span class="math inline">\(Y\mid\X=\x\)</span> nie można zdefiniować wzorem <span class="math inline">\(\Prob(\cdot\mid A)=\Prob(\cdot\cap A)/\Prob(A)\)</span>. Właściwą konstrukcją jest regularny rozkład warunkowy, który dla zmiennych o wartościach w <span class="math inline">\(\R^p\)</span> zawsze istnieje, ale jest wyznaczony jednoznacznie jedynie <strong>z dokładnością do zbioru miary zero</strong> względem rozkładu <span class="math inline">\(\X\)</span>. To samo dotyczy funkcji <span class="math inline">\(\fopt\)</span> oraz <span class="math inline">\(\eta_k\)</span>: ściśle biorąc nie są one funkcjami, lecz klasami równoważności funkcji. Konsekwentnie, wszystkie stwierdzenia postaci „dla każdego <span class="math inline">\(\x\)</span>” należy w dalszym ciągu czytać jako „dla prawie każdego <span class="math inline">\(\x\)</span>“.</p>
 <p><strong>Symbol <span class="math inline">\(p\)</span>.</strong> We wzorze (<a href="#eq-rozklad-laczny" class="quarto-xref"><span>1.1</span></a>) litera <span class="math inline">\(p\)</span> oznacza gęstość względem miary, która nie jest ta sama dla obu zmiennych: dla cech ciągłych jest to miara Lebesgue’a, dla jakościowej zmiennej wyjściowej – miara licząca. Formalnie chodzi o gęstość rozkładu łącznego względem miary produktowej. Zapis <span class="math inline">\(p(\cdot)\)</span> jest więc wygodnym skrótem obejmującym gęstości i prawdopodobieństwa punktowe naraz; stosujemy go w całej książce.</p>
 <p><strong>Dlaczego pomijamy te zastrzeżenia.</strong> Wielkości, którymi będziemy oceniać predyktory (<a href="#sec-strata-ryzyko" class="quarto-xref"><span>Sekcja 1.6</span></a>), są wartościami oczekiwanymi, czyli całkami. Dwie wersje funkcji <span class="math inline">\(\fopt\)</span> różniące się na zbiorze miary zero dają więc identyczne wartości tych wielkości. Obiekt niejednoznaczny nigdy nie występuje samodzielnie – zawsze pod znakiem wartości oczekiwanej, która tej niejednoznaczności nie widzi.</p>
@@ -745,7 +764,7 @@ Y\mid\X=\x\sim\operatorname{Bernoulli}\big(\eta(\x)\big).
 \tag{1.6}\]</span></span></p>
 <p>wyceniająca każdą pomyłkę na jednostkę, niezależnie od tego, jakich klas dotyczy. Oba wybory są domyślne, ale nie są jedyne możliwe ani zawsze właściwe – do konsekwencji zmiany straty wrócimy w <a href="02-predyktory-optymalne.html" class="quarto-xref"><span>Rozdział 2</span></a>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -754,7 +773,7 @@ Y\mid\X=\x\sim\operatorname{Bernoulli}\big(\eta(\x)\big).
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Symbol <span class="math inline">\(\ind(A)\)</span> oznacza <strong>funkcję wskaźnikową</strong> warunku <span class="math inline">\(A\)</span>:</p>
 <p><span class="math display">\[
