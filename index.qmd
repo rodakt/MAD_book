@@ -1,0 +1,50 @@
+# Przedmowa {.unnumbered}
+
+Podręcznik powstaje na bazie kursu *Modele analizy danych* prowadzonego na
+studiach magisterskich kierunku Analiza Danych. Materiał wykładowy z lat
+poprzednich został potraktowany jako punkt wyjścia, ale jest pisany na nowo:
+część wątków rozszerzono, część przeredagowano, dodano nowe przykłady i
+ćwiczenia.
+
+Założeniem jest połączenie rzetelności matematycznej z praktyką w Pythonie.
+Kluczowe wyniki są wyprowadzane, a nie tylko cytowane, i ujęte w numerowane
+definicje oraz twierdzenia. Wszystkie rysunki są generowane bezpośrednio
+z kodu widocznego w tekście -- Czytelnik może go uruchomić samodzielnie.
+
+## Dla kogo {.unnumbered}
+
+Zakładamy znajomość rachunku prawdopodobieństwa i algebry liniowej na
+poziomie kursu podstawowego oraz umiejętność programowania w Pythonie.
+Nie zakładamy natomiast wcześniejszego kontaktu z uczeniem maszynowym.
+Ponieważ Czytelnicy przychodzą z różnych kierunków -- ekonometrii,
+informatyki, biologii, matematyki -- pojęcia wprowadzamy powoli i za każdym
+razem uzasadniamy, skąd się biorą.
+
+## Jak korzystać z książki {.unnumbered}
+
+Rozdziały można czytać liniowo; każda część opiera się na poprzednich.
+Szczególnie ważny jest @sec-predyktory-optymalne -- ustala język (strata, ryzyko,
+predyktor optymalny), którym posługujemy się do końca książki.
+
+Fragmenty kodu są w pełni reprodukowalne. Instrukcja postawienia środowiska
+znajduje się w pliku `README.md`.
+
+## Konwencje notacyjne {.unnumbered}
+
+| Oznaczenie | Znaczenie |
+|---|---|
+| $\R$ | zbiór liczb rzeczywistych |
+| $\x$, $\X$ | wektor cech (mała pogrubiona), macierz projektowa lub wektor losowy cech (duża pogrubiona) |
+| $Y$, $y$ | zmienna objaśniana i jej realizacja |
+| $\E$, $\Prob$ | wartość oczekiwana, prawdopodobieństwo |
+| $\Var$, $\Cov$ | wariancja, kowariancja |
+| $\Nrozk(\mu, \sigma^2)$ | rozkład normalny |
+| $\ind(\cdot)$ | funkcja wskaźnikowa |
+| $\Loss(y, a)$, $\Risk(f)$ | funkcja straty, ryzyko predyktora |
+| $\fopt$, $\Bayes$ | predyktor optymalny, klasyfikator bayesowski |
+| $\hat{\cdot}$ | wielkość estymowana z danych |
+| $n$, $p$ | liczba obserwacji, liczba cech |
+| $\mathcal{D}$ | zbiór danych, $\{(\x_1, y_1), \dots, (\x_n, y_n)\}$ |
+
+Rozkład warunkowy zapisujemy $Y \mid \X = \x$, a wartości oczekiwane
+względem niego -- $\E[\,\cdot \mid \X = \x]$.

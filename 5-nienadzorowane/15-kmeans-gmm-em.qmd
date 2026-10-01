@@ -1,0 +1,3 @@
+# Grupowanie: $k$-średnich, GMM i algorytm EM {#sec-kmeans-gmm-em}
+
+*Rozdział w przygotowaniu.*

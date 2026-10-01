@@ -1,0 +1,3 @@
+# Analiza składowych głównych {#sec-pca}
+
+*Rozdział w przygotowaniu.*

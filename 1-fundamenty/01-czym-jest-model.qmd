@@ -1,0 +1,1570 @@
+# Czym jest model? {#sec-czym-jest-model}
+
+## Pojęcie modelu {#sec-pojecie-modelu}
+
+Ogólny termin *model* oznacza abstrakcyjny, uproszczony obraz pewnego fragmentu
+rzeczywistości. Prostym przykładem jest mapa -- model geograficzny
+reprezentujący terytorium. Uproszczenie sprawia, że model nie jest wierną
+kopią rzeczywistości, lecz w pewien sposób ją zniekształca. Jest ono jednak
+konieczne: model doskonale wierny musiałby być kompletną kopią modelowanej
+rzeczywistości, a wskutek tego byłby równie przeładowany nieistotnymi
+szczegółami i równie trudny do zrozumienia jak ona sama.
+
+Model jest więc kompromisem między wiernością a użytecznością -- narzędziem
+poznawczym, które pozwala lepiej zrozumieć rzeczywistość właśnie dzięki temu,
+że ją upraszcza. Myśl tę wyraził George Box [@box1976], a powtarzane dziś przy
+tej okazji powiedzenie brzmi: „wszystkie modele są błędne, ale niektóre są
+użyteczne” [@boxdraper1987].
+
+Uproszczenie ma jeszcze jedną konsekwencję. Ponieważ każdy model pomija pewne
+aspekty rzeczywistości, żaden nie jest jej absolutnie prawdziwym obrazem.
+Może być natomiast mniej lub bardziej trafny oraz użyteczny w określonym
+kontekście. Prawdziwość absolutna nie może więc stanowić praktycznego
+kryterium oceny modelu. Zastępują ją kryteria trafności, zakresu
+stosowalności i użyteczności.
+
+Poniższa lista zbiera własności, które w praktyce charakteryzują dobry model.
+
+- **Celowość.** Model nie powstaje bez określonego celu -- jest projektowany
+  pod konkretne pytanie lub klasę zadań. Ten sam obiekt rzeczywisty, na
+  przykład miasto, ma zupełnie inny model dla urbanisty, inny dla
+  epidemiologa, a jeszcze inny dla nawigacji satelitarnej.
+
+- **Selektywność i jawne granice.** Model określa, co znajduje się wewnątrz
+  analizowanego systemu, a co zostaje pominięte. Przebieg tej granicy jest
+  wyborem badacza i powinien być przedstawiony wprost -- to, co model pomija,
+  może później ujawnić się jako źródło jego błędu.
+
+- **Zachowanie istotnych relacji.** Choć model odrzuca wiele szczegółów,
+  powinien zachowywać te własności i relacje między elementami, które są
+  istotne ze względu na jego cel. Mapa drogowa powinna na przykład poprawnie
+  przedstawiać połączenia między miejscami, ale nie musi wiernie oddawać
+  wszystkich odległości ani kształtów terenu. O wartości modelu decyduje więc
+  nie liczba uwzględnionych szczegółów, lecz trafność zachowanej struktury.
+
+- **Użyteczność.** Dobry model pozwala wykonać zadanie, do którego został
+  zbudowany: opisać lub wyjaśnić zjawisko, dokonać przewidywania albo
+  przeprowadzić eksperyment typu *„co, jeśli…”* bez
+  ponoszenia kosztów i ryzyka działania w świecie rzeczywistym.
+
+- **Redukcja złożoności poznawczej.** Model sprowadza złożoność otoczenia do
+  rozmiaru, który człowiek lub komputer jest w stanie przetworzyć i
+  zrozumieć.
+
+- **Ograniczony zakres stosowalności.** Każdy model działa w określonym
+  zakresie i przy pewnych założeniach. Nowe dane lub zmiana warunków mogą
+  ujawnić jego ograniczenia i wymusić jego modyfikację. Modelowanie jest
+  zatem procesem iteracyjnym, a nie jednorazowym aktem.
+
+## Model w analizie danych {#sec-model-w-analizie-danych}
+
+W analizie danych *modelem* nazywamy sformalizowany opis prawidłowości
+dotyczących badanego zjawiska, konstruowany i oceniany na podstawie danych.
+Model nie opisuje bezpośrednio całej rzeczywistości, lecz wybrane,
+zarejestrowane cechy badanych obiektów oraz relacje między nimi. Pozwala
+przejść od zbioru pojedynczych obserwacji do bardziej ogólnego opisu, który
+można zastosować również do nowych przypadków.
+
+Najczęściej model opisuje zależność między:
+
+- **zmiennymi wejściowymi**, nazywanymi również cechami;
+- **zmienną wyjściową**, nazywaną zmienną objaśnianą, odpowiedzią albo
+  zmienną docelową.
+
+Działanie modelu możemy schematycznie zapisać jako
+
+$$
+\widehat y=\widehat f(\x),
+$$
+
+gdzie $\x$ oznacza zestaw cech opisujących obiekt, a $\widehat y$ -- wynik
+zwracany przez model. Daszek zaznacza, że mamy do czynienia z wielkością
+wyznaczoną z danych: $\widehat f$ jest zależnością odtworzoną na ich
+podstawie, a nie rzeczywistym mechanizmem badanego zjawiska. Obserwowany
+rzeczywisty wynik (*ground truth*) będziemy oznaczać przez $y$.
+Przykładowo $\x$ może zawierać wiek, masę ciała i wyniki badań pacjenta,
+natomiast $y$ może oznaczać obecność choroby.
+
+::: {#niejednoznacznosc-wyniku}
+**W analizie danych zmienne wejściowe nie muszą jednoznacznie wyznaczać
+obserwowanego wyniku, ponieważ zwykle nie zawierają pełnej informacji
+o badanym zjawisku.** Dwóch pacjentów o takich samych wartościach
+zarejestrowanych cech może mieć różny stan zdrowia: u jednego rozpoznano
+chorobę, u drugiego nie. Wynika to między innymi z wpływu czynników
+nieuwzględnionych w danych, błędów pomiarowych oraz przypadkowej zmienności
+badanego zjawiska.
+:::
+
+Nie oznacza to jednak, że sam model musi być niedeterministyczny. Model jest
+zwykle funkcją: dla tych samych wartości wejściowych zwraca zawsze ten sam
+wynik. Obiektom opisanym identycznym wektorem cech przypisze więc identyczną
+predykcję, chociaż ich rzeczywiste wyniki mogą się różnić.
+
+Nie ma w tym sprzeczności, ponieważ wyniku zwracanego przez model nie należy
+traktować jako pewnego rozstrzygnięcia o pojedynczym przypadku: z wymienionych
+wyżej powodów takie rozstrzygnięcie jest nieosiągalne. Skoro obiekty o identycznych cechach mają
+różne wyniki, żadna pojedyncza odpowiedź nie będzie trafna dla wszystkich.
+Model opisuje raczej to, czego można się spodziewać wśród obiektów o danych
+cechach, niż to, co wydarzy się w pojedynczym przypadku. Przewidując czas
+hospitalizacji, może zwracać wartość przeciętną dla pacjentów o danym
+profilu, ewentualnie uzupełnioną o przedział, w którym wynik powinien się
+mieścić. Rozpoznając chorobę, może
+zamiast jednoznacznej diagnozy podawać oszacowanie ryzyka jej wystąpienia.
+W obu przypadkach model przypisuje pojedynczemu obiektowi opis
+regularności obserwowanej w całej grupie obiektów do niego podobnych.
+
+Model może mieć postać wzoru matematycznego, zestawu reguł, drzewa decyzyjnego
+lub bardziej złożonej struktury obliczeniowej. Słowo *model* jest przy tym
+używane w dwóch powiązanych znaczeniach. Może oznaczać **klasę modeli**, czyli
+zbiór dopuszczalnych zależności różniących się parametrami, a niekiedy także
+strukturą. Przykładowo regresja logistyczna określa ogólną postać zależności
+między cechami a prawdopodobieństwem wyniku, ale nie wyznacza jeszcze
+konkretnych wartości współczynników.
+
+Słowo *model* może również oznaczać **model dopasowany**, czyli konkretny
+element wybranej klasy, otrzymany na podstawie danych. Regresja logistyczna
+dopasowana do danych pasażerów *Titanica* jest więc konkretnym modelem
+należącym do klasy modeli regresji logistycznej. Ma już określone zmienne
+wejściowe oraz konkretne wartości współczynników.
+
+Model jest czymś innym od **algorytmu uczenia**. Algorytm uczenia jest
+procedurą, która na podstawie danych treningowych wybiera lub konstruuje
+konkretny model. W przypadku modeli parametrycznych, opisanych ustaloną
+liczbą współczynników (zob. @sec-parametryczne-nieparametryczne), polega to
+zazwyczaj na wyznaczeniu wartości parametrów, natomiast w innych przypadkach
+może obejmować również wybór struktury modelu. Proces prowadzący do otrzymania
+konkretnego modelu nazywamy jego dopasowaniem, uczeniem albo treningiem.
+Rezultatem tego procesu jest model dopasowany, który można następnie
+zastosować do nowych obserwacji.
+
+Nie wszystkie modele w analizie danych opisują zależność między wejściem
+a z góry określonym wynikiem. Niektóre służą przede wszystkim do odkrywania
+struktury samych danych, na przykład podziału obserwacji na podobne grupy,
+wykrywania nietypowych przypadków albo redukcji liczby zmiennych. W każdym
+przypadku zadaniem modelu pozostaje jednak uchwycenie wybranych regularności
+w postaci prostszej i bardziej użytecznej niż pierwotny zbiór obserwacji.
+
+## Uczenie nadzorowane i nienadzorowane {#sec-nadzorowane-nienadzorowane}
+
+Podstawowy podział problemów uczenia wynika ze sposobu sformułowania zadania
+oraz z roli, jaką pełnią w nim obserwowane zmienne. W **uczeniu nadzorowanym**
+wyróżniamy zmienne wejściowe oraz zmienną wyjściową, a celem jest opisanie
+zależności między nimi. Dla każdego badanego obiektu obserwujemy zatem parę
+
+$$
+(\x_i,y_i),
+$$
+
+gdzie $\x_i$ jest wektorem cech obiektu, a $y_i$ -- odpowiadającym mu wynikiem.
+Zbiór danych ma postać
+
+$$
+\mathcal{D}
+=
+\{(\x_1,y_1),\ldots,(\x_n,y_n)\}.
+$$
+
+Taka struktura danych odzwierciedla przyjęty sposób opisu zjawiska: zakładamy,
+że istnieje wynik, który chcemy wyjaśniać lub przewidywać na podstawie
+pozostałych zmiennych. Dopiero po tak sformułowanym zadaniu wybieramy klasę
+modeli i algorytm służący do jej dopasowania.
+
+Celem uczenia nadzorowanego jest uchwycenie zależności między cechami a
+wynikiem. Otrzymany model można następnie zastosować do nowego obiektu, dla
+którego znamy $\x$, ale nie znamy jeszcze $y$. Przykładowo na podstawie
+danych pacjentów o znanym rozpoznaniu możemy zbudować model szacujący ryzyko
+choroby u kolejnych pacjentów. Podobnie, dysponując informacjami o
+pasażerach *Titanica* i ich losach, możemy próbować przewidywać przeżycie na
+podstawie wieku, płci, klasy biletu i innych cech.
+
+Określenie *nadzorowane* nie oznacza, że ktoś bezpośrednio kontroluje
+każdy krok działania algorytmu. Nadzór polega na obecności zmiennej
+wyjściowej w danych treningowych. Dzięki niej wynik zwracany przez model można
+porównać z wynikiem rzeczywiście zaobserwowanym.
+
+W **uczeniu nienadzorowanym** żadna ze zmiennych nie pełni roli z góry
+określonego wyniku. Każdy obiekt jest opisany jedynie przez wektor cech
+$\x_i$, a dane mają postać
+
+$$
+\mathcal{D}
+=
+\{\x_1,\ldots,\x_n\}.
+$$
+
+Celem analizy jest wówczas opisanie struktury występującej w samych cechach,
+na przykład podobieństwa między obserwacjami, występowania grup albo głównych
+kierunków zmienności.
+
+Metody nienadzorowane mogą służyć między innymi do:
+
+- podziału obserwacji na grupy obiektów o podobnych cechach;
+- przedstawienia danych za pomocą mniejszej liczby zmiennych;
+- wykrywania nietypowych obserwacji;
+- opisu zależności i geometrycznej struktury danych.
+
+Przykładowo możemy próbować podzielić pacjentów na grupy o podobnych profilach
+wyników badań, nie określając wcześniej, jakie grupy mają zostać odnalezione.
+Możemy również zastąpić dużą liczbę silnie powiązanych pomiarów kilkoma
+zmiennymi syntetycznymi, które zachowują najważniejszą część informacji
+zawartej w danych.
+
+Brak znanych odpowiedzi sprawia, że wynik uczenia nienadzorowanego jest
+zwykle trudniejszy do jednoznacznej oceny. Ten sam zbiór obserwacji może mieć
+kilka użytecznych opisów struktury, zależnie od celu analizy, przyjętej miary
+podobieństwa i założeń metody. Podział na uczenie nadzorowane i nienadzorowane
+dotyczy więc nie tylko użytego algorytmu, lecz przede wszystkim sposobu
+sformułowania zadania i informacji dostępnych podczas uczenia.
+
+W dalszej części skoncentrujemy się głównie na uczeniu nadzorowanym.
+
+## Regresja i klasyfikacja {#sec-regresja-klasyfikacja}
+
+W uczeniu nadzorowanym wyróżniamy dwa podstawowe rodzaje zadań: **regresję**
+i **klasyfikację**. Podział ten wynika przede wszystkim z charakteru zmiennej
+wyjściowej oraz z rodzaju wyniku, który chcemy otrzymać. Nie zależy natomiast
+od postaci zmiennych wejściowych -- te same cechy mogą zostać wykorzystane
+zarówno w zadaniu regresji, jak i klasyfikacji.
+
+W **regresji** zmienna wyjściowa ma charakter ilościowy. Jej wartości są
+liczbami, dla których znaczenie mają wielkość, porządek oraz różnice między
+wartościami. Zadaniem modelu jest przewidywanie wartości liczbowej:
+
+$$
+\widehat y=\widehat f(\x).
+$$
+
+Przykładami regresji są przewidywanie ceny mieszkania, czasu trwania
+hospitalizacji, stężenia substancji we krwi albo wielkości plonu. Wynikiem
+modelu może być pojedyncza wartość, ale model może również opisywać
+niepewność predykcji, na przykład za pomocą przedziału predykcji lub
+rozkładu możliwych wartości.
+
+W **klasyfikacji** zmienna wyjściowa ma charakter jakościowy: określa
+przynależność obiektu do jednej z ustalonych kategorii, nazywanych
+**klasami**. Jeżeli możliwe są dwie klasy, mówimy o klasyfikacji binarnej.
+Przykładem jest rozpoznawanie obecności albo braku choroby. Gdy klas jest
+więcej, mamy do czynienia z klasyfikacją wieloklasową, na przykład przy
+rozpoznawaniu gatunku rośliny na podstawie jej cech.
+
+Klasy mogą być oznaczone liczbami, nie nadaje im to jednak charakteru
+ilościowego. Jeżeli brak choroby oznaczymy przez $0$, a jej obecność przez
+$1$, różnica między tymi wartościami nie opisuje wielkości choroby. Liczby
+pełnią tutaj jedynie funkcję etykiet.
+
+W typowych zadaniach podział na regresję i klasyfikację jest związany
+z podziałem zmiennych na ciągłe i dyskretne. Ciągłą zmienną wyjściową
+modelujemy na ogół za pomocą regresji, natomiast jakościowa zmienna
+wyjściowa, przyjmująca wartości z dyskretnego zbioru klas, prowadzi do
+zadania klasyfikacji. Dlatego podział ten przedstawia się niekiedy
+w uproszczonej postaci: regresja dotyczy zmiennych ciągłych, a klasyfikacja --
+dyskretnych.
+
+Rzeczywista różnica leży jednak nie w ciągłości zmiennej, lecz w jej
+charakterze. Wartości ilościowej zmiennej wyjściowej są uporządkowane i mają
+skalę, więc sensowne jest pytanie o przeciętny wynik -- o „środek” jego
+rozkładu -- oraz o to, jak daleko predykcja od niego odbiega. Klasy nie mają
+ani porządku, ani skali: średnia z dwóch gatunków rośliny nie jest żadnym
+gatunkiem, a pomyłka między klasami nie jest „mała” ani „duża”. Dlatego
+model regresyjny podaje charakterystyki rozkładu wyniku, na przykład wartość
+przeciętną, a model klasyfikacyjny -- prawdopodobieństwa poszczególnych klas.
+
+Z tego powodu utożsamienie zmiennych ciągłych z regresją, a dyskretnych
+z klasyfikacją nie jest ścisłe. Zmienna dyskretna nie musi być zmienną
+jakościową. Może być również zmienną ilościową, jeżeli jej wartości mają
+znaczenie liczbowe. W takim przypadku mamy do czynienia z regresją, mimo że
+zmienna wyjściowa jest dyskretna.
+
+Przykładem jest liczba wizyt pacjenta w szpitalu w ciągu roku. Zmienna ta
+przyjmuje wartości $0,1,2,\ldots$, jest więc dyskretna, ale jej wartości
+pozostają liczbami: pacjent z pięcioma wizytami trafiał do szpitala częściej
+niż pacjent z dwiema, a różnica między nimi daje się zmierzyć. Naturalnym
+pytaniem jest tutaj, ilu wizyt można się spodziewać u pacjenta o danych
+cechach -- a nie, do której z kategorii „0”, „1”, „2” pacjent należy. Jest to
+więc zadanie regresji, mimo że zmienna wyjściowa jest dyskretna. Istnieją
+metody regresyjne przystosowane do zmiennych zliczeniowych, na przykład
+regresja Poissona.
+
+Podział na zmienne ciągłe i dyskretne nie pokrywa się więc dokładnie
+z podziałem na regresję i klasyfikację. Przewidywanie liczby zdarzeń zwykle
+zaliczamy do regresji, choć przewidywana zmienna jest dyskretna;
+przewidywanie rodzaju zdarzenia -- do klasyfikacji.
+
+Model klasyfikacyjny często nie zwraca bezpośrednio etykiety klasy, lecz
+oszacowania prawdopodobieństw poszczególnych klas:
+
+$$
+\widehat\eta_k(\x)
+\approx
+\Prob(Y=k\mid\X=\x).
+$$
+
+Na ich podstawie można następnie przypisać obiekt do jednej z klas, na
+przykład wybierając klasę o największym oszacowanym prawdopodobieństwie.
+Rozdzielenie tych dwóch etapów jest ważne: ten sam model może prowadzić do
+różnych decyzji zależnie od przyjętej reguły decyzyjnej. W diagnostyce
+medycznej próg wymagany do rozpoznania choroby można na przykład ustalić
+inaczej niż standardowe $0{,}5$, jeżeli przeoczenie choroby jest znacznie
+bardziej kosztowne niż wynik fałszywie dodatni.
+
+Regresja i klasyfikacja są rodzajami zadań, a nie rozłącznymi rodzinami
+algorytmów. Drzewa decyzyjne, metody najbliższych sąsiadów czy sieci
+neuronowe mogą występować zarówno w wersji regresyjnej, jak
+i klasyfikacyjnej. O charakterze zadania decyduje zmienna wyjściowa i cel
+analizy. Z tego powodu regresja logistyczna, mimo swojej nazwy, jest metodą
+klasyfikacji: opisuje prawdopodobieństwo przynależności do klasy, a nie
+wartość ilościowej zmiennej wyjściowej.
+
+## Probabilistyczny opis danych {#sec-zaleznosc-i-szum}
+
+Wróćmy do [wcześniejszego spostrzeżenia](#niejednoznacznosc-wyniku): obiekty
+opisane tym samym wektorem cech mogą mieć różne wartości zmiennej odpowiedzi.
+Model przypisuje im wszystkim jedną predykcję, nie ma więc jednej
+„prawidłowej odpowiedzi”, z którą można
+by ją zestawić. Zanim powiemy, co znaczy, że model jest dobry, musimy
+odpowiedzieć na dwa pytania:
+
+1. **Z czym porównujemy predykcję**, skoro pojedynczy zaobserwowany wynik nie
+   jest właściwym punktem odniesienia?
+2. **Jak wycenić rozbieżność** między predykcją a tym, co zaobserwowaliśmy?
+
+Pierwszemu poświęcona jest ta sekcja, drugiemu -- @sec-strata-ryzyko.
+
+Aby odpowiedzieć na pierwsze pytanie, posłużymy się probabilistycznym opisem
+danych. Przyjmujemy, że zarówno cechy, jak i wynik są losowe: $\X$ jest wektorem losowym cech,
+$Y$ -- losową zmienną wyjściową, a para $(\X,Y)$ ma pewien **rozkład łączny**
+$P$. Kolejne obserwacje $(\x_i,y_i)$ są niezależnymi losowaniami z tego
+rozkładu. Rozkład $P$ opisuje populację, z której pochodzą dane: określa
+prawdopodobieństwa wartości cech i wyniku oraz zależności między nimi.
+W przyjętym opisie cała informacja o danych jest zawarta w $P$.
+Wiedza o znaczeniu zmiennych i kontekście ich pomiaru pozostaje poza tym
+opisem, o ile nie wprowadzimy jej do niego za pomocą dodatkowych założeń.
+Rozkład $P$ nie jest nam znany -- dysponujemy jedynie obserwacjami
+pochodzącymi z tego rozkładu.
+
+Warto od razu zaznaczyć, że niezależność kolejnych obserwacji jest
+**założeniem**, a nie własnością danych. Bywa ono naruszone, na przykład
+gdy obserwacje są uporządkowane w czasie, pochodzą z sąsiadujących
+lokalizacji albo dotyczą powtarzanych pomiarów tego samego pacjenta.
+W dalszym ciągu przyjmujemy je milcząco, wskazując w razie potrzeby
+konsekwencje jego złamania.
+
+Rozkład $P$ opisujemy za pomocą funkcji prawdopodobieństwa lub gęstości,
+zależnie od rodzaju zmiennych. Oznaczmy tę funkcję przez $p(\x,y)$,
+a funkcję opisującą rozkład samych cech -- przez $p(\x)$. Dla $p(\x)>0$
+zachodzi
+
+$$
+p(\x,y)=p(\x)\cdot p(y\mid\x),
+$$ {#eq-rozklad-laczny}
+
+gdzie $p(y\mid\x)$ jest funkcją prawdopodobieństwa lub gęstością warunkową
+wyniku przy ustalonych cechach.
+
+::: {.callout-note collapse="true"}
+## Przypomnienie: rozkłady dyskretne i ciągłe
+
+**Rozkład dyskretny.** Zmienna $Y$ ma rozkład dyskretny, jeżeli przyjmuje
+wartości ze zbioru $\mathcal{Y}$ skończonego lub przeliczalnego, zwanego
+**nośnikiem**. Rozkład opisuje wtedy **funkcja prawdopodobieństwa**
+
+$$
+p(y)=\Prob(Y=y),\qquad y\in\mathcal{Y},
+$$
+
+spełniająca $p(y)>0$ oraz $\sum_{y\in\mathcal{Y}}p(y)=1$. Prawdopodobieństwo
+dowolnego zbioru wartości otrzymujemy poprzez sumowanie:
+$\Prob(Y\in A)=\sum_{y\in A}p(y)$.
+
+**Rozkład ciągły.** Zmienna $Y$ ma rozkład ciągły, jeżeli istnieje funkcja
+$p\ge 0$, zwana **gęstością**, taka że dla każdego zbioru $A$
+
+$$
+\Prob(Y\in A)=\int_{A}p(y)\,dy ,
+$$
+
+przy czym $\int_{-\infty}^{\infty}p(y)\,dy=1$. Biorąc $A=\{y_0\}$,
+otrzymujemy natychmiast $\Prob(Y=y_0)=0$: całka po zbiorze jednopunktowym
+jest zerem. Pojedyncze wartości nie mają więc dodatnich prawdopodobieństw,
+choć zmienna jakąś z nich przyjmuje.
+
+**Gęstość nie jest prawdopodobieństwem.** Wartość $p(y)$ nie musi nawet
+należeć do przedziału $[0,1]$ -- dla rozkładu jednostajnego na
+$[0;\,0{,}1]$ gęstość jest wszędzie równa $10$. Sens probabilistyczny ma
+dopiero prawdopodobieństwo przedziału: jeżeli gęstość jest ciągła w punkcie
+$y$, to dla małych $h>0$
+
+$$
+\Prob(y\le Y\le y+h)\approx p(y)\,h .
+$$
+
+Gęstość mierzy więc nie prawdopodobieństwo samej wartości $y$, lecz jego
+zagęszczenie w otoczeniu tej wartości -- stąd jej nazwa. Gęstości wolno
+porównywać między sobą, bo mówią, gdzie skupia się większa masa
+prawdopodobieństwa, ale nie wolno ich czytać jako prawdopodobieństw.
+
+**Dystrybuanta.** Wspólnym opisem obu przypadków jest **dystrybuanta**
+
+$$
+F(y)=\Prob(Y\le y),
+$$
+
+określona dla każdej zmiennej losowej rzeczywistej. W przypadku dyskretnym
+jest funkcją schodkową ze skokami w punktach nośnika, w ciągłym -- funkcją
+ciągłą, będącą całką z gęstości.
+:::
+
+::: {.callout-note collapse="true"}
+## Przypomnienie: rozkład łączny, brzegowy i warunkowy
+
+Literą $p$ oznaczamy, tak jak wyżej, funkcję prawdopodobieństwa albo
+gęstość -- zależnie od tego, czy zmienna jest dyskretna, czy ciągła.
+
+**Rozkład łączny** opisuje parę $(\X,Y)$ traktowaną jako całość: przypisuje
+prawdopodobieństwa zdarzeniom dotyczącym cech i wyniku naraz. Dla zmiennych
+dyskretnych $p(\x,y)=\Prob(\X=\x,\,Y=y)$; w przypadku ciągłym $p(\x,y)$ jest
+gęstością, a prawdopodobieństwa otrzymujemy przez całkowanie.
+
+**Rozkład brzegowy** opisuje same cechy, z pominięciem zmiennej wyjściowej.
+Jego funkcję prawdopodobieństwa lub gęstość otrzymujemy przez zsumowanie
+albo scałkowanie $p(\x,y)$ po $y$:
+
+$$
+p(\x)=\sum_{y}p(\x,y)
+\qquad\text{albo}\qquad
+p(\x)=\int p(\x,y)\,dy .
+$$
+
+**Rozkład warunkowy** opisuje wynik przy ustalonych cechach. Jego funkcję
+prawdopodobieństwa lub gęstość definiujemy dla $p(\x)>0$ wzorem
+
+$$
+p(y\mid\x)=\frac{p(\x,y)}{p(\x)} .
+$$
+
+Przy ustalonym $\x$ funkcja ta jest nieujemna i sumuje się (całkuje)
+po $y$ do jedynki, opisuje więc rozkład prawdopodobieństwa zmiennej $Y$.
+Dla zmiennych dyskretnych $p(y\mid\x)$ jest zwykłym
+prawdopodobieństwem warunkowym $\Prob(Y=y\mid\X=\x)$; gdy cechy są ciągłe,
+zdarzenie $\{\X=\x\}$ ma prawdopodobieństwo zero i definicja wymaga
+ostrożności -- wracamy do tego na końcu sekcji.
+
+**Skąd bierze się wzór ([-@eq-rozklad-laczny]).** Wystarczy pomnożyć ostatnią równość
+przez $p(\x)$. Wzór ten nie jest więc twierdzeniem o strukturze rozkładu,
+lecz przekształceniem podanego wzoru na funkcję prawdopodobieństwa lub
+gęstość warunkową. Cała jego treść leży w interpretacji obu czynników
+i w tym, że zależność, która nas interesuje,
+mieści się wyłącznie w drugim z nich.
+:::
+
+Pierwszy czynnik, $p(\x)$, opisuje **rozkład brzegowy** cech. Mówi, gdzie
+w przestrzeni cech znajdują się obiekty i jak gęsto. Jeśli na przykład
+obiektami są pacjenci, a cechami ich wiek i wyniki badań, rozkład ten opisuje,
+jaki jest typowy wiek pacjenta, jakie kombinacje wyników badań występują
+często, a jakie prawie wcale.
+O zależności między cechami a wynikiem nie mówi natomiast nic.
+
+Drugi czynnik, $p(y\mid\x)$, opisuje **rozkład warunkowy** zmiennej $Y$
+przy ustalonych cechach, oznaczany
+
+$$
+Y\mid\X=\x .
+$$
+
+Określa on, jakie wartości zmiennej $Y$ mogą wystąpić wśród obiektów
+o cechach $\x$ i z jakim prawdopodobieństwem; dla zmiennej ciągłej
+opisuje go gęstość warunkowa, dla dyskretnej -- prawdopodobieństwa
+poszczególnych wartości. To właśnie w nim zawarta jest cała zależność
+wyniku od cech, i to on odpowiada na pierwsze z pytań postawionych na
+początku sekcji: predykcję porównujemy nie z jedną wartością, lecz
+z całym rozkładem możliwych wyników.
+
+W samym rozkładzie warunkowym możemy wyróżnić część
+**systematyczną**, związaną z obserwowanymi cechami, oraz **szum**, czyli
+zmienność wyniku niewyjaśnioną przez te cechy. Słowa *szum* używamy
+w szerokim znaczeniu. Może on wynikać z błędów pomiarowych, z wpływu
+czynników nieuwzględnionych w danych albo z rzeczywistej losowości
+badanego zjawiska. Nie oznacza więc, że dane zostały zebrane
+nieprawidłowo.
+
+::: {.callout-note}
+## Po co nam ten podział
+Rozdzielenie wzoru ([-@eq-rozklad-laczny]) na dwa czynniki wróci w książce
+wielokrotnie, dlatego warto od razu zauważyć, co z niego wynika.
+
+Modelując zależność, interesujemy się drugim czynnikiem. Optymalna
+predykcja w punkcie $\x$ -- w sensie, który sprecyzujemy w
+@sec-strata-ryzyko -- zależy wyłącznie od rozkładu warunkowego --
+rozkład brzegowy cech nie wpływa na nią w żaden sposób. Wpływa natomiast
+na to, jak bardzo opłaca się być dokładnym w danym obszarze przestrzeni
+cech, bo obszary rzadko odwiedzane wnoszą do przeciętnej straty niewiele.
+Do tej obserwacji wracamy w @sec-predyktory-optymalne.
+
+Wzdłuż tego samego podziału przebiega też granica między dwiema rodzinami
+metod. Modele **dyskryminacyjne**, takie jak regresja logistyczna,
+opisują wyłącznie $p(y\mid\x)$ i o rozkładzie cech nie mówią nic. Modele
+**generatywne**, takie jak analiza dyskryminacyjna czy naiwny klasyfikator
+bayesowski, opisują cały rozkład łączny, docierając do zależności okrężną
+drogą -- przez rozkłady cech wewnątrz klas. Różnicę tę omówimy szczegółowo
+w @sec-modele-generatywne.
+:::
+
+### Regresja
+
+W przypadku regresji część systematyczną opisujemy za pomocą warunkowej
+wartości oczekiwanej, nazywanej **funkcją regresji**:
+
+$$
+\fopt(\x)=\E(Y\mid\X=\x).
+$$ {#eq-funkcja-regresji-wstep}
+
+Oznacza ona przeciętną wartość zmiennej wyjściowej wśród obiektów o cechach
+$\x$. Gwiazdka oznacza predyktor optymalny -- w jakim sensie, wyjaśniamy niżej --
+a więc wielkość teoretyczną, opisującą badaną
+populację, a nie funkcję wyznaczoną z danych; symbolu $f$ bez gwiazdki
+będziemy używać dla dowolnego predyktora, a $\widehat f$ -- dla predyktora
+dopasowanego do konkretnego zbioru obserwacji.
+
+::: {.callout-note collapse="true"}
+## Przypomnienie: warunkowa wartość oczekiwana
+
+Wartość oczekiwana rozkładu warunkowego $Y\mid\X=\x$ to średnia wartość $Y$
+wśród obiektów o cechach $\x$:
+
+$$
+\E(Y\mid\X=\x)=\sum_{y}y\,p(y\mid\x)
+\qquad\text{albo}\qquad
+\E(Y\mid\X=\x)=\int y\,p(y\mid\x)\,dy .
+$$
+
+Jest to **liczba** zależna od $\x$, a więc funkcja zmiennej $\x$ -- i właśnie
+tę funkcję nazywamy funkcją regresji.
+
+**Dwa zapisy, dwa różne obiekty.** Podstawiając w miejsce $\x$ losowy wektor
+$\X$, otrzymujemy $\E(Y\mid\X)=\fopt(\X)$, czyli **zmienną losową**: jej
+wartość zmienia się wraz z wylosowanym obiektem. Różnica jest istotna, bo
+oba zapisy występują w tym rozdziale. Wzór ([-@eq-funkcja-regresji-wstep]) mówi
+o liczbie przypisanej ustalonym cechom, natomiast warunek
+$\E(\varepsilon\mid\X)=0$ we wzorze ([-@eq-rozklad-addytywny]) jest równością zmiennych
+losowych -- znaczy tyle, że dla **każdego** $\x$ zachodzi
+$\E(\varepsilon\mid\X=\x)=0$.
+
+**Prawo iterowanej wartości oczekiwanej.** Uśrednienie funkcji $\fopt(\X)$
+po rozkładzie cech odtwarza zwykłą wartość oczekiwaną:
+
+$$
+\E\big[\E(Y\mid\X)\big]=\E(Y).
+$$
+
+Średnia warunkowych średnich jest więc średnią globalną -- z wagami danymi
+przez rozkład brzegowy cech. Ta tożsamość pozwala rozbijać rachunki na dwa
+kroki: najpierw uśredniamy przy ustalonych cechach, potem po cechach.
+Będziemy z niej korzystać przy rachunkach dotyczących ryzyka.
+:::
+
+Wybór warunkowej wartości oczekiwanej nie jest przypadkowy.
+W @sec-predyktory-optymalne pokażemy, że funkcja $\fopt$ jest **najlepszym
+możliwym** predyktorem, jeżeli błędy wyceniamy stratą kwadratową. Przy innej
+stracie wyróżniona byłaby inna charakterystyka rozkładu warunkowego, na
+przykład mediana. To, jaką charakterystykę rozkładu warto przewidywać,
+zależy więc od sposobu wyceniania błędów.
+
+Zdefiniujmy odchylenie wyniku od jego średniej warunkowej jako
+$\varepsilon=Y-\fopt(\X)$. Wówczas, przy ustalonych cechach, jego wartość
+oczekiwana wynosi
+
+$$
+\E(\varepsilon\mid\X)
+=\E(Y\mid\X)-\fopt(\X)=0.
+$$
+
+Zmienną wyjściową możemy więc przedstawić w postaci addytywnej
+
+$$
+Y=\fopt(\X)+\varepsilon,
+\qquad
+\E(\varepsilon\mid\X)=0 .
+$$ {#eq-rozklad-addytywny}
+
+Składnik $\varepsilon$ opisuje odchylenie obserwowanego wyniku od części
+systematycznej. Dwa obiekty o takich samych wartościach cech otrzymują tę
+samą wartość $\fopt(\x)$, ale ich rzeczywiste wyniki mogą się różnić ze
+względu na różne realizacje $\varepsilon$. Warunek $\E(\varepsilon\mid\X)=0$
+wynika z definicji $\varepsilon$ i oznacza, że odchylenia przy ustalonych
+cechach przeciętnie się znoszą.
+
+Przykładowo model może opisywać zależność między czasem hospitalizacji
+a wiekiem pacjenta, rozpoznaniem i wynikami badań. Pacjenci o takich samych
+wartościach zarejestrowanych cech nie muszą jednak przebywać w szpitalu
+dokładnie tyle samo dni. Na czas hospitalizacji wpływają również czynniki,
+których model nie uwzględnia, oraz zdarzenia, których nie da się przewidzieć
+na podstawie dostępnych informacji.
+
+Funkcja $\fopt$ opisuje zależność występującą w badanej populacji, ale
+zazwyczaj nie jest znana. Na podstawie danych treningowych wyznaczamy jej
+oszacowanie $\widehat f$, a predykcja dla obiektu o cechach $\x$ ma postać
+
+$$
+\widehat y=\widehat f(\x).
+$$
+
+### Klasyfikacja
+
+W klasyfikacji podział na zależność systematyczną i szum ma ten sam sens,
+ale nie da się go zapisać addytywnie. Suma etykiety klasy i odchylenia nie
+byłaby etykietą klasy, więc rozkład ([-@eq-rozklad-addytywny]) traci tu
+zastosowanie. Opisujemy zatem rozkład warunkowy wprost.
+
+Jeżeli zmienna wyjściowa przyjmuje wartości w zbiorze klas
+$\{1,\ldots,K\}$, część systematyczną opisują prawdopodobieństwa warunkowe
+
+$$
+\eta_k(\x)=\Prob(Y=k\mid\X=\x),
+\qquad k=1,\ldots,K,
+$$ {#eq-eta}
+
+spełniające dla każdego $\x$ warunek $\sum_{k=1}^{K}\eta_k(\x)=1$.
+W klasyfikacji binarnej wystarczy jedna funkcja
+$\eta(\x)=\Prob(Y=1\mid\X=\x)$, a rozkład wyniku przy ustalonych cechach
+zapisujemy jako
+
+$$
+Y\mid\X=\x\sim\operatorname{Bernoulli}\big(\eta(\x)\big).
+$$
+
+Funkcja $\eta$ pełni więc wobec klasyfikacji tę samą rolę, co $\fopt$ wobec
+regresji: opisuje systematyczną zależność wyniku od cech. Aby na podstawie
+prawdopodobieństw wybrać przewidywaną klasę, potrzebujemy reguły decyzyjnej.
+W przypadku binarnym możemy na przykład wybierać klasę $1$, gdy
+$\eta(\x)>1/2$, a klasę $0$ w przeciwnym razie. Jeżeli jednak
+$0<\eta(\x)<1$, obie klasy są możliwe przy tych samych cechach, więc nawet
+dokładna znajomość $\eta(\x)$ nie gwarantuje bezbłędnej klasyfikacji.
+W praktyce dochodzi do tego drugie źródło błędów: nie znamy $\eta(\x)$
+i musimy ją oszacować na podstawie danych.
+
+::: {.callout-note}
+## Jeden opis, dwie charakterystyki
+Warto zauważyć, jak niewiele różni oba przypadki. Wspólnym punktem wyjścia
+jest rozkład warunkowy $Y\mid\X=\x$; różnica polega wyłącznie na tym, co
+z niego odczytujemy.
+
+W problemie regresji wygodną charakterystyką jest odpowiednio rozumiany
+środek rozkładu -- na przykład średnia warunkowa $\fopt(\x)$ lub mediana
+warunkowa. W problemie klasyfikacji mówienie o „środku" nie ma
+sensu -- klasy nie mają porządku ani skali -- więc podajemy cały rozkład,
+czyli wektor $\big(\eta_1(\x),\ldots,\eta_K(\x)\big)$.
+
+Dla zmiennej binarnej z klasami zakodowanymi jako $0$ i $1$ oba opisy
+pokrywają się:
+$\E(Y\mid\X=\x)=\Prob(Y=1\mid\X=\x)$, a więc $\fopt=\eta$.
+Przy innym kodowaniu dwiema różnymi liczbami średnia warunkowa nadal
+jednoznacznie wyznacza prawdopodobieństwa klas, ale nie jest już wprost
+jednym z nich.
+:::
+
+W praktyce funkcje $\eta_k$, podobnie jak $\fopt$, nie są znane
+i zastępujemy je oszacowaniami $\widehat\eta_k$ wyznaczonymi z danych.
+W obu zadaniach mamy więc do czynienia z tym samym układem: nieznaną
+zależnością występującą w populacji, jej oszacowaniem zbudowanym na
+skończonej próbie oraz zmiennością wyniku, która pozostaje nawet po
+ustaleniu wszystkich dostępnych cech.
+
+::: {.callout-note collapse="true"}
+## Dla Czytelników z przygotowaniem z teorii miary
+
+Zapis wprowadzony w tej sekcji jest uproszczony w dwóch miejscach.
+
+**Rozkład warunkowy.** Gdy zmienna $\X$ ma rozkład ciągły, zdarzenie
+$\{\X=\x\}$ ma prawdopodobieństwo zero i rozkładu $Y\mid\X=\x$ nie można
+zdefiniować wzorem $\Prob(\cdot\mid A)=\Prob(\cdot\cap A)/\Prob(A)$.
+Właściwą konstrukcją jest regularny rozkład warunkowy, który dla zmiennych
+o wartościach w $\R^p$ zawsze istnieje, ale jest wyznaczony jednoznacznie
+jedynie **z dokładnością do zbioru miary zero** względem rozkładu $\X$.
+To samo dotyczy funkcji $\fopt$ oraz $\eta_k$: ściśle biorąc nie są one
+funkcjami, lecz klasami równoważności funkcji. Konsekwentnie, wszystkie
+stwierdzenia postaci „dla każdego $\x$" należy w dalszym ciągu czytać jako
+„dla prawie każdego $\x$".
+
+**Symbol $p$.** We wzorze ([-@eq-rozklad-laczny]) litera $p$ oznacza gęstość
+względem miary, która nie jest ta sama dla obu zmiennych: dla cech
+ciągłych jest to miara Lebesgue'a, dla jakościowej zmiennej wyjściowej --
+miara licząca. Formalnie chodzi o gęstość rozkładu łącznego względem
+miary produktowej. Zapis $p(\cdot)$ jest więc wygodnym skrótem
+obejmującym gęstości i prawdopodobieństwa punktowe naraz; stosujemy go
+w całej książce.
+
+**Dlaczego pomijamy te zastrzeżenia.** Wielkości, którymi będziemy oceniać
+predyktory (@sec-strata-ryzyko), są wartościami oczekiwanymi, czyli
+całkami. Dwie wersje funkcji $\fopt$ różniące się na zbiorze miary zero
+dają więc identyczne wartości tych wielkości. Obiekt
+niejednoznaczny nigdy nie występuje samodzielnie -- zawsze pod znakiem
+wartości oczekiwanej, która tej niejednoznaczności nie widzi.
+
+Ścisłe ujęcie znajdzie Czytelnik w monografii @devroye1996 dla
+klasyfikacji oraz @gyorfi2002 dla regresji nieparametrycznej.
+:::
+
+Odpowiedzieliśmy w ten sposób na pierwsze z pytań postawionych na początku
+sekcji. Wiemy już, z czym porównujemy predykcję: z rozkładem warunkowym
+$Y\mid\X=\x$, którego część systematyczną opisuje $\fopt$ albo $\eta_k$,
+a resztę stanowi szum.
+
+## Jak mierzymy jakość predykcji {#sec-strata-ryzyko}
+
+Wróćmy do drugiego z pytań postawionych w @sec-zaleznosc-i-szum: co znaczy,
+że predykcja jest bliska rzeczywistemu wynikowi? Odpowiedź wymaga
+określenia kosztu błędu danej wielkości. Koszt ten zależy od celu i kontekstu
+zastosowania modelu; nie wynika z samego rozkładu danych.
+
+Potrzebne będą dwa pojęcia. Pierwsze wycenia pojedynczy błąd, drugie
+uśrednia ten koszt po całej populacji.
+
+**Funkcją straty** nazywamy funkcję $\Loss(y,\widehat y)\ge 0$ określającą
+koszt predykcji $\widehat y$, gdy rzeczywistą wartością okazało się $y$.
+Naturalnie zakładamy $\Loss(y,y)=0$: trafna predykcja nie kosztuje nic.
+
+W regresji standardowym wyborem jest **strata kwadratowa**
+
+$$
+\Loss(y,\widehat y)=(y-\widehat y)^2,
+$$ {#eq-strata-kwadratowa-wstep}
+
+karząca duże pomyłki nieproporcjonalnie mocniej niż małe: jeden błąd
+o wartości $10$ kosztuje tyle, co sto błędów o wartości $1$. W klasyfikacji
+najprostszą stratą jest **strata 0--1**
+
+$$
+\Loss(y,\widehat y)=\ind(y\neq\widehat y),
+$$ {#eq-strata-01-wstep}
+
+wyceniająca każdą pomyłkę na jednostkę, niezależnie od tego, jakich klas
+dotyczy. Oba wybory są domyślne, ale nie są jedyne możliwe ani zawsze
+właściwe -- do konsekwencji zmiany straty wrócimy w @sec-predyktory-optymalne.
+
+::: {.callout-note collapse="true"}
+## Przypomnienie: funkcja wskaźnikowa
+
+Symbol $\ind(A)$ oznacza **funkcję wskaźnikową** warunku $A$:
+
+$$
+\ind(A)=
+\begin{cases}
+1, & \text{gdy warunek } A \text{ jest spełniony},\\
+0, & \text{w przeciwnym razie}.
+\end{cases}
+$$
+
+We wzorze ([-@eq-strata-01-wstep]) warunkiem jest $y\neq\widehat y$.
+Strata wynosi więc $1$, gdy przewidywana klasa różni się od rzeczywistej,
+oraz $0$, gdy klasy są zgodne.
+:::
+
+Strata mówi o pojedynczej obserwacji. Interesuje nas natomiast zachowanie
+modelu na całej populacji, z której pochodzą dane.
+
+::: {#def-ryzyko-podstawowe}
+## Ryzyko
+**Ryzykiem** predyktora $f$ nazywamy oczekiwaną stratę
+
+$$
+\Risk(f)=\E\big[\Loss\big(Y,f(\X)\big)\big],
+$$ {#eq-ryzyko-podstawowe}
+
+gdzie wartość oczekiwaną liczymy względem łącznego rozkładu pary
+$(\X,Y)$.
+:::
+
+@def-ryzyko-podstawowe jest wspólna dla regresji i klasyfikacji --
+różni je wyłącznie podstawiona strata. Dla straty kwadratowej ryzyko jest
+**błędem średniokwadratowym**
+
+$$
+\Risk(f)=\E\big[(Y-f(\X))^2\big],
+$$
+
+a dla straty 0--1, ponieważ wartość oczekiwana wskaźnika jest
+prawdopodobieństwem zdarzenia -- **prawdopodobieństwem błędnej
+klasyfikacji**:
+
+$$
+\Risk(f)=\E\big[\ind(Y\neq f(\X))\big]=\Prob\big(f(\X)\neq Y\big).
+$$
+
+Rachunek jest w obu przypadkach ten sam; zmienia się tylko interpretacja
+wyniku. Dwie wielkości, które w kursach statystyki wprowadza się zwykle
+osobno i różnymi wzorami, okazują się jednym pojęciem z dwoma różnymi
+podstawieniami.
+
+::: {.callout-important}
+## Ryzyko a błąd na danych treningowych
+Wartość oczekiwana we wzorze ([-@eq-ryzyko-podstawowe]) jest liczona względem rozkładu
+całej populacji, a nie względem zbioru obserwacji, którym dysponujemy.
+Wielkość, którą faktycznie umiemy obliczyć, to **ryzyko empiryczne**
+
+$$
+\widehat{\Risk}_n(f)=\frac1n\sum_{i=1}^{n}\Loss\big(y_i,f(\x_i)\big).
+$$ {#eq-ryzyko-empiryczne}
+
+Są to dwie różne rzeczy. Na $\Risk(f)$ nam zależy, ale nie umiemy jej obliczyć,
+bo nie znamy rozkładu populacji. $\widehat{\Risk}_n(f)$ umiemy obliczyć,
+lecz jeżeli te same dane posłużyły do dopasowania modelu, jest ona
+systematycznie zaniżona: model był dobierany tak, aby na nich wypadać
+dobrze. Dla predyktora ustalonego niezależnie od danych średnia ta
+byłaby nieobciążonym oszacowaniem ryzyka.
+
+Do rzetelnego szacowania ryzyka wracamy w @sec-ocena-modeli.
+:::
+
+Ryzyko określa przeciętny koszt błędów predyktora w populacji. Chcemy,
+by koszt ten był jak najmniejszy, dlatego pytamy: **która funkcja $f$
+minimalizuje $\Risk(f)$?**
+Zauważmy, że pytanie to nie dotyczy żadnego konkretnego algorytmu ani klasy
+modeli -- minimalizujemy po **wszystkich** funkcjach. Odpowiedź wyznacza
+więc granicę osiągalności, do której metody uczenia mogą się jedynie
+zbliżać.
+
+Okaże się, że odpowiedź zależy wyłącznie od wybranej straty. Przy stracie
+kwadratowej ([-@eq-strata-kwadratowa-wstep]) optymalna jest funkcja regresji
+([-@eq-funkcja-regresji-wstep]). Przy stracie 0--1 ([-@eq-strata-01-wstep])
+optymalna jest reguła
+wskazująca klasę o największym prawdopodobieństwie $\eta_k(\x)$.
+Wyprowadzenie obu wyników, wraz z konsekwencjami dla praktyki, jest treścią
+@sec-predyktory-optymalne.
+
+### Błąd redukowalny i nieredukowalny
+
+Ryzyko pozwala rozdzielić dwa źródła błędów predykcji. Rozróżnienie to
+dotyczy zarówno regresji, jak i klasyfikacji.
+
+W obu zadaniach istnieje najmniejsze ryzyko osiągalne przy ustalonych
+cechach i wybranej funkcji straty. Nazywamy je **błędem nieredukowalnym**.
+W regresji ze stratą kwadratową wynika ono ze zmienności wyników wokół
+średniej warunkowej; w klasyfikacji ze stratą 0--1 -- z możliwości
+występowania różnych klas przy tych samych cechach. Może być dodatnie
+nawet wtedy, gdy dokładnie znamy rozkład danych i stosujemy optymalną
+regułę predykcji.
+
+**Błąd redukowalny** to nadwyżka ryzyka naszego predyktora ponad to
+minimum. Może wynikać z ograniczeń wybranej klasy modeli lub z niedokładnego
+dopasowania na podstawie skończonej próby. Możemy go zmniejszać przez
+wybór odpowiedniejszej metody, lepsze dopasowanie lub zwiększenie liczby
+obserwacji, przy zachowaniu tego samego zestawu cech.
+
+Rozróżnienie to pozwala ocenić, jaka część ryzyka może zostać zmniejszona
+przez doskonalenie predyktora przy dostępnych cechach.
+
+::: {.callout-note}
+## Nieredukowalny -- ale względem czego
+Przymiotnik „nieredukowalny" odnosi się do **ustalonego zestawu cech**,
+a nie do zjawiska w ogóle. Zmienność $Y$ przy ustalonym $\X$ może wynikać
+z wpływu czynników, których nie zmierzyliśmy. Dodanie cechy dostarczającej
+nowej informacji o wyniku może zmniejszyć błąd dotąd nieredukowalny:
+część zmienności niewyjaśnionej przez dotychczasowe cechy staje się
+możliwa do przewidzenia.
+
+Praktyczna konsekwencja: czego nie da się poprawić modelowaniem, często
+daje się poprawić pomiarem.
+:::
+
+W @sec-predyktory-optymalne wyznaczymy optymalne reguły predykcji dla regresji
+i klasyfikacji, a dla każdej z nich także konkretną postać obu składników.
+Przy stracie kwadratowej (@sec-blad-nieredukowalny) błąd redukowalny
+będzie średnim kwadratem różnicy między predyktorem a funkcją regresji,
+a nieredukowalny -- średnią wariancją warunkową wyniku. Przy stracie 0--1
+błąd nieredukowalny okaże się ryzykiem najlepszego możliwego
+klasyfikatora, tzw. błędem bayesowskim, a redukowalny -- średnim
+prawdopodobieństwem trafienia utraconym przez wybór gorszej klasy.
+
+
+## Dwa cele modelowania: predykcja i wnioskowanie {#sec-predykcja-wnioskowanie}
+
+Opis zależności między cechami a wynikiem może służyć różnym celom.
+Możemy wykorzystywać model do przewidywania wyników dla nowych obiektów
+albo do szacowania określonych charakterystyk badanej populacji.
+Cele te nazywamy odpowiednio **predykcją** i **wnioskowaniem**.
+Mogą one korzystać z tego samego modelu, ale wymagają różnych kryteriów
+oceny.
+
+W szerokim znaczeniu wnioskowanie statystyczne obejmuje wykorzystanie
+danych z próby do formułowania wniosków o populacji, w tym również
+uczenie predyktora.
+W tej sekcji używamy tego terminu w węższym znaczeniu: szacowania
+i badania określonych charakterystyk populacji wraz z oceną niepewności.
+
+Rozważmy zbiór danych zawierający ceny sprzedaży mieszkań oraz ich cechy,
+takie jak metraż, lokalizacja i liczba pokoi. Na podstawie tych danych
+możemy szukać odpowiedzi na dwa różne pytania. Pytanie predykcyjne brzmi:
+„Jaką cenę przewidujemy dla
+mieszkania o powierzchni 60 m² w danej lokalizacji?”. Pytanie dotyczące
+wnioskowania może brzmieć: „O ile różni się przeciętna cena mieszkań
+o powierzchni 60 m² od przeciętnej ceny mieszkań o powierzchni 50 m²
+w tej samej lokalizacji?”. W pierwszym przypadku wynikiem jest przewidywana
+cena konkretnego mieszkania, w drugim -- oszacowanie różnicy między
+średnimi cenami dwóch grup mieszkań w populacji, wraz z oceną niepewności
+tego oszacowania. Sam fakt, że model zwraca przewidywania, nie przesądza
+więc o celu analizy: różnica dwóch przewidywanych średnich może służyć
+oszacowaniu interesującej nas zależności w populacji.
+
+O sukcesie predykcyjnym decyduje **generalizacja**, czyli zdolność modelu
+do skutecznego przewidywania wyników dla nowych przypadków z populacji,
+do której chcemy go stosować. Dobre dopasowanie do danych uczących samo
+w sobie jej nie zapewnia. Jakość generalizacji szacujemy na danych
+niewykorzystanych do dopasowania modelu, na przykład na zbiorze
+walidacyjnym. Wynik na takim zbiorze jest oszacowaniem jakości w danej
+populacji, a jego wiarygodność zależy od sposobu zebrania i wykorzystania
+danych. Do zasad tej oceny wrócimy w @sec-ocena-modeli.
+
+Miarę jakości predykcyjnej dobieramy do zadania. Może nią być średnia
+strata, jak przy ocenie błędu średniokwadratowego, ale stosuje się też
+miary, które nie są średnią strat liczonych osobno dla każdej obserwacji.
+Na przykład w klasyfikacji binarnej miara ROC AUC ocenia, na ile model
+przypisuje wyższe wyniki przypadkom klasy dodatniej niż przypadkom
+klasy ujemnej. Niezależnie od wyboru miary pytamy o jakość przewidywania
+na nowych danych.
+
+We wnioskowaniu oceniamy dokładność oszacowania wybranej wielkości
+oraz wiarygodność towarzyszącej mu oceny niepewności. Możemy w tym celu
+badać parametry modelu lub charakterystyki wyznaczone z jego odpowiedzi,
+takie jak różnica średnich cen. Interpretacja tych wielkości wymaga
+uzasadnienia założeń, na których opiera się zastosowana procedura.
+
+Dobra jakość predykcji nie gwarantuje jednak dokładnego oszacowania
+każdej interesującej nas zależności. Załóżmy, że w danych o mieszkaniach
+większemu metrażowi niemal zawsze towarzyszy większa liczba pokoi.
+Model może dobrze przewidywać ceny kolejnych mieszkań, w których te
+dwie cechy są powiązane w podobny sposób. Trudniej natomiast ustalić, jak
+średnia cena wiąże się z metrażem przy ustalonej liczbie pokoi:
+w danych jest niewiele mieszkań, które pozwalają na takie porównanie.
+Różne modele mogą więc podobnie przewidywać ceny typowych mieszkań,
+a jednocześnie wskazywać wyraźnie różne zależności ceny od metrażu
+przy ustalonej liczbie pokoi. Sam mały błąd predykcji nie rozstrzyga,
+które oszacowanie tej zależności jest trafne.
+
+Warto przy tym odróżnić **precyzję oszacowania** od jego **dokładności**.
+Precyzja dotyczy rozrzutu oszacowań, które otrzymywalibyśmy, powtarzając
+badanie na próbach tej samej wielkości, dobieranych w ten sam sposób,
+i stosując tę samą metodę. Im mniejszy ten rozrzut, tym większa precyzja.
+Dokładność dotyczy bliskości oszacowań do rzeczywistej wartości
+szacowanej wielkości. Oszacowania mogą być
+precyzyjne, a mimo to systematycznie odbiegać od tej wartości.
+Na przykład duża próba mieszkań wyłącznie z rynku pierwotnego może
+pozwolić precyzyjnie oszacować średnią cenę na tym rynku, ale użycie
+tej średniej jako oszacowania średniej ceny wszystkich mieszkań może
+prowadzić do systematycznego błędu. Sam wąski przedział ufności nie
+gwarantuje więc wiarygodnego wnioskowania: jego uzasadnienie zależy
+od założeń metody i sposobu doboru próby.
+
+Interpretacja wyników wymaga uwzględnienia założeń modelu i sposobu
+zebrania danych. Jeżeli przyjmujemy, że średnia cena mieszkania zależy
+liniowo od metrażu, to współczynnik przy metrażu opisuje w tym modelu
+różnicę średnich cen przypadającą na dodatkowy metr kwadratowy, przy
+ustalonych wartościach pozostałych uwzględnionych cech. Jego znaczenie
+zależy więc także od tego, jakie cechy włączymy do modelu: porównanie
+mieszkań o różnym metrażu ogółem jest innym porównaniem niż zestawienie
+ich w obrębie tej samej lokalizacji. Zarówno przy wnioskowaniu, jak
+i przy predykcji musimy też określić, do jakiej populacji odnosimy
+wyniki i co uzasadnia wykorzystanie w tym celu dostępnej próby.
+
+Osobnego rozróżnienia wymagają **zależność statystyczna i przyczynowość**.
+Jeżeli mieszkania po remoncie mają przeciętnie wyższe ceny, nie oznacza
+to jeszcze, że zaobserwowana różnica jest skutkiem samego remontu.
+Obie grupy mogą różnić się także lokalizacją, metrażem czy standardem
+budynku. Pytanie o skutek remontu dotyczy natomiast porównania ceny tego
+samego mieszkania w dwóch sytuacjach: gdy przeprowadzimy remont i gdy
+go nie przeprowadzimy. Dla danego mieszkania obserwujemy tylko jedną
+z tych sytuacji, więc nie możemy bezpośrednio wyznaczyć jego
+indywidualnego skutku remontu. Zwykle celem badania jest oszacowanie
+**przeciętnego skutku remontu w określonej populacji mieszkań**.
+Wymaga to odpowiedniego sposobu zaplanowania badania lub dodatkowych
+założeń pozwalających uzasadnić porównanie mieszkań remontowanych
+i nieremontowanych. Oszacowanie przeciętnego skutku nie oznacza jednak
+poznania skutku dla każdego mieszkania z osobna. Samo dopasowanie modelu
+opisującego zależność cen od cech mieszkań nie dostarcza uzasadnienia
+dla interpretacji przyczynowej.
+
+Niepewność towarzyszy zarówno wnioskowaniu, jak i predykcji, lecz może
+dotyczyć różnych wielkości. **Przedział ufności dla średniej ceny**
+mieszkań o ustalonych cechach wyraża niepewność oszacowania tej średniej
+na podstawie próby. **Przedział predykcji dla ceny pojedynczego
+mieszkania** musi dodatkowo uwzględniać zróżnicowanie cen mieszkań
+o tych samych obserwowanych cechach. Możemy więc precyzyjnie oszacować
+średnią cenę w danej grupie, a mimo to przewidywać cenę konkretnego
+mieszkania z dużą niepewnością. Zwiększanie liczby obserwacji może
+poprawiać precyzję oszacowania średniej, ale samo w sobie nie usuwa
+zmienności cen wokół niej -- tej samej, którą wcześniej wiązaliśmy
+z błędem nieredukowalnym.
+
+Ten sam model może służyć obu celom: oszacowana funkcja średniej ceny
+pozwala zarówno przewidywać ceny mieszkań, jak i porównywać średnie
+ceny przy różnych wartościach cech. Każde zastosowanie wymaga jednak
+oceny według kryteriów właściwych dla danego celu.
+
+## Trening modelu {#sec-trening-modelu}
+
+Wiemy już, jakie zadania może spełniać model i jak oceniać jego predykcje.
+Pozostaje pytanie, jak na podstawie danych wyznaczyć regułę predykcji
+$\widehat f$, która nowym obserwacjom przypisze przewidywaną wartość lub
+klasę. Chcielibyśmy wyznaczyć predyktor o możliwie małym ryzyku
+$\Risk(f)$. Nie znamy jednak rozkładu populacji $P$, względem którego
+ryzyko jest zdefiniowane. Dysponujemy jedynie zbiorem treningowym
+$\mathcal{D}=\{(\x_1,y_1),\ldots,(\x_n,y_n)\}$. **Trening modelu**
+polega na wykorzystaniu tej próby do wyznaczenia reguły, którą będziemy
+stosować także do nowych obserwacji. Poniżej opiszemy ten proces z perspektywy
+zadania predykcyjnego.
+
+Najpierw określamy klasę modeli $\mathcal{F}$
+(por. @sec-model-w-analizie-danych), czyli zbiór dopuszczalnych
+predyktorów. Każda funkcja $f\in\mathcal{F}$ przypisuje
+wektorowi cech $\x$ przewidywany wynik: w regresji jest to liczba,
+a w klasyfikacji -- etykieta klasy. Wybór
+$\mathcal{F}$ wyraża założenie o tym, jakie zależności chcemy odtwarzać:
+możemy dopuścić na przykład tylko zależności liniowe albo również
+funkcje o bardziej złożonym przebiegu. Klasa zbyt wąska może nie zawierać
+funkcji, która dobrze opisuje interesującą nas zależność. Samo
+poszerzanie klasy nie gwarantuje jednak lepszego wyniku uczenia.
+
+Aby porównać dopuszczalne predyktory, potrzebujemy **kryterium
+dopasowania**. Podstawowym wyborem jest ryzyko empiryczne
+zdefiniowane wzorem ([-@eq-ryzyko-empiryczne]):
+
+$$
+\widehat{\Risk}_n(f)
+=\frac1n\sum_{i=1}^{n}\Loss\big(y_i,f(\x_i)\big).
+$$
+
+Dla każdego kandydata $f$ obliczamy predykcje na danych treningowych,
+porównujemy je z zaobserwowanymi wynikami i uśredniamy poniesione straty.
+Przy stracie kwadratowej otrzymujemy średni kwadrat błędu na próbie,
+$\frac1n\sum_{i=1}^{n}(y_i-f(\x_i))^2$. Przy stracie 0--1 otrzymujemy
+odsetek błędnie sklasyfikowanych obserwacji,
+$\frac1n\sum_{i=1}^{n}\ind(y_i\neq f(\x_i))$. W obu przypadkach
+mniejsza wartość oznacza lepsze dopasowanie według wybranego kryterium.
+
+Prowadzi to do **zasady minimalizacji ryzyka empirycznego**:
+
+$$
+\widehat f\in\operatorname*{arg\,min}_{f\in\mathcal{F}}
+\widehat{\Risk}_n(f).
+$$ {#eq-minimalizacja-ryzyka-empirycznego}
+
+Równoważnie możemy zapisać:
+
+$$
+\widehat f\in\mathcal{F}
+\qquad\text{oraz}\qquad
+\widehat{\Risk}_n(\widehat f)\leq\widehat{\Risk}_n(f)
+\quad\text{dla każdego }f\in\mathcal{F}.
+$$
+
+Wybrany predyktor $\widehat f$ należy więc do klasy $\mathcal{F}$
+i ma ryzyko empiryczne nie większe niż jakikolwiek inny predyktor
+z tej klasy.
+
+Operator $\operatorname*{arg\,min}$ wskazuje argumenty, dla których
+minimalizowane wyrażenie osiąga najmniejszą wartość. Tutaj szukamy
+funkcji $f\in\mathcal{F}$. Minimum może być osiągane przez więcej niż
+jedną funkcję; $\widehat f$ wybieramy spośród nich. Zakładamy tu,
+że minimum w wybranej klasie jest osiągane.
+Wzór określa zasadę wyboru modelu, ale nie podaje jeszcze sposobu jego
+znalezienia. W praktyce procedura obliczeniowa może zwracać jedynie
+rozwiązanie przybliżone.
+
+Tę procedurę nazywamy algorytmem uczenia
+(por. @sec-model-w-analizie-danych). Klasa $\mathcal{F}$
+określa, jakie predyktory dopuszczamy, kryterium mówi, jak je porównujemy,
+a algorytm opisuje, jak na podstawie danych wyznaczamy konkretny model.
+Ta sama klasa i to samo kryterium mogą być obsługiwane przez różne
+algorytmy. Mogą one różnić się kosztem obliczeń, a przy dopasowaniu
+przybliżonym także otrzymanym wynikiem.
+
+Minimalizacja ryzyka empirycznego jest ważnym schematem uczenia, ale
+nie każda metoda bezpośrednio minimalizuje stratę, którą później
+oceniamy predykcje. Na przykład model prawdopodobieństw klas można
+dopasowywać przez minimalizację średniej ujemnego logarytmu
+prawdopodobieństwa przypisanego zaobserwowanej klasie, obliczanej
+na danych treningowych. Stratą 0--1 oceniamy wówczas etykiety otrzymane
+po zastosowaniu reguły decyzyjnej do oszacowanych prawdopodobieństw.
+Inne metody konstruują predykcję według ustalonej reguły, choćby na
+podstawie wyników obserwacji podobnych do przewidywanego przypadku.
+Dlatego opis metody powinien wskazywać zarówno sposób dopasowania,
+jak i kryterium oceny otrzymanego modelu.
+
+Małe ryzyko empiryczne świadczy o dopasowaniu do próby, lecz nie
+zapewnia dobrej generalizacji. Dostatecznie bogata klasa może pozwolić
+niemal zapamiętać wyniki treningowe, łącznie z przypadkowymi
+odchyleniami, których nie da się przewidzieć dla nowych obiektów.
+Takie **nadmierne dopasowanie** może dać bardzo mały błąd treningowy
+i duży błąd na nowych danych. W uczeniu musimy więc uwzględniać
+złożoność dopuszczalnych modeli i oceniać ich działanie na danych
+niewykorzystanych do dopasowania. Do sposobów ograniczania złożoności
+i oceny generalizacji wrócimy w @sec-bias-wariancja
+i @sec-ocena-modeli.
+
+Podobny schemat występuje w uczeniu nienadzorowanym. Dysponujemy wtedy
+zbiorem $\mathcal{D}=\{\x_1,\ldots,\x_n\}$, bez zmiennej docelowej,
+więc kryterium nie porównuje predykcji ze znanymi odpowiedziami.
+Nadal określamy jednak dopuszczalną postać modelu, sposób oceny
+dopasowania oraz algorytm. W grupowaniu możemy na przykład ustalić
+liczbę grup i szukać takiego podziału obserwacji oraz takich środków
+grup, aby suma kwadratów odległości obserwacji od przypisanych im
+środków była jak najmniejsza. Kryterium wyraża wówczas przyjęte
+rozumienie dobrej struktury grup, a nie zgodność z etykietami
+dostarczonymi w danych.
+
+Zarówno w uczeniu nadzorowanym, jak i nienadzorowanym trzeba zatem
+określić, jaką postać może przyjąć model i jak dane wpływają na jego
+dopasowanie.
+
+## Metody parametryczne i nieparametryczne {#sec-parametryczne-nieparametryczne}
+
+W poprzedniej sekcji punktem wyjścia do uczenia był wybór klasy modeli
+$\mathcal{F}$. Możemy ustalić postać zależności i na podstawie danych
+wyznaczyć jedynie pewną liczbę współczynników. Możemy też dopuścić,
+aby wraz z napływem danych opis zależności stawał się coraz bardziej
+szczegółowy. Rozróżnienie to prowadzi do **metod parametrycznych**
+i **nieparametrycznych**. Omówimy je na przykładzie przewidywania
+wartości liczbowej.
+
+W podejściu parametrycznym przyjmujemy rodzinę funkcji
+
+$$
+\mathcal{F}=\{f_{\theta}:\theta\in\Theta\},
+\qquad \Theta\subseteq\R^{d},
+$$
+
+gdzie $\theta$ jest wektorem parametrów, a jego wymiar $d$ jest ustalony
+i nie rośnie wraz z liczbą obserwacji $n$. Przy ustalonym zestawie cech
+i wybranej rodzinie funkcji trening polega na oszacowaniu $\theta$.
+Otrzymujemy $\widehat\theta$, a wraz z nim dopasowany predyktor
+$\widehat f=f_{\widehat\theta}$. Większa próba dostarcza więcej informacji
+do oszacowania tych samych parametrów.
+
+Prostym przykładem jest **regresja liniowa** z jedną cechą:
+
+$$
+f_{\theta}(x)=\beta_0+\beta_1x,
+\qquad \theta=(\beta_0,\beta_1).
+$$
+
+Jeżeli $x$ oznacza powierzchnię mieszkania, a wynikiem jest jego cena,
+model przypisuje każdemu dodatkowemu metrowi kwadratowemu taki sam
+przyrost przewidywanej ceny, równy $\beta_1$. Wyraz $\beta_0$ ustala
+położenie prostej; jego wartość dla $x=0$ nie musi mieć praktycznej
+interpretacji, jeśli mieszkania o takim metrażu nie należą do zakresu
+stosowalności modelu. Przy stracie kwadratowej dobieramy oba współczynniki,
+minimalizując średni kwadrat błędu na danych treningowych.
+Niezależnie od tego, czy mamy sto, czy dziesięć tysięcy obserwacji,
+szacujemy dwa współczynniki. Dane zmieniają położenie i nachylenie
+prostej, ale nie pozwalają jej się zakrzywić.
+
+W podejściu nieparametrycznym nie ograniczamy opisu zależności do
+rodziny wyznaczonej przez ustaloną, skończoną liczbę parametrów.
+Złożoność opisu może rosnąć wraz z liczbą obserwacji: dodatkowe dane
+mogą pozwalać odtwarzać coraz drobniejsze szczegóły zależności.
+Nie oznacza to, że model dopasowany do skończonej próby ma nieskończony
+rozmiar. Jego zapis jest skończony, lecz rozmiar ten nie musi być
+ograniczony z góry niezależnie od wielkości próby.
+
+Przykładem jest **regresja $k$ najbliższych sąsiadów**. Aby przewidzieć
+cenę mieszkania o metrażu $x$, wybieramy $k$ mieszkań z próby treningowej,
+których metraże są najbliższe $x$, i uśredniamy ich ceny:
+
+$$
+\widehat f(x)=\frac1k\sum_{i\in N_k(x)}y_i,
+$$
+
+gdzie $N_k(x)$ oznacza zbiór indeksów tych obserwacji. Przy jednej
+cesze bliskość możemy mierzyć odległością $|x_i-x|$.
+W odróżnieniu od regresji liniowej nie wyznaczamy jednej prostej
+obowiązującej w całym zakresie metrażu. Dla każdego przewidywanego
+przypadku korzystamy z odpowiedniego fragmentu próby. Gdy zmienia się
+$x$, może zmieniać się również zestaw sąsiadów, a więc i przewidywana
+cena. Opis dopasowanego modelu obejmuje dane treningowe potrzebne
+do wyszukiwania sąsiadów, zamiast sprowadzać się do dwóch współczynników.
+Metodę najbliższych sąsiadów w zadaniu klasyfikacji omówimy
+w @sec-knn.
+
+::: {.callout-note}
+## Nieparametryczny nie znaczy „bez parametrów” ani „bez założeń”
+
+Metoda nieparametryczna może mieć wielkości sterujące jej działaniem,
+takie jak liczba sąsiadów $k$. Może też wymagać oszacowania wielu
+współczynników. O nazwie decyduje brak ograniczenia rodziny modeli
+do ustalonej, skończenie wymiarowej parametryzacji.
+
+Pozostają również założenia o odtwarzanej zależności. Uśrednianie
+wyników sąsiadów jest użyteczne, gdy obiekty bliskie według wybranych
+cech mają zbliżone średnie wyniki. Znaczenie ma więc wybór cech,
+sposobu mierzenia odległości i wielkości sąsiedztwa. Zastąpienie
+prostej lokalnym uśrednianiem zmienia założenia modelu, ale ich
+nie usuwa.
+:::
+
+W tym miejscu warto rozróżnić **parametry modelu** i **hiperparametry**.
+Współczynniki $\beta_0$ i $\beta_1$ są parametrami regresji liniowej:
+wyznaczamy je podczas dopasowania w ustalonej klasie modeli.
+Liczba sąsiadów $k$ jest natomiast hiperparametrem metody $k$-NN:
+określa sposób konstruowania predykcji. Przy małym $k$ odpowiedź
+zależy od niewielu bliskich obserwacji, a przy dużym -- od średniej
+w szerszym otoczeniu. Hiperparametry ustalamy dla danego dopasowania,
+ale możemy je dobierać na podstawie danych, porównując wyniki
+różnych ustawień na zbiorze walidacyjnym. Do zasad takiego doboru
+wrócimy w @sec-ocena-modeli. Sam fakt, że pewna wielkość została
+dobrana z użyciem danych, nie przesądza więc, czy nazywamy ją
+parametrem, czy hiperparametrem; istotna jest jej rola w procedurze.
+
+Wybór podejścia ma konsekwencje dla tego, czego możemy nauczyć się
+z dostępnej próby. Prosta rodzina parametryczna silnie ogranicza
+dopuszczalne zależności. Jeżeli ograniczenia dobrze odpowiadają
+problemowi, mogą ułatwić uczenie nawet przy niewielu obserwacjach.
+Jeśli jednak średnia cena zmienia się z metrażem w sposób wyraźnie
+zakrzywiony, żadna liczba obserwacji nie sprawi, że pojedyncza prosta
+wiernie odtworzy ten przebieg. Takie ograniczenie może prowadzić
+do **niedopasowania**: model jest zbyt mało elastyczny, aby uchwycić
+istotną zależność.
+
+Metoda nieparametryczna daje większą swobodę odtwarzania kształtu
+zależności, ale potrzebuje danych tam, gdzie chcemy poznać jej
+lokalny przebieg. Przy wielu cechach znalezienie dostatecznie licznej
+grupy rzeczywiście podobnych obiektów może wymagać bardzo dużej
+próby. Zbyt małe sąsiedztwo sprawia natomiast, że predykcja silnie
+reaguje na przypadkowe odchylenia pojedynczych wyników, co sprzyja
+nadmiernemu dopasowaniu. Zbyt duże sąsiedztwo może zacierać istotne
+zmiany zależności i prowadzić do niedopasowania. Elastycznością
+trzeba więc sterować również w metodach nieparametrycznych.
+Związek między elastycznością, wielkością próby i zmiennością
+dopasowania rozwiniemy w @sec-bias-wariancja.
+
+Podział na metody parametryczne i nieparametryczne nie jest przy tym
+podziałem na modele liniowe i nieliniowe ani na proste i złożone.
+Na przykład rodzina funkcji $f_{\theta}(x)=a\exp(bx)$ ma dwa
+parametry, choć opisuje zależność nieliniową. Sieć neuronowa
+o ustalonej architekturze i ustalonej liczbie wag także jest modelem
+parametrycznym, nawet jeśli tych wag są miliony. Z kolei metoda
+nieparametryczna z silnym wygładzaniem może odtwarzać jedynie bardzo
+ogólny przebieg zależności. Sama nazwa podejścia nie przesądza zatem
+o elastyczności konkretnego dopasowania ani o jakości jego predykcji.
+
+Na @fig-parametryczne-nieparametryczne porównujemy oba podejścia
+na tych samych danych symulowanych. Średnia warunkowa wyniku ma
+zakrzywiony przebieg, a obserwacje odchylają się od niej wskutek szumu.
+Do próby dopasowujemy prostą oraz regresję $k$ najbliższych sąsiadów
+z $k=15$.
+
+```{python}
+#| label: fig-parametryczne-nieparametryczne
+#| fig-cap: "Regresja liniowa i lokalne uśrednianie na tej samej próbie. Linia przerywana przedstawia średnią warunkową, znaną dzięki symulacji. Prosta nie odtwarza jej zakrzywienia; metoda najbliższych sąsiadów może za nim podążać, ale jej przebieg zależy także od lokalnych odchyleń w próbie."
+
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.neighbors import KNeighborsRegressor
+
+rng_porownanie = np.random.default_rng(18)
+x_porownanie = np.sort(rng_porownanie.uniform(-3, 3, 180))
+srednia_porownanie = 0.5 * x_porownanie + np.sin(1.5 * x_porownanie)
+y_porownanie = srednia_porownanie + rng_porownanie.normal(0, 0.3, 180)
+siatka_porownanie = np.linspace(-3, 3, 600)
+srednia_siatka = 0.5 * siatka_porownanie + np.sin(1.5 * siatka_porownanie)
+
+modele_porownanie = [
+    ("Model parametryczny: regresja liniowa", LinearRegression(), "#D7263D"),
+    ("Metoda nieparametryczna: 15 sąsiadów", KNeighborsRegressor(n_neighbors=15), "#0072B2"),
+]
+fig, osie = plt.subplots(1, 2, figsize=(10, 4), sharex=True, sharey=True)
+for ax, (tytul, model, kolor) in zip(osie, modele_porownanie):
+    model.fit(x_porownanie[:, None], y_porownanie)
+    ax.scatter(x_porownanie, y_porownanie, s=12, color="0.55", alpha=0.5,
+               label="Dane treningowe")
+    ax.plot(siatka_porownanie, srednia_siatka, "--", color="0.15", lw=1.8,
+            label="Średnia warunkowa")
+    ax.plot(siatka_porownanie, model.predict(siatka_porownanie[:, None]),
+            color=kolor, lw=2, label="Dopasowany model")
+    ax.set(title=tytul, xlabel="$x$")
+    ax.grid(alpha=0.2)
+osie[0].set_ylabel("$y$")
+osie[0].legend(fontsize=8, loc="lower right")
+fig.tight_layout()
+plt.show()
+```
+
+Regresja liniowa wybiera jedną prostą jako przybliżenie całej zależności.
+Lokalne uśrednianie pozwala odtworzyć jej zakrzywienia, ale daje też
+drobne uskoki: przy zmianie zestawu sąsiadów zmienia się średnia ich
+wyników. Rysunek ilustruje różnicę w dopuszczalnej postaci predykcji.
+Nie stanowi ogólnego argumentu za przewagą jednej metody. Gdyby średnia
+warunkowa była liniowa, ograniczenie do prostych mogłoby być korzystne.
+W rzeczywistym zadaniu nie znamy tej średniej, a jakość obu metod
+musimy ocenić na danych niewykorzystanych do ich dopasowania i doboru
+hiperparametrów.
+
+## Kompromis między interpretowalnością a dokładnością
+
+Porównanie z @fig-parametryczne-nieparametryczne można odczytać także
+z innej strony. Działanie dopasowanej prostej da się streścić jednym
+zdaniem: każdy dodatkowy metr kwadratowy zwiększa przewidywaną cenę
+o $\widehat\beta_1$. Dla regresji $k$ najbliższych sąsiadów takiego
+zdania nie ma. Aby opisać, jak przewidywana cena zmienia się z metrażem,
+trzeba pokazać cały wykres dopasowania albo wskazać dane treningowe,
+z których powstaje. Większa elastyczność pozwoliła odtworzyć zakrzywienie
+zależności, ale opis modelu przestał być zwięzły. Napięcie między
+zdolnością modelu do odtwarzania złożonych zależności a możliwością
+zrozumienia jego działania nazywa się **kompromisem między
+interpretowalnością a dokładnością**.
+
+Model nazywamy **interpretowalnym**, jeżeli z jego struktury można
+odczytać, jak predykcja zależy od cech, bez obliczania jej dla wielu
+przykładowych obiektów. W regresji liniowej
+
+$$
+f(\x)=\beta_0+\beta_1x_1+\ldots+\beta_px_p
+$$
+
+predykcje dla dwóch obiektów różniących się jedynie wartością cechy $x_j$
+o jednostkę różnią się o $\beta_j$, niezależnie od wartości pozostałych
+cech. Całą zależność opisuje $p+1$ liczb, a wkład każdej cechy można
+rozpatrywać osobno. Na tę przejrzystość składa się kilka własności:
+
+- **addytywność** -- predykcja jest sumą wkładów poszczególnych cech,
+  więc wpływ jednej cechy nie zależy od wartości pozostałych;
+- **prosta postać wkładów** -- na przykład liniowa lub monotoniczna;
+- **rzadkość** -- model korzysta z niewielu cech; współczynniki przy
+  trzech cechach można objąć jednym spojrzeniem, przy trzystu już nie.
+
+Własności te można zachowywać w różnym stopniu. **Model addytywny**
+
+$$
+f(\x)=\beta_0+g_1(x_1)+\ldots+g_p(x_p)
+$$
+
+dopuszcza nieliniowe funkcje $g_j$, na przykład zakrzywioną zależność
+ceny od metrażu, ale zachowuje addytywność: wkład każdej cechy można
+przedstawić jako osobną krzywą. Addytywność tracimy, gdy dopuszczamy
+**interakcje**, czyli sytuacje, w których wpływ jednej cechy zależy
+od wartości innej. Jeżeli dodatkowy metr kwadratowy podnosi cenę bardziej
+w centrum miasta niż na jego obrzeżach, pytanie „o ile rośnie cena wraz
+z metrażem?” nie ma jednej odpowiedzi. Odpowiedź zależy od lokalizacji,
+a przy wielu wzajemnie oddziałujących cechach -- od ich kombinacji.
+
+Warto odróżnić interpretację **globalną**, opisującą zachowanie modelu
+w całym zakresie cech, od **lokalnej**, wyjaśniającej pojedynczą
+predykcję. Regresja $k$ najbliższych sąsiadów jest lokalnie przejrzysta:
+przewidywana cena jest średnią cen $k$ wskazanych mieszkań, które możemy
+obejrzeć. Globalnie nie ma zwięzłego opisu. Przy wielu cechach również
+lokalne wyjaśnienie staje się mniej oczywiste, bo to, które mieszkania
+uznajemy za podobne, zależy od wyboru odległości i skal poszczególnych cech.
+
+Popularne metody można schematycznie uporządkować od najbardziej
+do najmniej interpretowalnych [por. @islp, rozdz. 2]:
+
+1. regresja liniowa z niewielką liczbą niezerowych współczynników,
+   na przykład dopasowana metodą lasso, która część współczynników
+   ustawia dokładnie na zero;
+2. regresja liniowa ze wszystkimi cechami;
+3. modele addytywne;
+4. drzewa decyzyjne, w których predykcję wyznacza ciąg pytań
+   o wartości cech, na przykład „czy metraż przekracza 55 m²?”;
+5. zespoły wielu drzew oraz sieci neuronowe.
+
+W tej samej kolejności rośnie zwykle elastyczność. Uporządkowanie jest
+jednak przybliżone: płytkie drzewo z kilkoma pytaniami jest czytelniejsze
+niż regresja liniowa z setkami cech, a drzewo o tysiącach liści -- mniej
+czytelne niż model addytywny.
+
+**Kompromis jest tendencją, a nie prawem.** Dokładność, o którą chodzi,
+to jakość predykcji na nowych danych, a nie dopasowanie do próby
+treningowej. Bogatsza klasa modeli pozwala dopasować się do próby
+co najmniej równie dobrze jak uboższa, ale -- jak zauważyliśmy
+w @sec-trening-modelu -- może przy tym odtwarzać przypadkowe odchylenia.
+Jeżeli średnia warunkowa jest liniowa, prosta nie traci niczego na
+niedopasowaniu, a metoda najbliższych sąsiadów płaci za swoją swobodę
+większą wrażliwością na losowość próby. Prostszy model jest wtedy
+jednocześnie czytelniejszy i dokładniejszy. Rudin [-@rudin2019] zwraca
+uwagę, że w wielu zadaniach na danych tabelarycznych z sensownie
+określonymi cechami różnica dokładności między dobrze dopasowanymi
+modelami interpretowalnymi a złożonymi jest niewielka. Wyraźną przewagę
+elastyczne modele osiągają zwykle wtedy, gdy pojedyncze cechy nie mają
+osobnego znaczenia, a istotna informacja tkwi w ich złożonych
+układach -- jak w obrazach, dźwięku czy tekście, gdzie pojedynczy piksel
+lub znak niewiele mówi. Część elastyczności można też przenieść do
+doboru cech: logarytm ceny lub metraż podniesiony do kwadratu pozwalają
+modelowi liniowemu opisać zakrzywioną zależność bez utraty addytywności.
+Czy kompromis rzeczywiście występuje w danym zadaniu, trzeba więc
+sprawdzić, porównując modele na danych niewykorzystanych do ich dopasowania.
+
+**Czytelny nie znaczy trafny.** Łatwość odczytania współczynnika nie
+gwarantuje, że odczytana wartość opisuje interesującą nas zależność.
+Jak zauważyliśmy w @sec-predykcja-wnioskowanie, $\beta_j$ opisuje różnicę
+średnich przy ustalonych wartościach pozostałych cech *uwzględnionych
+w modelu*. Dodanie lub usunięcie cechy może zmienić zarówno wartość
+współczynnika, jak i jego znaczenie. Gdy metraż i liczba pokoi są silnie
+powiązane, oszacowania obu współczynników bywają niestabilne: niewielka
+zmiana próby może przesunąć „wpływ” z jednej cechy na drugą, choć
+predykcje prawie się nie zmieniają. Jeżeli zaś rzeczywista zależność jest
+zakrzywiona, nachylenie dopasowanej prostej jest jej uśrednionym
+podsumowaniem, a jego wartość zależy od tego, jakie metraże przeważają
+w próbie. Wreszcie żaden, nawet najprostszy, model zależności
+statystycznej nie uzasadnia sam przez się interpretacji przyczynowej.
+Interpretowalny model daje prostą odpowiedź, ale trzeba osobno
+uzasadnić, że jest to odpowiedź na zadane pytanie.
+
+**Wybór zależy od celu i kontekstu.** Jeżeli celem jest predykcja,
+najważniejsza jest jakość przewidywań i model elastyczny jest uzasadniony
+wtedy, gdy rzeczywiście przewiduje lepiej. Jeżeli celem jest wnioskowanie,
+potrzebujemy modelu, którego wielkości odpowiadają na postawione pytanie
+i pozwalają ocenić niepewność ich oszacowania; przemawia to za prostszymi
+strukturami, o ile ich założenia są uzasadnione. Poza samym celem analizy
+liczy się też sposób użycia modelu. Gdy model wspiera decyzje dotyczące
+ludzi -- przyznanie kredytu, kwalifikację do leczenia -- często trzeba
+uzasadnić pojedynczą decyzję, poddać model zewnętrznej kontroli lub
+spełnić wymagania prawne.
+
+Interpretowalność pomaga również wykryć, że model nauczył się zależności
+prawdziwej w danych, lecz bezużytecznej lub szkodliwej w zastosowaniu.
+Caruana i in. [-@caruana2015] opisują model ryzyka zgonu pacjentów
+z zapaleniem płuc, który miał wspierać decyzje o hospitalizacji. Jedna
+z odczytanych z niego reguł głosiła, że astma *obniża* ryzyko. W danych
+tak właśnie było: pacjentów z astmą od razu kierowano na intensywną
+terapię, a intensywne leczenie zmniejszało ich śmiertelność. Model
+zastosowany zgodnie z przeznaczeniem kierowałby jednak do leczenia
+domowego właśnie tych chorych, którzy potrzebowali najintensywniejszej
+opieki. Regułę zauważono, bo model był czytelny. Najdokładniejszym
+modelem w tamtym badaniu okazała się sieć neuronowa, ale uznano ją
+za zbyt ryzykowną: mogła nauczyć się tej samej zależności, a nie dało
+się tego sprawdzić. Przykład pokazuje, że dobra ocena na danych
+pochodzących z tego samego źródła co dane treningowe nie wykrywa
+modelu dokładnego z niewłaściwych powodów.
+
+## Zadania {.unnumbered}
+
+1. Wybierz model spoza analizy danych, na przykład schemat linii metra,
+   mapę pogody w prognozie telewizyjnej albo manekina używanego w testach
+   zderzeniowych. Wskaż jego cel, pominięte szczegóły, zachowane relacje
+   oraz sytuację, w której przestaje być użyteczny
+   (@sec-pojecie-modelu).
+
+2. Dla regresji liniowej i regresji $k$ najbliższych sąsiadów wskaż
+   osobno klasę modeli, model dopasowany i algorytm uczenia. Który z tych
+   elementów zmienia się po dołączeniu nowych obserwacji do zbioru
+   treningowego, a który pozostaje taki sam?
+
+3. Dla każdej sytuacji rozstrzygnij, czy jest to zadanie uczenia
+   nadzorowanego, czy nienadzorowanego, a w pierwszym przypadku -- czy jest
+   to regresja, czy klasyfikacja. Uzasadnij odpowiedź i wskaż przypadki,
+   w których rozstrzygnięcie zależy od celu analizy
+   (@sec-regresja-klasyfikacja).
+
+   a) Przewidywanie liczby wizyt pacjenta w przychodni w ciągu roku.
+   b) Przewidywanie oceny filmu w skali od 1 do 5 gwiazdek.
+   c) Przewidywanie województwa zamieszkania klienta na podstawie jego
+      historii zakupów.
+   d) Podział klientów sklepu internetowego na grupy o podobnych
+      zwyczajach zakupowych.
+   e) Szacowanie prawdopodobieństwa, że kredytobiorca spłaci kredyt.
+
+4. Dla każdej sytuacji rozstrzygnij, czy celem jest predykcja, czy
+   wnioskowanie, i zaproponuj, jak oceniać jakość modelu
+   (@sec-predykcja-wnioskowanie).
+
+   a) Bank chce automatycznie odrzucać wnioski kredytowe o wysokim ryzyku
+      niespłacenia.
+   b) Ministerstwo chce wiedzieć, o ile zmienią się wyniki egzaminów, jeśli
+      zmniejszy liczebność klas.
+   c) Sklep chce zaplanować zapasy na przyszły tydzień.
+
+   W której z tych sytuacji zaobserwowana w danych zależność nie wystarcza
+   do odpowiedzi na postawione pytanie? Dlaczego?
+
+5. Metoda $k$ najbliższych sąsiadów jest nieparametryczna. Wskaż jej
+   hiperparametry i założenia, które przyjmujemy, stosując ją
+   (@sec-parametryczne-nieparametryczne). Czy regresja wielomianowa,
+   w której stopień wielomianu dobieramy na podstawie danych, jest metodą
+   parametryczną? Uzasadnij odpowiedź.
+
+6. Wykaż, że w regresji jednego najbliższego sąsiada ryzyko empiryczne
+   ([-@eq-ryzyko-empiryczne]) obliczone na zbiorze treningowym jest równe
+   zeru, o ile w zbiorze tym nie ma dwóch obserwacji o tych samych cechach.
+   Czy wynika stąd cokolwiek o ryzyku tego predyktora? Co się zmienia,
+   jeżeli w zbiorze występują obserwacje o jednakowych cechach i różnych
+   wynikach?
+
+7. Podaj przykład zadania predykcyjnego, w którym dodanie jednej cechy
+   zmniejsza błąd nieredukowalny, oraz przykład, w którym zwiększenie
+   liczby obserwacji nie zmniejsza ryzyka dopasowanego modelu. Wyjaśnij
+   każdy z nich w kategoriach błędu redukowalnego i nieredukowalnego.
+
+8. Zmienna $X\in\{1,2,3\}$ i binarna zmienna $Y$ mają rozkład łączny
+
+   | $p(x,y)$ | $x=1$  | $x=2$  | $x=3$  |
+   |:--------:|:------:|:------:|:------:|
+   | $y=0$    | $0{,}24$ | $0{,}12$ | $0{,}06$ |
+   | $y=1$    | $0{,}06$ | $0{,}28$ | $0{,}24$ |
+
+   a) Wyznacz rozkład brzegowy $X$ oraz $\eta(x)=\Prob(Y=1\mid X=x)$.
+   b) Reguła wskazuje klasę $1$, gdy $\eta(x)>1/2$. Wyznacz jej
+      prawdopodobieństwo błędu. Korzystając z faktu, że reguła ta jest
+      optymalna przy stracie 0--1 (@sec-strata-ryzyko), podaj wartość
+      błędu nieredukowalnego.
+   c) Oblicz $\Prob(Y=1)$ bezpośrednio z tabeli oraz jako
+      $\sum_x\eta(x)\,p(x)$. Jaką tożsamość w ten sposób sprawdzasz?
+   d) Jaki błąd popełnia klasyfikator, który zawsze wskazuje klasę $1$?
+      Który składnik błędu jest tu większy niż dla reguły z punktu b)?
+
+9. Zmienna $X\in\{0,1,2\}$ ma rozkład
+   $p(0)=\tfrac14$, $p(1)=\tfrac12$, $p(2)=\tfrac14$. Przy $X=0$ zawsze
+   $Y=0$; przy $X=1$ zmienna $Y$ ma rozkład jednostajny na
+   $\{0,1,2,3\}$; przy $X=2$ przyjmuje wartości $2$ i $3$ z jednakowymi
+   prawdopodobieństwami.
+
+   a) Zapisz tabelę rozkładu łącznego $p(x,y)$.
+   b) Wyznacz $\fopt(x)=\E(Y\mid X=x)$ oraz możliwe wartości
+      $\varepsilon=Y-\fopt(X)$ przy każdym $x$.
+   c) Sprawdź, że $\E(\varepsilon\mid X=x)=0$ dla każdego $x$, i oblicz
+      $\Var(\varepsilon\mid X=x)$. Czy $\varepsilon$ jest niezależny od $X$?
+      Co to mówi o warunku w ([-@eq-rozklad-addytywny])?
+   d) Oblicz ryzyko kwadratowe predyktora $\fopt$ oraz predyktora stałego
+      $f(x)=\E Y$. Różnica tych wartości jest ceną za pominięcie cechy.
+
+10. Niech $X$ ma rozkład jednostajny na $[0,1]$.
+
+    a) Wyznacz gęstość zmiennej $U=X^2$ i sprawdź, że przyjmuje ona
+       wartości większe od $1$, a nawet dowolnie duże. Dlaczego nie
+       prowadzi to do sprzeczności?
+    b) Niech $Y\mid X=x\sim\Nrozk(x^2,\sigma^2)$. Podaj funkcję regresji
+       $\fopt$ i wyznacz $\E Y$, korzystając z prawa iterowanej wartości
+       oczekiwanej.
+    c) Oblicz ryzyko kwadratowe predyktora $\fopt$ oraz najlepszego
+       predyktora stałego. Jaka część ryzyka tego drugiego wynika
+       z pominięcia cechy $X$?
+
+11. W klasyfikacji binarnej zakodujmy klasy jako $-1$ i $1$, a przez
+    $\eta(\x)$ oznaczmy $\Prob(Y=1\mid\X=\x)$. Wyraź $\E(Y\mid\X=\x)$
+    przez $\eta(\x)$ i odwrotnie. Jak wygląda ta zależność przy
+    kodowaniu klas dowolnymi liczbami $a\neq b$?
+
+12. Niech $Y=X_1+X_2+\varepsilon$, gdzie $X_1$, $X_2$ i $\varepsilon$ są
+    niezależne, $X_1,X_2\sim\Nrozk(0,1)$, $\varepsilon\sim\Nrozk(0,\sigma^2)$.
+
+    a) Wyznacz funkcję regresji i błąd nieredukowalny przy stracie
+       kwadratowej, gdy dostępne są obie cechy, oraz gdy dostępna jest
+       tylko $X_1$.
+    b) Sprawdź oba wyniki symulacją w Pythonie: wygeneruj dużą próbę
+       i oblicz średnią stratę kwadratową obu funkcji regresji.
+    c) Powtórz rachunek dla przypadku, w którym $X_1$ i $X_2$ mają
+       współczynnik korelacji $\rho$. Jak błąd nieredukowalny przy samej
+       cesze $X_1$ zależy od $\rho$? Zinterpretuj przypadki $\rho=0$
+       i $|\rho|\to1$.
+
+13. Wygeneruj $n=30$ obserwacji z modelu $Y=\sin(2\pi X)+\varepsilon$,
+    gdzie $X$ ma rozkład jednostajny na $[0,1]$, a
+    $\varepsilon\sim\Nrozk(0,\,0{,}3^2)$. Dopasuj metodą najmniejszych
+    kwadratów wielomiany stopni od $1$ do $12$ (np. funkcją
+    `numpy.polynomial.Polynomial.fit`). Dla każdego stopnia oblicz ryzyko
+    empiryczne na zbiorze treningowym oraz przybliż ryzyko średnią stratą
+    na nowej próbie liczącej $100\,000$ obserwacji. Przedstaw obie
+    wielkości na jednym wykresie razem z poziomem błędu nieredukowalnego.
+
+    a) Dlaczego ryzyko empiryczne maleje wraz ze stopniem wielomianu?
+    b) Czy którakolwiek krzywa spada poniżej błędu nieredukowalnego?
+       Wyjaśnij, dlaczego tak jest.
+    c) Jak zmienia się obraz przy $n=300$?

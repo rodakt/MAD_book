@@ -1,0 +1,3 @@
+# Modele generatywne: LDA, QDA i naiwny Bayes {#sec-modele-generatywne}
+
+*Rozdział w przygotowaniu.*

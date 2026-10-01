@@ -1,0 +1,3 @@
+# Maszyny wektorów nośnych {#sec-svm}
+
+*Rozdział w przygotowaniu.*

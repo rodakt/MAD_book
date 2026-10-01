@@ -1,0 +1,3 @@
+# Perceptron wielowarstwowy i propagacja wsteczna {#sec-mlp-backprop}
+
+*Rozdział w przygotowaniu.*

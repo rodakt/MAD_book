@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl" xml:lang="pl"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>2&nbsp; Predyktory optymalne i błąd nieredukowalny – Modele analizy danych</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../1-fundamenty/03-knn.html" rel="next">
+<link href="../1-fundamenty/01-czym-jest-model.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-ac4787e5534439796bf08c3c37a51ec6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Brak wyników",
+    "search-matching-documents-text": "dopasowane dokumenty",
+    "search-copy-link-title": "Kopiuj link do wyszukiwania",
+    "search-hide-matches-text": "Ukryj dodatkowe dopasowania",
+    "search-more-match-text": "więcej dopasowań w tym dokumencie",
+    "search-more-matches-text": "więcej dopasowań w tym dokumencie",
+    "search-clear-button-title": "Wyczyść",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Anuluj",
+    "search-submit-button-title": "Zatwierdź",
+    "search-label": "Szukaj"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Przełącz pasek boczny" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../1-fundamenty/01-czym-jest-model.html">Fundamenty</a></li><li class="breadcrumb-item"><a href="../1-fundamenty/02-predyktory-optymalne.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Predyktory optymalne i błąd nieredukowalny</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Przełącz pasek boczny" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Szukaj" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Modele analizy danych</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Szukaj"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Przedmowa</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Fundamenty</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Przełącz sekcję">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../1-fundamenty/01-czym-jest-model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Czym jest model?</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../1-fundamenty/02-predyktory-optymalne.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Predyktory optymalne i błąd nieredukowalny</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../1-fundamenty/03-knn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Klasyfikator <span class="math inline">\(k\)</span> najbliższych sąsiadów</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../1-fundamenty/04-bias-wariancja.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Kompromis obciążenie–wariancja</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../1-fundamenty/05-ocena-modeli.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Ocena modeli w praktyce</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Modele liniowe</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Przełącz sekcję">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../2-modele-liniowe/06-regresja-liniowa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Regresja liniowa</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../2-modele-liniowe/07-selekcja-regularyzacja.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Selekcja i regularyzacja</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../2-modele-liniowe/08-regresja-logistyczna.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regresja logistyczna</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../2-modele-liniowe/09-glm-poisson.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Uogólnione modele liniowe i regresja Poissona</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Podejście probabilistyczne</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Przełącz sekcję">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../3-probabilistyka/10-paradygmat-bayesowski.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Paradygmat bayesowski</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../3-probabilistyka/11-modele-generatywne.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Modele generatywne: LDA, QDA i naiwny Bayes</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Poza liniowość</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Przełącz sekcję">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../4-poza-liniowoscia/12-mlp-backprop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Perceptron wielowarstwowy i propagacja wsteczna</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../4-poza-liniowoscia/13-svm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Maszyny wektorów nośnych</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Uczenie nienadzorowane</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Przełącz sekcję">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../5-nienadzorowane/14-pca.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Analiza składowych głównych</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../5-nienadzorowane/15-kmeans-gmm-em.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Grupowanie: <span class="math inline">\(k\)</span>-średnich, GMM i algorytm EM</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografia</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Spis treści</h2>
+   
+  <ul>
+  <li><a href="#sformułowanie-problemu" id="toc-sformułowanie-problemu" class="nav-link active" data-scroll-target="#sformułowanie-problemu"><span class="header-section-number">2.1</span> Sformułowanie problemu</a></li>
+  <li><a href="#redukcja-do-problemu-punktowego" id="toc-redukcja-do-problemu-punktowego" class="nav-link" data-scroll-target="#redukcja-do-problemu-punktowego"><span class="header-section-number">2.2</span> Redukcja do problemu punktowego</a></li>
+  <li><a href="#regresja-strata-kwadratowa-i-strata-absolutna" id="toc-regresja-strata-kwadratowa-i-strata-absolutna" class="nav-link" data-scroll-target="#regresja-strata-kwadratowa-i-strata-absolutna"><span class="header-section-number">2.3</span> Regresja: strata kwadratowa i strata absolutna</a>
+  <ul class="collapse">
+  <li><a href="#funkcja-regresji" id="toc-funkcja-regresji" class="nav-link" data-scroll-target="#funkcja-regresji"><span class="header-section-number">2.3.1</span> Funkcja regresji</a></li>
+  <li><a href="#strata-absolutna" id="toc-strata-absolutna" class="nav-link" data-scroll-target="#strata-absolutna"><span class="header-section-number">2.3.2</span> Strata absolutna</a></li>
+  <li><a href="#sec-blad-nieredukowalny" id="toc-sec-blad-nieredukowalny" class="nav-link" data-scroll-target="#sec-blad-nieredukowalny"><span class="header-section-number">2.3.3</span> Rozkład ryzyka przy stracie kwadratowej</a></li>
+  </ul></li>
+  <li><a href="#klasyfikacja-strata-01-i-klasyfikator-bayesowski" id="toc-klasyfikacja-strata-01-i-klasyfikator-bayesowski" class="nav-link" data-scroll-target="#klasyfikacja-strata-01-i-klasyfikator-bayesowski"><span class="header-section-number">2.4</span> Klasyfikacja: strata 0–1 i klasyfikator bayesowski</a></li>
+  <li><a href="#sec-od-prawdopodobienstw-do-decyzji" id="toc-sec-od-prawdopodobienstw-do-decyzji" class="nav-link" data-scroll-target="#sec-od-prawdopodobienstw-do-decyzji"><span class="header-section-number">2.5</span> Od prawdopodobieństw do decyzji</a>
+  <ul class="collapse">
+  <li><a href="#predykcja-probabilistyczna" id="toc-predykcja-probabilistyczna" class="nav-link" data-scroll-target="#predykcja-probabilistyczna"><span class="header-section-number">2.5.1</span> Predykcja probabilistyczna</a></li>
+  <li><a href="#straty-niesymetryczne-i-próg-decyzyjny" id="toc-straty-niesymetryczne-i-próg-decyzyjny" class="nav-link" data-scroll-target="#straty-niesymetryczne-i-próg-decyzyjny"><span class="header-section-number">2.5.2</span> Straty niesymetryczne i próg decyzyjny</a></li>
+  <li><a href="#opcja-odmowy" id="toc-opcja-odmowy" class="nav-link" data-scroll-target="#opcja-odmowy"><span class="header-section-number">2.5.3</span> Opcja odmowy</a></li>
+  </ul></li>
+  <li><a href="#nieosiągalność-optimum" id="toc-nieosiągalność-optimum" class="nav-link" data-scroll-target="#nieosiągalność-optimum"><span class="header-section-number">2.6</span> Nieosiągalność optimum</a></li>
+  <li><a href="#zadania" id="toc-zadania" class="nav-link" data-scroll-target="#zadania">Zadania</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+<!-- Makra matematyczne dla wyjścia HTML (MathJax). -->
+<!-- Odpowiednik dla PDF (LaTeX) znajduje się w pliku _macros.tex. -->
+<!-- Przy dodawaniu nowego makra zaktualizuj OBA pliki.            -->
+<div style="display:none">
+\(
+% --- Zbiory i operatory probabilistyczne ---
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\Nrozk}{\mathcal{N}}
+\newcommand{\ind}{\mathbb{1}}
+% --- Wektory i macierze ---
+\newcommand{\x}{\mathbf{x}}
+\newcommand{\X}{\mathbf{X}}
+% --- Teoria decyzji ---
+\newcommand{\Loss}{L}
+\newcommand{\Risk}{R}
+\newcommand{\Bayes}{g^{*}}
+\newcommand{\fopt}{f^{*}}
+\newcommand{\argmin}{\operatorname*{arg\,min}}
+\newcommand{\argmax}{\operatorname*{arg\,max}}
+\newcommand{\med}{\operatorname*{med}}
+\)
+</div>
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../1-fundamenty/01-czym-jest-model.html">Fundamenty</a></li><li class="breadcrumb-item"><a href="../1-fundamenty/02-predyktory-optymalne.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Predyktory optymalne i błąd nieredukowalny</span></a></li></ol></nav>
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title"><span id="sec-predyktory-optymalne" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Predyktory optymalne i błąd nieredukowalny</span></span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Kod</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Pokaż cały kod</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Ukryj cały kod</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>W <a href="01-czym-jest-model.html#sec-predykcja-wnioskowanie" class="quarto-xref"><span>Sekcja 1.7</span></a> wyróżniliśmy dwa cele modelowania: predykcję i wnioskowanie. Ten rozdział dotyczy pierwszego z nich. W regresji predykcja polega na podaniu na podstawie wektora cech <span class="math inline">\(\x\)</span> wartości <span class="math inline">\(\widehat y\)</span>, która ma być bliska nieznanemu <span class="math inline">\(y\)</span>, w klasyfikacji – na wskazaniu klasy. Jak wycenić taką predykcję, ustaliliśmy w <a href="01-czym-jest-model.html#sec-strata-ryzyko" class="quarto-xref"><span>Sekcja 1.6</span></a>: funkcją straty, której wartość oczekiwana to ryzyko. Lepsza jest reguła o mniejszym ryzyku, a najlepsza – ta, której ryzyko jest najmniejsze. Tam też postawiliśmy pytanie, na które ten rozdział odpowiada: <strong>która funkcja <span class="math inline">\(f\)</span> minimalizuje <span class="math inline">\(\Risk(f)\)</span>?</strong></p>
+<p>Odpowiedź jest zaskakująco produktywna: gdy tylko ustalimy, jak mierzymy stratę, optymalną regułę da się <strong>wyprowadzić</strong>, zamiast pozostawiać ją naszej intuicji. Okazuje się, że wybór miary straty – a nie wybór algorytmu – przesądza, czego w ogóle szukamy. Ten sam zbiór danych przy stracie kwadratowej i przy stracie absolutnej prowadzi do dwóch różnych odpowiedzi, i obie są poprawne.</p>
+<p>Wszystkie wyniki tego rozdziału zakładają, że rozkład łączny <span class="math inline">\((\X, Y)\)</span> jest znany. Wskazują więc, czego szukamy, ale nie mówią, jak to znaleźć: oszacowanie potrzebnych wielkości z danych to osobne zadanie, omówione w <a href="01-czym-jest-model.html#sec-trening-modelu" class="quarto-xref"><span>Sekcja 1.8</span></a>. W literaturze ten materiał nosi nazwę statystycznej teorii decyzji <span class="citation" data-cites="esl">(<a href="../references.html#ref-esl" role="doc-biblioref">Hastie, Tibshirani, i Friedman 2009, rozdz. 2.4</a>)</span>. My słowa „decyzja” używamy w węższym znaczeniu z <a href="01-czym-jest-model.html#sec-regresja-klasyfikacja" class="quarto-xref"><span>Sekcja 1.4</span></a>: jako wyboru działania na podstawie prawdopodobieństw klas, na przykład ustalenia progu albo odmowy odpowiedzi. Tym zajmujemy się w <a href="#sec-od-prawdopodobienstw-do-decyzji" class="quarto-xref"><span>Sekcja 2.5</span></a>.</p>
+<p>Rozdział buduje ten aparat od podstaw. Wynikiem będą fakty, do których wracamy przez całą książkę: funkcja regresji jako optymalny predyktor przy stracie kwadratowej i klasyfikator bayesowski przy stracie 0–1, a dla obu tych strat – konkretna postać rozkładu ryzyka na błąd redukowalny i nieredukowalny, wprowadzonego ogólnie w <a href="01-czym-jest-model.html#sec-strata-ryzyko" class="quarto-xref"><span>Sekcja 1.6</span></a>.</p>
+<section id="sformułowanie-problemu" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="sformułowanie-problemu"><span class="header-section-number">2.1</span> Sformułowanie problemu</h2>
+<p>Przyjmujemy opis probabilistyczny z <a href="01-czym-jest-model.html#sec-zaleznosc-i-szum" class="quarto-xref"><span>Sekcja 1.5</span></a>: para <span class="math inline">\((\X, Y)\)</span> ma nieznany rozkład łączny <span class="math inline">\(P\)</span>, a jej wartości leżą w <span class="math inline">\(\mathcal{X} \times \mathcal{Y}\)</span>. W regresji <span class="math inline">\(\mathcal{Y} = \R\)</span>, w klasyfikacji <span class="math inline">\(\mathcal{Y} = \{1, \dots, K\}\)</span>. Predyktor to dowolna (mierzalna) funkcja <span class="math inline">\(f : \mathcal{X} \to \mathcal{Y}\)</span>, a strata <span class="math inline">\(\Loss(y, \widehat y)\)</span> i ryzyko są takie jak w <a href="01-czym-jest-model.html#def-ryzyko-podstawowe" class="quarto-xref">Definicja&nbsp;<span>1.1</span></a>: <span id="eq-ryzyko"><span class="math display">\[
+\Risk(f) = \E\big[\Loss(Y, f(\X))\big].
+\tag{2.1}\]</span></span> Ryzyko jest wielkością teoretyczną: liczymy je względem nieznanego rozkładu <span class="math inline">\(P\)</span>, a nie na zbiorze uczącym.</p>
+<p>Symbol <span class="math inline">\(\E\)</span> będzie w tym rozdziale oznaczał średnie po różnych rozkładach, dlatego ustalmy konwencję. Zapis <span class="math inline">\(\E[\cdots]\)</span> bez warunku to średnia względem rozkładu wszystkich zmiennych losowych występujących w nawiasie: we wzorze (<a href="#eq-ryzyko" class="quarto-xref"><span>2.1</span></a>) – pary <span class="math inline">\((\X, Y)\)</span>, a gdy wyrażenie zależy tylko od <span class="math inline">\(\X\)</span> – rozkładu cech. Zapis <span class="math inline">\(\E[\cdots \mid \X = \x]\)</span> to średnia względem rozkładu warunkowego <span class="math inline">\(Y \mid \X = \x\)</span>, przy ustalonym <span class="math inline">\(\x\)</span>.</p>
+</section>
+<section id="redukcja-do-problemu-punktowego" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="redukcja-do-problemu-punktowego"><span class="header-section-number">2.2</span> Redukcja do problemu punktowego</h2>
+<p>Wzór (<a href="#eq-ryzyko" class="quarto-xref"><span>2.1</span></a>) wygląda na trudny do minimalizacji: szukamy funkcji, a nie liczby, i to w przestrzeni wszystkich funkcji mierzalnych. Poniższa obserwacja sprowadza go do zadania, które rozwiązujemy osobno w każdym punkcie <span class="math inline">\(\x\)</span> – i to ona jest właściwym silnikiem tego rozdziału.</p>
+<p>Skorzystajmy z prawa iterowanej wartości oczekiwanej (<a href="01-czym-jest-model.html#sec-zaleznosc-i-szum" class="quarto-xref"><span>Sekcja 1.5</span></a>): średnią po parze <span class="math inline">\((\X, Y)\)</span> można policzyć w dwóch krokach, najpierw uśredniając przy ustalonych cechach, potem po cechach. Dla ryzyka daje to <span id="eq-ryzyko-warunkowe"><span class="math display">\[
+\Risk(f) =
+\underbrace{\E\Big[\,
+\underbrace{\E\big[\Loss(Y, f(\X)) \,\big|\, \X \big]}_{\text{średnia po } Y \text{ przy ustalonym } \X}
+\,\Big]}_{\text{średnia po } \X}.
+\tag{2.2}\]</span></span> Wewnętrzna średnia to przeciętna strata wśród obiektów o tych samych cechach. Zależy ona od cech, więc jest zmienną losową – funkcją <span class="math inline">\(\X\)</span>, tak jak <span class="math inline">\(\E(Y \mid \X)\)</span> w <a href="01-czym-jest-model.html#sec-zaleznosc-i-szum" class="quarto-xref"><span>Sekcja 1.5</span></a>. Zewnętrzna średnia uśrednia ją po rozkładzie cech.</p>
+<p>Wprowadźmy <strong>ryzyko warunkowe</strong> w punkcie <span class="math inline">\(\x\)</span> dla wartości <span class="math inline">\(a\)</span>, którą rozważamy jako predykcję w tym punkcie: <span id="eq-ryzyko-punktowe"><span class="math display">\[
+r(a \mid \x) = \E\big[\Loss(Y, a) \,\big|\, \X = \x\big].
+\tag{2.3}\]</span></span> Punkt <span class="math inline">\(\x\)</span> i wartość <span class="math inline">\(a\)</span> są tu ustalone, losowe jest tylko <span class="math inline">\(Y\)</span>, a średnią liczymy względem rozkładu warunkowego <span class="math inline">\(Y \mid \X = \x\)</span>: <span class="math display">\[
+r(a \mid \x) = \sum_{y} \Loss(y, a)\, p(y \mid \x)
+\qquad\text{albo}\qquad
+r(a \mid \x) = \int \Loss(y, a)\, p(y \mid \x)\, dy .
+\]</span> Ryzyko warunkowe jest więc <strong>liczbą</strong>: mówi, ile przeciętnie kosztuje predykcja <span class="math inline">\(a\)</span> dla obiektów o cechach <span class="math inline">\(\x\)</span>. Wewnętrzna średnia w (<a href="#eq-ryzyko-warunkowe" class="quarto-xref"><span>2.2</span></a>) to ta sama wielkość z <span class="math inline">\(a = f(\x)\)</span>, obliczona w wylosowanym punkcie: <span class="math inline">\(\E\big[\Loss(Y, f(\X)) \mid \X\big] = r(f(\X) \mid \X)\)</span>.</p>
+<div id="thm-minimalizacja-punktowa" class="theorem">
+<p><span class="theorem-title"><strong>Twierdzenie 2.1 (Zasada minimalizacji punktowej)</strong></span> Jeżeli dla każdego <span class="math inline">\(\x\)</span> istnieje wartość <span class="math inline">\(\fopt(\x)\)</span> minimalizująca <span class="math inline">\(r(\cdot \mid \x)\)</span>, to funkcja <span class="math inline">\(\fopt\)</span> minimalizuje ryzyko <span class="math inline">\(\Risk\)</span> w klasie <strong>wszystkich</strong> predyktorów.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Dowód</em>. </span>Niech <span class="math inline">\(f\)</span> będzie dowolnym predyktorem. Z definicji <span class="math inline">\(\fopt(\x)\)</span> jako minimalizatora zachodzi <span class="math inline">\(r(\fopt(\x) \mid \x) \le r(f(\x) \mid \x)\)</span> dla każdego <span class="math inline">\(\x\)</span>. Podstawiając <span class="math inline">\(\X\)</span> w miejsce <span class="math inline">\(\x\)</span>, otrzymujemy nierówność między zmiennymi losowymi <span class="math inline">\(r(\fopt(\X) \mid \X)\)</span> i <span class="math inline">\(r(f(\X) \mid \X)\)</span>. Nierówność ta zachowuje się przy uśrednianiu po rozkładzie <span class="math inline">\(\X\)</span>, więc na mocy (<a href="#eq-ryzyko-warunkowe" class="quarto-xref"><span>2.2</span></a>) <span class="math display">\[
+\Risk(\fopt) = \E\big[r(\fopt(\X) \mid \X)\big]
+\;\le\; \E\big[r(f(\X) \mid \X)\big] = \Risk(f). \qquad\square
+\]</span></p>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Wskazówka</span>Co ten wynik naprawdę mówi
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Nie ma tu żadnego kompromisu między punktami. Optymalny predyktor nie musi „poświęcać” dokładności w jednym obszarze przestrzeni cech, żeby zyskać w innym – predykcje w różnych punktach <span class="math inline">\(\x\)</span> wybieramy całkowicie niezależnie.</p>
+<p>To brzmi banalnie, ale ma konsekwencję, która banalna nie jest: <strong>każdy kompromis, jaki obserwujemy w praktyce, bierze się z ograniczeń klasy modeli lub ze skończoności próby, a nie z natury problemu.</strong> Model liniowy musi wyważać dopasowanie w różnych obszarach tylko dlatego, że jest liniowy. Gdyby wolno nam było wybrać dowolną funkcję i gdybyśmy znali <span class="math inline">\(P\)</span>, żaden kompromis by nie istniał.</p>
+<p>Widać tu też rolę obu czynników rozkładu łącznego (<a href="01-czym-jest-model.html#eq-rozklad-laczny" class="quarto-xref"><span>1.1</span></a>). Ryzyko warunkowe <span class="math inline">\(r(a \mid \x)\)</span> zależy wyłącznie od rozkładu warunkowego <span class="math inline">\(Y \mid \X = \x\)</span>, więc optymalna predykcja w punkcie <span class="math inline">\(\x\)</span> nie zależy od rozkładu brzegowego cech <span class="math inline">\(p(\x)\)</span>. Ten pojawia się dopiero w zewnętrznej wartości oczekiwanej we wzorze (<a href="#eq-ryzyko-warunkowe" class="quarto-xref"><span>2.2</span></a>): waży punkty, decydując, ile wnosi do ryzyka błąd popełniony w danym obszarze przestrzeni cech – tak jak zapowiedzieliśmy w <a href="01-czym-jest-model.html#sec-zaleznosc-i-szum" class="quarto-xref"><span>Sekcja 1.5</span></a>.</p>
+</div>
+</div>
+<p>Od tej chwili wystarczy więc odpowiadać na pytanie: <em>dla danej straty <span class="math inline">\(\Loss\)</span> i danego rozkładu warunkowego <span class="math inline">\(Y \mid \X = \x\)</span>, która wartość <span class="math inline">\(a\)</span> minimalizuje (<a href="#eq-ryzyko-punktowe" class="quarto-xref"><span>2.3</span></a>)?</em> Odpowiedź zależy wyłącznie od <span class="math inline">\(\Loss\)</span> – i to właśnie dlatego wybór funkcji straty jest częścią modelowania, a nie szczegółem technicznym.</p>
+</section>
+<section id="regresja-strata-kwadratowa-i-strata-absolutna" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="regresja-strata-kwadratowa-i-strata-absolutna"><span class="header-section-number">2.3</span> Regresja: strata kwadratowa i strata absolutna</h2>
+<section id="funkcja-regresji" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="funkcja-regresji"><span class="header-section-number">2.3.1</span> Funkcja regresji</h3>
+<div id="thm-funkcja-regresji" class="theorem">
+<p><span class="theorem-title"><strong>Twierdzenie 2.2 (Optymalność funkcji regresji)</strong></span> Niech <span class="math inline">\(\mathcal{Y} = \R\)</span>, <span class="math inline">\(\Loss(y, a) = (y - a)^2\)</span> i niech <span class="math inline">\(\E[Y^2] &lt; \infty\)</span>. Wtedy ryzyko (<a href="#eq-ryzyko" class="quarto-xref"><span>2.1</span></a>) jest minimalizowane przez <strong>funkcję regresji</strong> <span id="eq-funkcja-regresji"><span class="math display">\[
+\fopt(\x) = \E(Y \mid \X = \x).
+\tag{2.4}\]</span></span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Dowód</em>. </span>Na mocy <a href="#thm-minimalizacja-punktowa" class="quarto-xref">Twierdzenie&nbsp;<span>2.1</span></a> wystarczy dla ustalonego <span class="math inline">\(\x\)</span> zminimalizować <span class="math inline">\(r(a \mid \x) = \E[(Y - a)^2 \mid \X = \x]\)</span> względem <span class="math inline">\(a \in \R\)</span>. Oznaczmy <span class="math inline">\(m = \E(Y \mid \X = \x)\)</span> i rozłóżmy różnicę <span class="math inline">\(Y - a = (Y - m) + (m - a)\)</span>: <span class="math display">\[
+\E\big[(Y-a)^2 \mid \X = \x\big]
+= \E\big[(Y-m)^2 \mid \X=\x\big] + 2(m-a)\,\E\big[Y-m \mid \X=\x\big] + (m-a)^2 .
+\]</span> Środkowy składnik znika, ponieważ <span class="math inline">\(\E[Y - m \mid \X = \x] = m - m = 0\)</span>. Zostaje <span id="eq-rozklad-ryzyka-punktowego"><span class="math display">\[
+r(a \mid \x) = \Var(Y \mid \X = \x) + (m - a)^2 .
+\tag{2.5}\]</span></span> Pierwszy składnik nie zależy od <span class="math inline">\(a\)</span>, drugi jest nieujemny i zeruje się dokładnie dla <span class="math inline">\(a = m\)</span>. Zatem <span class="math inline">\(\fopt(\x) = m = \E(Y \mid \X = \x)\)</span>. <span class="math inline">\(\qquad\square\)</span></p>
+</div>
+<p>Wyprowadzenie dało nam więcej niż samą tezę. Równanie (<a href="#eq-rozklad-ryzyka-punktowego" class="quarto-xref"><span>2.5</span></a>) mówi, że <strong>nawet optymalny predyktor ma niezerowe ryzyko</strong>, równe <span class="math inline">\(\Var(Y \mid \X = \x)\)</span>. Wrócimy do tego w <a href="#sec-blad-nieredukowalny" class="quarto-xref"><span>Sekcja 2.3.3</span></a>.</p>
+</section>
+<section id="strata-absolutna" class="level3" data-number="2.3.2">
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="strata-absolutna"><span class="header-section-number">2.3.2</span> Strata absolutna</h3>
+<p>Zmieńmy jedno założenie – stratę – i zobaczmy, jak zmienia się odpowiedź.</p>
+<div id="thm-mediana-warunkowa" class="theorem">
+<p><span class="theorem-title"><strong>Twierdzenie 2.3 (Optymalność mediany warunkowej)</strong></span> Przy stracie <span class="math inline">\(\Loss(y, a) = |y - a|\)</span> ryzyko (<a href="#eq-ryzyko" class="quarto-xref"><span>2.1</span></a>) jest minimalizowane przez <strong>medianę warunkową</strong> <span id="eq-mediana-warunkowa"><span class="math display">\[
+\fopt(\x) = \med(Y \mid \X = \x).
+\tag{2.6}\]</span></span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Dowód</em>. </span>Ustalmy <span class="math inline">\(\x\)</span> i oznaczmy przez <span class="math inline">\(F\)</span> dystrybuantę rozkładu <span class="math inline">\(Y \mid \X = \x\)</span>. Dla prostoty zakładamy, że <span class="math inline">\(F\)</span> jest ciągła. Rozbijając wartość oczekiwaną według znaku <span class="math inline">\(Y - a\)</span>, mamy <span class="math display">\[
+r(a \mid \x) = \int_{-\infty}^{a} (a - y)\,dF(y) + \int_{a}^{\infty} (y - a)\,dF(y).
+\]</span> Różniczkując po <span class="math inline">\(a\)</span> (składniki brzegowe znoszą się, bo podcałkowa funkcja zeruje się w <span class="math inline">\(y = a\)</span>): <span class="math display">\[
+\frac{\partial r}{\partial a}(a \mid \x) = F(a) - \big(1 - F(a)\big) = 2F(a) - 1 .
+\]</span> Pochodna jest ujemna dla <span class="math inline">\(F(a) &lt; \tfrac12\)</span> i dodatnia dla <span class="math inline">\(F(a) &gt; \tfrac12\)</span>, a funkcja <span class="math inline">\(r(\cdot \mid \x)\)</span> jest wypukła jako suma funkcji wypukłych. Minimum przypada więc tam, gdzie <span class="math inline">\(F(a) = \tfrac12\)</span>, czyli w medianie rozkładu warunkowego. <span class="math inline">\(\qquad\square\)</span></p>
+<p>Bez założenia ciągłości rozumowanie przenosi się na pochodne jednostronne: minimum osiąga każda mediana, czyli każde <span class="math inline">\(a\)</span> spełniające <span class="math inline">\(F(a^-) \le \tfrac12 \le F(a)\)</span> – w ogólności nie jest ona jednoznaczna.</p>
+</div>
+<p>Symbol <span class="math inline">\(\fopt\)</span> oznacza więc predyktor optymalny <strong>przy danej stracie</strong> – zmiana straty zmienia to, co się pod nim kryje. Gdy strata nie jest wskazana, <span class="math inline">\(\fopt\)</span> oznacza, tak jak w <a href="01-czym-jest-model.html#sec-zaleznosc-i-szum" class="quarto-xref"><span>Sekcja 1.5</span></a>, funkcję regresji.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Ważne</span>Wybór straty jest wyborem merytorycznym
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Twierdzenia <a href="#thm-funkcja-regresji" class="quarto-xref">Twierdzenie&nbsp;<span>2.2</span></a> i <a href="#thm-mediana-warunkowa" class="quarto-xref">Twierdzenie&nbsp;<span>2.3</span></a> dają <strong>różne</strong> odpowiedzi na to samo pytanie o ten sam rozkład. Gdy rozkład warunkowy jest skośny, średnia i mediana potrafią leżeć daleko od siebie – i wtedy pytanie „jaka jest najlepsza predykcja?” nie ma sensu, dopóki nie powiemy, co uznajemy za stratę.</p>
+<p>Strata kwadratowa karze duże błędy proporcjonalnie do kwadratu, więc jeden gruby błąd waży tyle co wiele drobnych: predyktor jest przyciągany w stronę ogona rozkładu. Strata absolutna waży wszystkie błędy liniowo i dlatego prowadzi do estymatora odpornego na obserwacje odstające.</p>
+<p>To nie jest wybór między „dokładniejszym” a „mniej dokładnym” narzędziem. Przy stracie kwadratowej jeden błąd o wartości 10 kosztuje tyle, co sto błędów o wartości 1 (por. <a href="01-czym-jest-model.html#sec-strata-ryzyko" class="quarto-xref"><span>Sekcja 1.6</span></a>), przy absolutnej – tyle, co dziesięć. Wybór straty to rozstrzygnięcie, która z tych wycen lepiej oddaje koszty w Twoim zastosowaniu.</p>
+</div>
+</div>
+<p>Zilustrujmy to numerycznie na rozkładzie warunkowym, dla którego średnia i mediana wyraźnie się rozjeżdżają.</p>
+<div id="cell-fig-strata-optima" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">2024</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Skośny rozkład warunkowy: mieszanka wąskiej masy i długiego prawego ogona.</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Dzięki skośności średnia i mediana wyraźnie się rozchodzą.</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">20_000</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>skladnik <span class="op">=</span> rng.random(n) <span class="op">&lt;</span> <span class="fl">0.85</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.where(skladnik,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>             rng.normal(<span class="fl">2.0</span>, <span class="fl">0.6</span>, n),        <span class="co"># masa główna</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>             rng.normal(<span class="fl">9.0</span>, <span class="fl">2.0</span>, n))        <span class="co"># ogon</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>srednia <span class="op">=</span> y.mean()</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>mediana <span class="op">=</span> np.median(y)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>siatka <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">12</span>, <span class="dv">400</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Ryzyko warunkowe estymowane metodą Monte Carlo dla obu strat.</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>ryzyko_kw <span class="op">=</span> ((y[<span class="va">None</span>, :] <span class="op">-</span> siatka[:, <span class="va">None</span>]) <span class="op">**</span> <span class="dv">2</span>).mean(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>ryzyko_abs <span class="op">=</span> np.<span class="bu">abs</span>(y[<span class="va">None</span>, :] <span class="op">-</span> siatka[:, <span class="va">None</span>]).mean(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>fig, osie <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="fl">9.5</span>, <span class="fl">3.8</span>), sharex<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, ryzyko, opt, etykieta, tytul <span class="kw">in</span> [</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    (osie[<span class="dv">0</span>], ryzyko_kw, srednia, <span class="st">"średnia warunkowa"</span>, <span class="vs">r"strata kwadratowa </span><span class="dv">$</span><span class="kw">(</span><span class="vs">y-a</span><span class="kw">)</span><span class="dv">^</span><span class="vs">2</span><span class="dv">$</span><span class="vs">"</span>),</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    (osie[<span class="dv">1</span>], ryzyko_abs, mediana, <span class="st">"mediana warunkowa"</span>, <span class="vs">r"strata absolutna </span><span class="dv">$</span><span class="cf">|</span><span class="vs">y-a</span><span class="cf">|</span><span class="dv">$</span><span class="vs">"</span>),</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>]:</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    ax.plot(siatka, ryzyko, color<span class="op">=</span><span class="st">"#1B6CA8"</span>, lw<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    ax.axvline(opt, color<span class="op">=</span><span class="st">"#D7263D"</span>, ls<span class="op">=</span><span class="st">"--"</span>, lw<span class="op">=</span><span class="fl">1.5</span>,</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>               label<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>etykieta<span class="sc">}</span><span class="ss"> = </span><span class="sc">{</span>opt<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"predykcja $a$"</span>)</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    ax.set_title(tytul)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    ax.legend(loc<span class="op">=</span><span class="st">"upper center"</span>, frameon<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].set_ylabel(<span class="vs">r"ryzyko warunkowe </span><span class="dv">$</span><span class="vs">r</span><span class="kw">(</span><span class="vs">a </span><span class="dv">\m</span><span class="vs">id x</span><span class="kw">)</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-strata-optima" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-strata-optima-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-predyktory-optymalne_files/figure-html/fig-strata-optima-output-1.png" width="903" height="355" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-strata-optima-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Rysunek&nbsp;2.1: Ryzyko warunkowe <span class="math inline">\(r(a \mid \x)\)</span> jako funkcja predykcji <span class="math inline">\(a\)</span> dla skośnego rozkładu warunkowego <span class="math inline">\(Y \mid \X = \x\)</span>. Strata kwadratowa (po lewej) jest minimalizowana przez średnią warunkową, strata absolutna (po prawej) – przez medianę. Dla rozkładu skośnego te dwa punkty są od siebie odległe.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Minima obu krzywych leżą w innych miejscach, choć rozkład warunkowy jest ten sam. Przy stracie kwadratowej długi prawy ogon przeciąga optymalną predykcję w prawo; przy stracie absolutnej ogon jest bez znaczenia, bo liczy się tylko to, po której stronie predykcji leży masa prawdopodobieństwa.</p>
+</section>
+<section id="sec-blad-nieredukowalny" class="level3" data-number="2.3.3">
+<h3 data-number="2.3.3" class="anchored" data-anchor-id="sec-blad-nieredukowalny"><span class="header-section-number">2.3.3</span> Rozkład ryzyka przy stracie kwadratowej</h3>
+<p>W <a href="01-czym-jest-model.html#sec-strata-ryzyko" class="quarto-xref"><span>Sekcja 1.6</span></a> rozdzieliliśmy ryzyko na błąd redukowalny i nieredukowalny, nie podając ich postaci. Wróćmy do straty kwadratowej: dla niej możemy je teraz wyznaczyć. Zapytajmy, ile traci predyktor <span class="math inline">\(f\)</span>, który nie jest optymalny. Uśredniając (<a href="#eq-rozklad-ryzyka-punktowego" class="quarto-xref"><span>2.5</span></a>) po rozkładzie <span class="math inline">\(\X\)</span>, dostajemy</p>
+<p><span id="eq-rozklad-bledu"><span class="math display">\[
+\underbrace{\E\big[(Y - f(\X))^2\big]}_{\text{ryzyko } f}
+=
+\underbrace{\E\Big[\big(\fopt(\X) - f(\X)\big)^2\Big]}_{\text{błąd redukowalny}}
++
+\underbrace{\E\big[\Var(Y \mid \X)\big]}_{\text{błąd nieredukowalny}} .
+\tag{2.7}\]</span></span> Średnie po obu stronach liczymy po różnych rozkładach. Po lewej stronie występują <span class="math inline">\(\X\)</span> i <span class="math inline">\(Y\)</span>, więc uśredniamy po parze <span class="math inline">\((\X, Y)\)</span>. Po prawej stronie <span class="math inline">\(Y\)</span> już nie ma: zniknęło przy uśrednianiu przy ustalonym <span class="math inline">\(\X\)</span> w (<a href="#eq-rozklad-ryzyka-punktowego" class="quarto-xref"><span>2.5</span></a>). Oba składniki są funkcjami samego <span class="math inline">\(\X\)</span> i uśredniamy je po rozkładzie cech.</p>
+<p>Błąd redukowalny okazuje się średnim kwadratem odległości predyktora od funkcji regresji, a nieredukowalny – średnią wariancją warunkową wyniku, czyli średnią wariancją szumu <span class="math inline">\(\varepsilon\)</span> z (<a href="01-czym-jest-model.html#eq-rozklad-addytywny" class="quarto-xref"><span>1.3</span></a>). Ten drugi zależy od rozkładu warunkowego <span class="math inline">\(Y \mid \X\)</span>, a więc – jak zauważyliśmy w <a href="01-czym-jest-model.html#sec-strata-ryzyko" class="quarto-xref"><span>Sekcja 1.6</span></a> – od zestawu cech, a nie od modelu.</p>
+<p>Rozkład (<a href="#eq-rozklad-bledu" class="quarto-xref"><span>2.7</span></a>) jest zalążkiem kompromisu obciążenie–wariancja. W <a href="04-bias-wariancja.html" class="quarto-xref"><span>Rozdział 4</span></a> rozbijemy człon redukowalny dalej – na część wynikającą ze zbyt ubogiej klasy modeli i część wynikającą ze skończoności próby.</p>
+</section>
+</section>
+<section id="klasyfikacja-strata-01-i-klasyfikator-bayesowski" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="klasyfikacja-strata-01-i-klasyfikator-bayesowski"><span class="header-section-number">2.4</span> Klasyfikacja: strata 0–1 i klasyfikator bayesowski</h2>
+<p>Przejdźmy do <span class="math inline">\(\mathcal{Y} = \{1, \dots, K\}\)</span> i straty 0–1 (<a href="01-czym-jest-model.html#eq-strata-01-wstep" class="quarto-xref"><span>1.6</span></a>), która karze każdą pomyłkę tak samo. Jak zauważyliśmy w <a href="01-czym-jest-model.html#sec-strata-ryzyko" class="quarto-xref"><span>Sekcja 1.6</span></a>, ryzyko jest przy niej prawdopodobieństwem błędnej klasyfikacji. Klasyfikatory, czyli predyktory o wartościach w zbiorze klas, oznaczamy literą <span class="math inline">\(g\)</span>. Prawdopodobieństwa klas zapisujemy, jak w <a href="01-czym-jest-model.html#sec-zaleznosc-i-szum" class="quarto-xref"><span>Sekcja 1.5</span></a>, jako <span class="math inline">\(\eta_k(\x) = \Prob(Y = k \mid \X = \x)\)</span>.</p>
+<div id="thm-bayes-optymalny" class="theorem">
+<p><span class="theorem-title"><strong>Twierdzenie 2.4 (Optymalność reguły Bayesa)</strong></span> Spośród wszystkich klasyfikatorów <span class="math inline">\(g : \mathcal{X} \to \{1, \dots, K\}\)</span> prawdopodobieństwo błędu <span class="math inline">\(\Prob\big(g(\X) \neq Y\big)\)</span> minimalizuje <strong>klasyfikator bayesowski</strong> <span id="eq-klasyfikator-bayesa"><span class="math display">\[
+\Bayes(\x) = \argmax_{k} \; \eta_k(\x).
+\tag{2.8}\]</span></span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Dowód</em>. </span>Zastosujmy <a href="#thm-minimalizacja-punktowa" class="quarto-xref">Twierdzenie&nbsp;<span>2.1</span></a>. Ryzyko warunkowe wskazania klasy <span class="math inline">\(a\)</span> w punkcie <span class="math inline">\(\x\)</span> wynosi <span class="math display">\[
+r(a \mid \x) = \E\big[\ind(Y \neq a) \mid \X = \x\big]
+= \Prob(Y \neq a \mid \X = \x)
+= 1 - \eta_a(\x).
+\]</span> Minimalizacja <span class="math inline">\(r(\cdot \mid \x)\)</span> jest więc równoważna maksymalizacji <span class="math inline">\(\eta_a(\x)\)</span> po <span class="math inline">\(a\)</span>, co daje dokładnie (<a href="#eq-klasyfikator-bayesa" class="quarto-xref"><span>2.8</span></a>). Ponieważ zachodzi to punktowo dla każdego <span class="math inline">\(\x\)</span>, minimalizowane jest również ryzyko uśrednione po rozkładzie <span class="math inline">\(\X\)</span>. <span class="math inline">\(\qquad\square\)</span></p>
+</div>
+<p>Ryzyko klasyfikatora bayesowskiego nazywamy <strong>błędem bayesowskim</strong>: <span id="eq-blad-bayesa"><span class="math display">\[
+\Risk^{*} = \Prob\big(\Bayes(\X) \neq Y\big)
+= \E\Big[1 - \max_{k} \eta_k(\X)\Big].
+\tag{2.9}\]</span></span> Ostatnie wyrażenie zależy już tylko od <span class="math inline">\(\X\)</span>, więc średnią liczymy po rozkładzie cech: w każdym punkcie <span class="math inline">\(\x\)</span> pomyłka zdarza się z prawdopodobieństwem <span class="math inline">\(1 - \max_k \eta_k(\x)\)</span>, a <span class="math inline">\(\E\)</span> uśrednia te prawdopodobieństwa po <span class="math inline">\(\x\)</span>.</p>
+<p>Błąd bayesowski jest więc błędem nieredukowalnym z <a href="01-czym-jest-model.html#sec-strata-ryzyko" class="quarto-xref"><span>Sekcja 1.6</span></a>, wyznaczonym dla straty 0–1. Tak jak dla straty kwadratowej, możemy wyznaczyć również część redukowalną. Ryzyko warunkowe wskazania klasy <span class="math inline">\(a\)</span> rozkłada się na <span class="math display">\[
+r(a \mid \x) = 1 - \eta_a(\x)
+= \big(1 - \max_k \eta_k(\x)\big) + \big(\max_k \eta_k(\x) - \eta_a(\x)\big).
+\]</span> Pierwszy składnik to ryzyko warunkowe klasyfikatora bayesowskiego. Drugi jest nieujemny i zeruje się dokładnie wtedy, gdy <span class="math inline">\(a\)</span> jest klasą o największym prawdopodobieństwie. Uśredniając po rozkładzie <span class="math inline">\(\X\)</span>, dostajemy odpowiednik (<a href="#eq-rozklad-bledu" class="quarto-xref"><span>2.7</span></a>): <span id="eq-rozklad-bledu-01"><span class="math display">\[
+\underbrace{\Prob\big(g(\X) \neq Y\big)}_{\text{ryzyko } g}
+=
+\underbrace{\E\Big[\max_k \eta_k(\X) - \eta_{g(\X)}(\X)\Big]}_{\text{błąd redukowalny}}
++
+\underbrace{\Risk^{*}}_{\text{błąd nieredukowalny}} .
+\tag{2.10}\]</span></span></p>
+<p>Dla dwóch klas różnica <span class="math inline">\(\max_k \eta_k(\x) - \eta_{g(\x)}(\x)\)</span> wynosi <span class="math inline">\(0\)</span>, gdy <span class="math inline">\(g(\x) = \Bayes(\x)\)</span>, a w przeciwnym razie <span class="math inline">\(|\eta_1(\x) - \eta_2(\x)| = |2\eta_1(\x) - 1|\)</span>. Błąd redukowalny jest więc równy <span class="math display">\[
+\E\Big[\,|2\eta_1(\X) - 1| \cdot \ind\big(g(\X) \neq \Bayes(\X)\big)\Big].
+\]</span> Nie liczy on po prostu, jak często <span class="math inline">\(g\)</span> nie zgadza się z regułą Bayesa, lecz waży każdą niezgodność tym, jak wyraźnie jedna klasa przeważa w danym punkcie. Niezgodność blisko granicy decyzyjnej, gdzie <span class="math inline">\(\eta_1(\x) \approx \tfrac12\)</span>, prawie nic nie kosztuje. W obszarze, gdzie <span class="math inline">\(\eta_1(\x)\)</span> jest bliskie <span class="math inline">\(0\)</span> lub <span class="math inline">\(1\)</span>, kosztuje niemal całą pomyłkę.</p>
+<p>Oba rozkłady, (<a href="#eq-rozklad-bledu" class="quarto-xref"><span>2.7</span></a>) i (<a href="#eq-rozklad-bledu-01" class="quarto-xref"><span>2.10</span></a>), mają tę samą budowę: ryzyko dowolnego predyktora to ryzyko predyktora optymalnego plus nieujemna nadwyżka, mierząca odległość od optimum. Przy stracie kwadratowej jest nią średni kwadrat odległości od funkcji regresji, przy stracie 0–1 – średnie prawdopodobieństwo trafienia utracone przez wybór gorszej klasy.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Błąd bayesowski to nie jest wada modelu
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(\Risk^{*}\)</span> jest zwykle dodatni i przy ustalonych cechach nie da się go zmniejszyć <strong>żadnym</strong> modelem, żadną ilością danych ani żadną mocą obliczeniową. Jest dodatni zawsze, gdy istnieje obszar przestrzeni cech o dodatnim prawdopodobieństwie, w którym <span class="math inline">\(\eta_k(\x)\)</span> nie koncentruje się na jednej klasie – czyli gdy te same cechy występują u obiektów o różnych etykietach.</p>
+<p>Praktyczna konsekwencja: gdyby błąd bayesowski problemu wynosił 7%, to klasyfikator z błędem 7,2% mógłby zyskać na dalszym strojeniu co najwyżej 0,2 punktu procentowego. Większej poprawy trzeba by szukać nie w modelu, lecz w cechach – w informacji, której obecne cechy nie zawierają. Wartości <span class="math inline">\(\Risk^{*}\)</span> zwykle nie znamy, ale już sama świadomość, że taki próg istnieje, chroni przed oczekiwaniem, że dość dobry model osiągnie błąd bliski zera.</p>
+</div>
+</div>
+</section>
+<section id="sec-od-prawdopodobienstw-do-decyzji" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="sec-od-prawdopodobienstw-do-decyzji"><span class="header-section-number">2.5</span> Od prawdopodobieństw do decyzji</h2>
+<p>W <a href="01-czym-jest-model.html#sec-regresja-klasyfikacja" class="quarto-xref"><span>Sekcja 1.4</span></a> rozdzieliliśmy w klasyfikacji dwa etapy: oszacowanie prawdopodobieństw klas <span class="math inline">\(\eta_k(\x)\)</span> i wybór klasy za pomocą reguły decyzyjnej. Klasyfikator bayesowski jest jedną z takich reguł – optymalną przy stracie 0–1. Ta sekcja odpowiada na dwa pytania: dlaczego model powinien zwracać właśnie <span class="math inline">\(\eta_k(\x)\)</span> i jak wybrać regułę decyzyjną, gdy strata 0–1 nie opisuje dobrze kosztów zastosowania. Oba pytania rozstrzyga ta sama zasada minimalizacji punktowej.</p>
+<section id="predykcja-probabilistyczna" class="level3" data-number="2.5.1">
+<h3 data-number="2.5.1" class="anchored" data-anchor-id="predykcja-probabilistyczna"><span class="header-section-number">2.5.1</span> Predykcja probabilistyczna</h3>
+<p>Niech <span class="math inline">\(\mathcal{Y} = \{0, 1\}\)</span> i <span class="math inline">\(\eta(\x) = \Prob(Y = 1 \mid \X = \x)\)</span>. Model zamiast etykiety zwraca liczbę <span class="math inline">\(p \in [0, 1]\)</span>, która ma być prawdopodobieństwem klasy <span class="math inline">\(1\)</span>. Taka predykcja ma inną postać niż <span class="math inline">\(y\)</span> i nie da się jej „trafić”: <span class="math inline">\(Y\)</span> przyjmuje tylko wartości <span class="math inline">\(0\)</span> i <span class="math inline">\(1\)</span>, więc strata <span class="math inline">\(\Loss(y, p)\)</span> musi nagradzać coś innego niż zgodność <span class="math inline">\(p\)</span> z <span class="math inline">\(y\)</span>. Rozważmy dwie popularne straty: <strong>stratę Briera</strong> i <strong>stratę logarytmiczną</strong>, <span class="math display">\[
+\Loss_{\mathrm{B}}(y, p) = (y - p)^2, \qquad
+\Loss_{\log}(y, p) = -y \ln p - (1 - y) \ln(1 - p).
+\]</span> Druga to ujemny logarytm prawdopodobieństwa, które model przypisał zaobserwowanej klasie; o jej roli w uczeniu wspominaliśmy w <a href="01-czym-jest-model.html#sec-trening-modelu" class="quarto-xref"><span>Sekcja 1.8</span></a>.</p>
+<p>Dla straty Briera nie trzeba nic liczyć. <span class="math inline">\(Y\)</span> jest zmienną liczbową o wartościach <span class="math inline">\(0\)</span> i <span class="math inline">\(1\)</span>, więc <span class="math inline">\(\E(Y \mid \X = \x) = \eta(\x)\)</span> i <a href="#thm-funkcja-regresji" class="quarto-xref">Twierdzenie&nbsp;<span>2.2</span></a> daje od razu <span class="math inline">\(\fopt(\x) = \eta(\x)\)</span>. Dla straty logarytmicznej ryzyko warunkowe wynosi <span class="math display">\[
+r(p \mid \x) = -\eta(\x) \ln p - \big(1 - \eta(\x)\big) \ln(1 - p).
+\]</span> Jest to funkcja wypukła zmiennej <span class="math inline">\(p\)</span>, a jej pochodna <span class="math inline">\(-\eta(\x)/p + \big(1 - \eta(\x)\big)/(1 - p)\)</span> zeruje się dokładnie dla <span class="math inline">\(p = \eta(\x)\)</span>. Obie straty prowadzą więc do tego samego optimum: <strong>najlepiej jest podać prawdziwe prawdopodobieństwo warunkowe</strong>. Straty o tej własności nazywamy <strong>właściwymi</strong> (ang. <em>proper scoring rules</em>).</p>
+<p>Nie każda strata ją ma. Dla straty absolutnej <span class="math inline">\(|y - p|\)</span> ryzyko warunkowe <span class="math display">\[
+r(p \mid \x) = \eta(\x)\,(1 - p) + \big(1 - \eta(\x)\big)\, p
+\]</span> jest liniowe w <span class="math inline">\(p\)</span>, więc minimum leży na końcu przedziału: <span class="math inline">\(p = 1\)</span>, gdy <span class="math inline">\(\eta(\x) &gt; \tfrac12\)</span>, i <span class="math inline">\(p = 0\)</span> w przeciwnym razie. Model oceniany tą stratą zwraca zatem etykietę klasyfikatora bayesowskiego zamiast prawdopodobieństwa i traci informację o tym, jak pewna jest ta etykieta. Tymczasem właśnie tej informacji potrzebują obie reguły decyzyjne omówione poniżej.</p>
+</section>
+<section id="straty-niesymetryczne-i-próg-decyzyjny" class="level3" data-number="2.5.2">
+<h3 data-number="2.5.2" class="anchored" data-anchor-id="straty-niesymetryczne-i-próg-decyzyjny"><span class="header-section-number">2.5.2</span> Straty niesymetryczne i próg decyzyjny</h3>
+<p>Strata 0–1 zakłada, że wszystkie pomyłki kosztują tyle samo. W diagnostyce medycznej, wykrywaniu oszustw czy filtrowaniu spamu założenie to jest fałszywe i zwykle kosztowne. Ogólniej, dla macierzy kosztów <span class="math inline">\(\Loss(y, a) = c_{y a}\)</span> ryzyko warunkowe wynosi <span class="math display">\[
+r(a \mid \x) = \sum_{k=1}^{K} c_{k a} \,\eta_k(\x),
+\]</span> a <a href="#thm-minimalizacja-punktowa" class="quarto-xref">Twierdzenie&nbsp;<span>2.1</span></a> daje regułę optymalną <span id="eq-regula-kosztowa"><span class="math display">\[
+\fopt(\x) = \argmin_{a} \sum_{k=1}^{K} c_{k a} \,\eta_k(\x).
+\tag{2.11}\]</span></span></p>
+<p>W przypadku dwuklasowym z kosztami <span class="math inline">\(c_{10}\)</span> (fałszywie ujemny) i <span class="math inline">\(c_{01}\)</span> (fałszywie dodatni), przy zerowym koszcie trafnych decyzji (<span class="math inline">\(c_{00} = c_{11} = 0\)</span>), reguła (<a href="#eq-regula-kosztowa" class="quarto-xref"><span>2.11</span></a>) redukuje się do progowania prawdopodobieństwa warunkowego na poziomie <span class="math inline">\(c_{01}/(c_{01} + c_{10})\)</span> zamiast na <span class="math inline">\(\tfrac12\)</span>.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Wskazówka</span>Dobry model, zły próg
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Warto zauważyć, co (<a href="#eq-regula-kosztowa" class="quarto-xref"><span>2.11</span></a>) <strong>oddziela</strong>. Prawdopodobieństwa <span class="math inline">\(\eta_k(\x)\)</span> zależą wyłącznie od zjawiska, koszty <span class="math inline">\(c_{ya}\)</span> – wyłącznie od zastosowania. Wynika stąd praktyczna zasada: model powinien estymować prawdopodobieństwa, a próg decyzyjny należy dobierać osobno, na etapie wdrożenia.</p>
+<p>Model zwracający twardą etykietę zamiast prawdopodobieństwa zamyka tę drogę: przy zmianie kosztów trzeba go uczyć od nowa.</p>
+</div>
+</div>
+<p>Predykcja probabilistyczna i reguła kosztowa składają się na dwa etapy z <a href="01-czym-jest-model.html#sec-regresja-klasyfikacja" class="quarto-xref"><span>Sekcja 1.4</span></a>. Pierwszy etap oceniamy stratą właściwą, a jego optimum <span class="math inline">\(\eta(\x)\)</span> nie zależy od kosztów zastosowania. W drugim podstawiamy to oszacowanie do reguły (<a href="#eq-regula-kosztowa" class="quarto-xref"><span>2.11</span></a>).</p>
+</section>
+<section id="opcja-odmowy" class="level3" data-number="2.5.3">
+<h3 data-number="2.5.3" class="anchored" data-anchor-id="opcja-odmowy"><span class="header-section-number">2.5.3</span> Opcja odmowy</h3>
+<p>Wróćmy do <span class="math inline">\(K\)</span> klas i dopuśćmy dodatkową decyzję: model może odmówić odpowiedzi i przekazać przypadek człowiekowi. Decyzji jest wtedy więcej niż etykiet: do klas <span class="math inline">\(1, \dots, K\)</span> dochodzi odmowa. Stratę rozszerzamy na nową decyzję tak, że wskazanie klasy oceniamy jak w stracie 0–1, a odmowa kosztuje stałą kwotę <span class="math inline">\(d \in (0, 1)\)</span>, niezależnie od prawdziwej klasy: <span class="math display">\[
+\Loss(y, k) = \ind(y \neq k), \qquad \Loss(y, \text{odmowa}) = d.
+\]</span> Ryzyko warunkowe wskazania klasy <span class="math inline">\(k\)</span> znamy z dowodu <a href="#thm-bayes-optymalny" class="quarto-xref">Twierdzenie&nbsp;<span>2.4</span></a>: <span class="math inline">\(r(k \mid \x) = 1 - \eta_k(\x)\)</span>. Ryzyko warunkowe odmowy wynosi po prostu <span class="math inline">\(d\)</span>. Najlepszą klasą jest <span class="math inline">\(\Bayes(\x)\)</span>, a jej ryzyko warunkowe to <span class="math inline">\(1 - \max_k \eta_k(\x)\)</span>. Reguła optymalna ma więc postać <span id="eq-regula-chowa"><span class="math display">\[
+\fopt(\x) =
+\begin{cases}
+\Bayes(\x), &amp; \text{gdy } 1 - \max_k \eta_k(\x) \le d, \\
+\text{odmowa}, &amp; \text{w przeciwnym razie}.
+\end{cases}
+\tag{2.12}\]</span></span> Jest to <strong>reguła Chowa</strong>: odmawiamy, gdy nawet najbardziej prawdopodobna klasa daje szansę pomyłki większą niż koszt odmowy. Przypadki skrajne potwierdzają intuicję. Ponieważ <span class="math inline">\(\max_k \eta_k(\x) \ge 1/K\)</span>, przy <span class="math inline">\(d \ge (K-1)/K\)</span> odmowa nigdy się nie opłaca i wracamy do klasyfikatora bayesowskiego. Przy <span class="math inline">\(d\)</span> bliskim zeru model odpowiada tylko tam, gdzie jest niemal pewny.</p>
+<p>Minimalne ryzyko wynosi teraz <span class="math inline">\(\E\big[\min\big(1 - \max_k \eta_k(\X),\, d\big)\big]\)</span>, ze średnią po rozkładzie cech, i nie przekracza błędu bayesowskiego (<a href="#eq-blad-bayesa" class="quarto-xref"><span>2.9</span></a>). Opcja odmowy nie usuwa niepewności. Pozwala jedynie wymienić pomyłki w najtrudniejszych obszarach przestrzeni cech na stały, znany z góry koszt. Podobnie jak reguła kosztowa, reguła Chowa wymaga prawdopodobieństw <span class="math inline">\(\eta_k(\x)\)</span>, a nie samej etykiety.</p>
+</section>
+</section>
+<section id="nieosiągalność-optimum" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="nieosiągalność-optimum"><span class="header-section-number">2.6</span> Nieosiągalność optimum</h2>
+<p>Wszystkie twierdzenia tego rozdziału mają tę samą wadę: ich teza odwołuje się do rozkładu <span class="math inline">\(P\)</span>, którego nie znamy. <span class="math inline">\(\E(Y \mid \X = \x)\)</span> i <span class="math inline">\(\eta_k(\x)\)</span> to wielkości teoretyczne. Reguła bayesowska nie jest algorytmem, który można uruchomić – jest <strong>wzorcem, do którego algorytmy się zbliżają</strong>.</p>
+<p>Wartość tego wzorca jest jednak praktyczna: pozwala oceniać algorytmy przez pytanie, jak dobrze estymują <span class="math inline">\(\eta_k(\x)\)</span>, i pozwala wiedzieć, kiedy przestać. Poniższy eksperyment pokazuje jedno i drugie na przykładzie, w którym błąd bayesowski znamy dokładnie.</p>
+<p>Rozważmy dwie równoliczne klasy o rozkładach <span class="math inline">\(\Nrozk(-\mu, 1)\)</span> i <span class="math inline">\(\Nrozk(\mu, 1)\)</span> na prostej. Z symetrii <span class="math inline">\(\eta(x) = \Prob(Y=1 \mid X=x) &gt; \tfrac12\)</span> dokładnie dla <span class="math inline">\(x &gt; 0\)</span>, więc reguła bayesowska to <span class="math inline">\(\Bayes(x) = \ind(x &gt; 0)\)</span>, a błąd bayesowski wynosi <span class="math display">\[
+\Risk^{*} = \Prob\big(\Nrozk(\mu, 1) &lt; 0\big) = \Phi(-\mu),
+\]</span> gdzie <span class="math inline">\(\Phi\)</span> to dystrybuanta rozkładu normalnego standardowego.</p>
+<div id="cell-fig-blad-bayesa" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.neighbors <span class="im">import</span> KNeighborsClassifier</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">7</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> <span class="fl">1.0</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>blad_bayesa <span class="op">=</span> norm.cdf(<span class="op">-</span>mu)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> probka(n, rng):</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Losuje n obserwacji z równoliczną mieszanką N(-mu,1) i N(mu,1)."""</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> rng.integers(<span class="dv">0</span>, <span class="dv">2</span>, n)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> rng.normal(np.where(y <span class="op">==</span> <span class="dv">1</span>, mu, <span class="op">-</span>mu), <span class="fl">1.0</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>), y</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Ryzyko liczymy DOKŁADNIE, a nie na zbiorze testowym. Rozkład jest nam znany,</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co"># więc zamiast losować dane testowe całkujemy definicję ryzyka:</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">#   R(g) = 0.5 * P(g(X)=0, klasa 1) + 0.5 * P(g(X)=1, klasa 0)</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co">#        = 0.5 * \int phi(x-mu) 1{g(x)=0} dx  +  0.5 * \int phi(x+mu) 1{g(x)=1} dx</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Zaleta jest zasadnicza: wynik nie ma szumu Monte Carlo, więc krzywa nie</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co"># przecina błędu bayesowskiego przypadkiem. Uboczna: jest szybciej.</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>siatka <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">7</span>, <span class="dv">7</span>, <span class="dv">4001</span>)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>gestosc_klasy1 <span class="op">=</span> norm.pdf(siatka <span class="op">-</span> mu)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>gestosc_klasy0 <span class="op">=</span> norm.pdf(siatka <span class="op">+</span> mu)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ryzyko_dokladne(klasyfikator):</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Prawdopodobieństwo błędu klasyfikatora, liczone całkowaniem."""</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    etykiety <span class="op">=</span> klasyfikator.predict(siatka.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    calka <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> np.trapezoid(np.where(etykiety <span class="op">==</span> <span class="dv">0</span>, gestosc_klasy1, <span class="fl">0.0</span>), siatka) <span class="op">\</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>          <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> np.trapezoid(np.where(etykiety <span class="op">==</span> <span class="dv">1</span>, gestosc_klasy0, <span class="fl">0.0</span>), siatka)</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> calka</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>licznosci <span class="op">=</span> np.array([<span class="dv">20</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">300</span>, <span class="dv">1000</span>, <span class="dv">3000</span>, <span class="dv">10_000</span>])</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>powtorzenia <span class="op">=</span> <span class="dv">25</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>bledy <span class="op">=</span> np.empty((<span class="bu">len</span>(licznosci), powtorzenia))</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, n <span class="kw">in</span> <span class="bu">enumerate</span>(licznosci):</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(powtorzenia):</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>        X_tr, y_tr <span class="op">=</span> probka(n, rng)</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>        <span class="co"># k rosnące z n: warunek zbieżności k-NN do reguły bayesowskiej</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>        <span class="co"># (k -&gt; oo oraz k/n -&gt; 0); szczegóły w @sec-knn.</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>        k <span class="op">=</span> <span class="bu">max</span>(<span class="dv">1</span>, <span class="bu">int</span>(<span class="bu">round</span>(np.sqrt(n))))</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>        klf <span class="op">=</span> KNeighborsClassifier(n_neighbors<span class="op">=</span>k).fit(X_tr, y_tr)</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>        bledy[i, j] <span class="op">=</span> ryzyko_dokladne(klf)</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>srednie <span class="op">=</span> bledy.mean(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="co"># Rozkład ryzyka po próbach uczących jest skośny i ograniczony z dołu przez</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="co"># błąd bayesowski, więc przedział "średnia +- odchylenie" wystawałby poniżej</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a><span class="co"># granicy, której przekroczyć się nie da. Używamy kwantyli.</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>kwantyle <span class="op">=</span> np.quantile(bledy, [<span class="fl">0.1</span>, <span class="fl">0.9</span>], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>wasy <span class="op">=</span> np.<span class="bu">abs</span>(kwantyle <span class="op">-</span> srednie)</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="fl">4.0</span>))</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>ax.errorbar(licznosci, srednie, yerr<span class="op">=</span>wasy, marker<span class="op">=</span><span class="st">"o"</span>, capsize<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span><span class="st">"#1B6CA8"</span>, label<span class="op">=</span><span class="vs">r"</span><span class="dv">$</span><span class="vs">k</span><span class="dv">$</span><span class="vs">-NN, </span><span class="dv">$</span><span class="vs">k=</span><span class="dv">\s</span><span class="vs">qrt{n}</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>ax.axhline(blad_bayesa, color<span class="op">=</span><span class="st">"#D7263D"</span>, ls<span class="op">=</span><span class="st">"--"</span>, lw<span class="op">=</span><span class="fl">1.8</span>,</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>           label<span class="op">=</span><span class="vs">rf"błąd bayesowski </span><span class="dv">$</span><span class="er">\</span><span class="vs">Phi</span><span class="kw">(</span><span class="vs">-</span><span class="dv">\m</span><span class="vs">u</span><span class="kw">)</span><span class="vs"> = </span><span class="sc">{</span>blad_bayesa<span class="sc">:.4f}</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>ax.set_xscale(<span class="st">"log"</span>)</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"liczność próby uczącej $n$"</span>)</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"ryzyko $R(g)$"</span>)   <span class="co"># matplotlib nie zna makr z _macros.tex</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>ax.legend(frameon<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-blad-bayesa" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-blad-bayesa-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-predyktory-optymalne_files/figure-html/fig-blad-bayesa-output-1.png" width="616" height="374" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-blad-bayesa-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Rysunek&nbsp;2.2: Ryzyko klasyfikatora <span class="math inline">\(k\)</span>-NN w zależności od liczności próby uczącej, dla dwóch klas <span class="math inline">\(\Nrozk(\pm 1, 1)\)</span>. Punkty to średnie z 25 niezależnych prób uczących, wąsy – kwantyle rzędu <span class="math inline">\(0{,}1\)</span> i <span class="math inline">\(0{,}9\)</span>. Błąd bayesowski <span class="math inline">\(\Phi(-1) \approx 0{,}1587\)</span> wyznacza poziom, poniżej którego nie schodzi żaden klasyfikator, niezależnie od liczby obserwacji.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Krzywa opada i wypłaszcza się tuż nad czerwoną linią, nigdy jej nie przecinając – nie może, bo <a href="#thm-bayes-optymalny" class="quarto-xref">Twierdzenie&nbsp;<span>2.4</span></a> tego zabrania, a ryzyko policzyliśmy dokładnie, bez szumu losowania. Zachowanie jest typowe: zwiększanie próby przybliża nas do optimum coraz wolniej, a ostatnie punkty procentowe błędu są po prostu niedostępne.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Dlaczego całkujemy zamiast losować zbiór testowy
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Gdybyśmy oszacowali ryzyko na losowym zbiorze testowym, oszacowanie miałoby własny błąd standardowy. Gdybyśmy użyli np. 20 tys. obserwacji testowych, wynosiłby on około <span class="math inline">\(0{,}0026\)</span> – czyli <strong>więcej niż cała różnica</strong>, którą chcemy pokazać w prawej części wykresu. Krzywa co jakiś czas schodziłaby przypadkiem pod czerwoną linię, sugerując coś, co jest niemożliwe.</p>
+<p>Ponieważ w tym sztucznym przykładzie rozkład <span class="math inline">\(P\)</span> znamy, ryzyko liczymy wprost z definicji (<a href="#eq-ryzyko" class="quarto-xref"><span>2.1</span></a>) – całkując. W realnym problemie tej możliwości nie ma i pozostaje zbiór testowy wraz z jego niepewnością; jak sobie z nią radzić, mówi <a href="05-ocena-modeli.html" class="quarto-xref"><span>Rozdział 5</span></a>.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Wskazówka</span>Jak czytać taki wykres w praktyce
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>W realnym problemie czerwonej linii nie znamy – i to jest główna trudność diagnostyczna w uczeniu maszynowym. Widzimy tylko krzywą niebieską i musimy zgadnąć, czy jej wypłaszczenie oznacza „dotarliśmy do granicy zjawiska”, czy „model jest za słaby”.</p>
+<p>Rozróżnienie tych dwóch sytuacji wymaga narzędzi z <a href="04-bias-wariancja.html" class="quarto-xref"><span>Rozdział 4</span></a> i <a href="05-ocena-modeli.html" class="quarto-xref"><span>Rozdział 5</span></a>. Sygnał ostrzegawczy jest jednak prosty: jeśli podwojenie liczby danych nie poprawia wyniku, problemem prawie na pewno nie jest liczba danych. Może to oznaczać, że ryzyko jest już bliskie błędowi nieredukowalnemu, ale równie dobrze – że ogranicza nas wybrana metoda lub sposób jej dopasowania. Rozstrzygnięcie wymaga porównania różnych modeli.</p>
+</div>
+</div>
+</section>
+<section id="zadania" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="zadania">Zadania</h2>
+<ol type="1">
+<li><p>Rozważ ryzyko ważone <span class="math inline">\(\E\big[w(\X)\,(Y - f(\X))^2\big]\)</span> dla pewnej wagi <span class="math inline">\(w(\x) &gt; 0\)</span> zależnej od punktu. Wykaż, że optymalny predyktor nadal jest równy <span class="math inline">\(\E(Y \mid \X = \x)\)</span>. Wyjaśnij, dlaczego ważenie nie zmienia rozwiązania, choć zmienia wartość ryzyka. Porównaj tę sytuację ze zmianą rozkładu brzegowego cech <span class="math inline">\(p(\x)\)</span> przy niezmienionym rozkładzie warunkowym (<a href="01-czym-jest-model.html#sec-zaleznosc-i-szum" class="quarto-xref"><span>Sekcja 1.5</span></a>).</p></li>
+<li><p>Rozważ <strong>stratę pinball</strong> (kwantylową) o parametrze <span class="math inline">\(\tau \in (0,1)\)</span>: <span class="math display">\[
+\Loss_\tau(y, a) = \begin{cases}
+  \tau (y - a), &amp; y \ge a, \\
+  (1-\tau)(a - y), &amp; y &lt; a.
+\end{cases}
+\]</span> Powtarzając rozumowanie z dowodu <a href="#thm-mediana-warunkowa" class="quarto-xref">Twierdzenie&nbsp;<span>2.3</span></a> wykaż, że optymalny predyktor to kwantyl rzędu <span class="math inline">\(\tau\)</span> rozkładu warunkowego. Sprawdź, że dla <span class="math inline">\(\tau = \tfrac12\)</span> odzyskujesz <a href="#thm-mediana-warunkowa" class="quarto-xref">Twierdzenie&nbsp;<span>2.3</span></a>.</p></li>
+<li><p>Dla dwóch klas o rozkładach <span class="math inline">\(\Nrozk(-\mu, \sigma^2)\)</span> i <span class="math inline">\(\Nrozk(\mu, \sigma^2)\)</span> z równymi prawdopodobieństwami a priori wyprowadź wzór na błąd bayesowski w zależności od <span class="math inline">\(\mu\)</span> i <span class="math inline">\(\sigma\)</span>. Dla jakiej wartości <span class="math inline">\(\mu/\sigma\)</span> błąd bayesowski spada poniżej 1%?</p></li>
+<li><p>Zmodyfikuj eksperyment z <a href="#fig-blad-bayesa" class="quarto-xref">Rysunek&nbsp;<span>2.2</span></a> tak, aby klasy miały prawdopodobieństwa a priori <span class="math inline">\(0{,}9\)</span> i <span class="math inline">\(0{,}1\)</span>. Wyznacz nowy błąd bayesowski i porównaj go z błędem klasyfikatora trywialnego, który zawsze wskazuje klasę częstszą. Kiedy <span class="math inline">\(k\)</span>-NN zaczyna być od niego lepszy?</p></li>
+<li><p>Wykorzystując (<a href="#eq-regula-kosztowa" class="quarto-xref"><span>2.11</span></a>) wyznacz próg decyzyjny dla problemu dwuklasowego, w którym pominięcie przypadku pozytywnego kosztuje dziesięciokrotnie więcej niż fałszywy alarm. Zilustruj numerycznie, jak przesunięcie progu zmienia liczbę błędów obu typów.</p></li>
+<li><p><strong>Korekta prawdopodobieństw a priori.</strong> Model klasyfikacyjny uczono na próbie, w której klasy występowały z częstościami <span class="math inline">\(\pi'_k\)</span>, na przykład na próbie zbalansowanej. Model zwraca więc oszacowania <span class="math inline">\(\eta'_k(\x) = \Prob'(Y = k \mid \X = \x)\)</span>. W populacji, w której model będzie stosowany, klasy występują z częstościami <span class="math inline">\(\pi_k\)</span>, a rozkłady cech w obrębie klas <span class="math inline">\(p(\x \mid Y = k)\)</span> są takie same jak w próbie. Korzystając ze wzoru Bayesa, wykaż, że <span class="math display">\[
+\eta_k(\x) = \frac{\eta'_k(\x)\, \pi_k / \pi'_k}
+{\sum_{j=1}^{K} \eta'_j(\x)\, \pi_j / \pi'_j} .
+\]</span> Pokaż, że w przypadku dwuklasowym korekta sprowadza się do pomnożenia szans <span class="math inline">\(\eta(\x) / (1 - \eta(\x))\)</span> przez stałą, i wyznacz tę stałą. Model wykrywania oszustw uczono na próbie zbalansowanej, a w populacji oszustwa stanowią 1% transakcji. Dla pewnej transakcji model zwrócił <span class="math inline">\(0{,}8\)</span>. Jakie jest prawdopodobieństwo oszustwa po korekcie? Wyjaśnij, dlaczego tej korekty nie da się przeprowadzić dla modelu zwracającego wyłącznie etykiety (por. ramka „Dobry model, zły próg”).</p></li>
+<li><p>Wykaż, że dla dowolnego rozkładu o skończonej wariancji średnia <span class="math inline">\(\mu\)</span> i mediana <span class="math inline">\(m\)</span> spełniają <span class="math inline">\(|\mu - m| \le \sigma\)</span>. (Wskazówka: skorzystaj z <a href="#thm-mediana-warunkowa" class="quarto-xref">Twierdzenie&nbsp;<span>2.3</span></a> i nierówności Jensena.) Podaj rozkład, dla którego ta różnica jest bliska <span class="math inline">\(\sigma\)</span>. Następnie pokaż, że przy ustalonym rozstępie międzykwartylowym różnica <span class="math inline">\(|\mu - m|\)</span> może być dowolnie duża. Co to mówi o odporności obu predyktorów?</p></li>
+</ol>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-esl" class="csl-entry" role="listitem">
+Hastie, Trevor, Robert Tibshirani, i Jerome Friedman. 2009. <em>The Elements of Statistical Learning: Data Mining, Inference, and Prediction</em>. 2. wyd. Springer.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Skopiowano!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Skopiowano!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../1-fundamenty/01-czym-jest-model.html" class="pagination-link" aria-label="Czym jest model?">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Czym jest model?</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../1-fundamenty/03-knn.html" class="pagination-link" aria-label="Klasyfikator $k$ najbliższych sąsiadów">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Klasyfikator <span class="math inline">\(k\)</span> najbliższych sąsiadów</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

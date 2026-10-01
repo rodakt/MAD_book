@@ -1,0 +1,3 @@
+# Regresja logistyczna {#sec-regresja-logistyczna}
+
+*Rozdział w przygotowaniu.*

@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl" xml:lang="pl"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>1&nbsp; Czym jest model? – Modele analizy danych</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../1-fundamenty/02-predyktory-optymalne.html" rel="next">
+<link href="../index.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-ac4787e5534439796bf08c3c37a51ec6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Brak wyników",
+    "search-matching-documents-text": "dopasowane dokumenty",
+    "search-copy-link-title": "Kopiuj link do wyszukiwania",
+    "search-hide-matches-text": "Ukryj dodatkowe dopasowania",
+    "search-more-match-text": "więcej dopasowań w tym dokumencie",
+    "search-more-matches-text": "więcej dopasowań w tym dokumencie",
+    "search-clear-button-title": "Wyczyść",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Anuluj",
+    "search-submit-button-title": "Zatwierdź",
+    "search-label": "Szukaj"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Przełącz pasek boczny" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../1-fundamenty/01-czym-jest-model.html">Fundamenty</a></li><li class="breadcrumb-item"><a href="../1-fundamenty/01-czym-jest-model.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Czym jest model?</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Przełącz pasek boczny" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Szukaj" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Modele analizy danych</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Szukaj"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Przedmowa</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Fundamenty</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Przełącz sekcję">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../1-fundamenty/01-czym-jest-model.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Czym jest model?</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../1-fundamenty/02-predyktory-optymalne.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Predyktory optymalne i błąd nieredukowalny</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../1-fundamenty/03-knn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Klasyfikator <span class="math inline">\(k\)</span> najbliższych sąsiadów</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../1-fundamenty/04-bias-wariancja.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Kompromis obciążenie–wariancja</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../1-fundamenty/05-ocena-modeli.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Ocena modeli w praktyce</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Modele liniowe</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Przełącz sekcję">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../2-modele-liniowe/06-regresja-liniowa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Regresja liniowa</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../2-modele-liniowe/07-selekcja-regularyzacja.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Selekcja i regularyzacja</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../2-modele-liniowe/08-regresja-logistyczna.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regresja logistyczna</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../2-modele-liniowe/09-glm-poisson.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Uogólnione modele liniowe i regresja Poissona</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Podejście probabilistyczne</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Przełącz sekcję">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../3-probabilistyka/10-paradygmat-bayesowski.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Paradygmat bayesowski</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../3-probabilistyka/11-modele-generatywne.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Modele generatywne: LDA, QDA i naiwny Bayes</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Poza liniowość</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Przełącz sekcję">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../4-poza-liniowoscia/12-mlp-backprop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Perceptron wielowarstwowy i propagacja wsteczna</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../4-poza-liniowoscia/13-svm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Maszyny wektorów nośnych</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Uczenie nienadzorowane</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Przełącz sekcję">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../5-nienadzorowane/14-pca.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Analiza składowych głównych</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../5-nienadzorowane/15-kmeans-gmm-em.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Grupowanie: <span class="math inline">\(k\)</span>-średnich, GMM i algorytm EM</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografia</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Spis treści</h2>
+   
+  <ul>
+  <li><a href="#sec-pojecie-modelu" id="toc-sec-pojecie-modelu" class="nav-link active" data-scroll-target="#sec-pojecie-modelu"><span class="header-section-number">1.1</span> Pojęcie modelu</a></li>
+  <li><a href="#sec-model-w-analizie-danych" id="toc-sec-model-w-analizie-danych" class="nav-link" data-scroll-target="#sec-model-w-analizie-danych"><span class="header-section-number">1.2</span> Model w analizie danych</a></li>
+  <li><a href="#sec-nadzorowane-nienadzorowane" id="toc-sec-nadzorowane-nienadzorowane" class="nav-link" data-scroll-target="#sec-nadzorowane-nienadzorowane"><span class="header-section-number">1.3</span> Uczenie nadzorowane i nienadzorowane</a></li>
+  <li><a href="#sec-regresja-klasyfikacja" id="toc-sec-regresja-klasyfikacja" class="nav-link" data-scroll-target="#sec-regresja-klasyfikacja"><span class="header-section-number">1.4</span> Regresja i klasyfikacja</a></li>
+  <li><a href="#sec-zaleznosc-i-szum" id="toc-sec-zaleznosc-i-szum" class="nav-link" data-scroll-target="#sec-zaleznosc-i-szum"><span class="header-section-number">1.5</span> Probabilistyczny opis danych</a>
+  <ul class="collapse">
+  <li><a href="#regresja" id="toc-regresja" class="nav-link" data-scroll-target="#regresja"><span class="header-section-number">1.5.1</span> Regresja</a></li>
+  <li><a href="#klasyfikacja" id="toc-klasyfikacja" class="nav-link" data-scroll-target="#klasyfikacja"><span class="header-section-number">1.5.2</span> Klasyfikacja</a></li>
+  </ul></li>
+  <li><a href="#sec-strata-ryzyko" id="toc-sec-strata-ryzyko" class="nav-link" data-scroll-target="#sec-strata-ryzyko"><span class="header-section-number">1.6</span> Jak mierzymy jakość predykcji</a>
+  <ul class="collapse">
+  <li><a href="#błąd-redukowalny-i-nieredukowalny" id="toc-błąd-redukowalny-i-nieredukowalny" class="nav-link" data-scroll-target="#błąd-redukowalny-i-nieredukowalny"><span class="header-section-number">1.6.1</span> Błąd redukowalny i nieredukowalny</a></li>
+  </ul></li>
+  <li><a href="#sec-predykcja-wnioskowanie" id="toc-sec-predykcja-wnioskowanie" class="nav-link" data-scroll-target="#sec-predykcja-wnioskowanie"><span class="header-section-number">1.7</span> Dwa cele modelowania: predykcja i wnioskowanie</a></li>
+  <li><a href="#sec-trening-modelu" id="toc-sec-trening-modelu" class="nav-link" data-scroll-target="#sec-trening-modelu"><span class="header-section-number">1.8</span> Trening modelu</a></li>
+  <li><a href="#sec-parametryczne-nieparametryczne" id="toc-sec-parametryczne-nieparametryczne" class="nav-link" data-scroll-target="#sec-parametryczne-nieparametryczne"><span class="header-section-number">1.9</span> Metody parametryczne i nieparametryczne</a></li>
+  <li><a href="#kompromis-między-interpretowalnością-a-dokładnością" id="toc-kompromis-między-interpretowalnością-a-dokładnością" class="nav-link" data-scroll-target="#kompromis-między-interpretowalnością-a-dokładnością"><span class="header-section-number">1.10</span> Kompromis między interpretowalnością a dokładnością</a></li>
+  <li><a href="#zadania" id="toc-zadania" class="nav-link" data-scroll-target="#zadania">Zadania</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+<!-- Makra matematyczne dla wyjścia HTML (MathJax). -->
+<!-- Odpowiednik dla PDF (LaTeX) znajduje się w pliku _macros.tex. -->
+<!-- Przy dodawaniu nowego makra zaktualizuj OBA pliki.            -->
+<div style="display:none">
+\(
+% --- Zbiory i operatory probabilistyczne ---
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\Nrozk}{\mathcal{N}}
+\newcommand{\ind}{\mathbb{1}}
+% --- Wektory i macierze ---
+\newcommand{\x}{\mathbf{x}}
+\newcommand{\X}{\mathbf{X}}
+% --- Teoria decyzji ---
+\newcommand{\Loss}{L}
+\newcommand{\Risk}{R}
+\newcommand{\Bayes}{g^{*}}
+\newcommand{\fopt}{f^{*}}
+\newcommand{\argmin}{\operatorname*{arg\,min}}
+\newcommand{\argmax}{\operatorname*{arg\,max}}
+\newcommand{\med}{\operatorname*{med}}
+\)
+</div>
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../1-fundamenty/01-czym-jest-model.html">Fundamenty</a></li><li class="breadcrumb-item"><a href="../1-fundamenty/01-czym-jest-model.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Czym jest model?</span></a></li></ol></nav>
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title"><span id="sec-czym-jest-model" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Czym jest model?</span></span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Kod</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Pokaż cały kod</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Ukryj cały kod</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="sec-pojecie-modelu" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="sec-pojecie-modelu"><span class="header-section-number">1.1</span> Pojęcie modelu</h2>
+<p>Ogólny termin <em>model</em> oznacza abstrakcyjny, uproszczony obraz pewnego fragmentu rzeczywistości. Prostym przykładem jest mapa – model geograficzny reprezentujący terytorium. Uproszczenie sprawia, że model nie jest wierną kopią rzeczywistości, lecz w pewien sposób ją zniekształca. Jest ono jednak konieczne: model doskonale wierny musiałby być kompletną kopią modelowanej rzeczywistości, a wskutek tego byłby równie przeładowany nieistotnymi szczegółami i równie trudny do zrozumienia jak ona sama.</p>
+<p>Model jest więc kompromisem między wiernością a użytecznością – narzędziem poznawczym, które pozwala lepiej zrozumieć rzeczywistość właśnie dzięki temu, że ją upraszcza. Myśl tę wyraził George Box <span class="citation" data-cites="box1976">(<a href="../references.html#ref-box1976" role="doc-biblioref">Box 1976</a>)</span>, a powtarzane dziś przy tej okazji powiedzenie brzmi: „wszystkie modele są błędne, ale niektóre są użyteczne” <span class="citation" data-cites="boxdraper1987">(<a href="../references.html#ref-boxdraper1987" role="doc-biblioref">Box i Draper 1987</a>)</span>.</p>
+<p>Uproszczenie ma jeszcze jedną konsekwencję. Ponieważ każdy model pomija pewne aspekty rzeczywistości, żaden nie jest jej absolutnie prawdziwym obrazem. Może być natomiast mniej lub bardziej trafny oraz użyteczny w określonym kontekście. Prawdziwość absolutna nie może więc stanowić praktycznego kryterium oceny modelu. Zastępują ją kryteria trafności, zakresu stosowalności i użyteczności.</p>
+<p>Poniższa lista zbiera własności, które w praktyce charakteryzują dobry model.</p>
+<ul>
+<li><p><strong>Celowość.</strong> Model nie powstaje bez określonego celu – jest projektowany pod konkretne pytanie lub klasę zadań. Ten sam obiekt rzeczywisty, na przykład miasto, ma zupełnie inny model dla urbanisty, inny dla epidemiologa, a jeszcze inny dla nawigacji satelitarnej.</p></li>
+<li><p><strong>Selektywność i jawne granice.</strong> Model określa, co znajduje się wewnątrz analizowanego systemu, a co zostaje pominięte. Przebieg tej granicy jest wyborem badacza i powinien być przedstawiony wprost – to, co model pomija, może później ujawnić się jako źródło jego błędu.</p></li>
+<li><p><strong>Zachowanie istotnych relacji.</strong> Choć model odrzuca wiele szczegółów, powinien zachowywać te własności i relacje między elementami, które są istotne ze względu na jego cel. Mapa drogowa powinna na przykład poprawnie przedstawiać połączenia między miejscami, ale nie musi wiernie oddawać wszystkich odległości ani kształtów terenu. O wartości modelu decyduje więc nie liczba uwzględnionych szczegółów, lecz trafność zachowanej struktury.</p></li>
+<li><p><strong>Użyteczność.</strong> Dobry model pozwala wykonać zadanie, do którego został zbudowany: opisać lub wyjaśnić zjawisko, dokonać przewidywania albo przeprowadzić eksperyment typu <em>„co, jeśli…”</em> bez ponoszenia kosztów i ryzyka działania w świecie rzeczywistym.</p></li>
+<li><p><strong>Redukcja złożoności poznawczej.</strong> Model sprowadza złożoność otoczenia do rozmiaru, który człowiek lub komputer jest w stanie przetworzyć i zrozumieć.</p></li>
+<li><p><strong>Ograniczony zakres stosowalności.</strong> Każdy model działa w określonym zakresie i przy pewnych założeniach. Nowe dane lub zmiana warunków mogą ujawnić jego ograniczenia i wymusić jego modyfikację. Modelowanie jest zatem procesem iteracyjnym, a nie jednorazowym aktem.</p></li>
+</ul>
+</section>
+<section id="sec-model-w-analizie-danych" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="sec-model-w-analizie-danych"><span class="header-section-number">1.2</span> Model w analizie danych</h2>
+<p>W analizie danych <em>modelem</em> nazywamy sformalizowany opis prawidłowości dotyczących badanego zjawiska, konstruowany i oceniany na podstawie danych. Model nie opisuje bezpośrednio całej rzeczywistości, lecz wybrane, zarejestrowane cechy badanych obiektów oraz relacje między nimi. Pozwala przejść od zbioru pojedynczych obserwacji do bardziej ogólnego opisu, który można zastosować również do nowych przypadków.</p>
+<p>Najczęściej model opisuje zależność między:</p>
+<ul>
+<li><strong>zmiennymi wejściowymi</strong>, nazywanymi również cechami;</li>
+<li><strong>zmienną wyjściową</strong>, nazywaną zmienną objaśnianą, odpowiedzią albo zmienną docelową.</li>
+</ul>
+<p>Działanie modelu możemy schematycznie zapisać jako</p>
+<p><span class="math display">\[
+\widehat y=\widehat f(\x),
+\]</span></p>
+<p>gdzie <span class="math inline">\(\x\)</span> oznacza zestaw cech opisujących obiekt, a <span class="math inline">\(\widehat y\)</span> – wynik zwracany przez model. Daszek zaznacza, że mamy do czynienia z wielkością wyznaczoną z danych: <span class="math inline">\(\widehat f\)</span> jest zależnością odtworzoną na ich podstawie, a nie rzeczywistym mechanizmem badanego zjawiska. Obserwowany rzeczywisty wynik (<em>ground truth</em>) będziemy oznaczać przez <span class="math inline">\(y\)</span>. Przykładowo <span class="math inline">\(\x\)</span> może zawierać wiek, masę ciała i wyniki badań pacjenta, natomiast <span class="math inline">\(y\)</span> może oznaczać obecność choroby.</p>
+<div id="niejednoznacznosc-wyniku">
+<p><strong>W analizie danych zmienne wejściowe nie muszą jednoznacznie wyznaczać obserwowanego wyniku, ponieważ zwykle nie zawierają pełnej informacji o badanym zjawisku.</strong> Dwóch pacjentów o takich samych wartościach zarejestrowanych cech może mieć różny stan zdrowia: u jednego rozpoznano chorobę, u drugiego nie. Wynika to między innymi z wpływu czynników nieuwzględnionych w danych, błędów pomiarowych oraz przypadkowej zmienności badanego zjawiska.</p>
+</div>
+<p>Nie oznacza to jednak, że sam model musi być niedeterministyczny. Model jest zwykle funkcją: dla tych samych wartości wejściowych zwraca zawsze ten sam wynik. Obiektom opisanym identycznym wektorem cech przypisze więc identyczną predykcję, chociaż ich rzeczywiste wyniki mogą się różnić.</p>
+<p>Nie ma w tym sprzeczności, ponieważ wyniku zwracanego przez model nie należy traktować jako pewnego rozstrzygnięcia o pojedynczym przypadku: z wymienionych wyżej powodów takie rozstrzygnięcie jest nieosiągalne. Skoro obiekty o identycznych cechach mają różne wyniki, żadna pojedyncza odpowiedź nie będzie trafna dla wszystkich. Model opisuje raczej to, czego można się spodziewać wśród obiektów o danych cechach, niż to, co wydarzy się w pojedynczym przypadku. Przewidując czas hospitalizacji, może zwracać wartość przeciętną dla pacjentów o danym profilu, ewentualnie uzupełnioną o przedział, w którym wynik powinien się mieścić. Rozpoznając chorobę, może zamiast jednoznacznej diagnozy podawać oszacowanie ryzyka jej wystąpienia. W obu przypadkach model przypisuje pojedynczemu obiektowi opis regularności obserwowanej w całej grupie obiektów do niego podobnych.</p>
+<p>Model może mieć postać wzoru matematycznego, zestawu reguł, drzewa decyzyjnego lub bardziej złożonej struktury obliczeniowej. Słowo <em>model</em> jest przy tym używane w dwóch powiązanych znaczeniach. Może oznaczać <strong>klasę modeli</strong>, czyli zbiór dopuszczalnych zależności różniących się parametrami, a niekiedy także strukturą. Przykładowo regresja logistyczna określa ogólną postać zależności między cechami a prawdopodobieństwem wyniku, ale nie wyznacza jeszcze konkretnych wartości współczynników.</p>
+<p>Słowo <em>model</em> może również oznaczać <strong>model dopasowany</strong>, czyli konkretny element wybranej klasy, otrzymany na podstawie danych. Regresja logistyczna dopasowana do danych pasażerów <em>Titanica</em> jest więc konkretnym modelem należącym do klasy modeli regresji logistycznej. Ma już określone zmienne wejściowe oraz konkretne wartości współczynników.</p>
+<p>Model jest czymś innym od <strong>algorytmu uczenia</strong>. Algorytm uczenia jest procedurą, która na podstawie danych treningowych wybiera lub konstruuje konkretny model. W przypadku modeli parametrycznych, opisanych ustaloną liczbą współczynników (zob. <a href="#sec-parametryczne-nieparametryczne" class="quarto-xref"><span>Sekcja 1.9</span></a>), polega to zazwyczaj na wyznaczeniu wartości parametrów, natomiast w innych przypadkach może obejmować również wybór struktury modelu. Proces prowadzący do otrzymania konkretnego modelu nazywamy jego dopasowaniem, uczeniem albo treningiem. Rezultatem tego procesu jest model dopasowany, który można następnie zastosować do nowych obserwacji.</p>
+<p>Nie wszystkie modele w analizie danych opisują zależność między wejściem a z góry określonym wynikiem. Niektóre służą przede wszystkim do odkrywania struktury samych danych, na przykład podziału obserwacji na podobne grupy, wykrywania nietypowych przypadków albo redukcji liczby zmiennych. W każdym przypadku zadaniem modelu pozostaje jednak uchwycenie wybranych regularności w postaci prostszej i bardziej użytecznej niż pierwotny zbiór obserwacji.</p>
+</section>
+<section id="sec-nadzorowane-nienadzorowane" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="sec-nadzorowane-nienadzorowane"><span class="header-section-number">1.3</span> Uczenie nadzorowane i nienadzorowane</h2>
+<p>Podstawowy podział problemów uczenia wynika ze sposobu sformułowania zadania oraz z roli, jaką pełnią w nim obserwowane zmienne. W <strong>uczeniu nadzorowanym</strong> wyróżniamy zmienne wejściowe oraz zmienną wyjściową, a celem jest opisanie zależności między nimi. Dla każdego badanego obiektu obserwujemy zatem parę</p>
+<p><span class="math display">\[
+(\x_i,y_i),
+\]</span></p>
+<p>gdzie <span class="math inline">\(\x_i\)</span> jest wektorem cech obiektu, a <span class="math inline">\(y_i\)</span> – odpowiadającym mu wynikiem. Zbiór danych ma postać</p>
+<p><span class="math display">\[
+\mathcal{D}
+=
+\{(\x_1,y_1),\ldots,(\x_n,y_n)\}.
+\]</span></p>
+<p>Taka struktura danych odzwierciedla przyjęty sposób opisu zjawiska: zakładamy, że istnieje wynik, który chcemy wyjaśniać lub przewidywać na podstawie pozostałych zmiennych. Dopiero po tak sformułowanym zadaniu wybieramy klasę modeli i algorytm służący do jej dopasowania.</p>
+<p>Celem uczenia nadzorowanego jest uchwycenie zależności między cechami a wynikiem. Otrzymany model można następnie zastosować do nowego obiektu, dla którego znamy <span class="math inline">\(\x\)</span>, ale nie znamy jeszcze <span class="math inline">\(y\)</span>. Przykładowo na podstawie danych pacjentów o znanym rozpoznaniu możemy zbudować model szacujący ryzyko choroby u kolejnych pacjentów. Podobnie, dysponując informacjami o pasażerach <em>Titanica</em> i ich losach, możemy próbować przewidywać przeżycie na podstawie wieku, płci, klasy biletu i innych cech.</p>
+<p>Określenie <em>nadzorowane</em> nie oznacza, że ktoś bezpośrednio kontroluje każdy krok działania algorytmu. Nadzór polega na obecności zmiennej wyjściowej w danych treningowych. Dzięki niej wynik zwracany przez model można porównać z wynikiem rzeczywiście zaobserwowanym.</p>
+<p>W <strong>uczeniu nienadzorowanym</strong> żadna ze zmiennych nie pełni roli z góry określonego wyniku. Każdy obiekt jest opisany jedynie przez wektor cech <span class="math inline">\(\x_i\)</span>, a dane mają postać</p>
+<p><span class="math display">\[
+\mathcal{D}
+=
+\{\x_1,\ldots,\x_n\}.
+\]</span></p>
+<p>Celem analizy jest wówczas opisanie struktury występującej w samych cechach, na przykład podobieństwa między obserwacjami, występowania grup albo głównych kierunków zmienności.</p>
+<p>Metody nienadzorowane mogą służyć między innymi do:</p>
+<ul>
+<li>podziału obserwacji na grupy obiektów o podobnych cechach;</li>
+<li>przedstawienia danych za pomocą mniejszej liczby zmiennych;</li>
+<li>wykrywania nietypowych obserwacji;</li>
+<li>opisu zależności i geometrycznej struktury danych.</li>
+</ul>
+<p>Przykładowo możemy próbować podzielić pacjentów na grupy o podobnych profilach wyników badań, nie określając wcześniej, jakie grupy mają zostać odnalezione. Możemy również zastąpić dużą liczbę silnie powiązanych pomiarów kilkoma zmiennymi syntetycznymi, które zachowują najważniejszą część informacji zawartej w danych.</p>
+<p>Brak znanych odpowiedzi sprawia, że wynik uczenia nienadzorowanego jest zwykle trudniejszy do jednoznacznej oceny. Ten sam zbiór obserwacji może mieć kilka użytecznych opisów struktury, zależnie od celu analizy, przyjętej miary podobieństwa i założeń metody. Podział na uczenie nadzorowane i nienadzorowane dotyczy więc nie tylko użytego algorytmu, lecz przede wszystkim sposobu sformułowania zadania i informacji dostępnych podczas uczenia.</p>
+<p>W dalszej części skoncentrujemy się głównie na uczeniu nadzorowanym.</p>
+</section>
+<section id="sec-regresja-klasyfikacja" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="sec-regresja-klasyfikacja"><span class="header-section-number">1.4</span> Regresja i klasyfikacja</h2>
+<p>W uczeniu nadzorowanym wyróżniamy dwa podstawowe rodzaje zadań: <strong>regresję</strong> i <strong>klasyfikację</strong>. Podział ten wynika przede wszystkim z charakteru zmiennej wyjściowej oraz z rodzaju wyniku, który chcemy otrzymać. Nie zależy natomiast od postaci zmiennych wejściowych – te same cechy mogą zostać wykorzystane zarówno w zadaniu regresji, jak i klasyfikacji.</p>
+<p>W <strong>regresji</strong> zmienna wyjściowa ma charakter ilościowy. Jej wartości są liczbami, dla których znaczenie mają wielkość, porządek oraz różnice między wartościami. Zadaniem modelu jest przewidywanie wartości liczbowej:</p>
+<p><span class="math display">\[
+\widehat y=\widehat f(\x).
+\]</span></p>
+<p>Przykładami regresji są przewidywanie ceny mieszkania, czasu trwania hospitalizacji, stężenia substancji we krwi albo wielkości plonu. Wynikiem modelu może być pojedyncza wartość, ale model może również opisywać niepewność predykcji, na przykład za pomocą przedziału predykcji lub rozkładu możliwych wartości.</p>
+<p>W <strong>klasyfikacji</strong> zmienna wyjściowa ma charakter jakościowy: określa przynależność obiektu do jednej z ustalonych kategorii, nazywanych <strong>klasami</strong>. Jeżeli możliwe są dwie klasy, mówimy o klasyfikacji binarnej. Przykładem jest rozpoznawanie obecności albo braku choroby. Gdy klas jest więcej, mamy do czynienia z klasyfikacją wieloklasową, na przykład przy rozpoznawaniu gatunku rośliny na podstawie jej cech.</p>
+<p>Klasy mogą być oznaczone liczbami, nie nadaje im to jednak charakteru ilościowego. Jeżeli brak choroby oznaczymy przez <span class="math inline">\(0\)</span>, a jej obecność przez <span class="math inline">\(1\)</span>, różnica między tymi wartościami nie opisuje wielkości choroby. Liczby pełnią tutaj jedynie funkcję etykiet.</p>
+<p>W typowych zadaniach podział na regresję i klasyfikację jest związany z podziałem zmiennych na ciągłe i dyskretne. Ciągłą zmienną wyjściową modelujemy na ogół za pomocą regresji, natomiast jakościowa zmienna wyjściowa, przyjmująca wartości z dyskretnego zbioru klas, prowadzi do zadania klasyfikacji. Dlatego podział ten przedstawia się niekiedy w uproszczonej postaci: regresja dotyczy zmiennych ciągłych, a klasyfikacja – dyskretnych.</p>
+<p>Rzeczywista różnica leży jednak nie w ciągłości zmiennej, lecz w jej charakterze. Wartości ilościowej zmiennej wyjściowej są uporządkowane i mają skalę, więc sensowne jest pytanie o przeciętny wynik – o „środek” jego rozkładu – oraz o to, jak daleko predykcja od niego odbiega. Klasy nie mają ani porządku, ani skali: średnia z dwóch gatunków rośliny nie jest żadnym gatunkiem, a pomyłka między klasami nie jest „mała” ani „duża”. Dlatego model regresyjny podaje charakterystyki rozkładu wyniku, na przykład wartość przeciętną, a model klasyfikacyjny – prawdopodobieństwa poszczególnych klas.</p>
+<p>Z tego powodu utożsamienie zmiennych ciągłych z regresją, a dyskretnych z klasyfikacją nie jest ścisłe. Zmienna dyskretna nie musi być zmienną jakościową. Może być również zmienną ilościową, jeżeli jej wartości mają znaczenie liczbowe. W takim przypadku mamy do czynienia z regresją, mimo że zmienna wyjściowa jest dyskretna.</p>
+<p>Przykładem jest liczba wizyt pacjenta w szpitalu w ciągu roku. Zmienna ta przyjmuje wartości <span class="math inline">\(0,1,2,\ldots\)</span>, jest więc dyskretna, ale jej wartości pozostają liczbami: pacjent z pięcioma wizytami trafiał do szpitala częściej niż pacjent z dwiema, a różnica między nimi daje się zmierzyć. Naturalnym pytaniem jest tutaj, ilu wizyt można się spodziewać u pacjenta o danych cechach – a nie, do której z kategorii „0”, „1”, „2” pacjent należy. Jest to więc zadanie regresji, mimo że zmienna wyjściowa jest dyskretna. Istnieją metody regresyjne przystosowane do zmiennych zliczeniowych, na przykład regresja Poissona.</p>
+<p>Podział na zmienne ciągłe i dyskretne nie pokrywa się więc dokładnie z podziałem na regresję i klasyfikację. Przewidywanie liczby zdarzeń zwykle zaliczamy do regresji, choć przewidywana zmienna jest dyskretna; przewidywanie rodzaju zdarzenia – do klasyfikacji.</p>
+<p>Model klasyfikacyjny często nie zwraca bezpośrednio etykiety klasy, lecz oszacowania prawdopodobieństw poszczególnych klas:</p>
+<p><span class="math display">\[
+\widehat\eta_k(\x)
+\approx
+\Prob(Y=k\mid\X=\x).
+\]</span></p>
+<p>Na ich podstawie można następnie przypisać obiekt do jednej z klas, na przykład wybierając klasę o największym oszacowanym prawdopodobieństwie. Rozdzielenie tych dwóch etapów jest ważne: ten sam model może prowadzić do różnych decyzji zależnie od przyjętej reguły decyzyjnej. W diagnostyce medycznej próg wymagany do rozpoznania choroby można na przykład ustalić inaczej niż standardowe <span class="math inline">\(0{,}5\)</span>, jeżeli przeoczenie choroby jest znacznie bardziej kosztowne niż wynik fałszywie dodatni.</p>
+<p>Regresja i klasyfikacja są rodzajami zadań, a nie rozłącznymi rodzinami algorytmów. Drzewa decyzyjne, metody najbliższych sąsiadów czy sieci neuronowe mogą występować zarówno w wersji regresyjnej, jak i klasyfikacyjnej. O charakterze zadania decyduje zmienna wyjściowa i cel analizy. Z tego powodu regresja logistyczna, mimo swojej nazwy, jest metodą klasyfikacji: opisuje prawdopodobieństwo przynależności do klasy, a nie wartość ilościowej zmiennej wyjściowej.</p>
+</section>
+<section id="sec-zaleznosc-i-szum" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="sec-zaleznosc-i-szum"><span class="header-section-number">1.5</span> Probabilistyczny opis danych</h2>
+<p>Wróćmy do <a href="#niejednoznacznosc-wyniku">wcześniejszego spostrzeżenia</a>: obiekty opisane tym samym wektorem cech mogą mieć różne wartości zmiennej odpowiedzi. Model przypisuje im wszystkim jedną predykcję, nie ma więc jednej „prawidłowej odpowiedzi”, z którą można by ją zestawić. Zanim powiemy, co znaczy, że model jest dobry, musimy odpowiedzieć na dwa pytania:</p>
+<ol type="1">
+<li><strong>Z czym porównujemy predykcję</strong>, skoro pojedynczy zaobserwowany wynik nie jest właściwym punktem odniesienia?</li>
+<li><strong>Jak wycenić rozbieżność</strong> między predykcją a tym, co zaobserwowaliśmy?</li>
+</ol>
+<p>Pierwszemu poświęcona jest ta sekcja, drugiemu – <a href="#sec-strata-ryzyko" class="quarto-xref"><span>Sekcja 1.6</span></a>.</p>
+<p>Aby odpowiedzieć na pierwsze pytanie, posłużymy się probabilistycznym opisem danych. Przyjmujemy, że zarówno cechy, jak i wynik są losowe: <span class="math inline">\(\X\)</span> jest wektorem losowym cech, <span class="math inline">\(Y\)</span> – losową zmienną wyjściową, a para <span class="math inline">\((\X,Y)\)</span> ma pewien <strong>rozkład łączny</strong> <span class="math inline">\(P\)</span>. Kolejne obserwacje <span class="math inline">\((\x_i,y_i)\)</span> są niezależnymi losowaniami z tego rozkładu. Rozkład <span class="math inline">\(P\)</span> opisuje populację, z której pochodzą dane: określa prawdopodobieństwa wartości cech i wyniku oraz zależności między nimi. W przyjętym opisie cała informacja o danych jest zawarta w <span class="math inline">\(P\)</span>. Wiedza o znaczeniu zmiennych i kontekście ich pomiaru pozostaje poza tym opisem, o ile nie wprowadzimy jej do niego za pomocą dodatkowych założeń. Rozkład <span class="math inline">\(P\)</span> nie jest nam znany – dysponujemy jedynie obserwacjami pochodzącymi z tego rozkładu.</p>
+<p>Warto od razu zaznaczyć, że niezależność kolejnych obserwacji jest <strong>założeniem</strong>, a nie własnością danych. Bywa ono naruszone, na przykład gdy obserwacje są uporządkowane w czasie, pochodzą z sąsiadujących lokalizacji albo dotyczą powtarzanych pomiarów tego samego pacjenta. W dalszym ciągu przyjmujemy je milcząco, wskazując w razie potrzeby konsekwencje jego złamania.</p>
+<p>Rozkład <span class="math inline">\(P\)</span> opisujemy za pomocą funkcji prawdopodobieństwa lub gęstości, zależnie od rodzaju zmiennych. Oznaczmy tę funkcję przez <span class="math inline">\(p(\x,y)\)</span>, a funkcję opisującą rozkład samych cech – przez <span class="math inline">\(p(\x)\)</span>. Dla <span class="math inline">\(p(\x)&gt;0\)</span> zachodzi</p>
+<p><span id="eq-rozklad-laczny"><span class="math display">\[
+p(\x,y)=p(\x)\cdot p(y\mid\x),
+\tag{1.1}\]</span></span></p>
+<p>gdzie <span class="math inline">\(p(y\mid\x)\)</span> jest funkcją prawdopodobieństwa lub gęstością warunkową wyniku przy ustalonych cechach.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Przypomnienie: rozkłady dyskretne i ciągłe
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Rozkład dyskretny.</strong> Zmienna <span class="math inline">\(Y\)</span> ma rozkład dyskretny, jeżeli przyjmuje wartości ze zbioru <span class="math inline">\(\mathcal{Y}\)</span> skończonego lub przeliczalnego, zwanego <strong>nośnikiem</strong>. Rozkład opisuje wtedy <strong>funkcja prawdopodobieństwa</strong></p>
+<p><span class="math display">\[
+p(y)=\Prob(Y=y),\qquad y\in\mathcal{Y},
+\]</span></p>
+<p>spełniająca <span class="math inline">\(p(y)&gt;0\)</span> oraz <span class="math inline">\(\sum_{y\in\mathcal{Y}}p(y)=1\)</span>. Prawdopodobieństwo dowolnego zbioru wartości otrzymujemy poprzez sumowanie: <span class="math inline">\(\Prob(Y\in A)=\sum_{y\in A}p(y)\)</span>.</p>
+<p><strong>Rozkład ciągły.</strong> Zmienna <span class="math inline">\(Y\)</span> ma rozkład ciągły, jeżeli istnieje funkcja <span class="math inline">\(p\ge 0\)</span>, zwana <strong>gęstością</strong>, taka że dla każdego zbioru <span class="math inline">\(A\)</span></p>
+<p><span class="math display">\[
+\Prob(Y\in A)=\int_{A}p(y)\,dy ,
+\]</span></p>
+<p>przy czym <span class="math inline">\(\int_{-\infty}^{\infty}p(y)\,dy=1\)</span>. Biorąc <span class="math inline">\(A=\{y_0\}\)</span>, otrzymujemy natychmiast <span class="math inline">\(\Prob(Y=y_0)=0\)</span>: całka po zbiorze jednopunktowym jest zerem. Pojedyncze wartości nie mają więc dodatnich prawdopodobieństw, choć zmienna jakąś z nich przyjmuje.</p>
+<p><strong>Gęstość nie jest prawdopodobieństwem.</strong> Wartość <span class="math inline">\(p(y)\)</span> nie musi nawet należeć do przedziału <span class="math inline">\([0,1]\)</span> – dla rozkładu jednostajnego na <span class="math inline">\([0;\,0{,}1]\)</span> gęstość jest wszędzie równa <span class="math inline">\(10\)</span>. Sens probabilistyczny ma dopiero prawdopodobieństwo przedziału: jeżeli gęstość jest ciągła w punkcie <span class="math inline">\(y\)</span>, to dla małych <span class="math inline">\(h&gt;0\)</span></p>
+<p><span class="math display">\[
+\Prob(y\le Y\le y+h)\approx p(y)\,h .
+\]</span></p>
+<p>Gęstość mierzy więc nie prawdopodobieństwo samej wartości <span class="math inline">\(y\)</span>, lecz jego zagęszczenie w otoczeniu tej wartości – stąd jej nazwa. Gęstości wolno porównywać między sobą, bo mówią, gdzie skupia się większa masa prawdopodobieństwa, ale nie wolno ich czytać jako prawdopodobieństw.</p>
+<p><strong>Dystrybuanta.</strong> Wspólnym opisem obu przypadków jest <strong>dystrybuanta</strong></p>
+<p><span class="math display">\[
+F(y)=\Prob(Y\le y),
+\]</span></p>
+<p>określona dla każdej zmiennej losowej rzeczywistej. W przypadku dyskretnym jest funkcją schodkową ze skokami w punktach nośnika, w ciągłym – funkcją ciągłą, będącą całką z gęstości.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Przypomnienie: rozkład łączny, brzegowy i warunkowy
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Literą <span class="math inline">\(p\)</span> oznaczamy, tak jak wyżej, funkcję prawdopodobieństwa albo gęstość – zależnie od tego, czy zmienna jest dyskretna, czy ciągła.</p>
+<p><strong>Rozkład łączny</strong> opisuje parę <span class="math inline">\((\X,Y)\)</span> traktowaną jako całość: przypisuje prawdopodobieństwa zdarzeniom dotyczącym cech i wyniku naraz. Dla zmiennych dyskretnych <span class="math inline">\(p(\x,y)=\Prob(\X=\x,\,Y=y)\)</span>; w przypadku ciągłym <span class="math inline">\(p(\x,y)\)</span> jest gęstością, a prawdopodobieństwa otrzymujemy przez całkowanie.</p>
+<p><strong>Rozkład brzegowy</strong> opisuje same cechy, z pominięciem zmiennej wyjściowej. Jego funkcję prawdopodobieństwa lub gęstość otrzymujemy przez zsumowanie albo scałkowanie <span class="math inline">\(p(\x,y)\)</span> po <span class="math inline">\(y\)</span>:</p>
+<p><span class="math display">\[
+p(\x)=\sum_{y}p(\x,y)
+\qquad\text{albo}\qquad
+p(\x)=\int p(\x,y)\,dy .
+\]</span></p>
+<p><strong>Rozkład warunkowy</strong> opisuje wynik przy ustalonych cechach. Jego funkcję prawdopodobieństwa lub gęstość definiujemy dla <span class="math inline">\(p(\x)&gt;0\)</span> wzorem</p>
+<p><span class="math display">\[
+p(y\mid\x)=\frac{p(\x,y)}{p(\x)} .
+\]</span></p>
+<p>Przy ustalonym <span class="math inline">\(\x\)</span> funkcja ta jest nieujemna i sumuje się (całkuje) po <span class="math inline">\(y\)</span> do jedynki, opisuje więc rozkład prawdopodobieństwa zmiennej <span class="math inline">\(Y\)</span>. Dla zmiennych dyskretnych <span class="math inline">\(p(y\mid\x)\)</span> jest zwykłym prawdopodobieństwem warunkowym <span class="math inline">\(\Prob(Y=y\mid\X=\x)\)</span>; gdy cechy są ciągłe, zdarzenie <span class="math inline">\(\{\X=\x\}\)</span> ma prawdopodobieństwo zero i definicja wymaga ostrożności – wracamy do tego na końcu sekcji.</p>
+<p><strong>Skąd bierze się wzór (<a href="#eq-rozklad-laczny" class="quarto-xref"><span>1.1</span></a>).</strong> Wystarczy pomnożyć ostatnią równość przez <span class="math inline">\(p(\x)\)</span>. Wzór ten nie jest więc twierdzeniem o strukturze rozkładu, lecz przekształceniem podanego wzoru na funkcję prawdopodobieństwa lub gęstość warunkową. Cała jego treść leży w interpretacji obu czynników i w tym, że zależność, która nas interesuje, mieści się wyłącznie w drugim z nich.</p>
+</div>
+</div>
+</div>
+<p>Pierwszy czynnik, <span class="math inline">\(p(\x)\)</span>, opisuje <strong>rozkład brzegowy</strong> cech. Mówi, gdzie w przestrzeni cech znajdują się obiekty i jak gęsto. Jeśli na przykład obiektami są pacjenci, a cechami ich wiek i wyniki badań, rozkład ten opisuje, jaki jest typowy wiek pacjenta, jakie kombinacje wyników badań występują często, a jakie prawie wcale. O zależności między cechami a wynikiem nie mówi natomiast nic.</p>
+<p>Drugi czynnik, <span class="math inline">\(p(y\mid\x)\)</span>, opisuje <strong>rozkład warunkowy</strong> zmiennej <span class="math inline">\(Y\)</span> przy ustalonych cechach, oznaczany</p>
+<p><span class="math display">\[
+Y\mid\X=\x .
+\]</span></p>
+<p>Określa on, jakie wartości zmiennej <span class="math inline">\(Y\)</span> mogą wystąpić wśród obiektów o cechach <span class="math inline">\(\x\)</span> i z jakim prawdopodobieństwem; dla zmiennej ciągłej opisuje go gęstość warunkowa, dla dyskretnej – prawdopodobieństwa poszczególnych wartości. To właśnie w nim zawarta jest cała zależność wyniku od cech, i to on odpowiada na pierwsze z pytań postawionych na początku sekcji: predykcję porównujemy nie z jedną wartością, lecz z całym rozkładem możliwych wyników.</p>
+<p>W samym rozkładzie warunkowym możemy wyróżnić część <strong>systematyczną</strong>, związaną z obserwowanymi cechami, oraz <strong>szum</strong>, czyli zmienność wyniku niewyjaśnioną przez te cechy. Słowa <em>szum</em> używamy w szerokim znaczeniu. Może on wynikać z błędów pomiarowych, z wpływu czynników nieuwzględnionych w danych albo z rzeczywistej losowości badanego zjawiska. Nie oznacza więc, że dane zostały zebrane nieprawidłowo.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Po co nam ten podział
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Rozdzielenie wzoru (<a href="#eq-rozklad-laczny" class="quarto-xref"><span>1.1</span></a>) na dwa czynniki wróci w książce wielokrotnie, dlatego warto od razu zauważyć, co z niego wynika.</p>
+<p>Modelując zależność, interesujemy się drugim czynnikiem. Optymalna predykcja w punkcie <span class="math inline">\(\x\)</span> – w sensie, który sprecyzujemy w <a href="#sec-strata-ryzyko" class="quarto-xref"><span>Sekcja 1.6</span></a> – zależy wyłącznie od rozkładu warunkowego – rozkład brzegowy cech nie wpływa na nią w żaden sposób. Wpływa natomiast na to, jak bardzo opłaca się być dokładnym w danym obszarze przestrzeni cech, bo obszary rzadko odwiedzane wnoszą do przeciętnej straty niewiele. Do tej obserwacji wracamy w <a href="02-predyktory-optymalne.html" class="quarto-xref"><span>Rozdział 2</span></a>.</p>
+<p>Wzdłuż tego samego podziału przebiega też granica między dwiema rodzinami metod. Modele <strong>dyskryminacyjne</strong>, takie jak regresja logistyczna, opisują wyłącznie <span class="math inline">\(p(y\mid\x)\)</span> i o rozkładzie cech nie mówią nic. Modele <strong>generatywne</strong>, takie jak analiza dyskryminacyjna czy naiwny klasyfikator bayesowski, opisują cały rozkład łączny, docierając do zależności okrężną drogą – przez rozkłady cech wewnątrz klas. Różnicę tę omówimy szczegółowo w <a href="../3-probabilistyka/11-modele-generatywne.html" class="quarto-xref"><span>Rozdział 11</span></a>.</p>
+</div>
+</div>
+<section id="regresja" class="level3" data-number="1.5.1">
+<h3 data-number="1.5.1" class="anchored" data-anchor-id="regresja"><span class="header-section-number">1.5.1</span> Regresja</h3>
+<p>W przypadku regresji część systematyczną opisujemy za pomocą warunkowej wartości oczekiwanej, nazywanej <strong>funkcją regresji</strong>:</p>
+<p><span id="eq-funkcja-regresji-wstep"><span class="math display">\[
+\fopt(\x)=\E(Y\mid\X=\x).
+\tag{1.2}\]</span></span></p>
+<p>Oznacza ona przeciętną wartość zmiennej wyjściowej wśród obiektów o cechach <span class="math inline">\(\x\)</span>. Gwiazdka oznacza predyktor optymalny – w jakim sensie, wyjaśniamy niżej – a więc wielkość teoretyczną, opisującą badaną populację, a nie funkcję wyznaczoną z danych; symbolu <span class="math inline">\(f\)</span> bez gwiazdki będziemy używać dla dowolnego predyktora, a <span class="math inline">\(\widehat f\)</span> – dla predyktora dopasowanego do konkretnego zbioru obserwacji.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Przypomnienie: warunkowa wartość oczekiwana
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Wartość oczekiwana rozkładu warunkowego <span class="math inline">\(Y\mid\X=\x\)</span> to średnia wartość <span class="math inline">\(Y\)</span> wśród obiektów o cechach <span class="math inline">\(\x\)</span>:</p>
+<p><span class="math display">\[
+\E(Y\mid\X=\x)=\sum_{y}y\,p(y\mid\x)
+\qquad\text{albo}\qquad
+\E(Y\mid\X=\x)=\int y\,p(y\mid\x)\,dy .
+\]</span></p>
+<p>Jest to <strong>liczba</strong> zależna od <span class="math inline">\(\x\)</span>, a więc funkcja zmiennej <span class="math inline">\(\x\)</span> – i właśnie tę funkcję nazywamy funkcją regresji.</p>
+<p><strong>Dwa zapisy, dwa różne obiekty.</strong> Podstawiając w miejsce <span class="math inline">\(\x\)</span> losowy wektor <span class="math inline">\(\X\)</span>, otrzymujemy <span class="math inline">\(\E(Y\mid\X)=\fopt(\X)\)</span>, czyli <strong>zmienną losową</strong>: jej wartość zmienia się wraz z wylosowanym obiektem. Różnica jest istotna, bo oba zapisy występują w tym rozdziale. Wzór (<a href="#eq-funkcja-regresji-wstep" class="quarto-xref"><span>1.2</span></a>) mówi o liczbie przypisanej ustalonym cechom, natomiast warunek <span class="math inline">\(\E(\varepsilon\mid\X)=0\)</span> we wzorze (<a href="#eq-rozklad-addytywny" class="quarto-xref"><span>1.3</span></a>) jest równością zmiennych losowych – znaczy tyle, że dla <strong>każdego</strong> <span class="math inline">\(\x\)</span> zachodzi <span class="math inline">\(\E(\varepsilon\mid\X=\x)=0\)</span>.</p>
+<p><strong>Prawo iterowanej wartości oczekiwanej.</strong> Uśrednienie funkcji <span class="math inline">\(\fopt(\X)\)</span> po rozkładzie cech odtwarza zwykłą wartość oczekiwaną:</p>
+<p><span class="math display">\[
+\E\big[\E(Y\mid\X)\big]=\E(Y).
+\]</span></p>
+<p>Średnia warunkowych średnich jest więc średnią globalną – z wagami danymi przez rozkład brzegowy cech. Ta tożsamość pozwala rozbijać rachunki na dwa kroki: najpierw uśredniamy przy ustalonych cechach, potem po cechach. Będziemy z niej korzystać przy rachunkach dotyczących ryzyka.</p>
+</div>
+</div>
+</div>
+<p>Wybór warunkowej wartości oczekiwanej nie jest przypadkowy. W <a href="02-predyktory-optymalne.html" class="quarto-xref"><span>Rozdział 2</span></a> pokażemy, że funkcja <span class="math inline">\(\fopt\)</span> jest <strong>najlepszym możliwym</strong> predyktorem, jeżeli błędy wyceniamy stratą kwadratową. Przy innej stracie wyróżniona byłaby inna charakterystyka rozkładu warunkowego, na przykład mediana. To, jaką charakterystykę rozkładu warto przewidywać, zależy więc od sposobu wyceniania błędów.</p>
+<p>Zdefiniujmy odchylenie wyniku od jego średniej warunkowej jako <span class="math inline">\(\varepsilon=Y-\fopt(\X)\)</span>. Wówczas, przy ustalonych cechach, jego wartość oczekiwana wynosi</p>
+<p><span class="math display">\[
+\E(\varepsilon\mid\X)
+=\E(Y\mid\X)-\fopt(\X)=0.
+\]</span></p>
+<p>Zmienną wyjściową możemy więc przedstawić w postaci addytywnej</p>
+<p><span id="eq-rozklad-addytywny"><span class="math display">\[
+Y=\fopt(\X)+\varepsilon,
+\qquad
+\E(\varepsilon\mid\X)=0 .
+\tag{1.3}\]</span></span></p>
+<p>Składnik <span class="math inline">\(\varepsilon\)</span> opisuje odchylenie obserwowanego wyniku od części systematycznej. Dwa obiekty o takich samych wartościach cech otrzymują tę samą wartość <span class="math inline">\(\fopt(\x)\)</span>, ale ich rzeczywiste wyniki mogą się różnić ze względu na różne realizacje <span class="math inline">\(\varepsilon\)</span>. Warunek <span class="math inline">\(\E(\varepsilon\mid\X)=0\)</span> wynika z definicji <span class="math inline">\(\varepsilon\)</span> i oznacza, że odchylenia przy ustalonych cechach przeciętnie się znoszą.</p>
+<p>Przykładowo model może opisywać zależność między czasem hospitalizacji a wiekiem pacjenta, rozpoznaniem i wynikami badań. Pacjenci o takich samych wartościach zarejestrowanych cech nie muszą jednak przebywać w szpitalu dokładnie tyle samo dni. Na czas hospitalizacji wpływają również czynniki, których model nie uwzględnia, oraz zdarzenia, których nie da się przewidzieć na podstawie dostępnych informacji.</p>
+<p>Funkcja <span class="math inline">\(\fopt\)</span> opisuje zależność występującą w badanej populacji, ale zazwyczaj nie jest znana. Na podstawie danych treningowych wyznaczamy jej oszacowanie <span class="math inline">\(\widehat f\)</span>, a predykcja dla obiektu o cechach <span class="math inline">\(\x\)</span> ma postać</p>
+<p><span class="math display">\[
+\widehat y=\widehat f(\x).
+\]</span></p>
+</section>
+<section id="klasyfikacja" class="level3" data-number="1.5.2">
+<h3 data-number="1.5.2" class="anchored" data-anchor-id="klasyfikacja"><span class="header-section-number">1.5.2</span> Klasyfikacja</h3>
+<p>W klasyfikacji podział na zależność systematyczną i szum ma ten sam sens, ale nie da się go zapisać addytywnie. Suma etykiety klasy i odchylenia nie byłaby etykietą klasy, więc rozkład (<a href="#eq-rozklad-addytywny" class="quarto-xref"><span>1.3</span></a>) traci tu zastosowanie. Opisujemy zatem rozkład warunkowy wprost.</p>
+<p>Jeżeli zmienna wyjściowa przyjmuje wartości w zbiorze klas <span class="math inline">\(\{1,\ldots,K\}\)</span>, część systematyczną opisują prawdopodobieństwa warunkowe</p>
+<p><span id="eq-eta"><span class="math display">\[
+\eta_k(\x)=\Prob(Y=k\mid\X=\x),
+\qquad k=1,\ldots,K,
+\tag{1.4}\]</span></span></p>
+<p>spełniające dla każdego <span class="math inline">\(\x\)</span> warunek <span class="math inline">\(\sum_{k=1}^{K}\eta_k(\x)=1\)</span>. W klasyfikacji binarnej wystarczy jedna funkcja <span class="math inline">\(\eta(\x)=\Prob(Y=1\mid\X=\x)\)</span>, a rozkład wyniku przy ustalonych cechach zapisujemy jako</p>
+<p><span class="math display">\[
+Y\mid\X=\x\sim\operatorname{Bernoulli}\big(\eta(\x)\big).
+\]</span></p>
+<p>Funkcja <span class="math inline">\(\eta\)</span> pełni więc wobec klasyfikacji tę samą rolę, co <span class="math inline">\(\fopt\)</span> wobec regresji: opisuje systematyczną zależność wyniku od cech. Aby na podstawie prawdopodobieństw wybrać przewidywaną klasę, potrzebujemy reguły decyzyjnej. W przypadku binarnym możemy na przykład wybierać klasę <span class="math inline">\(1\)</span>, gdy <span class="math inline">\(\eta(\x)&gt;1/2\)</span>, a klasę <span class="math inline">\(0\)</span> w przeciwnym razie. Jeżeli jednak <span class="math inline">\(0&lt;\eta(\x)&lt;1\)</span>, obie klasy są możliwe przy tych samych cechach, więc nawet dokładna znajomość <span class="math inline">\(\eta(\x)\)</span> nie gwarantuje bezbłędnej klasyfikacji. W praktyce dochodzi do tego drugie źródło błędów: nie znamy <span class="math inline">\(\eta(\x)\)</span> i musimy ją oszacować na podstawie danych.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Jeden opis, dwie charakterystyki
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Warto zauważyć, jak niewiele różni oba przypadki. Wspólnym punktem wyjścia jest rozkład warunkowy <span class="math inline">\(Y\mid\X=\x\)</span>; różnica polega wyłącznie na tym, co z niego odczytujemy.</p>
+<p>W problemie regresji wygodną charakterystyką jest odpowiednio rozumiany środek rozkładu – na przykład średnia warunkowa <span class="math inline">\(\fopt(\x)\)</span> lub mediana warunkowa. W problemie klasyfikacji mówienie o „środku” nie ma sensu – klasy nie mają porządku ani skali – więc podajemy cały rozkład, czyli wektor <span class="math inline">\(\big(\eta_1(\x),\ldots,\eta_K(\x)\big)\)</span>.</p>
+<p>Dla zmiennej binarnej z klasami zakodowanymi jako <span class="math inline">\(0\)</span> i <span class="math inline">\(1\)</span> oba opisy pokrywają się: <span class="math inline">\(\E(Y\mid\X=\x)=\Prob(Y=1\mid\X=\x)\)</span>, a więc <span class="math inline">\(\fopt=\eta\)</span>. Przy innym kodowaniu dwiema różnymi liczbami średnia warunkowa nadal jednoznacznie wyznacza prawdopodobieństwa klas, ale nie jest już wprost jednym z nich.</p>
+</div>
+</div>
+<p>W praktyce funkcje <span class="math inline">\(\eta_k\)</span>, podobnie jak <span class="math inline">\(\fopt\)</span>, nie są znane i zastępujemy je oszacowaniami <span class="math inline">\(\widehat\eta_k\)</span> wyznaczonymi z danych. W obu zadaniach mamy więc do czynienia z tym samym układem: nieznaną zależnością występującą w populacji, jej oszacowaniem zbudowanym na skończonej próbie oraz zmiennością wyniku, która pozostaje nawet po ustaleniu wszystkich dostępnych cech.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Dla Czytelników z przygotowaniem z teorii miary
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Zapis wprowadzony w tej sekcji jest uproszczony w dwóch miejscach.</p>
+<p><strong>Rozkład warunkowy.</strong> Gdy zmienna <span class="math inline">\(\X\)</span> ma rozkład ciągły, zdarzenie <span class="math inline">\(\{\X=\x\}\)</span> ma prawdopodobieństwo zero i rozkładu <span class="math inline">\(Y\mid\X=\x\)</span> nie można zdefiniować wzorem <span class="math inline">\(\Prob(\cdot\mid A)=\Prob(\cdot\cap A)/\Prob(A)\)</span>. Właściwą konstrukcją jest regularny rozkład warunkowy, który dla zmiennych o wartościach w <span class="math inline">\(\R^p\)</span> zawsze istnieje, ale jest wyznaczony jednoznacznie jedynie <strong>z dokładnością do zbioru miary zero</strong> względem rozkładu <span class="math inline">\(\X\)</span>. To samo dotyczy funkcji <span class="math inline">\(\fopt\)</span> oraz <span class="math inline">\(\eta_k\)</span>: ściśle biorąc nie są one funkcjami, lecz klasami równoważności funkcji. Konsekwentnie, wszystkie stwierdzenia postaci „dla każdego <span class="math inline">\(\x\)</span>” należy w dalszym ciągu czytać jako „dla prawie każdego <span class="math inline">\(\x\)</span>“.</p>
+<p><strong>Symbol <span class="math inline">\(p\)</span>.</strong> We wzorze (<a href="#eq-rozklad-laczny" class="quarto-xref"><span>1.1</span></a>) litera <span class="math inline">\(p\)</span> oznacza gęstość względem miary, która nie jest ta sama dla obu zmiennych: dla cech ciągłych jest to miara Lebesgue’a, dla jakościowej zmiennej wyjściowej – miara licząca. Formalnie chodzi o gęstość rozkładu łącznego względem miary produktowej. Zapis <span class="math inline">\(p(\cdot)\)</span> jest więc wygodnym skrótem obejmującym gęstości i prawdopodobieństwa punktowe naraz; stosujemy go w całej książce.</p>
+<p><strong>Dlaczego pomijamy te zastrzeżenia.</strong> Wielkości, którymi będziemy oceniać predyktory (<a href="#sec-strata-ryzyko" class="quarto-xref"><span>Sekcja 1.6</span></a>), są wartościami oczekiwanymi, czyli całkami. Dwie wersje funkcji <span class="math inline">\(\fopt\)</span> różniące się na zbiorze miary zero dają więc identyczne wartości tych wielkości. Obiekt niejednoznaczny nigdy nie występuje samodzielnie – zawsze pod znakiem wartości oczekiwanej, która tej niejednoznaczności nie widzi.</p>
+<p>Ścisłe ujęcie znajdzie Czytelnik w monografii <span class="citation" data-cites="devroye1996">Devroye, Györfi, i Lugosi (<a href="../references.html#ref-devroye1996" role="doc-biblioref">1996</a>)</span> dla klasyfikacji oraz <span class="citation" data-cites="gyorfi2002">Györfi i in. (<a href="../references.html#ref-gyorfi2002" role="doc-biblioref">2002</a>)</span> dla regresji nieparametrycznej.</p>
+</div>
+</div>
+</div>
+<p>Odpowiedzieliśmy w ten sposób na pierwsze z pytań postawionych na początku sekcji. Wiemy już, z czym porównujemy predykcję: z rozkładem warunkowym <span class="math inline">\(Y\mid\X=\x\)</span>, którego część systematyczną opisuje <span class="math inline">\(\fopt\)</span> albo <span class="math inline">\(\eta_k\)</span>, a resztę stanowi szum.</p>
+</section>
+</section>
+<section id="sec-strata-ryzyko" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="sec-strata-ryzyko"><span class="header-section-number">1.6</span> Jak mierzymy jakość predykcji</h2>
+<p>Wróćmy do drugiego z pytań postawionych w <a href="#sec-zaleznosc-i-szum" class="quarto-xref"><span>Sekcja 1.5</span></a>: co znaczy, że predykcja jest bliska rzeczywistemu wynikowi? Odpowiedź wymaga określenia kosztu błędu danej wielkości. Koszt ten zależy od celu i kontekstu zastosowania modelu; nie wynika z samego rozkładu danych.</p>
+<p>Potrzebne będą dwa pojęcia. Pierwsze wycenia pojedynczy błąd, drugie uśrednia ten koszt po całej populacji.</p>
+<p><strong>Funkcją straty</strong> nazywamy funkcję <span class="math inline">\(\Loss(y,\widehat y)\ge 0\)</span> określającą koszt predykcji <span class="math inline">\(\widehat y\)</span>, gdy rzeczywistą wartością okazało się <span class="math inline">\(y\)</span>. Naturalnie zakładamy <span class="math inline">\(\Loss(y,y)=0\)</span>: trafna predykcja nie kosztuje nic.</p>
+<p>W regresji standardowym wyborem jest <strong>strata kwadratowa</strong></p>
+<p><span id="eq-strata-kwadratowa-wstep"><span class="math display">\[
+\Loss(y,\widehat y)=(y-\widehat y)^2,
+\tag{1.5}\]</span></span></p>
+<p>karząca duże pomyłki nieproporcjonalnie mocniej niż małe: jeden błąd o wartości <span class="math inline">\(10\)</span> kosztuje tyle, co sto błędów o wartości <span class="math inline">\(1\)</span>. W klasyfikacji najprostszą stratą jest <strong>strata 0–1</strong></p>
+<p><span id="eq-strata-01-wstep"><span class="math display">\[
+\Loss(y,\widehat y)=\ind(y\neq\widehat y),
+\tag{1.6}\]</span></span></p>
+<p>wyceniająca każdą pomyłkę na jednostkę, niezależnie od tego, jakich klas dotyczy. Oba wybory są domyślne, ale nie są jedyne możliwe ani zawsze właściwe – do konsekwencji zmiany straty wrócimy w <a href="02-predyktory-optymalne.html" class="quarto-xref"><span>Rozdział 2</span></a>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Przypomnienie: funkcja wskaźnikowa
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Symbol <span class="math inline">\(\ind(A)\)</span> oznacza <strong>funkcję wskaźnikową</strong> warunku <span class="math inline">\(A\)</span>:</p>
+<p><span class="math display">\[
+\ind(A)=
+\begin{cases}
+1, &amp; \text{gdy warunek } A \text{ jest spełniony},\\
+0, &amp; \text{w przeciwnym razie}.
+\end{cases}
+\]</span></p>
+<p>We wzorze (<a href="#eq-strata-01-wstep" class="quarto-xref"><span>1.6</span></a>) warunkiem jest <span class="math inline">\(y\neq\widehat y\)</span>. Strata wynosi więc <span class="math inline">\(1\)</span>, gdy przewidywana klasa różni się od rzeczywistej, oraz <span class="math inline">\(0\)</span>, gdy klasy są zgodne.</p>
+</div>
+</div>
+</div>
+<p>Strata mówi o pojedynczej obserwacji. Interesuje nas natomiast zachowanie modelu na całej populacji, z której pochodzą dane.</p>
+<div id="def-ryzyko-podstawowe" class="theorem definition">
+<p><span class="theorem-title"><strong>Definicja 1.1 (Ryzyko)</strong></span> <strong>Ryzykiem</strong> predyktora <span class="math inline">\(f\)</span> nazywamy oczekiwaną stratę</p>
+<p><span id="eq-ryzyko-podstawowe"><span class="math display">\[
+\Risk(f)=\E\big[\Loss\big(Y,f(\X)\big)\big],
+\tag{1.7}\]</span></span></p>
+<p>gdzie wartość oczekiwaną liczymy względem łącznego rozkładu pary <span class="math inline">\((\X,Y)\)</span>.</p>
+</div>
+<p><a href="#def-ryzyko-podstawowe" class="quarto-xref">Definicja&nbsp;<span>1.1</span></a> jest wspólna dla regresji i klasyfikacji – różni je wyłącznie podstawiona strata. Dla straty kwadratowej ryzyko jest <strong>błędem średniokwadratowym</strong></p>
+<p><span class="math display">\[
+\Risk(f)=\E\big[(Y-f(\X))^2\big],
+\]</span></p>
+<p>a dla straty 0–1, ponieważ wartość oczekiwana wskaźnika jest prawdopodobieństwem zdarzenia – <strong>prawdopodobieństwem błędnej klasyfikacji</strong>:</p>
+<p><span class="math display">\[
+\Risk(f)=\E\big[\ind(Y\neq f(\X))\big]=\Prob\big(f(\X)\neq Y\big).
+\]</span></p>
+<p>Rachunek jest w obu przypadkach ten sam; zmienia się tylko interpretacja wyniku. Dwie wielkości, które w kursach statystyki wprowadza się zwykle osobno i różnymi wzorami, okazują się jednym pojęciem z dwoma różnymi podstawieniami.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Ważne</span>Ryzyko a błąd na danych treningowych
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Wartość oczekiwana we wzorze (<a href="#eq-ryzyko-podstawowe" class="quarto-xref"><span>1.7</span></a>) jest liczona względem rozkładu całej populacji, a nie względem zbioru obserwacji, którym dysponujemy. Wielkość, którą faktycznie umiemy obliczyć, to <strong>ryzyko empiryczne</strong></p>
+<p><span id="eq-ryzyko-empiryczne"><span class="math display">\[
+\widehat{\Risk}_n(f)=\frac1n\sum_{i=1}^{n}\Loss\big(y_i,f(\x_i)\big).
+\tag{1.8}\]</span></span></p>
+<p>Są to dwie różne rzeczy. Na <span class="math inline">\(\Risk(f)\)</span> nam zależy, ale nie umiemy jej obliczyć, bo nie znamy rozkładu populacji. <span class="math inline">\(\widehat{\Risk}_n(f)\)</span> umiemy obliczyć, lecz jeżeli te same dane posłużyły do dopasowania modelu, jest ona systematycznie zaniżona: model był dobierany tak, aby na nich wypadać dobrze. Dla predyktora ustalonego niezależnie od danych średnia ta byłaby nieobciążonym oszacowaniem ryzyka.</p>
+<p>Do rzetelnego szacowania ryzyka wracamy w <a href="05-ocena-modeli.html" class="quarto-xref"><span>Rozdział 5</span></a>.</p>
+</div>
+</div>
+<p>Ryzyko określa przeciętny koszt błędów predyktora w populacji. Chcemy, by koszt ten był jak najmniejszy, dlatego pytamy: <strong>która funkcja <span class="math inline">\(f\)</span> minimalizuje <span class="math inline">\(\Risk(f)\)</span>?</strong> Zauważmy, że pytanie to nie dotyczy żadnego konkretnego algorytmu ani klasy modeli – minimalizujemy po <strong>wszystkich</strong> funkcjach. Odpowiedź wyznacza więc granicę osiągalności, do której metody uczenia mogą się jedynie zbliżać.</p>
+<p>Okaże się, że odpowiedź zależy wyłącznie od wybranej straty. Przy stracie kwadratowej (<a href="#eq-strata-kwadratowa-wstep" class="quarto-xref"><span>1.5</span></a>) optymalna jest funkcja regresji (<a href="#eq-funkcja-regresji-wstep" class="quarto-xref"><span>1.2</span></a>). Przy stracie 0–1 (<a href="#eq-strata-01-wstep" class="quarto-xref"><span>1.6</span></a>) optymalna jest reguła wskazująca klasę o największym prawdopodobieństwie <span class="math inline">\(\eta_k(\x)\)</span>. Wyprowadzenie obu wyników, wraz z konsekwencjami dla praktyki, jest treścią <a href="02-predyktory-optymalne.html" class="quarto-xref"><span>Rozdział 2</span></a>.</p>
+<section id="błąd-redukowalny-i-nieredukowalny" class="level3" data-number="1.6.1">
+<h3 data-number="1.6.1" class="anchored" data-anchor-id="błąd-redukowalny-i-nieredukowalny"><span class="header-section-number">1.6.1</span> Błąd redukowalny i nieredukowalny</h3>
+<p>Ryzyko pozwala rozdzielić dwa źródła błędów predykcji. Rozróżnienie to dotyczy zarówno regresji, jak i klasyfikacji.</p>
+<p>W obu zadaniach istnieje najmniejsze ryzyko osiągalne przy ustalonych cechach i wybranej funkcji straty. Nazywamy je <strong>błędem nieredukowalnym</strong>. W regresji ze stratą kwadratową wynika ono ze zmienności wyników wokół średniej warunkowej; w klasyfikacji ze stratą 0–1 – z możliwości występowania różnych klas przy tych samych cechach. Może być dodatnie nawet wtedy, gdy dokładnie znamy rozkład danych i stosujemy optymalną regułę predykcji.</p>
+<p><strong>Błąd redukowalny</strong> to nadwyżka ryzyka naszego predyktora ponad to minimum. Może wynikać z ograniczeń wybranej klasy modeli lub z niedokładnego dopasowania na podstawie skończonej próby. Możemy go zmniejszać przez wybór odpowiedniejszej metody, lepsze dopasowanie lub zwiększenie liczby obserwacji, przy zachowaniu tego samego zestawu cech.</p>
+<p>Rozróżnienie to pozwala ocenić, jaka część ryzyka może zostać zmniejszona przez doskonalenie predyktora przy dostępnych cechach.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Nieredukowalny – ale względem czego
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Przymiotnik „nieredukowalny” odnosi się do <strong>ustalonego zestawu cech</strong>, a nie do zjawiska w ogóle. Zmienność <span class="math inline">\(Y\)</span> przy ustalonym <span class="math inline">\(\X\)</span> może wynikać z wpływu czynników, których nie zmierzyliśmy. Dodanie cechy dostarczającej nowej informacji o wyniku może zmniejszyć błąd dotąd nieredukowalny: część zmienności niewyjaśnionej przez dotychczasowe cechy staje się możliwa do przewidzenia.</p>
+<p>Praktyczna konsekwencja: czego nie da się poprawić modelowaniem, często daje się poprawić pomiarem.</p>
+</div>
+</div>
+<p>W <a href="02-predyktory-optymalne.html" class="quarto-xref"><span>Rozdział 2</span></a> wyznaczymy optymalne reguły predykcji dla regresji i klasyfikacji, a dla każdej z nich także konkretną postać obu składników. Przy stracie kwadratowej (<a href="02-predyktory-optymalne.html#sec-blad-nieredukowalny" class="quarto-xref"><span>Sekcja 2.3.3</span></a>) błąd redukowalny będzie średnim kwadratem różnicy między predyktorem a funkcją regresji, a nieredukowalny – średnią wariancją warunkową wyniku. Przy stracie 0–1 błąd nieredukowalny okaże się ryzykiem najlepszego możliwego klasyfikatora, tzw. błędem bayesowskim, a redukowalny – średnim prawdopodobieństwem trafienia utraconym przez wybór gorszej klasy.</p>
+</section>
+</section>
+<section id="sec-predykcja-wnioskowanie" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="sec-predykcja-wnioskowanie"><span class="header-section-number">1.7</span> Dwa cele modelowania: predykcja i wnioskowanie</h2>
+<p>Opis zależności między cechami a wynikiem może służyć różnym celom. Możemy wykorzystywać model do przewidywania wyników dla nowych obiektów albo do szacowania określonych charakterystyk badanej populacji. Cele te nazywamy odpowiednio <strong>predykcją</strong> i <strong>wnioskowaniem</strong>. Mogą one korzystać z tego samego modelu, ale wymagają różnych kryteriów oceny.</p>
+<p>W szerokim znaczeniu wnioskowanie statystyczne obejmuje wykorzystanie danych z próby do formułowania wniosków o populacji, w tym również uczenie predyktora. W tej sekcji używamy tego terminu w węższym znaczeniu: szacowania i badania określonych charakterystyk populacji wraz z oceną niepewności.</p>
+<p>Rozważmy zbiór danych zawierający ceny sprzedaży mieszkań oraz ich cechy, takie jak metraż, lokalizacja i liczba pokoi. Na podstawie tych danych możemy szukać odpowiedzi na dwa różne pytania. Pytanie predykcyjne brzmi: „Jaką cenę przewidujemy dla mieszkania o powierzchni 60 m² w danej lokalizacji?”. Pytanie dotyczące wnioskowania może brzmieć: „O ile różni się przeciętna cena mieszkań o powierzchni 60 m² od przeciętnej ceny mieszkań o powierzchni 50 m² w tej samej lokalizacji?”. W pierwszym przypadku wynikiem jest przewidywana cena konkretnego mieszkania, w drugim – oszacowanie różnicy między średnimi cenami dwóch grup mieszkań w populacji, wraz z oceną niepewności tego oszacowania. Sam fakt, że model zwraca przewidywania, nie przesądza więc o celu analizy: różnica dwóch przewidywanych średnich może służyć oszacowaniu interesującej nas zależności w populacji.</p>
+<p>O sukcesie predykcyjnym decyduje <strong>generalizacja</strong>, czyli zdolność modelu do skutecznego przewidywania wyników dla nowych przypadków z populacji, do której chcemy go stosować. Dobre dopasowanie do danych uczących samo w sobie jej nie zapewnia. Jakość generalizacji szacujemy na danych niewykorzystanych do dopasowania modelu, na przykład na zbiorze walidacyjnym. Wynik na takim zbiorze jest oszacowaniem jakości w danej populacji, a jego wiarygodność zależy od sposobu zebrania i wykorzystania danych. Do zasad tej oceny wrócimy w <a href="05-ocena-modeli.html" class="quarto-xref"><span>Rozdział 5</span></a>.</p>
+<p>Miarę jakości predykcyjnej dobieramy do zadania. Może nią być średnia strata, jak przy ocenie błędu średniokwadratowego, ale stosuje się też miary, które nie są średnią strat liczonych osobno dla każdej obserwacji. Na przykład w klasyfikacji binarnej miara ROC AUC ocenia, na ile model przypisuje wyższe wyniki przypadkom klasy dodatniej niż przypadkom klasy ujemnej. Niezależnie od wyboru miary pytamy o jakość przewidywania na nowych danych.</p>
+<p>We wnioskowaniu oceniamy dokładność oszacowania wybranej wielkości oraz wiarygodność towarzyszącej mu oceny niepewności. Możemy w tym celu badać parametry modelu lub charakterystyki wyznaczone z jego odpowiedzi, takie jak różnica średnich cen. Interpretacja tych wielkości wymaga uzasadnienia założeń, na których opiera się zastosowana procedura.</p>
+<p>Dobra jakość predykcji nie gwarantuje jednak dokładnego oszacowania każdej interesującej nas zależności. Załóżmy, że w danych o mieszkaniach większemu metrażowi niemal zawsze towarzyszy większa liczba pokoi. Model może dobrze przewidywać ceny kolejnych mieszkań, w których te dwie cechy są powiązane w podobny sposób. Trudniej natomiast ustalić, jak średnia cena wiąże się z metrażem przy ustalonej liczbie pokoi: w danych jest niewiele mieszkań, które pozwalają na takie porównanie. Różne modele mogą więc podobnie przewidywać ceny typowych mieszkań, a jednocześnie wskazywać wyraźnie różne zależności ceny od metrażu przy ustalonej liczbie pokoi. Sam mały błąd predykcji nie rozstrzyga, które oszacowanie tej zależności jest trafne.</p>
+<p>Warto przy tym odróżnić <strong>precyzję oszacowania</strong> od jego <strong>dokładności</strong>. Precyzja dotyczy rozrzutu oszacowań, które otrzymywalibyśmy, powtarzając badanie na próbach tej samej wielkości, dobieranych w ten sam sposób, i stosując tę samą metodę. Im mniejszy ten rozrzut, tym większa precyzja. Dokładność dotyczy bliskości oszacowań do rzeczywistej wartości szacowanej wielkości. Oszacowania mogą być precyzyjne, a mimo to systematycznie odbiegać od tej wartości. Na przykład duża próba mieszkań wyłącznie z rynku pierwotnego może pozwolić precyzyjnie oszacować średnią cenę na tym rynku, ale użycie tej średniej jako oszacowania średniej ceny wszystkich mieszkań może prowadzić do systematycznego błędu. Sam wąski przedział ufności nie gwarantuje więc wiarygodnego wnioskowania: jego uzasadnienie zależy od założeń metody i sposobu doboru próby.</p>
+<p>Interpretacja wyników wymaga uwzględnienia założeń modelu i sposobu zebrania danych. Jeżeli przyjmujemy, że średnia cena mieszkania zależy liniowo od metrażu, to współczynnik przy metrażu opisuje w tym modelu różnicę średnich cen przypadającą na dodatkowy metr kwadratowy, przy ustalonych wartościach pozostałych uwzględnionych cech. Jego znaczenie zależy więc także od tego, jakie cechy włączymy do modelu: porównanie mieszkań o różnym metrażu ogółem jest innym porównaniem niż zestawienie ich w obrębie tej samej lokalizacji. Zarówno przy wnioskowaniu, jak i przy predykcji musimy też określić, do jakiej populacji odnosimy wyniki i co uzasadnia wykorzystanie w tym celu dostępnej próby.</p>
+<p>Osobnego rozróżnienia wymagają <strong>zależność statystyczna i przyczynowość</strong>. Jeżeli mieszkania po remoncie mają przeciętnie wyższe ceny, nie oznacza to jeszcze, że zaobserwowana różnica jest skutkiem samego remontu. Obie grupy mogą różnić się także lokalizacją, metrażem czy standardem budynku. Pytanie o skutek remontu dotyczy natomiast porównania ceny tego samego mieszkania w dwóch sytuacjach: gdy przeprowadzimy remont i gdy go nie przeprowadzimy. Dla danego mieszkania obserwujemy tylko jedną z tych sytuacji, więc nie możemy bezpośrednio wyznaczyć jego indywidualnego skutku remontu. Zwykle celem badania jest oszacowanie <strong>przeciętnego skutku remontu w określonej populacji mieszkań</strong>. Wymaga to odpowiedniego sposobu zaplanowania badania lub dodatkowych założeń pozwalających uzasadnić porównanie mieszkań remontowanych i nieremontowanych. Oszacowanie przeciętnego skutku nie oznacza jednak poznania skutku dla każdego mieszkania z osobna. Samo dopasowanie modelu opisującego zależność cen od cech mieszkań nie dostarcza uzasadnienia dla interpretacji przyczynowej.</p>
+<p>Niepewność towarzyszy zarówno wnioskowaniu, jak i predykcji, lecz może dotyczyć różnych wielkości. <strong>Przedział ufności dla średniej ceny</strong> mieszkań o ustalonych cechach wyraża niepewność oszacowania tej średniej na podstawie próby. <strong>Przedział predykcji dla ceny pojedynczego mieszkania</strong> musi dodatkowo uwzględniać zróżnicowanie cen mieszkań o tych samych obserwowanych cechach. Możemy więc precyzyjnie oszacować średnią cenę w danej grupie, a mimo to przewidywać cenę konkretnego mieszkania z dużą niepewnością. Zwiększanie liczby obserwacji może poprawiać precyzję oszacowania średniej, ale samo w sobie nie usuwa zmienności cen wokół niej – tej samej, którą wcześniej wiązaliśmy z błędem nieredukowalnym.</p>
+<p>Ten sam model może służyć obu celom: oszacowana funkcja średniej ceny pozwala zarówno przewidywać ceny mieszkań, jak i porównywać średnie ceny przy różnych wartościach cech. Każde zastosowanie wymaga jednak oceny według kryteriów właściwych dla danego celu.</p>
+</section>
+<section id="sec-trening-modelu" class="level2" data-number="1.8">
+<h2 data-number="1.8" class="anchored" data-anchor-id="sec-trening-modelu"><span class="header-section-number">1.8</span> Trening modelu</h2>
+<p>Wiemy już, jakie zadania może spełniać model i jak oceniać jego predykcje. Pozostaje pytanie, jak na podstawie danych wyznaczyć regułę predykcji <span class="math inline">\(\widehat f\)</span>, która nowym obserwacjom przypisze przewidywaną wartość lub klasę. Chcielibyśmy wyznaczyć predyktor o możliwie małym ryzyku <span class="math inline">\(\Risk(f)\)</span>. Nie znamy jednak rozkładu populacji <span class="math inline">\(P\)</span>, względem którego ryzyko jest zdefiniowane. Dysponujemy jedynie zbiorem treningowym <span class="math inline">\(\mathcal{D}=\{(\x_1,y_1),\ldots,(\x_n,y_n)\}\)</span>. <strong>Trening modelu</strong> polega na wykorzystaniu tej próby do wyznaczenia reguły, którą będziemy stosować także do nowych obserwacji. Poniżej opiszemy ten proces z perspektywy zadania predykcyjnego.</p>
+<p>Najpierw określamy klasę modeli <span class="math inline">\(\mathcal{F}\)</span> (por. <a href="#sec-model-w-analizie-danych" class="quarto-xref"><span>Sekcja 1.2</span></a>), czyli zbiór dopuszczalnych predyktorów. Każda funkcja <span class="math inline">\(f\in\mathcal{F}\)</span> przypisuje wektorowi cech <span class="math inline">\(\x\)</span> przewidywany wynik: w regresji jest to liczba, a w klasyfikacji – etykieta klasy. Wybór <span class="math inline">\(\mathcal{F}\)</span> wyraża założenie o tym, jakie zależności chcemy odtwarzać: możemy dopuścić na przykład tylko zależności liniowe albo również funkcje o bardziej złożonym przebiegu. Klasa zbyt wąska może nie zawierać funkcji, która dobrze opisuje interesującą nas zależność. Samo poszerzanie klasy nie gwarantuje jednak lepszego wyniku uczenia.</p>
+<p>Aby porównać dopuszczalne predyktory, potrzebujemy <strong>kryterium dopasowania</strong>. Podstawowym wyborem jest ryzyko empiryczne zdefiniowane wzorem (<a href="#eq-ryzyko-empiryczne" class="quarto-xref"><span>1.8</span></a>):</p>
+<p><span class="math display">\[
+\widehat{\Risk}_n(f)
+=\frac1n\sum_{i=1}^{n}\Loss\big(y_i,f(\x_i)\big).
+\]</span></p>
+<p>Dla każdego kandydata <span class="math inline">\(f\)</span> obliczamy predykcje na danych treningowych, porównujemy je z zaobserwowanymi wynikami i uśredniamy poniesione straty. Przy stracie kwadratowej otrzymujemy średni kwadrat błędu na próbie, <span class="math inline">\(\frac1n\sum_{i=1}^{n}(y_i-f(\x_i))^2\)</span>. Przy stracie 0–1 otrzymujemy odsetek błędnie sklasyfikowanych obserwacji, <span class="math inline">\(\frac1n\sum_{i=1}^{n}\ind(y_i\neq f(\x_i))\)</span>. W obu przypadkach mniejsza wartość oznacza lepsze dopasowanie według wybranego kryterium.</p>
+<p>Prowadzi to do <strong>zasady minimalizacji ryzyka empirycznego</strong>:</p>
+<p><span id="eq-minimalizacja-ryzyka-empirycznego"><span class="math display">\[
+\widehat f\in\operatorname*{arg\,min}_{f\in\mathcal{F}}
+\widehat{\Risk}_n(f).
+\tag{1.9}\]</span></span></p>
+<p>Równoważnie możemy zapisać:</p>
+<p><span class="math display">\[
+\widehat f\in\mathcal{F}
+\qquad\text{oraz}\qquad
+\widehat{\Risk}_n(\widehat f)\leq\widehat{\Risk}_n(f)
+\quad\text{dla każdego }f\in\mathcal{F}.
+\]</span></p>
+<p>Wybrany predyktor <span class="math inline">\(\widehat f\)</span> należy więc do klasy <span class="math inline">\(\mathcal{F}\)</span> i ma ryzyko empiryczne nie większe niż jakikolwiek inny predyktor z tej klasy.</p>
+<p>Operator <span class="math inline">\(\operatorname*{arg\,min}\)</span> wskazuje argumenty, dla których minimalizowane wyrażenie osiąga najmniejszą wartość. Tutaj szukamy funkcji <span class="math inline">\(f\in\mathcal{F}\)</span>. Minimum może być osiągane przez więcej niż jedną funkcję; <span class="math inline">\(\widehat f\)</span> wybieramy spośród nich. Zakładamy tu, że minimum w wybranej klasie jest osiągane. Wzór określa zasadę wyboru modelu, ale nie podaje jeszcze sposobu jego znalezienia. W praktyce procedura obliczeniowa może zwracać jedynie rozwiązanie przybliżone.</p>
+<p>Tę procedurę nazywamy algorytmem uczenia (por. <a href="#sec-model-w-analizie-danych" class="quarto-xref"><span>Sekcja 1.2</span></a>). Klasa <span class="math inline">\(\mathcal{F}\)</span> określa, jakie predyktory dopuszczamy, kryterium mówi, jak je porównujemy, a algorytm opisuje, jak na podstawie danych wyznaczamy konkretny model. Ta sama klasa i to samo kryterium mogą być obsługiwane przez różne algorytmy. Mogą one różnić się kosztem obliczeń, a przy dopasowaniu przybliżonym także otrzymanym wynikiem.</p>
+<p>Minimalizacja ryzyka empirycznego jest ważnym schematem uczenia, ale nie każda metoda bezpośrednio minimalizuje stratę, którą później oceniamy predykcje. Na przykład model prawdopodobieństw klas można dopasowywać przez minimalizację średniej ujemnego logarytmu prawdopodobieństwa przypisanego zaobserwowanej klasie, obliczanej na danych treningowych. Stratą 0–1 oceniamy wówczas etykiety otrzymane po zastosowaniu reguły decyzyjnej do oszacowanych prawdopodobieństw. Inne metody konstruują predykcję według ustalonej reguły, choćby na podstawie wyników obserwacji podobnych do przewidywanego przypadku. Dlatego opis metody powinien wskazywać zarówno sposób dopasowania, jak i kryterium oceny otrzymanego modelu.</p>
+<p>Małe ryzyko empiryczne świadczy o dopasowaniu do próby, lecz nie zapewnia dobrej generalizacji. Dostatecznie bogata klasa może pozwolić niemal zapamiętać wyniki treningowe, łącznie z przypadkowymi odchyleniami, których nie da się przewidzieć dla nowych obiektów. Takie <strong>nadmierne dopasowanie</strong> może dać bardzo mały błąd treningowy i duży błąd na nowych danych. W uczeniu musimy więc uwzględniać złożoność dopuszczalnych modeli i oceniać ich działanie na danych niewykorzystanych do dopasowania. Do sposobów ograniczania złożoności i oceny generalizacji wrócimy w <a href="04-bias-wariancja.html" class="quarto-xref"><span>Rozdział 4</span></a> i <a href="05-ocena-modeli.html" class="quarto-xref"><span>Rozdział 5</span></a>.</p>
+<p>Podobny schemat występuje w uczeniu nienadzorowanym. Dysponujemy wtedy zbiorem <span class="math inline">\(\mathcal{D}=\{\x_1,\ldots,\x_n\}\)</span>, bez zmiennej docelowej, więc kryterium nie porównuje predykcji ze znanymi odpowiedziami. Nadal określamy jednak dopuszczalną postać modelu, sposób oceny dopasowania oraz algorytm. W grupowaniu możemy na przykład ustalić liczbę grup i szukać takiego podziału obserwacji oraz takich środków grup, aby suma kwadratów odległości obserwacji od przypisanych im środków była jak najmniejsza. Kryterium wyraża wówczas przyjęte rozumienie dobrej struktury grup, a nie zgodność z etykietami dostarczonymi w danych.</p>
+<p>Zarówno w uczeniu nadzorowanym, jak i nienadzorowanym trzeba zatem określić, jaką postać może przyjąć model i jak dane wpływają na jego dopasowanie.</p>
+</section>
+<section id="sec-parametryczne-nieparametryczne" class="level2" data-number="1.9">
+<h2 data-number="1.9" class="anchored" data-anchor-id="sec-parametryczne-nieparametryczne"><span class="header-section-number">1.9</span> Metody parametryczne i nieparametryczne</h2>
+<p>W poprzedniej sekcji punktem wyjścia do uczenia był wybór klasy modeli <span class="math inline">\(\mathcal{F}\)</span>. Możemy ustalić postać zależności i na podstawie danych wyznaczyć jedynie pewną liczbę współczynników. Możemy też dopuścić, aby wraz z napływem danych opis zależności stawał się coraz bardziej szczegółowy. Rozróżnienie to prowadzi do <strong>metod parametrycznych</strong> i <strong>nieparametrycznych</strong>. Omówimy je na przykładzie przewidywania wartości liczbowej.</p>
+<p>W podejściu parametrycznym przyjmujemy rodzinę funkcji</p>
+<p><span class="math display">\[
+\mathcal{F}=\{f_{\theta}:\theta\in\Theta\},
+\qquad \Theta\subseteq\R^{d},
+\]</span></p>
+<p>gdzie <span class="math inline">\(\theta\)</span> jest wektorem parametrów, a jego wymiar <span class="math inline">\(d\)</span> jest ustalony i nie rośnie wraz z liczbą obserwacji <span class="math inline">\(n\)</span>. Przy ustalonym zestawie cech i wybranej rodzinie funkcji trening polega na oszacowaniu <span class="math inline">\(\theta\)</span>. Otrzymujemy <span class="math inline">\(\widehat\theta\)</span>, a wraz z nim dopasowany predyktor <span class="math inline">\(\widehat f=f_{\widehat\theta}\)</span>. Większa próba dostarcza więcej informacji do oszacowania tych samych parametrów.</p>
+<p>Prostym przykładem jest <strong>regresja liniowa</strong> z jedną cechą:</p>
+<p><span class="math display">\[
+f_{\theta}(x)=\beta_0+\beta_1x,
+\qquad \theta=(\beta_0,\beta_1).
+\]</span></p>
+<p>Jeżeli <span class="math inline">\(x\)</span> oznacza powierzchnię mieszkania, a wynikiem jest jego cena, model przypisuje każdemu dodatkowemu metrowi kwadratowemu taki sam przyrost przewidywanej ceny, równy <span class="math inline">\(\beta_1\)</span>. Wyraz <span class="math inline">\(\beta_0\)</span> ustala położenie prostej; jego wartość dla <span class="math inline">\(x=0\)</span> nie musi mieć praktycznej interpretacji, jeśli mieszkania o takim metrażu nie należą do zakresu stosowalności modelu. Przy stracie kwadratowej dobieramy oba współczynniki, minimalizując średni kwadrat błędu na danych treningowych. Niezależnie od tego, czy mamy sto, czy dziesięć tysięcy obserwacji, szacujemy dwa współczynniki. Dane zmieniają położenie i nachylenie prostej, ale nie pozwalają jej się zakrzywić.</p>
+<p>W podejściu nieparametrycznym nie ograniczamy opisu zależności do rodziny wyznaczonej przez ustaloną, skończoną liczbę parametrów. Złożoność opisu może rosnąć wraz z liczbą obserwacji: dodatkowe dane mogą pozwalać odtwarzać coraz drobniejsze szczegóły zależności. Nie oznacza to, że model dopasowany do skończonej próby ma nieskończony rozmiar. Jego zapis jest skończony, lecz rozmiar ten nie musi być ograniczony z góry niezależnie od wielkości próby.</p>
+<p>Przykładem jest <strong>regresja <span class="math inline">\(k\)</span> najbliższych sąsiadów</strong>. Aby przewidzieć cenę mieszkania o metrażu <span class="math inline">\(x\)</span>, wybieramy <span class="math inline">\(k\)</span> mieszkań z próby treningowej, których metraże są najbliższe <span class="math inline">\(x\)</span>, i uśredniamy ich ceny:</p>
+<p><span class="math display">\[
+\widehat f(x)=\frac1k\sum_{i\in N_k(x)}y_i,
+\]</span></p>
+<p>gdzie <span class="math inline">\(N_k(x)\)</span> oznacza zbiór indeksów tych obserwacji. Przy jednej cesze bliskość możemy mierzyć odległością <span class="math inline">\(|x_i-x|\)</span>. W odróżnieniu od regresji liniowej nie wyznaczamy jednej prostej obowiązującej w całym zakresie metrażu. Dla każdego przewidywanego przypadku korzystamy z odpowiedniego fragmentu próby. Gdy zmienia się <span class="math inline">\(x\)</span>, może zmieniać się również zestaw sąsiadów, a więc i przewidywana cena. Opis dopasowanego modelu obejmuje dane treningowe potrzebne do wyszukiwania sąsiadów, zamiast sprowadzać się do dwóch współczynników. Metodę najbliższych sąsiadów w zadaniu klasyfikacji omówimy w <a href="03-knn.html" class="quarto-xref"><span>Rozdział 3</span></a>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Nieparametryczny nie znaczy „bez parametrów” ani „bez założeń”
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Metoda nieparametryczna może mieć wielkości sterujące jej działaniem, takie jak liczba sąsiadów <span class="math inline">\(k\)</span>. Może też wymagać oszacowania wielu współczynników. O nazwie decyduje brak ograniczenia rodziny modeli do ustalonej, skończenie wymiarowej parametryzacji.</p>
+<p>Pozostają również założenia o odtwarzanej zależności. Uśrednianie wyników sąsiadów jest użyteczne, gdy obiekty bliskie według wybranych cech mają zbliżone średnie wyniki. Znaczenie ma więc wybór cech, sposobu mierzenia odległości i wielkości sąsiedztwa. Zastąpienie prostej lokalnym uśrednianiem zmienia założenia modelu, ale ich nie usuwa.</p>
+</div>
+</div>
+<p>W tym miejscu warto rozróżnić <strong>parametry modelu</strong> i <strong>hiperparametry</strong>. Współczynniki <span class="math inline">\(\beta_0\)</span> i <span class="math inline">\(\beta_1\)</span> są parametrami regresji liniowej: wyznaczamy je podczas dopasowania w ustalonej klasie modeli. Liczba sąsiadów <span class="math inline">\(k\)</span> jest natomiast hiperparametrem metody <span class="math inline">\(k\)</span>-NN: określa sposób konstruowania predykcji. Przy małym <span class="math inline">\(k\)</span> odpowiedź zależy od niewielu bliskich obserwacji, a przy dużym – od średniej w szerszym otoczeniu. Hiperparametry ustalamy dla danego dopasowania, ale możemy je dobierać na podstawie danych, porównując wyniki różnych ustawień na zbiorze walidacyjnym. Do zasad takiego doboru wrócimy w <a href="05-ocena-modeli.html" class="quarto-xref"><span>Rozdział 5</span></a>. Sam fakt, że pewna wielkość została dobrana z użyciem danych, nie przesądza więc, czy nazywamy ją parametrem, czy hiperparametrem; istotna jest jej rola w procedurze.</p>
+<p>Wybór podejścia ma konsekwencje dla tego, czego możemy nauczyć się z dostępnej próby. Prosta rodzina parametryczna silnie ogranicza dopuszczalne zależności. Jeżeli ograniczenia dobrze odpowiadają problemowi, mogą ułatwić uczenie nawet przy niewielu obserwacjach. Jeśli jednak średnia cena zmienia się z metrażem w sposób wyraźnie zakrzywiony, żadna liczba obserwacji nie sprawi, że pojedyncza prosta wiernie odtworzy ten przebieg. Takie ograniczenie może prowadzić do <strong>niedopasowania</strong>: model jest zbyt mało elastyczny, aby uchwycić istotną zależność.</p>
+<p>Metoda nieparametryczna daje większą swobodę odtwarzania kształtu zależności, ale potrzebuje danych tam, gdzie chcemy poznać jej lokalny przebieg. Przy wielu cechach znalezienie dostatecznie licznej grupy rzeczywiście podobnych obiektów może wymagać bardzo dużej próby. Zbyt małe sąsiedztwo sprawia natomiast, że predykcja silnie reaguje na przypadkowe odchylenia pojedynczych wyników, co sprzyja nadmiernemu dopasowaniu. Zbyt duże sąsiedztwo może zacierać istotne zmiany zależności i prowadzić do niedopasowania. Elastycznością trzeba więc sterować również w metodach nieparametrycznych. Związek między elastycznością, wielkością próby i zmiennością dopasowania rozwiniemy w <a href="04-bias-wariancja.html" class="quarto-xref"><span>Rozdział 4</span></a>.</p>
+<p>Podział na metody parametryczne i nieparametryczne nie jest przy tym podziałem na modele liniowe i nieliniowe ani na proste i złożone. Na przykład rodzina funkcji <span class="math inline">\(f_{\theta}(x)=a\exp(bx)\)</span> ma dwa parametry, choć opisuje zależność nieliniową. Sieć neuronowa o ustalonej architekturze i ustalonej liczbie wag także jest modelem parametrycznym, nawet jeśli tych wag są miliony. Z kolei metoda nieparametryczna z silnym wygładzaniem może odtwarzać jedynie bardzo ogólny przebieg zależności. Sama nazwa podejścia nie przesądza zatem o elastyczności konkretnego dopasowania ani o jakości jego predykcji.</p>
+<p>Na <a href="#fig-parametryczne-nieparametryczne" class="quarto-xref">Rysunek&nbsp;<span>1.1</span></a> porównujemy oba podejścia na tych samych danych symulowanych. Średnia warunkowa wyniku ma zakrzywiony przebieg, a obserwacje odchylają się od niej wskutek szumu. Do próby dopasowujemy prostą oraz regresję <span class="math inline">\(k\)</span> najbliższych sąsiadów z <span class="math inline">\(k=15\)</span>.</p>
+<div id="cell-fig-parametryczne-nieparametryczne" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.neighbors <span class="im">import</span> KNeighborsRegressor</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>rng_porownanie <span class="op">=</span> np.random.default_rng(<span class="dv">18</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>x_porownanie <span class="op">=</span> np.sort(rng_porownanie.uniform(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">180</span>))</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>srednia_porownanie <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> x_porownanie <span class="op">+</span> np.sin(<span class="fl">1.5</span> <span class="op">*</span> x_porownanie)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>y_porownanie <span class="op">=</span> srednia_porownanie <span class="op">+</span> rng_porownanie.normal(<span class="dv">0</span>, <span class="fl">0.3</span>, <span class="dv">180</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>siatka_porownanie <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">600</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>srednia_siatka <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> siatka_porownanie <span class="op">+</span> np.sin(<span class="fl">1.5</span> <span class="op">*</span> siatka_porownanie)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>modele_porownanie <span class="op">=</span> [</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"Model parametryczny: regresja liniowa"</span>, LinearRegression(), <span class="st">"#D7263D"</span>),</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"Metoda nieparametryczna: 15 sąsiadów"</span>, KNeighborsRegressor(n_neighbors<span class="op">=</span><span class="dv">15</span>), <span class="st">"#0072B2"</span>),</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>fig, osie <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">4</span>), sharex<span class="op">=</span><span class="va">True</span>, sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, (tytul, model, kolor) <span class="kw">in</span> <span class="bu">zip</span>(osie, modele_porownanie):</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    model.fit(x_porownanie[:, <span class="va">None</span>], y_porownanie)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    ax.scatter(x_porownanie, y_porownanie, s<span class="op">=</span><span class="dv">12</span>, color<span class="op">=</span><span class="st">"0.55"</span>, alpha<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>               label<span class="op">=</span><span class="st">"Dane treningowe"</span>)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    ax.plot(siatka_porownanie, srednia_siatka, <span class="st">"--"</span>, color<span class="op">=</span><span class="st">"0.15"</span>, lw<span class="op">=</span><span class="fl">1.8</span>,</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span><span class="st">"Średnia warunkowa"</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    ax.plot(siatka_porownanie, model.predict(siatka_porownanie[:, <span class="va">None</span>]),</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span>kolor, lw<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">"Dopasowany model"</span>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    ax.<span class="bu">set</span>(title<span class="op">=</span>tytul, xlabel<span class="op">=</span><span class="st">"$x$"</span>)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    ax.grid(alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].set_ylabel(<span class="st">"$y$"</span>)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].legend(fontsize<span class="op">=</span><span class="dv">8</span>, loc<span class="op">=</span><span class="st">"lower right"</span>)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-parametryczne-nieparametryczne" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-parametryczne-nieparametryczne-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01-czym-jest-model_files/figure-html/fig-parametryczne-nieparametryczne-output-1.png" width="951" height="374" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-parametryczne-nieparametryczne-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Rysunek&nbsp;1.1: Regresja liniowa i lokalne uśrednianie na tej samej próbie. Linia przerywana przedstawia średnią warunkową, znaną dzięki symulacji. Prosta nie odtwarza jej zakrzywienia; metoda najbliższych sąsiadów może za nim podążać, ale jej przebieg zależy także od lokalnych odchyleń w próbie.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Regresja liniowa wybiera jedną prostą jako przybliżenie całej zależności. Lokalne uśrednianie pozwala odtworzyć jej zakrzywienia, ale daje też drobne uskoki: przy zmianie zestawu sąsiadów zmienia się średnia ich wyników. Rysunek ilustruje różnicę w dopuszczalnej postaci predykcji. Nie stanowi ogólnego argumentu za przewagą jednej metody. Gdyby średnia warunkowa była liniowa, ograniczenie do prostych mogłoby być korzystne. W rzeczywistym zadaniu nie znamy tej średniej, a jakość obu metod musimy ocenić na danych niewykorzystanych do ich dopasowania i doboru hiperparametrów.</p>
+</section>
+<section id="kompromis-między-interpretowalnością-a-dokładnością" class="level2" data-number="1.10">
+<h2 data-number="1.10" class="anchored" data-anchor-id="kompromis-między-interpretowalnością-a-dokładnością"><span class="header-section-number">1.10</span> Kompromis między interpretowalnością a dokładnością</h2>
+<p>Porównanie z <a href="#fig-parametryczne-nieparametryczne" class="quarto-xref">Rysunek&nbsp;<span>1.1</span></a> można odczytać także z innej strony. Działanie dopasowanej prostej da się streścić jednym zdaniem: każdy dodatkowy metr kwadratowy zwiększa przewidywaną cenę o <span class="math inline">\(\widehat\beta_1\)</span>. Dla regresji <span class="math inline">\(k\)</span> najbliższych sąsiadów takiego zdania nie ma. Aby opisać, jak przewidywana cena zmienia się z metrażem, trzeba pokazać cały wykres dopasowania albo wskazać dane treningowe, z których powstaje. Większa elastyczność pozwoliła odtworzyć zakrzywienie zależności, ale opis modelu przestał być zwięzły. Napięcie między zdolnością modelu do odtwarzania złożonych zależności a możliwością zrozumienia jego działania nazywa się <strong>kompromisem między interpretowalnością a dokładnością</strong>.</p>
+<p>Model nazywamy <strong>interpretowalnym</strong>, jeżeli z jego struktury można odczytać, jak predykcja zależy od cech, bez obliczania jej dla wielu przykładowych obiektów. W regresji liniowej</p>
+<p><span class="math display">\[
+f(\x)=\beta_0+\beta_1x_1+\ldots+\beta_px_p
+\]</span></p>
+<p>predykcje dla dwóch obiektów różniących się jedynie wartością cechy <span class="math inline">\(x_j\)</span> o jednostkę różnią się o <span class="math inline">\(\beta_j\)</span>, niezależnie od wartości pozostałych cech. Całą zależność opisuje <span class="math inline">\(p+1\)</span> liczb, a wkład każdej cechy można rozpatrywać osobno. Na tę przejrzystość składa się kilka własności:</p>
+<ul>
+<li><strong>addytywność</strong> – predykcja jest sumą wkładów poszczególnych cech, więc wpływ jednej cechy nie zależy od wartości pozostałych;</li>
+<li><strong>prosta postać wkładów</strong> – na przykład liniowa lub monotoniczna;</li>
+<li><strong>rzadkość</strong> – model korzysta z niewielu cech; współczynniki przy trzech cechach można objąć jednym spojrzeniem, przy trzystu już nie.</li>
+</ul>
+<p>Własności te można zachowywać w różnym stopniu. <strong>Model addytywny</strong></p>
+<p><span class="math display">\[
+f(\x)=\beta_0+g_1(x_1)+\ldots+g_p(x_p)
+\]</span></p>
+<p>dopuszcza nieliniowe funkcje <span class="math inline">\(g_j\)</span>, na przykład zakrzywioną zależność ceny od metrażu, ale zachowuje addytywność: wkład każdej cechy można przedstawić jako osobną krzywą. Addytywność tracimy, gdy dopuszczamy <strong>interakcje</strong>, czyli sytuacje, w których wpływ jednej cechy zależy od wartości innej. Jeżeli dodatkowy metr kwadratowy podnosi cenę bardziej w centrum miasta niż na jego obrzeżach, pytanie „o ile rośnie cena wraz z metrażem?” nie ma jednej odpowiedzi. Odpowiedź zależy od lokalizacji, a przy wielu wzajemnie oddziałujących cechach – od ich kombinacji.</p>
+<p>Warto odróżnić interpretację <strong>globalną</strong>, opisującą zachowanie modelu w całym zakresie cech, od <strong>lokalnej</strong>, wyjaśniającej pojedynczą predykcję. Regresja <span class="math inline">\(k\)</span> najbliższych sąsiadów jest lokalnie przejrzysta: przewidywana cena jest średnią cen <span class="math inline">\(k\)</span> wskazanych mieszkań, które możemy obejrzeć. Globalnie nie ma zwięzłego opisu. Przy wielu cechach również lokalne wyjaśnienie staje się mniej oczywiste, bo to, które mieszkania uznajemy za podobne, zależy od wyboru odległości i skal poszczególnych cech.</p>
+<p>Popularne metody można schematycznie uporządkować od najbardziej do najmniej interpretowalnych <span class="citation" data-cites="islp">(por. <a href="../references.html#ref-islp" role="doc-biblioref">James i in. 2023, rozdz. 2</a>)</span>:</p>
+<ol type="1">
+<li>regresja liniowa z niewielką liczbą niezerowych współczynników, na przykład dopasowana metodą lasso, która część współczynników ustawia dokładnie na zero;</li>
+<li>regresja liniowa ze wszystkimi cechami;</li>
+<li>modele addytywne;</li>
+<li>drzewa decyzyjne, w których predykcję wyznacza ciąg pytań o wartości cech, na przykład „czy metraż przekracza 55 m²?”;</li>
+<li>zespoły wielu drzew oraz sieci neuronowe.</li>
+</ol>
+<p>W tej samej kolejności rośnie zwykle elastyczność. Uporządkowanie jest jednak przybliżone: płytkie drzewo z kilkoma pytaniami jest czytelniejsze niż regresja liniowa z setkami cech, a drzewo o tysiącach liści – mniej czytelne niż model addytywny.</p>
+<p><strong>Kompromis jest tendencją, a nie prawem.</strong> Dokładność, o którą chodzi, to jakość predykcji na nowych danych, a nie dopasowanie do próby treningowej. Bogatsza klasa modeli pozwala dopasować się do próby co najmniej równie dobrze jak uboższa, ale – jak zauważyliśmy w <a href="#sec-trening-modelu" class="quarto-xref"><span>Sekcja 1.8</span></a> – może przy tym odtwarzać przypadkowe odchylenia. Jeżeli średnia warunkowa jest liniowa, prosta nie traci niczego na niedopasowaniu, a metoda najbliższych sąsiadów płaci za swoją swobodę większą wrażliwością na losowość próby. Prostszy model jest wtedy jednocześnie czytelniejszy i dokładniejszy. Rudin <span class="citation" data-cites="rudin2019">(<a href="../references.html#ref-rudin2019" role="doc-biblioref">2019</a>)</span> zwraca uwagę, że w wielu zadaniach na danych tabelarycznych z sensownie określonymi cechami różnica dokładności między dobrze dopasowanymi modelami interpretowalnymi a złożonymi jest niewielka. Wyraźną przewagę elastyczne modele osiągają zwykle wtedy, gdy pojedyncze cechy nie mają osobnego znaczenia, a istotna informacja tkwi w ich złożonych układach – jak w obrazach, dźwięku czy tekście, gdzie pojedynczy piksel lub znak niewiele mówi. Część elastyczności można też przenieść do doboru cech: logarytm ceny lub metraż podniesiony do kwadratu pozwalają modelowi liniowemu opisać zakrzywioną zależność bez utraty addytywności. Czy kompromis rzeczywiście występuje w danym zadaniu, trzeba więc sprawdzić, porównując modele na danych niewykorzystanych do ich dopasowania.</p>
+<p><strong>Czytelny nie znaczy trafny.</strong> Łatwość odczytania współczynnika nie gwarantuje, że odczytana wartość opisuje interesującą nas zależność. Jak zauważyliśmy w <a href="#sec-predykcja-wnioskowanie" class="quarto-xref"><span>Sekcja 1.7</span></a>, <span class="math inline">\(\beta_j\)</span> opisuje różnicę średnich przy ustalonych wartościach pozostałych cech <em>uwzględnionych w modelu</em>. Dodanie lub usunięcie cechy może zmienić zarówno wartość współczynnika, jak i jego znaczenie. Gdy metraż i liczba pokoi są silnie powiązane, oszacowania obu współczynników bywają niestabilne: niewielka zmiana próby może przesunąć „wpływ” z jednej cechy na drugą, choć predykcje prawie się nie zmieniają. Jeżeli zaś rzeczywista zależność jest zakrzywiona, nachylenie dopasowanej prostej jest jej uśrednionym podsumowaniem, a jego wartość zależy od tego, jakie metraże przeważają w próbie. Wreszcie żaden, nawet najprostszy, model zależności statystycznej nie uzasadnia sam przez się interpretacji przyczynowej. Interpretowalny model daje prostą odpowiedź, ale trzeba osobno uzasadnić, że jest to odpowiedź na zadane pytanie.</p>
+<p><strong>Wybór zależy od celu i kontekstu.</strong> Jeżeli celem jest predykcja, najważniejsza jest jakość przewidywań i model elastyczny jest uzasadniony wtedy, gdy rzeczywiście przewiduje lepiej. Jeżeli celem jest wnioskowanie, potrzebujemy modelu, którego wielkości odpowiadają na postawione pytanie i pozwalają ocenić niepewność ich oszacowania; przemawia to za prostszymi strukturami, o ile ich założenia są uzasadnione. Poza samym celem analizy liczy się też sposób użycia modelu. Gdy model wspiera decyzje dotyczące ludzi – przyznanie kredytu, kwalifikację do leczenia – często trzeba uzasadnić pojedynczą decyzję, poddać model zewnętrznej kontroli lub spełnić wymagania prawne.</p>
+<p>Interpretowalność pomaga również wykryć, że model nauczył się zależności prawdziwej w danych, lecz bezużytecznej lub szkodliwej w zastosowaniu. Caruana i in. <span class="citation" data-cites="caruana2015">(<a href="../references.html#ref-caruana2015" role="doc-biblioref">2015</a>)</span> opisują model ryzyka zgonu pacjentów z zapaleniem płuc, który miał wspierać decyzje o hospitalizacji. Jedna z odczytanych z niego reguł głosiła, że astma <em>obniża</em> ryzyko. W danych tak właśnie było: pacjentów z astmą od razu kierowano na intensywną terapię, a intensywne leczenie zmniejszało ich śmiertelność. Model zastosowany zgodnie z przeznaczeniem kierowałby jednak do leczenia domowego właśnie tych chorych, którzy potrzebowali najintensywniejszej opieki. Regułę zauważono, bo model był czytelny. Najdokładniejszym modelem w tamtym badaniu okazała się sieć neuronowa, ale uznano ją za zbyt ryzykowną: mogła nauczyć się tej samej zależności, a nie dało się tego sprawdzić. Przykład pokazuje, że dobra ocena na danych pochodzących z tego samego źródła co dane treningowe nie wykrywa modelu dokładnego z niewłaściwych powodów.</p>
+</section>
+<section id="zadania" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="zadania">Zadania</h2>
+<ol type="1">
+<li><p>Wybierz model spoza analizy danych, na przykład schemat linii metra, mapę pogody w prognozie telewizyjnej albo manekina używanego w testach zderzeniowych. Wskaż jego cel, pominięte szczegóły, zachowane relacje oraz sytuację, w której przestaje być użyteczny (<a href="#sec-pojecie-modelu" class="quarto-xref"><span>Sekcja 1.1</span></a>).</p></li>
+<li><p>Dla regresji liniowej i regresji <span class="math inline">\(k\)</span> najbliższych sąsiadów wskaż osobno klasę modeli, model dopasowany i algorytm uczenia. Który z tych elementów zmienia się po dołączeniu nowych obserwacji do zbioru treningowego, a który pozostaje taki sam?</p></li>
+<li><p>Dla każdej sytuacji rozstrzygnij, czy jest to zadanie uczenia nadzorowanego, czy nienadzorowanego, a w pierwszym przypadku – czy jest to regresja, czy klasyfikacja. Uzasadnij odpowiedź i wskaż przypadki, w których rozstrzygnięcie zależy od celu analizy (<a href="#sec-regresja-klasyfikacja" class="quarto-xref"><span>Sekcja 1.4</span></a>).</p>
+<ol type="a">
+<li>Przewidywanie liczby wizyt pacjenta w przychodni w ciągu roku.</li>
+<li>Przewidywanie oceny filmu w skali od 1 do 5 gwiazdek.</li>
+<li>Przewidywanie województwa zamieszkania klienta na podstawie jego historii zakupów.</li>
+<li>Podział klientów sklepu internetowego na grupy o podobnych zwyczajach zakupowych.</li>
+<li>Szacowanie prawdopodobieństwa, że kredytobiorca spłaci kredyt.</li>
+</ol></li>
+<li><p>Dla każdej sytuacji rozstrzygnij, czy celem jest predykcja, czy wnioskowanie, i zaproponuj, jak oceniać jakość modelu (<a href="#sec-predykcja-wnioskowanie" class="quarto-xref"><span>Sekcja 1.7</span></a>).</p>
+<ol type="a">
+<li>Bank chce automatycznie odrzucać wnioski kredytowe o wysokim ryzyku niespłacenia.</li>
+<li>Ministerstwo chce wiedzieć, o ile zmienią się wyniki egzaminów, jeśli zmniejszy liczebność klas.</li>
+<li>Sklep chce zaplanować zapasy na przyszły tydzień.</li>
+</ol>
+<p>W której z tych sytuacji zaobserwowana w danych zależność nie wystarcza do odpowiedzi na postawione pytanie? Dlaczego?</p></li>
+<li><p>Metoda <span class="math inline">\(k\)</span> najbliższych sąsiadów jest nieparametryczna. Wskaż jej hiperparametry i założenia, które przyjmujemy, stosując ją (<a href="#sec-parametryczne-nieparametryczne" class="quarto-xref"><span>Sekcja 1.9</span></a>). Czy regresja wielomianowa, w której stopień wielomianu dobieramy na podstawie danych, jest metodą parametryczną? Uzasadnij odpowiedź.</p></li>
+<li><p>Wykaż, że w regresji jednego najbliższego sąsiada ryzyko empiryczne (<a href="#eq-ryzyko-empiryczne" class="quarto-xref"><span>1.8</span></a>) obliczone na zbiorze treningowym jest równe zeru, o ile w zbiorze tym nie ma dwóch obserwacji o tych samych cechach. Czy wynika stąd cokolwiek o ryzyku tego predyktora? Co się zmienia, jeżeli w zbiorze występują obserwacje o jednakowych cechach i różnych wynikach?</p></li>
+<li><p>Podaj przykład zadania predykcyjnego, w którym dodanie jednej cechy zmniejsza błąd nieredukowalny, oraz przykład, w którym zwiększenie liczby obserwacji nie zmniejsza ryzyka dopasowanego modelu. Wyjaśnij każdy z nich w kategoriach błędu redukowalnego i nieredukowalnego.</p></li>
+<li><p>Zmienna <span class="math inline">\(X\in\{1,2,3\}\)</span> i binarna zmienna <span class="math inline">\(Y\)</span> mają rozkład łączny</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;"><span class="math inline">\(p(x,y)\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(x=1\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(x=2\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(x=3\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(y=0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0{,}24\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0{,}12\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0{,}06\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(y=1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0{,}06\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0{,}28\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0{,}24\)</span></td>
+</tr>
+</tbody>
+</table>
+<ol type="a">
+<li>Wyznacz rozkład brzegowy <span class="math inline">\(X\)</span> oraz <span class="math inline">\(\eta(x)=\Prob(Y=1\mid X=x)\)</span>.</li>
+<li>Reguła wskazuje klasę <span class="math inline">\(1\)</span>, gdy <span class="math inline">\(\eta(x)&gt;1/2\)</span>. Wyznacz jej prawdopodobieństwo błędu. Korzystając z faktu, że reguła ta jest optymalna przy stracie 0–1 (<a href="#sec-strata-ryzyko" class="quarto-xref"><span>Sekcja 1.6</span></a>), podaj wartość błędu nieredukowalnego.</li>
+<li>Oblicz <span class="math inline">\(\Prob(Y=1)\)</span> bezpośrednio z tabeli oraz jako <span class="math inline">\(\sum_x\eta(x)\,p(x)\)</span>. Jaką tożsamość w ten sposób sprawdzasz?</li>
+<li>Jaki błąd popełnia klasyfikator, który zawsze wskazuje klasę <span class="math inline">\(1\)</span>? Który składnik błędu jest tu większy niż dla reguły z punktu b)?</li>
+</ol></li>
+<li><p>Zmienna <span class="math inline">\(X\in\{0,1,2\}\)</span> ma rozkład <span class="math inline">\(p(0)=\tfrac14\)</span>, <span class="math inline">\(p(1)=\tfrac12\)</span>, <span class="math inline">\(p(2)=\tfrac14\)</span>. Przy <span class="math inline">\(X=0\)</span> zawsze <span class="math inline">\(Y=0\)</span>; przy <span class="math inline">\(X=1\)</span> zmienna <span class="math inline">\(Y\)</span> ma rozkład jednostajny na <span class="math inline">\(\{0,1,2,3\}\)</span>; przy <span class="math inline">\(X=2\)</span> przyjmuje wartości <span class="math inline">\(2\)</span> i <span class="math inline">\(3\)</span> z jednakowymi prawdopodobieństwami.</p>
+<ol type="a">
+<li>Zapisz tabelę rozkładu łącznego <span class="math inline">\(p(x,y)\)</span>.</li>
+<li>Wyznacz <span class="math inline">\(\fopt(x)=\E(Y\mid X=x)\)</span> oraz możliwe wartości <span class="math inline">\(\varepsilon=Y-\fopt(X)\)</span> przy każdym <span class="math inline">\(x\)</span>.</li>
+<li>Sprawdź, że <span class="math inline">\(\E(\varepsilon\mid X=x)=0\)</span> dla każdego <span class="math inline">\(x\)</span>, i oblicz <span class="math inline">\(\Var(\varepsilon\mid X=x)\)</span>. Czy <span class="math inline">\(\varepsilon\)</span> jest niezależny od <span class="math inline">\(X\)</span>? Co to mówi o warunku w (<a href="#eq-rozklad-addytywny" class="quarto-xref"><span>1.3</span></a>)?</li>
+<li>Oblicz ryzyko kwadratowe predyktora <span class="math inline">\(\fopt\)</span> oraz predyktora stałego <span class="math inline">\(f(x)=\E Y\)</span>. Różnica tych wartości jest ceną za pominięcie cechy.</li>
+</ol></li>
+<li><p>Niech <span class="math inline">\(X\)</span> ma rozkład jednostajny na <span class="math inline">\([0,1]\)</span>.</p>
+<ol type="a">
+<li>Wyznacz gęstość zmiennej <span class="math inline">\(U=X^2\)</span> i sprawdź, że przyjmuje ona wartości większe od <span class="math inline">\(1\)</span>, a nawet dowolnie duże. Dlaczego nie prowadzi to do sprzeczności?</li>
+<li>Niech <span class="math inline">\(Y\mid X=x\sim\Nrozk(x^2,\sigma^2)\)</span>. Podaj funkcję regresji <span class="math inline">\(\fopt\)</span> i wyznacz <span class="math inline">\(\E Y\)</span>, korzystając z prawa iterowanej wartości oczekiwanej.</li>
+<li>Oblicz ryzyko kwadratowe predyktora <span class="math inline">\(\fopt\)</span> oraz najlepszego predyktora stałego. Jaka część ryzyka tego drugiego wynika z pominięcia cechy <span class="math inline">\(X\)</span>?</li>
+</ol></li>
+<li><p>W klasyfikacji binarnej zakodujmy klasy jako <span class="math inline">\(-1\)</span> i <span class="math inline">\(1\)</span>, a przez <span class="math inline">\(\eta(\x)\)</span> oznaczmy <span class="math inline">\(\Prob(Y=1\mid\X=\x)\)</span>. Wyraź <span class="math inline">\(\E(Y\mid\X=\x)\)</span> przez <span class="math inline">\(\eta(\x)\)</span> i odwrotnie. Jak wygląda ta zależność przy kodowaniu klas dowolnymi liczbami <span class="math inline">\(a\neq b\)</span>?</p></li>
+<li><p>Niech <span class="math inline">\(Y=X_1+X_2+\varepsilon\)</span>, gdzie <span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span> i <span class="math inline">\(\varepsilon\)</span> są niezależne, <span class="math inline">\(X_1,X_2\sim\Nrozk(0,1)\)</span>, <span class="math inline">\(\varepsilon\sim\Nrozk(0,\sigma^2)\)</span>.</p>
+<ol type="a">
+<li>Wyznacz funkcję regresji i błąd nieredukowalny przy stracie kwadratowej, gdy dostępne są obie cechy, oraz gdy dostępna jest tylko <span class="math inline">\(X_1\)</span>.</li>
+<li>Sprawdź oba wyniki symulacją w Pythonie: wygeneruj dużą próbę i oblicz średnią stratę kwadratową obu funkcji regresji.</li>
+<li>Powtórz rachunek dla przypadku, w którym <span class="math inline">\(X_1\)</span> i <span class="math inline">\(X_2\)</span> mają współczynnik korelacji <span class="math inline">\(\rho\)</span>. Jak błąd nieredukowalny przy samej cesze <span class="math inline">\(X_1\)</span> zależy od <span class="math inline">\(\rho\)</span>? Zinterpretuj przypadki <span class="math inline">\(\rho=0\)</span> i <span class="math inline">\(|\rho|\to1\)</span>.</li>
+</ol></li>
+<li><p>Wygeneruj <span class="math inline">\(n=30\)</span> obserwacji z modelu <span class="math inline">\(Y=\sin(2\pi X)+\varepsilon\)</span>, gdzie <span class="math inline">\(X\)</span> ma rozkład jednostajny na <span class="math inline">\([0,1]\)</span>, a <span class="math inline">\(\varepsilon\sim\Nrozk(0,\,0{,}3^2)\)</span>. Dopasuj metodą najmniejszych kwadratów wielomiany stopni od <span class="math inline">\(1\)</span> do <span class="math inline">\(12\)</span> (np. funkcją <code>numpy.polynomial.Polynomial.fit</code>). Dla każdego stopnia oblicz ryzyko empiryczne na zbiorze treningowym oraz przybliż ryzyko średnią stratą na nowej próbie liczącej <span class="math inline">\(100\,000\)</span> obserwacji. Przedstaw obie wielkości na jednym wykresie razem z poziomem błędu nieredukowalnego.</p>
+<ol type="a">
+<li>Dlaczego ryzyko empiryczne maleje wraz ze stopniem wielomianu?</li>
+<li>Czy którakolwiek krzywa spada poniżej błędu nieredukowalnego? Wyjaśnij, dlaczego tak jest.</li>
+<li>Jak zmienia się obraz przy <span class="math inline">\(n=300\)</span>?</li>
+</ol></li>
+</ol>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-box1976" class="csl-entry" role="listitem">
+Box, George E. P. 1976. <span>„Science and Statistics”</span>. <em>Journal of the American Statistical Association</em> 71 (356): 791–99. <a href="https://doi.org/10.1080/01621459.1976.10480949">https://doi.org/10.1080/01621459.1976.10480949</a>.
+</div>
+<div id="ref-boxdraper1987" class="csl-entry" role="listitem">
+Box, George E. P., i Norman R. Draper. 1987. <em>Empirical Model-Building and Response Surfaces</em>. Wiley Series w Probability i Mathematical Statistics. Wiley.
+</div>
+<div id="ref-caruana2015" class="csl-entry" role="listitem">
+Caruana, Rich, Yin Lou, Johannes Gehrke, Paul Koch, Marc Sturm, i Noémie Elhadad. 2015. <span>„Intelligible Models for <span>HealthCare</span>: Predicting Pneumonia Risk and Hospital 30-day Readmission”</span>. W <em>Proceedings of the 21th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</em>, 1721–30. <a href="https://doi.org/10.1145/2783258.2788613">https://doi.org/10.1145/2783258.2788613</a>.
+</div>
+<div id="ref-devroye1996" class="csl-entry" role="listitem">
+Devroye, Luc, László Györfi, i Gábor Lugosi. 1996. <em>A Probabilistic Theory of Pattern Recognition</em>. T. 31. Stochastic Modelling i Applied Probability. Springer. <a href="https://doi.org/10.1007/978-1-4612-0711-5">https://doi.org/10.1007/978-1-4612-0711-5</a>.
+</div>
+<div id="ref-gyorfi2002" class="csl-entry" role="listitem">
+Györfi, László, Michael Kohler, Adam Krzyżak, i Harro Walk. 2002. <em>A Distribution-Free Theory of Nonparametric Regression</em>. Springer Series w Statistics. Springer. <a href="https://doi.org/10.1007/b97848">https://doi.org/10.1007/b97848</a>.
+</div>
+<div id="ref-islp" class="csl-entry" role="listitem">
+James, Gareth, Daniela Witten, Trevor Hastie, Robert Tibshirani, i Jonathan Taylor. 2023. <em>An Introduction to Statistical Learning with Applications in Python</em>. Springer Texts w Statistics. Springer.
+</div>
+<div id="ref-rudin2019" class="csl-entry" role="listitem">
+Rudin, Cynthia. 2019. <span>„Stop Explaining Black Box Machine Learning Models for High Stakes Decisions and Use Interpretable Models Instead”</span>. <em>Nature Machine Intelligence</em> 1 (5): 206–15. <a href="https://doi.org/10.1038/s42256-019-0048-x">https://doi.org/10.1038/s42256-019-0048-x</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Skopiowano!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Skopiowano!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../index.html" class="pagination-link" aria-label="Przedmowa">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Przedmowa</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../1-fundamenty/02-predyktory-optymalne.html" class="pagination-link" aria-label="Predyktory optymalne i błąd nieredukowalny">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Predyktory optymalne i błąd nieredukowalny</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

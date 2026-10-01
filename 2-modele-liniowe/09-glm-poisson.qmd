@@ -1,0 +1,3 @@
+# Uogólnione modele liniowe i regresja Poissona {#sec-glm-poisson}
+
+*Rozdział w przygotowaniu.*

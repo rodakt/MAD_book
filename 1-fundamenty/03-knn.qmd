@@ -1,0 +1,3 @@
+# Klasyfikator $k$ najbliższych sąsiadów {#sec-knn}
+
+*Rozdział w przygotowaniu.*

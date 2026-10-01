@@ -1,0 +1,3 @@
+# Regresja liniowa {#sec-regresja-liniowa}
+
+*Rozdział w przygotowaniu.*
