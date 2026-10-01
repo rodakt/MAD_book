@@ -6,28 +6,29 @@ poprzednich został potraktowany jako punkt wyjścia, ale jest pisany na nowo:
 część wątków rozszerzono, część przeredagowano, dodano nowe przykłady i
 ćwiczenia.
 
-Założeniem jest połączenie rzetelności matematycznej z praktyką w Pythonie.
-Kluczowe wyniki są wyprowadzane, a nie tylko cytowane, i ujęte w numerowane
-definicje oraz twierdzenia. Wszystkie rysunki są generowane bezpośrednio
-z kodu widocznego w tekście -- Czytelnik może go uruchomić samodzielnie.
-
-## Dla kogo {.unnumbered}
+## Wymagania {.unnumbered}
 
 Zakładamy znajomość rachunku prawdopodobieństwa i algebry liniowej na
-poziomie kursu podstawowego oraz umiejętność programowania w Pythonie.
-Nie zakładamy natomiast wcześniejszego kontaktu z uczeniem maszynowym.
+poziomie kursu podstawowego oraz umiejętność programowania w dowolnym
+języku imperatywnym. Nie zakładamy natomiast wcześniejszego kontaktu z uczeniem maszynowym.
 Ponieważ Czytelnicy przychodzą z różnych kierunków -- ekonometrii,
-informatyki, biologii, matematyki -- pojęcia wprowadzamy powoli i za każdym
-razem uzasadniamy, skąd się biorą.
+informatyki, biologii, matematyki -- pojęcia wprowadzamy powoli i staramy się
+uzasadniać, skąd się biorą.
 
-## Jak korzystać z książki {.unnumbered}
+## Kod w książce {.unnumbered}
 
-Rozdziały można czytać liniowo; każda część opiera się na poprzednich.
-Szczególnie ważny jest @sec-predyktory-optymalne -- ustala język (strata, ryzyko,
-predyktor optymalny), którym posługujemy się do końca książki.
+Fragmenty kodu są w pełni reprodukowalne: wszystkie losowania mają ustalone
+ziarno. Kod każdego rysunku można rozwinąć i skopiować. Do jego uruchomienia
+wystarczy Python 3.12 z pakietami `numpy`, `scipy`, `pandas`, `matplotlib`,
+`scikit-learn` i `statsmodels`.
 
-Fragmenty kodu są w pełni reprodukowalne. Instrukcja postawienia środowiska
-znajduje się w pliku `README.md`.
+## Zasady zaliczenia {.unnumbered}
+
+Kurs składa się z dwóch części, zaliczanych oddzielnie.
+
+- **Wykład** -- test pisemny w formie papierowej.
+- **Projekt** -- przygotowywany samodzielnie w domu, a następnie broniony
+  ustnie.
 
 ## Konwencje notacyjne {.unnumbered}
 

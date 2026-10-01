@@ -4,27 +4,37 @@
     "href": "index.html",
     "title": "Modele analizy danych",
     "section": "",
-    "text": "Przedmowa\nPodręcznik powstaje na bazie kursu Modele analizy danych prowadzonego na studiach magisterskich kierunku Analiza Danych. Materiał wykładowy z lat poprzednich został potraktowany jako punkt wyjścia, ale jest pisany na nowo: część wątków rozszerzono, część przeredagowano, dodano nowe przykłady i ćwiczenia.\nZałożeniem jest połączenie rzetelności matematycznej z praktyką w Pythonie. Kluczowe wyniki są wyprowadzane, a nie tylko cytowane, i ujęte w numerowane definicje oraz twierdzenia. Wszystkie rysunki są generowane bezpośrednio z kodu widocznego w tekście – Czytelnik może go uruchomić samodzielnie.",
+    "text": "Przedmowa\nPodręcznik powstaje na bazie kursu Modele analizy danych prowadzonego na studiach magisterskich kierunku Analiza Danych. Materiał wykładowy z lat poprzednich został potraktowany jako punkt wyjścia, ale jest pisany na nowo: część wątków rozszerzono, część przeredagowano, dodano nowe przykłady i ćwiczenia.",
     "crumbs": [
       "Przedmowa"
     ]
   },
   {
-    "objectID": "index.html#dla-kogo",
-    "href": "index.html#dla-kogo",
+    "objectID": "index.html#wymagania",
+    "href": "index.html#wymagania",
     "title": "Modele analizy danych",
-    "section": "Dla kogo",
-    "text": "Dla kogo\nZakładamy znajomość rachunku prawdopodobieństwa i algebry liniowej na poziomie kursu podstawowego oraz umiejętność programowania w Pythonie. Nie zakładamy natomiast wcześniejszego kontaktu z uczeniem maszynowym. Ponieważ Czytelnicy przychodzą z różnych kierunków – ekonometrii, informatyki, biologii, matematyki – pojęcia wprowadzamy powoli i za każdym razem uzasadniamy, skąd się biorą.",
+    "section": "Wymagania",
+    "text": "Wymagania\nZakładamy znajomość rachunku prawdopodobieństwa i algebry liniowej na poziomie kursu podstawowego oraz umiejętność programowania w dowolnym języku imperatywnym. Nie zakładamy natomiast wcześniejszego kontaktu z uczeniem maszynowym. Ponieważ Czytelnicy przychodzą z różnych kierunków – ekonometrii, informatyki, biologii, matematyki – pojęcia wprowadzamy powoli i staramy się uzasadniać, skąd się biorą.",
     "crumbs": [
       "Przedmowa"
     ]
   },
   {
-    "objectID": "index.html#jak-korzystać-z-książki",
-    "href": "index.html#jak-korzystać-z-książki",
+    "objectID": "index.html#kod-w-książce",
+    "href": "index.html#kod-w-książce",
     "title": "Modele analizy danych",
-    "section": "Jak korzystać z książki",
-    "text": "Jak korzystać z książki\nRozdziały można czytać liniowo; każda część opiera się na poprzednich. Szczególnie ważny jest 2  Predyktory optymalne i błąd nieredukowalny – ustala język (strata, ryzyko, predyktor optymalny), którym posługujemy się do końca książki.\nFragmenty kodu są w pełni reprodukowalne. Instrukcja postawienia środowiska znajduje się w pliku README.md.",
+    "section": "Kod w książce",
+    "text": "Kod w książce\nFragmenty kodu są w pełni reprodukowalne: wszystkie losowania mają ustalone ziarno. Kod każdego rysunku można rozwinąć i skopiować. Do jego uruchomienia wystarczy Python 3.12 z pakietami numpy, scipy, pandas, matplotlib, scikit-learn i statsmodels.",
+    "crumbs": [
+      "Przedmowa"
+    ]
+  },
+  {
+    "objectID": "index.html#zasady-zaliczenia",
+    "href": "index.html#zasady-zaliczenia",
+    "title": "Modele analizy danych",
+    "section": "Zasady zaliczenia",
+    "text": "Zasady zaliczenia\nKurs składa się z dwóch części, zaliczanych oddzielnie.\n\nWykład – test pisemny w formie papierowej.\nProjekt – przygotowywany samodzielnie w domu, a następnie broniony ustnie.",
     "crumbs": [
       "Przedmowa"
     ]
