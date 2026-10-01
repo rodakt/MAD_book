@@ -6,15 +6,6 @@ poprzednich został potraktowany jako punkt wyjścia, ale jest pisany na nowo:
 część wątków rozszerzono, część przeredagowano, dodano nowe przykłady i
 ćwiczenia.
 
-## Wymagania {.unnumbered}
-
-Zakładamy znajomość rachunku prawdopodobieństwa i algebry liniowej na
-poziomie kursu podstawowego oraz umiejętność programowania w dowolnym
-języku imperatywnym. Nie zakładamy natomiast wcześniejszego kontaktu z uczeniem maszynowym.
-Ponieważ Czytelnicy przychodzą z różnych kierunków -- ekonometrii,
-informatyki, biologii, matematyki -- pojęcia wprowadzamy powoli i staramy się
-uzasadniać, skąd się biorą.
-
 ## Kod w książce {.unnumbered}
 
 Fragmenty kodu są w pełni reprodukowalne: wszystkie losowania mają ustalone
@@ -36,14 +27,6 @@ probabilistyczne, w dużej mierze oparte na metodach bayesowskich.
   bayesowskim.
 - @devroye1996 i @gyorfi2002 -- teoria klasyfikacji i regresji
   nieparametrycznej dla Czytelników zainteresowanych ścisłymi dowodami.
-
-## Zasady zaliczenia {.unnumbered}
-
-Kurs składa się z dwóch części, zaliczanych oddzielnie.
-
-- **Wykład** -- test pisemny w formie papierowej.
-- **Projekt** -- przygotowywany samodzielnie w domu, a następnie broniony
-  ustnie.
 
 ## Konwencje notacyjne {.unnumbered}
 

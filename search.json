@@ -10,16 +10,6 @@
     ]
   },
   {
-    "objectID": "index.html#wymagania",
-    "href": "index.html#wymagania",
-    "title": "Modele analizy danych",
-    "section": "Wymagania",
-    "text": "Wymagania\nZakładamy znajomość rachunku prawdopodobieństwa i algebry liniowej na poziomie kursu podstawowego oraz umiejętność programowania w dowolnym języku imperatywnym. Nie zakładamy natomiast wcześniejszego kontaktu z uczeniem maszynowym. Ponieważ Czytelnicy przychodzą z różnych kierunków – ekonometrii, informatyki, biologii, matematyki – pojęcia wprowadzamy powoli i staramy się uzasadniać, skąd się biorą.",
-    "crumbs": [
-      "Przedmowa"
-    ]
-  },
-  {
     "objectID": "index.html#kod-w-książce",
     "href": "index.html#kod-w-książce",
     "title": "Modele analizy danych",
@@ -35,16 +25,6 @@
     "title": "Modele analizy danych",
     "section": "Literatura",
     "text": "Literatura\nPierwsze dwie pozycje reprezentują ujęcie statystyczne, dwie kolejne – probabilistyczne, w dużej mierze oparte na metodach bayesowskich.\n\nISLP (James i in. 2023) – podstawowy podręcznik uzupełniający, z przykładami w Pythonie.\nESL (Hastie, Tibshirani, i Friedman 2009) – szerszy zakres i głębsze, bardziej precyzyjne ujęcie tego samego materiału.\nPRML (Bishop 2006) i PML (Murphy 2022) – uczenie maszynowe budowane konsekwentnie na modelach probabilistycznych i wnioskowaniu bayesowskim.\nDevroye, Györfi, i Lugosi (1996) i Györfi i in. (2002) – teoria klasyfikacji i regresji nieparametrycznej dla Czytelników zainteresowanych ścisłymi dowodami.",
-    "crumbs": [
-      "Przedmowa"
-    ]
-  },
-  {
-    "objectID": "index.html#zasady-zaliczenia",
-    "href": "index.html#zasady-zaliczenia",
-    "title": "Modele analizy danych",
-    "section": "Zasady zaliczenia",
-    "text": "Zasady zaliczenia\nKurs składa się z dwóch części, zaliczanych oddzielnie.\n\nWykład – test pisemny w formie papierowej.\nProjekt – przygotowywany samodzielnie w domu, a następnie broniony ustnie.",
     "crumbs": [
       "Przedmowa"
     ]
