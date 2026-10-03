@@ -680,61 +680,99 @@ sposób jej dopasowania. Rozstrzygnięcie wymaga porównania różnych modeli.
 
 ## Zadania {.unnumbered}
 
-1. Rozważ ryzyko ważone $\E\big[w(\X)\,(Y - f(\X))^2\big]$ dla pewnej wagi
-   $w(\x) > 0$ zależnej od punktu. Wykaż, że optymalny predyktor nadal jest równy
-   $\E(Y \mid \X = \x)$. Wyjaśnij, dlaczego ważenie nie zmienia rozwiązania,
-   choć zmienia wartość ryzyka. Porównaj tę sytuację ze zmianą rozkładu
-   brzegowego cech $p(\x)$ przy niezmienionym rozkładzie warunkowym
-   (@sec-zaleznosc-i-szum).
+::: {#exr-ryzyko-wazone}
+Rozważ ryzyko ważone $\E\big[w(\X)\,(Y - f(\X))^2\big]$ dla pewnej wagi
+$w(\x) > 0$ zależnej od punktu. Wykaż, że optymalny predyktor nadal jest równy
+$\E(Y \mid \X = \x)$. Wyjaśnij, dlaczego ważenie nie zmienia rozwiązania,
+choć zmienia wartość ryzyka. Porównaj tę sytuację ze zmianą rozkładu
+brzegowego cech $p(\x)$ przy niezmienionym rozkładzie warunkowym
+(@sec-zaleznosc-i-szum).
+:::
 
-2. Rozważ **stratę pinball** (kwantylową) o parametrze $\tau \in (0,1)$:
-   $$
-   \Loss_\tau(y, a) = \begin{cases}
-     \tau (y - a), & y \ge a, \\
-     (1-\tau)(a - y), & y < a.
-   \end{cases}
-   $$
-   Powtarzając rozumowanie z dowodu @thm-mediana-warunkowa wykaż, że
-   optymalny predyktor to kwantyl rzędu $\tau$ rozkładu warunkowego.
-   Sprawdź, że dla $\tau = \tfrac12$ odzyskujesz @thm-mediana-warunkowa.
+::: {#exr-strata-pinball}
+Rozważ **stratę pinball** (kwantylową) o parametrze $\tau \in (0,1)$:
+$$
+\Loss_\tau(y, a) = \begin{cases}
+  \tau (y - a), & y \ge a, \\
+  (1-\tau)(a - y), & y < a.
+\end{cases}
+$$
+Powtarzając rozumowanie z dowodu @thm-mediana-warunkowa wykaż, że
+optymalny predyktor to kwantyl rzędu $\tau$ rozkładu warunkowego.
+Sprawdź, że dla $\tau = \tfrac12$ odzyskujesz @thm-mediana-warunkowa.
+:::
 
-3. Dla dwóch klas o rozkładach $\Nrozk(-\mu, \sigma^2)$ i $\Nrozk(\mu, \sigma^2)$
-   z równymi prawdopodobieństwami a priori wyprowadź wzór na błąd bayesowski
-   w zależności od $\mu$ i $\sigma$. Dla jakiej wartości $\mu/\sigma$ błąd
-   bayesowski spada poniżej 1%?
+::: {#exr-blad-bayesa-gaussy}
+Dla dwóch klas o rozkładach $\Nrozk(-\mu, \sigma^2)$ i $\Nrozk(\mu, \sigma^2)$
+z równymi prawdopodobieństwami a priori wyprowadź wzór na błąd bayesowski
+w zależności od $\mu$ i $\sigma$. Dla jakiej wartości $\mu/\sigma$ błąd
+bayesowski spada poniżej 1%?
+:::
 
-4. Zmodyfikuj eksperyment z @fig-blad-bayesa tak, aby klasy miały
-   prawdopodobieństwa a priori $0{,}9$ i $0{,}1$. Wyznacz nowy błąd
-   bayesowski i porównaj go z błędem klasyfikatora trywialnego, który zawsze
-   wskazuje klasę częstszą. Kiedy $k$-NN zaczyna być od niego lepszy?
+::: {#exr-niezrownowazone-klasy}
+Zmodyfikuj eksperyment z @fig-blad-bayesa tak, aby klasy miały
+prawdopodobieństwa a priori $0{,}9$ i $0{,}1$. Wyznacz nowy błąd
+bayesowski i porównaj go z błędem klasyfikatora trywialnego, który zawsze
+wskazuje klasę częstszą. Kiedy $k$-NN zaczyna być od niego lepszy?
+:::
 
-5. Wykorzystując ([-@eq-regula-kosztowa]) wyznacz próg decyzyjny dla problemu
-   dwuklasowego, w którym pominięcie przypadku pozytywnego kosztuje
-   dziesięciokrotnie więcej niż fałszywy alarm. Zilustruj numerycznie, jak
-   przesunięcie progu zmienia liczbę błędów obu typów.
+::: {#exr-prog-kosztowy}
+Wykorzystując ([-@eq-regula-kosztowa]) wyznacz próg decyzyjny dla problemu
+dwuklasowego, w którym pominięcie przypadku pozytywnego kosztuje
+dziesięciokrotnie więcej niż fałszywy alarm. Zilustruj numerycznie, jak
+przesunięcie progu zmienia liczbę błędów obu typów.
+:::
 
-6. **Korekta prawdopodobieństw a priori.** Model klasyfikacyjny uczono na
-   próbie, w której klasy występowały z częstościami $\pi'_k$, na przykład
-   na próbie zbalansowanej. Model zwraca więc oszacowania
-   $\eta'_k(\x) = \Prob'(Y = k \mid \X = \x)$. W populacji, w której model
-   będzie stosowany, klasy występują z częstościami $\pi_k$, a rozkłady
-   cech w obrębie klas $p(\x \mid Y = k)$ są takie same jak w próbie.
-   Korzystając ze wzoru Bayesa, wykaż, że
-   $$
-   \eta_k(\x) = \frac{\eta'_k(\x)\, \pi_k / \pi'_k}
-   {\sum_{j=1}^{K} \eta'_j(\x)\, \pi_j / \pi'_j} .
-   $$
-   Pokaż, że w przypadku dwuklasowym korekta sprowadza się do pomnożenia
-   szans $\eta(\x) / (1 - \eta(\x))$ przez stałą, i wyznacz tę stałą.
-   Model wykrywania oszustw uczono na próbie zbalansowanej, a w populacji
-   oszustwa stanowią 1% transakcji. Dla pewnej transakcji model zwrócił
-   $0{,}8$. Jakie jest prawdopodobieństwo oszustwa po korekcie? Wyjaśnij,
-   dlaczego tej korekty nie da się przeprowadzić dla modelu zwracającego
-   wyłącznie etykiety (por. ramka „Dobry model, zły próg").
+::: {#exr-korekta-apriori}
+**Korekta prawdopodobieństw a priori.** Model klasyfikacyjny uczono na
+próbie, w której klasy występowały z częstościami $\pi'_k$, na przykład
+na próbie zbalansowanej. Model zwraca więc oszacowania
+$\eta'_k(\x) = \Prob'(Y = k \mid \X = \x)$. W populacji, w której model
+będzie stosowany, klasy występują z częstościami $\pi_k$, a rozkłady
+cech w obrębie klas $p(\x \mid Y = k)$ są takie same jak w próbie.
+Korzystając ze wzoru Bayesa, wykaż, że
+$$
+\eta_k(\x) = \frac{\eta'_k(\x)\, \pi_k / \pi'_k}
+{\sum_{j=1}^{K} \eta'_j(\x)\, \pi_j / \pi'_j} .
+$$
+Pokaż, że w przypadku dwuklasowym korekta sprowadza się do pomnożenia
+szans $\eta(\x) / (1 - \eta(\x))$ przez stałą, i wyznacz tę stałą.
+Model wykrywania oszustw uczono na próbie zbalansowanej, a w populacji
+oszustwa stanowią 1% transakcji. Dla pewnej transakcji model zwrócił
+$0{,}8$. Jakie jest prawdopodobieństwo oszustwa po korekcie? Wyjaśnij,
+dlaczego tej korekty nie da się przeprowadzić dla modelu zwracającego
+wyłącznie etykiety (por. ramka „Dobry model, zły próg").
+:::
 
-7. Wykaż, że dla dowolnego rozkładu o skończonej wariancji średnia $\mu$
-   i mediana $m$ spełniają $|\mu - m| \le \sigma$. (Wskazówka: skorzystaj
-   z @thm-mediana-warunkowa i nierówności Jensena.) Podaj rozkład, dla którego
-   ta różnica jest bliska $\sigma$. Następnie pokaż, że przy ustalonym
-   rozstępie międzykwartylowym różnica $|\mu - m|$ może być dowolnie duża.
-   Co to mówi o odporności obu predyktorów?
+::: {#exr-srednia-mediana}
+Wykaż, że dla dowolnego rozkładu o skończonej wariancji średnia $\mu$
+i mediana $m$ spełniają $|\mu - m| \le \sigma$. (Wskazówka: skorzystaj
+z @thm-mediana-warunkowa i nierówności Jensena.) Podaj rozkład, dla którego
+ta różnica jest bliska $\sigma$. Następnie pokaż, że przy ustalonym
+rozstępie międzykwartylowym różnica $|\mu - m|$ może być dowolnie duża.
+Co to mówi o odporności obu predyktorów?
+:::
+
+::: {#exr-taksowki}
+W mieście jeżdżą taksówki dwóch przedsiębiorstw: $85\%$ z nich należy
+do Zielonego, $15\%$ do Niebieskiego. Jedna z taksówek spowodowała
+wypadek i odjechała. Świadek zeznaje, że była niebieska. Badanie
+świadka wykazało, że w podobnych warunkach myli kolor w $20\%$
+przypadków, niezależnie od tego, jaki kolor widzi (problem Kahnemana
+i Tversky'ego). Potraktujmy zeznanie świadka jako cechę $X$,
+a przedsiębiorstwo -- jako klasę $Y$, z klasą pozytywną Niebieskie.
+
+a) Wyznacz $\eta(x)=\Prob(Y=\text{Niebieskie}\mid X=x)$ dla obu
+   możliwych zeznań. Czy zeznanie niesie informację o klasie?
+b) Wyznacz klasyfikator bayesowski przy stracie 0--1 i jego błąd.
+   Porównaj go z błędem reguły „wierz świadkowi” oraz klasyfikatora
+   stałego. Jak pogodzić wynik z odpowiedzią z punktu a)?
+c) Przy jakim prawdopodobieństwie pomyłki świadka jego zeznanie
+   zaczyna zmieniać decyzję klasyfikatora bayesowskiego przy stracie
+   0--1?
+d) Załóżmy, że niesłuszne oczyszczenie Niebieskiego kosztuje $c$ razy
+   więcej niż niesłuszne obwinienie. Korzystając
+   z ([-@eq-regula-kosztowa]), wyznacz najmniejsze $c$, przy którym
+   zeznanie „niebieska” prowadzi do decyzji Niebieskie. Odnieś wynik do
+   ramki „Dobry model, zły próg”.
+:::
