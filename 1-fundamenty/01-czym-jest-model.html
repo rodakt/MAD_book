@@ -59,7 +59,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
-  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -742,7 +741,7 @@ Y\mid\X=\x\sim\operatorname{Bernoulli}\big(\eta(\x)\big).
 <p><strong>Rozkład warunkowy.</strong> Gdy zmienna <span class="math inline">\(\X\)</span> ma rozkład ciągły, zdarzenie <span class="math inline">\(\{\X=\x\}\)</span> ma prawdopodobieństwo zero i rozkładu <span class="math inline">\(Y\mid\X=\x\)</span> nie można zdefiniować wzorem <span class="math inline">\(\Prob(\cdot\mid A)=\Prob(\cdot\cap A)/\Prob(A)\)</span>. Właściwą konstrukcją jest regularny rozkład warunkowy, który dla zmiennych o wartościach w <span class="math inline">\(\R^p\)</span> zawsze istnieje, ale jest wyznaczony jednoznacznie jedynie <strong>z dokładnością do zbioru miary zero</strong> względem rozkładu <span class="math inline">\(\X\)</span>. To samo dotyczy funkcji <span class="math inline">\(\fopt\)</span> oraz <span class="math inline">\(\eta_k\)</span>: ściśle biorąc nie są one funkcjami, lecz klasami równoważności funkcji. Konsekwentnie, wszystkie stwierdzenia postaci „dla każdego <span class="math inline">\(\x\)</span>” należy w dalszym ciągu czytać jako „dla prawie każdego <span class="math inline">\(\x\)</span>“.</p>
 <p><strong>Symbol <span class="math inline">\(p\)</span>.</strong> We wzorze (<a href="#eq-rozklad-laczny" class="quarto-xref"><span>1.1</span></a>) litera <span class="math inline">\(p\)</span> oznacza gęstość względem miary, która nie jest ta sama dla obu zmiennych: dla cech ciągłych jest to miara Lebesgue’a, dla jakościowej zmiennej wyjściowej – miara licząca. Formalnie chodzi o gęstość rozkładu łącznego względem miary produktowej. Zapis <span class="math inline">\(p(\cdot)\)</span> jest więc wygodnym skrótem obejmującym gęstości i prawdopodobieństwa punktowe naraz; stosujemy go w całej książce.</p>
 <p><strong>Dlaczego pomijamy te zastrzeżenia.</strong> Wielkości, którymi będziemy oceniać predyktory (<a href="#sec-strata-ryzyko" class="quarto-xref"><span>Sekcja 1.6</span></a>), są wartościami oczekiwanymi, czyli całkami. Dwie wersje funkcji <span class="math inline">\(\fopt\)</span> różniące się na zbiorze miary zero dają więc identyczne wartości tych wielkości. Obiekt niejednoznaczny nigdy nie występuje samodzielnie – zawsze pod znakiem wartości oczekiwanej, która tej niejednoznaczności nie widzi.</p>
-<p>Ścisłe ujęcie znajdzie Czytelnik w monografii <span class="citation" data-cites="devroye1996">Devroye, Györfi, i Lugosi (<a href="../references.html#ref-devroye1996" role="doc-biblioref">1996</a>)</span> dla klasyfikacji oraz <span class="citation" data-cites="gyorfi2002">Györfi i in. (<a href="../references.html#ref-gyorfi2002" role="doc-biblioref">2002</a>)</span> dla regresji nieparametrycznej.</p>
+<p>Ścisłe ujęcie znajdzie Czytelnik w monografii <span class="citation" data-cites="devroye1996">Devroye i in. (<a href="../references.html#ref-devroye1996" role="doc-biblioref">1996</a>)</span> dla klasyfikacji oraz <span class="citation" data-cites="gyorfi2002">Györfi i in. (<a href="../references.html#ref-gyorfi2002" role="doc-biblioref">2002</a>)</span> dla regresji nieparametrycznej.</p>
 </div>
 </div>
 </div>
@@ -1134,24 +1133,24 @@ n(x)=\sum_y n(x,y),
 </div>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
 <div id="ref-box1976" class="csl-entry" role="listitem">
 Box, George E. P. 1976. <span>„Science and Statistics”</span>. <em>Journal of the American Statistical Association</em> 71 (356): 791–99. <a href="https://doi.org/10.1080/01621459.1976.10480949">https://doi.org/10.1080/01621459.1976.10480949</a>.
 </div>
 <div id="ref-boxdraper1987" class="csl-entry" role="listitem">
-Box, George E. P., i Norman R. Draper. 1987. <em>Empirical Model-Building and Response Surfaces</em>. Wiley Series w Probability i Mathematical Statistics. Wiley.
+Box, George E. P. i Norman R. Draper. 1987. <em>Empirical Model-Building and Response Surfaces</em>. <span>Wiley Series in Probability and Mathematical Statistics</span>. Wiley.
 </div>
 <div id="ref-caruana2015" class="csl-entry" role="listitem">
-Caruana, Rich, Yin Lou, Johannes Gehrke, Paul Koch, Marc Sturm, i Noémie Elhadad. 2015. <span>„Intelligible Models for <span>HealthCare</span>: Predicting Pneumonia Risk and Hospital 30-day Readmission”</span>. W <em>Proceedings of the 21th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</em>, 1721–30. <a href="https://doi.org/10.1145/2783258.2788613">https://doi.org/10.1145/2783258.2788613</a>.
+Caruana, Rich, Yin Lou, Johannes Gehrke, Paul Koch, Marc Sturm i Noémie Elhadad. 2015. <span>„Intelligible Models for <span>HealthCare</span>: Predicting Pneumonia Risk and Hospital 30-day Readmission”</span>. <em>Proceedings of the 21th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</em>, 1721–30. <a href="https://doi.org/10.1145/2783258.2788613">https://doi.org/10.1145/2783258.2788613</a>.
 </div>
 <div id="ref-devroye1996" class="csl-entry" role="listitem">
-Devroye, Luc, László Györfi, i Gábor Lugosi. 1996. <em>A Probabilistic Theory of Pattern Recognition</em>. T. 31. Stochastic Modelling i Applied Probability. Springer. <a href="https://doi.org/10.1007/978-1-4612-0711-5">https://doi.org/10.1007/978-1-4612-0711-5</a>.
+Devroye, Luc, László Györfi i Gábor Lugosi. 1996. <em>A Probabilistic Theory of Pattern Recognition</em>. <span>Stochastic Modelling and Applied Probability</span> 31. Springer. <a href="https://doi.org/10.1007/978-1-4612-0711-5">https://doi.org/10.1007/978-1-4612-0711-5</a>.
 </div>
 <div id="ref-gyorfi2002" class="csl-entry" role="listitem">
-Györfi, László, Michael Kohler, Adam Krzyżak, i Harro Walk. 2002. <em>A Distribution-Free Theory of Nonparametric Regression</em>. Springer Series w Statistics. Springer. <a href="https://doi.org/10.1007/b97848">https://doi.org/10.1007/b97848</a>.
+Györfi, László, Michael Kohler, Adam Krzyżak i Harro Walk. 2002. <em>A Distribution-Free Theory of Nonparametric Regression</em>. <span>Springer Series in Statistics</span>. Springer. <a href="https://doi.org/10.1007/b97848">https://doi.org/10.1007/b97848</a>.
 </div>
 <div id="ref-islp" class="csl-entry" role="listitem">
-James, Gareth, Daniela Witten, Trevor Hastie, Robert Tibshirani, i Jonathan Taylor. 2023. <em>An Introduction to Statistical Learning with Applications in Python</em>. Springer Texts w Statistics. Springer.
+James, Gareth, Daniela Witten, Trevor Hastie, Robert Tibshirani i Jonathan Taylor. 2023. <em>An Introduction to Statistical Learning with Applications in Python</em>. <span>Springer Texts in Statistics</span>. Springer.
 </div>
 <div id="ref-rudin2019" class="csl-entry" role="listitem">
 Rudin, Cynthia. 2019. <span>„Stop Explaining Black Box Machine Learning Models for High Stakes Decisions and Use Interpretable Models Instead”</span>. <em>Nature Machine Intelligence</em> 1 (5): 206–15. <a href="https://doi.org/10.1038/s42256-019-0048-x">https://doi.org/10.1038/s42256-019-0048-x</a>.

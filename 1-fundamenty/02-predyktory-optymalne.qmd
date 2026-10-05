@@ -397,6 +397,8 @@ lecz waży każdą niezgodność tym, jak wyraźnie jedna klasa przeważa w dany
 punkcie. Niezgodność blisko granicy decyzyjnej, gdzie
 $\eta_1(\x) \approx \tfrac12$, prawie nic nie kosztuje. W obszarze, gdzie
 $\eta_1(\x)$ jest bliskie $0$ lub $1$, kosztuje niemal całą pomyłkę.
+Ten wzór na nadwyżkę ryzyka nad błędem bayesowskim jest punktem wyjścia
+teorii klasyfikacji w monografii @devroye1996 [rozdz. 2].
 
 Oba rozkłady, ([-@eq-rozklad-bledu]) i ([-@eq-rozklad-bledu-01]), mają tę
 samą budowę: ryzyko dowolnego predyktora to ryzyko predyktora optymalnego
@@ -440,7 +442,8 @@ Model zamiast etykiety zwraca liczbę $p \in [0, 1]$, która ma być
 prawdopodobieństwem klasy $1$. Taka predykcja ma inną postać niż $y$ i nie
 da się jej „trafić": $Y$ przyjmuje tylko wartości $0$ i $1$, więc strata
 $\Loss(y, p)$ musi nagradzać coś innego niż zgodność $p$ z $y$. Rozważmy
-dwie popularne straty: **stratę Briera** i **stratę logarytmiczną**,
+dwie popularne straty: **stratę Briera** [@brier1950] i **stratę
+logarytmiczną**,
 $$
 \Loss_{\mathrm{B}}(y, p) = (y - p)^2, \qquad
 \Loss_{\log}(y, p) = -y \ln p - (1 - y) \ln(1 - p).
@@ -460,7 +463,8 @@ Jest to funkcja wypukła zmiennej $p$, a jej pochodna
 $-\eta(\x)/p + \big(1 - \eta(\x)\big)/(1 - p)$ zeruje się dokładnie dla
 $p = \eta(\x)$. Obie straty prowadzą więc do tego samego optimum:
 **najlepiej jest podać prawdziwe prawdopodobieństwo warunkowe**. Straty
-o tej własności nazywamy **właściwymi** (ang. *proper scoring rules*).
+o tej własności nazywamy **właściwymi** (ang. *proper scoring rules*)
+[@gneiting2007].
 
 Nie każda strata ją ma. Dla straty absolutnej $|y - p|$ ryzyko warunkowe
 $$
@@ -491,7 +495,7 @@ W przypadku dwuklasowym z kosztami $c_{10}$ (fałszywie ujemny) i $c_{01}$
 (fałszywie dodatni), przy zerowym koszcie trafnych decyzji
 ($c_{00} = c_{11} = 0$), reguła ([-@eq-regula-kosztowa]) redukuje się do progowania
 prawdopodobieństwa warunkowego na poziomie $c_{01}/(c_{01} + c_{10})$ zamiast
-na $\tfrac12$.
+na $\tfrac12$ [@elkan2001].
 
 ::: {.callout-tip}
 ## Dobry model, zły próg
@@ -533,7 +537,7 @@ $$
 \text{odmowa}, & \text{w przeciwnym razie}.
 \end{cases}
 $$ {#eq-regula-chowa}
-Jest to **reguła Chowa**: odmawiamy, gdy nawet najbardziej
+Jest to **reguła Chowa** [@chow1970]: odmawiamy, gdy nawet najbardziej
 prawdopodobna klasa daje szansę pomyłki większą niż koszt odmowy.
 Przypadki skrajne potwierdzają intuicję. Ponieważ
 $\max_k \eta_k(\x) \ge 1/K$, przy $d \ge (K-1)/K$ odmowa nigdy się nie
@@ -677,6 +681,28 @@ liczba danych. Może to oznaczać, że ryzyko jest już bliskie błędowi
 nieredukowalnemu, ale równie dobrze -- że ogranicza nas wybrana metoda lub
 sposób jej dopasowania. Rozstrzygnięcie wymaga porównania różnych modeli.
 :::
+
+## Uwagi bibliograficzne {.unnumbered}
+
+Statystyczną teorię decyzji w ujęciu bliskim temu rozdziałowi przedstawiają
+@esl [rozdz. 2.4], a łagodniej, z przykładami, @islp [rozdz. 2].
+@bishop2006 [rozdz. 1.5] omawia te same zagadnienia od strony
+probabilistycznej: minimalizację oczekiwanej straty, opcję odmowy
+i rozdzielenie wnioskowania od decyzji. Rozważa tam też stratę
+$|y - a|^q$, która dla $q = 1$ prowadzi do mediany warunkowej.
+Nowsze ujęcie, obejmujące również straty dla predykcji
+probabilistycznej, zawiera @murphy2022 [rozdz. 5].
+
+Ścisłą teorię klasyfikacji, zbudowaną wokół błędu bayesowskiego i nadwyżki
+ryzyka nad nim, wykładają @devroye1996, a analogiczną teorię regresji, z funkcją
+regresji jako optimum przy stracie kwadratowej, @gyorfi2002 [rozdz. 1].
+
+Straty właściwe i ich związek z estymacją prawdopodobieństw omawiają
+w pracy przeglądowej @gneiting2007. @elkan2001 wyprowadza próg dla
+niesymetrycznych kosztów i pokazuje, że zamiast przesuwać próg, można
+zmienić proporcje klas w zbiorze uczącym. @chow1970 bada, jak przy
+zmianie kosztu odmowy $d$ zmieniają się jednocześnie częstość błędów
+i częstość odmów.
 
 ## Zadania {.unnumbered}
 

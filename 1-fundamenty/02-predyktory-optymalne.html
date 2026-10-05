@@ -59,7 +59,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
-  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -375,6 +374,7 @@ window.Quarto = {
   <li><a href="#opcja-odmowy" id="toc-opcja-odmowy" class="nav-link" data-scroll-target="#opcja-odmowy"><span class="header-section-number">2.5.3</span> Opcja odmowy</a></li>
   </ul></li>
   <li><a href="#nieosiągalność-optimum" id="toc-nieosiągalność-optimum" class="nav-link" data-scroll-target="#nieosiągalność-optimum"><span class="header-section-number">2.6</span> Nieosiągalność optimum</a></li>
+  <li><a href="#uwagi-bibliograficzne" id="toc-uwagi-bibliograficzne" class="nav-link" data-scroll-target="#uwagi-bibliograficzne">Uwagi bibliograficzne</a></li>
   <li><a href="#zadania" id="toc-zadania" class="nav-link" data-scroll-target="#zadania">Zadania</a></li>
   </ul>
 </nav>
@@ -429,7 +429,7 @@ window.Quarto = {
 
 <p>W <a href="01-czym-jest-model.html#sec-predykcja-wnioskowanie" class="quarto-xref"><span>Sekcja 1.7</span></a> wyróżniliśmy dwa cele modelowania: predykcję i wnioskowanie. Ten rozdział dotyczy pierwszego z nich. W regresji predykcja polega na podaniu na podstawie wektora cech <span class="math inline">\(\x\)</span> wartości <span class="math inline">\(\widehat y\)</span>, która ma być bliska nieznanemu <span class="math inline">\(y\)</span>, w klasyfikacji – na wskazaniu klasy. Jak wycenić taką predykcję, ustaliliśmy w <a href="01-czym-jest-model.html#sec-strata-ryzyko" class="quarto-xref"><span>Sekcja 1.6</span></a>: funkcją straty, której wartość oczekiwana to ryzyko. Lepsza jest reguła o mniejszym ryzyku, a najlepsza – ta, której ryzyko jest najmniejsze. Tam też postawiliśmy pytanie, na które ten rozdział odpowiada: <strong>która funkcja <span class="math inline">\(f\)</span> minimalizuje <span class="math inline">\(\Risk(f)\)</span>?</strong></p>
 <p>Odpowiedź jest zaskakująco produktywna: gdy tylko ustalimy, jak mierzymy stratę, optymalną regułę da się <strong>wyprowadzić</strong>, zamiast pozostawiać ją naszej intuicji. Okazuje się, że wybór miary straty – a nie wybór algorytmu – przesądza, czego w ogóle szukamy. Ten sam zbiór danych przy stracie kwadratowej i przy stracie absolutnej prowadzi do dwóch różnych odpowiedzi, i obie są poprawne.</p>
-<p>Wszystkie wyniki tego rozdziału zakładają, że rozkład łączny <span class="math inline">\((\X, Y)\)</span> jest znany. Wskazują więc, czego szukamy, ale nie mówią, jak to znaleźć: oszacowanie potrzebnych wielkości z danych to osobne zadanie, omówione w <a href="01-czym-jest-model.html#sec-trening-modelu" class="quarto-xref"><span>Sekcja 1.8</span></a>. W literaturze ten materiał nosi nazwę statystycznej teorii decyzji <span class="citation" data-cites="esl">(<a href="../references.html#ref-esl" role="doc-biblioref">Hastie, Tibshirani, i Friedman 2009, rozdz. 2.4</a>)</span>. My słowa „decyzja” używamy w węższym znaczeniu z <a href="01-czym-jest-model.html#sec-regresja-klasyfikacja" class="quarto-xref"><span>Sekcja 1.4</span></a>: jako wyboru działania na podstawie prawdopodobieństw klas, na przykład ustalenia progu albo odmowy odpowiedzi. Tym zajmujemy się w <a href="#sec-od-prawdopodobienstw-do-decyzji" class="quarto-xref"><span>Sekcja 2.5</span></a>.</p>
+<p>Wszystkie wyniki tego rozdziału zakładają, że rozkład łączny <span class="math inline">\((\X, Y)\)</span> jest znany. Wskazują więc, czego szukamy, ale nie mówią, jak to znaleźć: oszacowanie potrzebnych wielkości z danych to osobne zadanie, omówione w <a href="01-czym-jest-model.html#sec-trening-modelu" class="quarto-xref"><span>Sekcja 1.8</span></a>. W literaturze ten materiał nosi nazwę statystycznej teorii decyzji <span class="citation" data-cites="esl">(<a href="../references.html#ref-esl" role="doc-biblioref">Hastie i in. 2009, rozdz. 2.4</a>)</span>. My słowa „decyzja” używamy w węższym znaczeniu z <a href="01-czym-jest-model.html#sec-regresja-klasyfikacja" class="quarto-xref"><span>Sekcja 1.4</span></a>: jako wyboru działania na podstawie prawdopodobieństw klas, na przykład ustalenia progu albo odmowy odpowiedzi. Tym zajmujemy się w <a href="#sec-od-prawdopodobienstw-do-decyzji" class="quarto-xref"><span>Sekcja 2.5</span></a>.</p>
 <p>Rozdział buduje ten aparat od podstaw. Wynikiem będą fakty, do których wracamy przez całą książkę: funkcja regresji jako optymalny predyktor przy stracie kwadratowej i klasyfikator bayesowski przy stracie 0–1, a dla obu tych strat – konkretna postać rozkładu ryzyka na błąd redukowalny i nieredukowalny, wprowadzonego ogólnie w <a href="01-czym-jest-model.html#sec-strata-ryzyko" class="quarto-xref"><span>Sekcja 1.6</span></a>.</p>
 <section id="sformułowanie-problemu" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="sformułowanie-problemu"><span class="header-section-number">2.1</span> Sformułowanie problemu</h2>
@@ -633,7 +633,7 @@ r(a \mid \x) = 1 - \eta_a(\x)
 \tag{2.10}\]</span></span></p>
 <p>Dla dwóch klas różnica <span class="math inline">\(\max_k \eta_k(\x) - \eta_{g(\x)}(\x)\)</span> wynosi <span class="math inline">\(0\)</span>, gdy <span class="math inline">\(g(\x) = \Bayes(\x)\)</span>, a w przeciwnym razie <span class="math inline">\(|\eta_1(\x) - \eta_2(\x)| = |2\eta_1(\x) - 1|\)</span>. Błąd redukowalny jest więc równy <span class="math display">\[
 \E\Big[\,|2\eta_1(\X) - 1| \cdot \ind\big(g(\X) \neq \Bayes(\X)\big)\Big].
-\]</span> Nie liczy on po prostu, jak często <span class="math inline">\(g\)</span> nie zgadza się z regułą Bayesa, lecz waży każdą niezgodność tym, jak wyraźnie jedna klasa przeważa w danym punkcie. Niezgodność blisko granicy decyzyjnej, gdzie <span class="math inline">\(\eta_1(\x) \approx \tfrac12\)</span>, prawie nic nie kosztuje. W obszarze, gdzie <span class="math inline">\(\eta_1(\x)\)</span> jest bliskie <span class="math inline">\(0\)</span> lub <span class="math inline">\(1\)</span>, kosztuje niemal całą pomyłkę.</p>
+\]</span> Nie liczy on po prostu, jak często <span class="math inline">\(g\)</span> nie zgadza się z regułą Bayesa, lecz waży każdą niezgodność tym, jak wyraźnie jedna klasa przeważa w danym punkcie. Niezgodność blisko granicy decyzyjnej, gdzie <span class="math inline">\(\eta_1(\x) \approx \tfrac12\)</span>, prawie nic nie kosztuje. W obszarze, gdzie <span class="math inline">\(\eta_1(\x)\)</span> jest bliskie <span class="math inline">\(0\)</span> lub <span class="math inline">\(1\)</span>, kosztuje niemal całą pomyłkę. Ten wzór na nadwyżkę ryzyka nad błędem bayesowskim jest punktem wyjścia teorii klasyfikacji w monografii <span class="citation" data-cites="devroye1996">Devroye i in. (<a href="../references.html#ref-devroye1996" role="doc-biblioref">1996, rozdz. 2</a>)</span>.</p>
 <p>Oba rozkłady, (<a href="#eq-rozklad-bledu" class="quarto-xref"><span>2.7</span></a>) i (<a href="#eq-rozklad-bledu-01" class="quarto-xref"><span>2.10</span></a>), mają tę samą budowę: ryzyko dowolnego predyktora to ryzyko predyktora optymalnego plus nieujemna nadwyżka, mierząca odległość od optimum. Przy stracie kwadratowej jest nią średni kwadrat odległości od funkcji regresji, przy stracie 0–1 – średnie prawdopodobieństwo trafienia utracone przez wybór gorszej klasy.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -655,13 +655,13 @@ r(a \mid \x) = 1 - \eta_a(\x)
 <p>W <a href="01-czym-jest-model.html#sec-regresja-klasyfikacja" class="quarto-xref"><span>Sekcja 1.4</span></a> rozdzieliliśmy w klasyfikacji dwa etapy: oszacowanie prawdopodobieństw klas <span class="math inline">\(\eta_k(\x)\)</span> i wybór klasy za pomocą reguły decyzyjnej. Klasyfikator bayesowski jest jedną z takich reguł – optymalną przy stracie 0–1. Ta sekcja odpowiada na dwa pytania: dlaczego model powinien zwracać właśnie <span class="math inline">\(\eta_k(\x)\)</span> i jak wybrać regułę decyzyjną, gdy strata 0–1 nie opisuje dobrze kosztów zastosowania. Oba pytania rozstrzyga ta sama zasada minimalizacji punktowej.</p>
 <section id="predykcja-probabilistyczna" class="level3" data-number="2.5.1">
 <h3 data-number="2.5.1" class="anchored" data-anchor-id="predykcja-probabilistyczna"><span class="header-section-number">2.5.1</span> Predykcja probabilistyczna</h3>
-<p>Niech <span class="math inline">\(\mathcal{Y} = \{0, 1\}\)</span> i <span class="math inline">\(\eta(\x) = \Prob(Y = 1 \mid \X = \x)\)</span>. Model zamiast etykiety zwraca liczbę <span class="math inline">\(p \in [0, 1]\)</span>, która ma być prawdopodobieństwem klasy <span class="math inline">\(1\)</span>. Taka predykcja ma inną postać niż <span class="math inline">\(y\)</span> i nie da się jej „trafić”: <span class="math inline">\(Y\)</span> przyjmuje tylko wartości <span class="math inline">\(0\)</span> i <span class="math inline">\(1\)</span>, więc strata <span class="math inline">\(\Loss(y, p)\)</span> musi nagradzać coś innego niż zgodność <span class="math inline">\(p\)</span> z <span class="math inline">\(y\)</span>. Rozważmy dwie popularne straty: <strong>stratę Briera</strong> i <strong>stratę logarytmiczną</strong>, <span class="math display">\[
+<p>Niech <span class="math inline">\(\mathcal{Y} = \{0, 1\}\)</span> i <span class="math inline">\(\eta(\x) = \Prob(Y = 1 \mid \X = \x)\)</span>. Model zamiast etykiety zwraca liczbę <span class="math inline">\(p \in [0, 1]\)</span>, która ma być prawdopodobieństwem klasy <span class="math inline">\(1\)</span>. Taka predykcja ma inną postać niż <span class="math inline">\(y\)</span> i nie da się jej „trafić”: <span class="math inline">\(Y\)</span> przyjmuje tylko wartości <span class="math inline">\(0\)</span> i <span class="math inline">\(1\)</span>, więc strata <span class="math inline">\(\Loss(y, p)\)</span> musi nagradzać coś innego niż zgodność <span class="math inline">\(p\)</span> z <span class="math inline">\(y\)</span>. Rozważmy dwie popularne straty: <strong>stratę Briera</strong> <span class="citation" data-cites="brier1950">(<a href="../references.html#ref-brier1950" role="doc-biblioref">Brier 1950</a>)</span> i <strong>stratę logarytmiczną</strong>, <span class="math display">\[
 \Loss_{\mathrm{B}}(y, p) = (y - p)^2, \qquad
 \Loss_{\log}(y, p) = -y \ln p - (1 - y) \ln(1 - p).
 \]</span> Druga to ujemny logarytm prawdopodobieństwa, które model przypisał zaobserwowanej klasie; o jej roli w uczeniu wspominaliśmy w <a href="01-czym-jest-model.html#sec-trening-modelu" class="quarto-xref"><span>Sekcja 1.8</span></a>.</p>
 <p>Dla straty Briera nie trzeba nic liczyć. <span class="math inline">\(Y\)</span> jest zmienną liczbową o wartościach <span class="math inline">\(0\)</span> i <span class="math inline">\(1\)</span>, więc <span class="math inline">\(\E(Y \mid \X = \x) = \eta(\x)\)</span> i <a href="#thm-funkcja-regresji" class="quarto-xref">Twierdzenie&nbsp;<span>2.2</span></a> daje od razu <span class="math inline">\(\fopt(\x) = \eta(\x)\)</span>. Dla straty logarytmicznej ryzyko warunkowe wynosi <span class="math display">\[
 r(p \mid \x) = -\eta(\x) \ln p - \big(1 - \eta(\x)\big) \ln(1 - p).
-\]</span> Jest to funkcja wypukła zmiennej <span class="math inline">\(p\)</span>, a jej pochodna <span class="math inline">\(-\eta(\x)/p + \big(1 - \eta(\x)\big)/(1 - p)\)</span> zeruje się dokładnie dla <span class="math inline">\(p = \eta(\x)\)</span>. Obie straty prowadzą więc do tego samego optimum: <strong>najlepiej jest podać prawdziwe prawdopodobieństwo warunkowe</strong>. Straty o tej własności nazywamy <strong>właściwymi</strong> (ang. <em>proper scoring rules</em>).</p>
+\]</span> Jest to funkcja wypukła zmiennej <span class="math inline">\(p\)</span>, a jej pochodna <span class="math inline">\(-\eta(\x)/p + \big(1 - \eta(\x)\big)/(1 - p)\)</span> zeruje się dokładnie dla <span class="math inline">\(p = \eta(\x)\)</span>. Obie straty prowadzą więc do tego samego optimum: <strong>najlepiej jest podać prawdziwe prawdopodobieństwo warunkowe</strong>. Straty o tej własności nazywamy <strong>właściwymi</strong> (ang. <em>proper scoring rules</em>) <span class="citation" data-cites="gneiting2007">(<a href="../references.html#ref-gneiting2007" role="doc-biblioref">Gneiting i Raftery 2007</a>)</span>.</p>
 <p>Nie każda strata ją ma. Dla straty absolutnej <span class="math inline">\(|y - p|\)</span> ryzyko warunkowe <span class="math display">\[
 r(p \mid \x) = \eta(\x)\,(1 - p) + \big(1 - \eta(\x)\big)\, p
 \]</span> jest liniowe w <span class="math inline">\(p\)</span>, więc minimum leży na końcu przedziału: <span class="math inline">\(p = 1\)</span>, gdy <span class="math inline">\(\eta(\x) &gt; \tfrac12\)</span>, i <span class="math inline">\(p = 0\)</span> w przeciwnym razie. Model oceniany tą stratą zwraca zatem etykietę klasyfikatora bayesowskiego zamiast prawdopodobieństwa i traci informację o tym, jak pewna jest ta etykieta. Tymczasem właśnie tej informacji potrzebują obie reguły decyzyjne omówione poniżej.</p>
@@ -673,7 +673,7 @@ r(a \mid \x) = \sum_{k=1}^{K} c_{k a} \,\eta_k(\x),
 \]</span> a <a href="#thm-minimalizacja-punktowa" class="quarto-xref">Twierdzenie&nbsp;<span>2.1</span></a> daje regułę optymalną <span id="eq-regula-kosztowa"><span class="math display">\[
 \fopt(\x) = \argmin_{a} \sum_{k=1}^{K} c_{k a} \,\eta_k(\x).
 \tag{2.11}\]</span></span></p>
-<p>W przypadku dwuklasowym z kosztami <span class="math inline">\(c_{10}\)</span> (fałszywie ujemny) i <span class="math inline">\(c_{01}\)</span> (fałszywie dodatni), przy zerowym koszcie trafnych decyzji (<span class="math inline">\(c_{00} = c_{11} = 0\)</span>), reguła (<a href="#eq-regula-kosztowa" class="quarto-xref"><span>2.11</span></a>) redukuje się do progowania prawdopodobieństwa warunkowego na poziomie <span class="math inline">\(c_{01}/(c_{01} + c_{10})\)</span> zamiast na <span class="math inline">\(\tfrac12\)</span>.</p>
+<p>W przypadku dwuklasowym z kosztami <span class="math inline">\(c_{10}\)</span> (fałszywie ujemny) i <span class="math inline">\(c_{01}\)</span> (fałszywie dodatni), przy zerowym koszcie trafnych decyzji (<span class="math inline">\(c_{00} = c_{11} = 0\)</span>), reguła (<a href="#eq-regula-kosztowa" class="quarto-xref"><span>2.11</span></a>) redukuje się do progowania prawdopodobieństwa warunkowego na poziomie <span class="math inline">\(c_{01}/(c_{01} + c_{10})\)</span> zamiast na <span class="math inline">\(\tfrac12\)</span> <span class="citation" data-cites="elkan2001">(<a href="../references.html#ref-elkan2001" role="doc-biblioref">Elkan 2001</a>)</span>.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -700,7 +700,7 @@ r(a \mid \x) = \sum_{k=1}^{K} c_{k a} \,\eta_k(\x),
 \Bayes(\x), &amp; \text{gdy } 1 - \max_k \eta_k(\x) \le d, \\
 \text{odmowa}, &amp; \text{w przeciwnym razie}.
 \end{cases}
-\tag{2.12}\]</span></span> Jest to <strong>reguła Chowa</strong>: odmawiamy, gdy nawet najbardziej prawdopodobna klasa daje szansę pomyłki większą niż koszt odmowy. Przypadki skrajne potwierdzają intuicję. Ponieważ <span class="math inline">\(\max_k \eta_k(\x) \ge 1/K\)</span>, przy <span class="math inline">\(d \ge (K-1)/K\)</span> odmowa nigdy się nie opłaca i wracamy do klasyfikatora bayesowskiego. Przy <span class="math inline">\(d\)</span> bliskim zeru model odpowiada tylko tam, gdzie jest niemal pewny.</p>
+\tag{2.12}\]</span></span> Jest to <strong>reguła Chowa</strong> <span class="citation" data-cites="chow1970">(<a href="../references.html#ref-chow1970" role="doc-biblioref">Chow 1970</a>)</span>: odmawiamy, gdy nawet najbardziej prawdopodobna klasa daje szansę pomyłki większą niż koszt odmowy. Przypadki skrajne potwierdzają intuicję. Ponieważ <span class="math inline">\(\max_k \eta_k(\x) \ge 1/K\)</span>, przy <span class="math inline">\(d \ge (K-1)/K\)</span> odmowa nigdy się nie opłaca i wracamy do klasyfikatora bayesowskiego. Przy <span class="math inline">\(d\)</span> bliskim zeru model odpowiada tylko tam, gdzie jest niemal pewny.</p>
 <p>Minimalne ryzyko wynosi teraz <span class="math inline">\(\E\big[\min\big(1 - \max_k \eta_k(\X),\, d\big)\big]\)</span>, ze średnią po rozkładzie cech, i nie przekracza błędu bayesowskiego (<a href="#eq-blad-bayesa" class="quarto-xref"><span>2.9</span></a>). Opcja odmowy nie usuwa niepewności. Pozwala jedynie wymienić pomyłki w najtrudniejszych obszarach przestrzeni cech na stały, znany z góry koszt. Podobnie jak reguła kosztowa, reguła Chowa wymaga prawdopodobieństw <span class="math inline">\(\eta_k(\x)\)</span>, a nie samej etykiety.</p>
 </section>
 </section>
@@ -823,6 +823,12 @@ Rysunek&nbsp;2.2: Ryzyko klasyfikatora <span class="math inline">\(k\)</span>-NN
 </div>
 </div>
 </section>
+<section id="uwagi-bibliograficzne" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="uwagi-bibliograficzne">Uwagi bibliograficzne</h2>
+<p>Statystyczną teorię decyzji w ujęciu bliskim temu rozdziałowi przedstawiają <span class="citation" data-cites="esl">Hastie i in. (<a href="../references.html#ref-esl" role="doc-biblioref">2009, rozdz. 2.4</a>)</span>, a łagodniej, z przykładami, <span class="citation" data-cites="islp">James i in. (<a href="../references.html#ref-islp" role="doc-biblioref">2023, rozdz. 2</a>)</span>. <span class="citation" data-cites="bishop2006">Bishop (<a href="../references.html#ref-bishop2006" role="doc-biblioref">2006, rozdz. 1.5</a>)</span> omawia te same zagadnienia od strony probabilistycznej: minimalizację oczekiwanej straty, opcję odmowy i rozdzielenie wnioskowania od decyzji. Rozważa tam też stratę <span class="math inline">\(|y - a|^q\)</span>, która dla <span class="math inline">\(q = 1\)</span> prowadzi do mediany warunkowej. Nowsze ujęcie, obejmujące również straty dla predykcji probabilistycznej, zawiera <span class="citation" data-cites="murphy2022">Murphy (<a href="../references.html#ref-murphy2022" role="doc-biblioref">2022, rozdz. 5</a>)</span>.</p>
+<p>Ścisłą teorię klasyfikacji, zbudowaną wokół błędu bayesowskiego i nadwyżki ryzyka nad nim, wykładają <span class="citation" data-cites="devroye1996">Devroye i in. (<a href="../references.html#ref-devroye1996" role="doc-biblioref">1996</a>)</span>, a analogiczną teorię regresji, z funkcją regresji jako optimum przy stracie kwadratowej, <span class="citation" data-cites="gyorfi2002">Györfi i in. (<a href="../references.html#ref-gyorfi2002" role="doc-biblioref">2002, rozdz. 1</a>)</span>.</p>
+<p>Straty właściwe i ich związek z estymacją prawdopodobieństw omawiają w pracy przeglądowej <span class="citation" data-cites="gneiting2007">Gneiting i Raftery (<a href="../references.html#ref-gneiting2007" role="doc-biblioref">2007</a>)</span>. <span class="citation" data-cites="elkan2001">Elkan (<a href="../references.html#ref-elkan2001" role="doc-biblioref">2001</a>)</span> wyprowadza próg dla niesymetrycznych kosztów i pokazuje, że zamiast przesuwać próg, można zmienić proporcje klas w zbiorze uczącym. <span class="citation" data-cites="chow1970">Chow (<a href="../references.html#ref-chow1970" role="doc-biblioref">1970</a>)</span> bada, jak przy zmianie kosztu odmowy <span class="math inline">\(d\)</span> zmieniają się jednocześnie częstość błędów i częstość odmów.</p>
+</section>
 <section id="zadania" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="zadania">Zadania</h2>
 <div id="exr-ryzyko-wazone" class="theorem exercise">
@@ -865,9 +871,36 @@ Rysunek&nbsp;2.2: Ryzyko klasyfikatora <span class="math inline">\(k\)</span>-NN
 </div>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-bishop2006" class="csl-entry" role="listitem">
+Bishop, Christopher M. 2006. <em>Pattern Recognition and Machine Learning</em>. <span>Information Science and Statistics</span>. Springer.
+</div>
+<div id="ref-brier1950" class="csl-entry" role="listitem">
+Brier, Glenn W. 1950. <span>„Verification of Forecasts Expressed in Terms of Probability”</span>. <em>Monthly Weather Review</em> 78 (1): 1–3. <a href="https://doi.org/10.1175/1520-0493(1950)078%3C0001:VOFEIT%3E2.0.CO;2">https://doi.org/10.1175/1520-0493(1950)078%3C0001:VOFEIT%3E2.0.CO;2</a>.
+</div>
+<div id="ref-chow1970" class="csl-entry" role="listitem">
+Chow, C. K. 1970. <span>„On Optimum Recognition Error and Reject Tradeoff”</span>. <em>IEEE Transactions on Information Theory</em> 16 (1): 41–46. <a href="https://doi.org/10.1109/TIT.1970.1054406">https://doi.org/10.1109/TIT.1970.1054406</a>.
+</div>
+<div id="ref-devroye1996" class="csl-entry" role="listitem">
+Devroye, Luc, László Györfi i Gábor Lugosi. 1996. <em>A Probabilistic Theory of Pattern Recognition</em>. <span>Stochastic Modelling and Applied Probability</span> 31. Springer. <a href="https://doi.org/10.1007/978-1-4612-0711-5">https://doi.org/10.1007/978-1-4612-0711-5</a>.
+</div>
+<div id="ref-elkan2001" class="csl-entry" role="listitem">
+Elkan, Charles. 2001. <span>„The Foundations of Cost-Sensitive Learning”</span>. <em>Proceedings of the Seventeenth International Joint Conference on Artificial Intelligence (IJCAI)</em>, 973–78.
+</div>
+<div id="ref-gneiting2007" class="csl-entry" role="listitem">
+Gneiting, Tilmann i Adrian E. Raftery. 2007. <span>„Strictly Proper Scoring Rules, Prediction, and Estimation”</span>. <em>Journal of the American Statistical Association</em> 102 (477): 359–78. <a href="https://doi.org/10.1198/016214506000001437">https://doi.org/10.1198/016214506000001437</a>.
+</div>
+<div id="ref-gyorfi2002" class="csl-entry" role="listitem">
+Györfi, László, Michael Kohler, Adam Krzyżak i Harro Walk. 2002. <em>A Distribution-Free Theory of Nonparametric Regression</em>. <span>Springer Series in Statistics</span>. Springer. <a href="https://doi.org/10.1007/b97848">https://doi.org/10.1007/b97848</a>.
+</div>
 <div id="ref-esl" class="csl-entry" role="listitem">
-Hastie, Trevor, Robert Tibshirani, i Jerome Friedman. 2009. <em>The Elements of Statistical Learning: Data Mining, Inference, and Prediction</em>. 2. wyd. Springer.
+Hastie, Trevor, Robert Tibshirani i Jerome Friedman. 2009. <em>The Elements of Statistical Learning: Data Mining, Inference, and Prediction</em>. 2. wyd. Springer.
+</div>
+<div id="ref-islp" class="csl-entry" role="listitem">
+James, Gareth, Daniela Witten, Trevor Hastie, Robert Tibshirani i Jonathan Taylor. 2023. <em>An Introduction to Statistical Learning with Applications in Python</em>. <span>Springer Texts in Statistics</span>. Springer.
+</div>
+<div id="ref-murphy2022" class="csl-entry" role="listitem">
+Murphy, Kevin P. 2022. <em>Probabilistic Machine Learning: An Introduction</em>. MIT Press.
 </div>
 </div>
 </section>
