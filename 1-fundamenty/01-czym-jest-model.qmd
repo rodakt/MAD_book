@@ -393,7 +393,7 @@ zwykłą funkcją, to $g(Y)$ również jest zmienną losową: najpierw losujemy
 obiekt, potem odczytujemy $Y$, a na końcu obliczamy $g$. Z tego prostego
 spostrzeżenia będziemy stale korzystać. Na przykład $\fopt(\X)$ jest
 zmienną losową, choć $\fopt$ jest ustaloną funkcją, a strata
-$\Loss\big(Y,f(\X)\big)$ z @sec-strata-ryzyko jest zmienną losową, bo
+$\Loss\big(Y,f(\X)\big)$ z sekcji [-@sec-strata-ryzyko] jest zmienną losową, bo
 zależy od wylosowanej pary $(\X,Y)$. Wartość oczekiwana takiej zmiennej
 jest już liczbą.
 :::
@@ -528,11 +528,11 @@ nieprawidłowo.
 ## Po co nam ten podział
 Modelując zależność, interesujemy się drugim czynnikiem. Optymalna
 predykcja w punkcie $\x$ -- w sensie, który sprecyzujemy w
-@sec-strata-ryzyko -- zależy wyłącznie od rozkładu warunkowego --
+sekcji [-@sec-strata-ryzyko] -- zależy wyłącznie od rozkładu warunkowego --
 rozkład brzegowy cech nie wpływa na nią w żaden sposób. Wpływa natomiast
 na to, jak bardzo opłaca się być dokładnym w danym obszarze przestrzeni
 cech, bo obszary rzadko odwiedzane wnoszą do przeciętnej straty niewiele.
-Do tej obserwacji wracamy w @sec-predyktory-optymalne.
+Do tej obserwacji wracamy w rozdziale [-@sec-predyktory-optymalne].
 
 Wzdłuż tego samego podziału przebiega też granica między dwiema rodzinami
 metod. Modele **dyskryminacyjne**, takie jak regresja logistyczna,
@@ -540,7 +540,7 @@ opisują wyłącznie $p(y\mid\x)$ i o rozkładzie cech nie mówią nic. Modele
 **generatywne**, takie jak analiza dyskryminacyjna czy naiwny klasyfikator
 bayesowski, opisują cały rozkład łączny, docierając do zależności okrężną
 drogą -- przez rozkłady cech wewnątrz klas. Różnicę tę omówimy szczegółowo
-w @sec-modele-generatywne.
+w rozdziale [-@sec-modele-generatywne].
 :::
 
 ### Regresja
@@ -549,7 +549,7 @@ W przypadku regresji część systematyczną opisujemy za pomocą warunkowej
 wartości oczekiwanej, nazywanej **funkcją regresji**:
 
 $$
-\fopt(\x)=\E(Y\mid\X=\x).
+\fopt(\x)=\E[Y\mid\X=\x].
 $$ {#eq-funkcja-regresji-wstep}
 
 Oznacza ona przeciętną wartość zmiennej wyjściowej wśród obiektów o cechach
@@ -566,27 +566,27 @@ Wartość oczekiwana rozkładu warunkowego $Y\mid\X=\x$ to średnia wartość $Y
 wśród obiektów o cechach $\x$:
 
 $$
-\E(Y\mid\X=\x)=\sum_{y}y\,p(y\mid\x)
+\E[Y\mid\X=\x]=\sum_{y}y\,p(y\mid\x)
 \qquad\text{albo}\qquad
-\E(Y\mid\X=\x)=\int y\,p(y\mid\x)\,dy .
+\E[Y\mid\X=\x]=\int y\,p(y\mid\x)\,dy .
 $$
 
 Jest to **liczba** zależna od $\x$, a więc funkcja zmiennej $\x$ -- i właśnie
 tę funkcję nazywamy funkcją regresji.
 
 **Dwa zapisy, dwa różne obiekty.** Podstawiając w miejsce $\x$ losowy wektor
-$\X$, otrzymujemy $\E(Y\mid\X)=\fopt(\X)$, czyli **zmienną losową**: jej
+$\X$, otrzymujemy $\E[Y\mid\X]=\fopt(\X)$, czyli **zmienną losową**: jej
 wartość zmienia się wraz z wylosowanym obiektem. Wzór ([-@eq-funkcja-regresji-wstep]) mówi
 o liczbie przypisanej ustalonym cechom, natomiast warunek
-$\E(\varepsilon\mid\X)=0$ we wzorze ([-@eq-rozklad-addytywny]) jest równością zmiennych
+$\E[\varepsilon\mid\X]=0$ we wzorze ([-@eq-rozklad-addytywny]) jest równością zmiennych
 losowych -- znaczy tyle, że dla **każdego** $\x$ zachodzi
-$\E(\varepsilon\mid\X=\x)=0$.
+$\E[\varepsilon\mid\X=\x]=0$.
 
 **Prawo iterowanej wartości oczekiwanej.** Uśrednienie funkcji $\fopt(\X)$
 po rozkładzie cech odtwarza zwykłą wartość oczekiwaną:
 
 $$
-\E\big[\E(Y\mid\X)\big]=\E(Y).
+\E\big[\E[Y\mid\X]\big]=\E[Y].
 $$
 
 Średnia warunkowych średnich jest więc średnią globalną -- z wagami danymi
@@ -596,7 +596,7 @@ Będziemy z niej korzystać przy rachunkach dotyczących ryzyka.
 :::
 
 Wybór warunkowej wartości oczekiwanej nie jest przypadkowy.
-W @sec-predyktory-optymalne pokażemy, że funkcja $\fopt$ jest **najlepszym
+W rozdziale [-@sec-predyktory-optymalne] pokażemy, że funkcja $\fopt$ jest **najlepszym
 możliwym** predyktorem, jeżeli błędy wyceniamy stratą kwadratową. Przy innej
 stracie wyróżniona byłaby inna charakterystyka rozkładu warunkowego, na
 przykład mediana. To, jaką charakterystykę rozkładu warto przewidywać,
@@ -607,8 +607,8 @@ $\varepsilon=Y-\fopt(\X)$. Wówczas, przy ustalonych cechach, jego wartość
 oczekiwana wynosi
 
 $$
-\E(\varepsilon\mid\X)
-=\E(Y\mid\X)-\fopt(\X)=0.
+\E[\varepsilon\mid\X]
+=\E[Y\mid\X]-\fopt(\X)=0.
 $$
 
 Zmienną wyjściową możemy więc przedstawić w postaci addytywnej
@@ -616,13 +616,13 @@ Zmienną wyjściową możemy więc przedstawić w postaci addytywnej
 $$
 Y=\fopt(\X)+\varepsilon,
 \qquad
-\E(\varepsilon\mid\X)=0 .
+\E[\varepsilon\mid\X]=0 .
 $$ {#eq-rozklad-addytywny}
 
 Składnik $\varepsilon$ opisuje odchylenie obserwowanego wyniku od części
 systematycznej. Dwa obiekty o takich samych wartościach cech otrzymują tę
 samą wartość $\fopt(\x)$, ale ich rzeczywiste wyniki mogą się różnić ze
-względu na różne realizacje $\varepsilon$. Warunek $\E(\varepsilon\mid\X)=0$
+względu na różne realizacje $\varepsilon$. Warunek $\E[\varepsilon\mid\X]=0$
 wynika z definicji $\varepsilon$ i oznacza, że odchylenia przy ustalonych
 cechach przeciętnie się znoszą.
 
@@ -689,7 +689,7 @@ czyli wektor $\big(\eta_1(\x),\ldots,\eta_K(\x)\big)$.
 
 Dla zmiennej binarnej z klasami zakodowanymi jako $0$ i $1$ oba opisy
 pokrywają się:
-$\E(Y\mid\X=\x)=\Prob(Y=1\mid\X=\x)$, a więc $\fopt=\eta$.
+$\E[Y\mid\X=\x]=\Prob(Y=1\mid\X=\x)$, a więc $\fopt=\eta$.
 Przy innym kodowaniu dwiema różnymi liczbami średnia warunkowa nadal
 jednoznacznie wyznacza prawdopodobieństwa klas, ale nie jest już wprost
 jednym z nich.
@@ -752,7 +752,7 @@ a resztę stanowi szum.
 
 ## Jak mierzymy jakość predykcji {#sec-strata-ryzyko}
 
-Wróćmy do drugiego z pytań postawionych w @sec-zaleznosc-i-szum: co znaczy,
+Wróćmy do drugiego z pytań postawionych w sekcji [-@sec-zaleznosc-i-szum]: co znaczy,
 że predykcja jest bliska rzeczywistemu wynikowi? Odpowiedź wymaga
 określenia kosztu błędu danej wielkości. Koszt ten zależy od celu i kontekstu
 zastosowania modelu; nie wynika z samego rozkładu danych.
@@ -780,7 +780,7 @@ $$ {#eq-strata-01-wstep}
 
 wyceniająca każdą pomyłkę na jednostkę, niezależnie od tego, jakich klas
 dotyczy. Oba wybory są domyślne, ale nie są jedyne możliwe ani zawsze
-właściwe -- do konsekwencji zmiany straty wrócimy w @sec-predyktory-optymalne.
+właściwe -- do konsekwencji zmiany straty wrócimy w rozdziale [-@sec-predyktory-optymalne].
 
 ::: {.callout-note collapse="true"}
 ## Przypomnienie: funkcja wskaźnikowa
@@ -853,7 +853,7 @@ systematycznie zaniżona: model był dobierany tak, aby na nich wypadać
 dobrze. Dla predyktora ustalonego niezależnie od danych średnia ta
 byłaby nieobciążonym oszacowaniem ryzyka.
 
-Do rzetelnego szacowania ryzyka wracamy w @sec-ocena-modeli.
+Do rzetelnego szacowania ryzyka wracamy w rozdziale [-@sec-ocena-modeli].
 :::
 
 Ryzyko określa przeciętny koszt błędów predyktora w populacji. Chcemy,
@@ -870,7 +870,7 @@ kwadratowej ([-@eq-strata-kwadratowa-wstep]) optymalna jest funkcja regresji
 optymalna jest reguła
 wskazująca klasę o największym prawdopodobieństwie $\eta_k(\x)$.
 Wyprowadzenie obu wyników, wraz z konsekwencjami dla praktyki, jest treścią
-@sec-predyktory-optymalne.
+rozdziału [-@sec-predyktory-optymalne].
 
 ### Błąd redukowalny i nieredukowalny
 
@@ -907,7 +907,7 @@ Praktyczna konsekwencja: czego nie da się poprawić modelowaniem, często
 daje się poprawić pomiarem.
 :::
 
-W @sec-predyktory-optymalne wyznaczymy optymalne reguły predykcji dla regresji
+W rozdziale [-@sec-predyktory-optymalne] wyznaczymy optymalne reguły predykcji dla regresji
 i klasyfikacji, a dla każdej z nich także konkretną postać obu składników.
 Przy stracie kwadratowej (@sec-blad-nieredukowalny) błąd redukowalny
 będzie średnim kwadratem różnicy między predyktorem a funkcją regresji,
@@ -953,7 +953,7 @@ w sobie jej nie zapewnia. Jakość generalizacji szacujemy na danych
 niewykorzystanych do dopasowania modelu, na przykład na zbiorze
 walidacyjnym. Wynik na takim zbiorze jest oszacowaniem jakości w danej
 populacji, a jego wiarygodność zależy od sposobu zebrania i wykorzystania
-danych. Do zasad tej oceny wrócimy w @sec-ocena-modeli.
+danych. Do zasad tej oceny wrócimy w rozdziale [-@sec-ocena-modeli].
 
 Miarę jakości predykcyjnej dobieramy do zadania. Może nią być średnia
 strata, jak przy ocenie błędu średniokwadratowego, ale stosuje się też
@@ -1120,15 +1120,23 @@ przybliżonym także otrzymanym wynikiem.
 
 Minimalizacja ryzyka empirycznego jest ważnym schematem uczenia, ale
 nie każda metoda bezpośrednio minimalizuje stratę, którą później
-oceniamy predykcje. Na przykład model prawdopodobieństw klas można
-dopasowywać przez minimalizację średniej ujemnego logarytmu
-prawdopodobieństwa przypisanego zaobserwowanej klasie, obliczanej
-na danych treningowych. Stratą 0--1 oceniamy wówczas etykiety otrzymane
-po zastosowaniu reguły decyzyjnej do oszacowanych prawdopodobieństw.
-Inne metody konstruują predykcję według ustalonej reguły, choćby na
-podstawie wyników obserwacji podobnych do przewidywanego przypadku.
-Dlatego opis metody powinien wskazywać zarówno sposób dopasowania,
-jak i kryterium oceny otrzymanego modelu.
+oceniamy predykcje. Typowy przykład daje klasyfikacja przebiegająca
+w dwóch etapach z sekcji [-@sec-regresja-klasyfikacja]. Model
+prawdopodobieństw klas dopasowujemy, minimalizując na danych
+treningowych średnią **straty logarytmicznej**, czyli ujemnego
+logarytmu prawdopodobieństwa przypisanego zaobserwowanej klasie.
+Etykiety otrzymane po zastosowaniu reguły decyzyjnej oceniamy natomiast
+stratą 0--1. Strata 0--1 słabo nadaje się do dopasowania: mała zmiana
+parametrów zwykle nie zmienia liczby błędów, więc nie wskazuje, w którą
+stronę poprawiać model. Strata logarytmiczna reaguje na każdą zmianę
+prawdopodobieństw. Dlaczego jej minimalizacja prowadzi do sensownych
+prawdopodobieństw, wyjaśnimy w rozdziale [-@sec-predyktory-optymalne].
+
+Inne metody w ogóle nie minimalizują jawnego kryterium, tylko
+konstruują predykcję według ustalonej reguły, choćby na podstawie
+wyników obserwacji podobnych do przewidywanego przypadku. Dlatego opis
+metody powinien wskazywać zarówno sposób dopasowania, jak i kryterium
+oceny otrzymanego modelu.
 
 Małe ryzyko empiryczne świadczy o dopasowaniu do próby, lecz nie
 zapewnia dobrej generalizacji. Dostatecznie bogata klasa może pozwolić
@@ -1138,8 +1146,8 @@ Takie **nadmierne dopasowanie** może dać bardzo mały błąd treningowy
 i duży błąd na nowych danych. W uczeniu musimy więc uwzględniać
 złożoność dopuszczalnych modeli i oceniać ich działanie na danych
 niewykorzystanych do dopasowania. Do sposobów ograniczania złożoności
-i oceny generalizacji wrócimy w @sec-bias-wariancja
-i @sec-ocena-modeli.
+i oceny generalizacji wrócimy w rozdziałach [-@sec-bias-wariancja]
+i [-@sec-ocena-modeli].
 
 Podobny schemat występuje w uczeniu nienadzorowanym. Dysponujemy wtedy
 zbiorem $\mathcal{D}=\{\x_1,\ldots,\x_n\}$, bez zmiennej docelowej,
@@ -1223,7 +1231,7 @@ $x$, może zmieniać się również zestaw sąsiadów, a więc i przewidywana
 cena. Opis dopasowanego modelu obejmuje dane treningowe potrzebne
 do wyszukiwania sąsiadów, zamiast sprowadzać się do dwóch współczynników.
 Metodę najbliższych sąsiadów w zadaniu klasyfikacji omówimy
-w @sec-knn.
+w rozdziale [-@sec-knn].
 
 ::: {.callout-note}
 ## Nieparametryczny nie znaczy „bez parametrów” ani „bez założeń”
@@ -1234,8 +1242,10 @@ współczynników. O nazwie decyduje brak ograniczenia rodziny modeli
 do ustalonej, skończenie wymiarowej parametryzacji.
 
 Pozostają również założenia o odtwarzanej zależności. Uśrednianie
-wyników sąsiadów jest użyteczne, gdy obiekty bliskie według wybranych
-cech mają zbliżone średnie wyniki. Znaczenie ma więc wybór cech,
+wyników sąsiadów jest użyteczne, gdy funkcja regresji
+$\fopt(\x) = \E[Y \mid \X = \x]$ zmienia się niewiele przy niewielkiej
+zmianie $\x$ -- wtedy wyniki sąsiadów mówią coś o średnim wyniku
+w punkcie $\x$. Znaczenie ma więc wybór cech,
 sposobu mierzenia odległości i wielkości sąsiedztwa. Zastąpienie
 prostej lokalnym uśrednianiem zmienia założenia modelu, ale ich
 nie usuwa.
@@ -1250,7 +1260,7 @@ zależy od niewielu bliskich obserwacji, a przy dużym -- od średniej
 w szerszym otoczeniu. Hiperparametry ustalamy dla danego dopasowania,
 ale możemy je dobierać na podstawie danych, porównując wyniki
 różnych ustawień na zbiorze walidacyjnym. Do zasad takiego doboru
-wrócimy w @sec-ocena-modeli. Sam fakt, że pewna wielkość została
+wrócimy w rozdziale [-@sec-ocena-modeli]. Sam fakt, że pewna wielkość została
 dobrana z użyciem danych, nie przesądza więc, czy nazywamy ją
 parametrem, czy hiperparametrem; istotna jest jej rola w procedurze.
 
@@ -1274,7 +1284,7 @@ nadmiernemu dopasowaniu. Zbyt duże sąsiedztwo może zacierać istotne
 zmiany zależności i prowadzić do niedopasowania. Elastycznością
 trzeba więc sterować również w metodach nieparametrycznych.
 Związek między elastycznością, wielkością próby i zmiennością
-dopasowania rozwiniemy w @sec-bias-wariancja.
+dopasowania rozwiniemy w rozdziale [-@sec-bias-wariancja].
 
 Podział na metody parametryczne i nieparametryczne nie jest przy tym
 podziałem na modele liniowe i nieliniowe ani na proste i złożone.
@@ -1416,7 +1426,7 @@ czytelne niż model addytywny.
 to jakość predykcji na nowych danych, a nie dopasowanie do próby
 treningowej. Bogatsza klasa modeli pozwala dopasować się do próby
 co najmniej równie dobrze jak uboższa, ale -- jak zauważyliśmy
-w @sec-trening-modelu -- może przy tym odtwarzać przypadkowe odchylenia.
+w sekcji [-@sec-trening-modelu] -- może przy tym odtwarzać przypadkowe odchylenia.
 Jeżeli średnia warunkowa jest liniowa, prosta nie traci niczego na
 niedopasowaniu, a metoda najbliższych sąsiadów płaci za swoją swobodę
 większą wrażliwością na losowość próby. Prostszy model jest wtedy
@@ -1435,7 +1445,7 @@ sprawdzić, porównując modele na danych niewykorzystanych do ich dopasowania.
 
 **Czytelny nie znaczy trafny.** Łatwość odczytania współczynnika nie
 gwarantuje, że odczytana wartość opisuje interesującą nas zależność.
-Jak zauważyliśmy w @sec-predykcja-wnioskowanie, $\beta_j$ opisuje różnicę
+Jak zauważyliśmy w sekcji [-@sec-predykcja-wnioskowanie], $\beta_j$ opisuje różnicę
 średnich przy ustalonych wartościach pozostałych cech *uwzględnionych
 w modelu*. Dodanie lub usunięcie cechy może zmienić zarówno wartość
 współczynnika, jak i jego znaczenie. Gdy metraż i liczba pokoi są silnie
@@ -1569,7 +1579,7 @@ d) Jaki błąd popełnia klasyfikator, który zawsze wskazuje klasę $1$?
 
 ::: {#exr-kodowanie-klas}
 W klasyfikacji binarnej zakodujmy klasy jako $-1$ i $1$, a przez
-$\eta(\x)$ oznaczmy $\Prob(Y=1\mid\X=\x)$. Wyraź $\E(Y\mid\X=\x)$
+$\eta(\x)$ oznaczmy $\Prob(Y=1\mid\X=\x)$. Wyraź $\E[Y\mid\X=\x]$
 przez $\eta(\x)$ i odwrotnie. Jak wygląda ta zależność przy
 kodowaniu klas dowolnymi liczbami $a\neq b$?
 :::
@@ -1582,13 +1592,13 @@ $\{0,1,2,3\}$; przy $X=2$ przyjmuje wartości $2$ i $3$ z jednakowymi
 prawdopodobieństwami.
 
 a) Zapisz tabelę rozkładu łącznego $p(x,y)$.
-b) Wyznacz $\fopt(x)=\E(Y\mid X=x)$ oraz możliwe wartości
+b) Wyznacz $\fopt(x)=\E[Y\mid X=x]$ oraz możliwe wartości
    $\varepsilon=Y-\fopt(X)$ przy każdym $x$.
-c) Sprawdź, że $\E(\varepsilon\mid X=x)=0$ dla każdego $x$, i oblicz
+c) Sprawdź, że $\E[\varepsilon\mid X=x]=0$ dla każdego $x$, i oblicz
    $\Var(\varepsilon\mid X=x)$. Czy $\varepsilon$ jest niezależny od $X$?
    Co to mówi o warunku w ([-@eq-rozklad-addytywny])?
 d) Oblicz ryzyko kwadratowe predyktora $\fopt$ oraz predyktora stałego
-   $f(x)=\E Y$. Różnica tych wartości jest ceną za pominięcie cechy.
+   $f(x)=\E[Y]$. Różnica tych wartości jest ceną za pominięcie cechy.
 :::
 
 ::: {#exr-kwadrat-jednostajnej}
@@ -1598,7 +1608,7 @@ a) Wyznacz gęstość zmiennej $U=X^2$ i sprawdź, że przyjmuje ona
    wartości większe od $1$, a nawet dowolnie duże. Dlaczego nie
    prowadzi to do sprzeczności?
 b) Niech $Y\mid X=x\sim\Nrozk(x^2,\sigma^2)$. Podaj funkcję regresji
-   $\fopt$ i wyznacz $\E Y$, korzystając z prawa iterowanej wartości
+   $\fopt$ i wyznacz $\E[Y]$, korzystając z prawa iterowanej wartości
    oczekiwanej.
 c) Oblicz ryzyko kwadratowe predyktora $\fopt$ oraz najlepszego
    predyktora stałego. Jaka część ryzyka tego drugiego wynika
@@ -1629,7 +1639,7 @@ c) Niech $n(x,y)$ oznacza liczbę powtórzeń z wynikiem $(x,y)$,
    \qquad
    \frac{n(x,y)}{N}=\frac{n(x,y)}{n(x)}\cdot\frac{n(x)}{N}.
    $$
-   Które wzory z sekcji @sec-zaleznosc-i-szum przybliżają te
+   Które wzory z sekcji [-@sec-zaleznosc-i-szum] przybliżają te
    tożsamości? Dlaczego oszacowania z punktu b) muszą je spełniać
    dokładnie, niezależnie od $N$?
 :::

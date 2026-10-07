@@ -1,3 +1,1032 @@
-# Klasyfikator $k$ najbliższych sąsiadów {#sec-knn}
+# Metoda $k$ najbliższych sąsiadów {#sec-knn}
 
-*Rozdział w przygotowaniu.*
+W rozdziale [-@sec-predyktory-optymalne] ustaliliśmy, czego szukamy. Przy stracie
+kwadratowej optymalnym predyktorem jest funkcja regresji
+$\fopt(\x) = \E[Y \mid \X = \x]$, a przy stracie 0--1 -- klasyfikator
+bayesowski, który wskazuje klasę o największym prawdopodobieństwie
+warunkowym $\eta_k(\x)$. Obie wielkości odwołują się jednak do nieznanego
+rozkładu $P$. Ten rozdział przedstawia, jak oszacować je z danych niemal
+wprost z definicji.
+
+Gdyby w próbie było wiele obserwacji o cechach dokładnie równych $\x$,
+moglibyśmy uśrednić ich wyniki i otrzymać próbkowy odpowiednik średniej
+warunkowej. Przy cechach ciągłych taka sytuacja praktycznie nie występuje:
+w zbiorze uczącym zwykle nie ma ani jednej obserwacji z $\X = \x$. Metoda
+$k$ najbliższych sąsiadów ($k$-NN, ang. *$k$ nearest neighbors*) zastępuje
+więc warunek „$\X = \x$” słabszym warunkiem „$\X$ blisko $\x$” i uśrednia
+wyniki obserwacji leżących najbliżej. Ta jedna idea daje zarówno metodę
+regresji, jak i klasyfikacji.
+
+Metoda nie zakłada niczego o postaci $\fopt$ ani $\eta_k$, a mimo to
+przy rosnącej liczbie danych zbliża się do optimum z poprzedniego
+rozdziału. Zobaczymy jednak również, gdzie leży jej granica: w wielu
+wymiarach „blisko” przestaje znaczyć to, co podpowiada intuicja.
+Przy okazji $k$-NN poznamy też pojęcia, które wrócą przy każdej kolejnej
+metodzie: dobór stopnia wygładzenia, rolę skali cech i przekleństwo
+wymiarowości.
+
+## Uśrednianie lokalne {#sec-knn-idea}
+
+Zacznijmy od regresji z jedną cechą. W sekcji [-@sec-parametryczne-nieparametryczne]
+przewidywaliśmy cenę mieszkania o metrażu $x$ jako średnią cen $k$ mieszkań
+o najbliższym metrażu. @fig-knn-idea pokazuje ten sam zabieg na danych
+symulowanych, dla których funkcję regresji znamy.
+
+```{python}
+#| label: fig-knn-idea
+#| fig-cap: "Uśrednianie lokalne. Szare punkty to próba ucząca, przerywana krzywa -- prawdziwa funkcja regresji $\\fopt$. Aby przewidzieć wynik w punkcie $x_0$, wybieramy $k = 7$ obserwacji o cechach najbliższych $x_0$ (zaznaczone na czerwono) i uśredniamy ich wyniki. Pozioma kreska pokazuje tę średnią na przedziale zajmowanym przez sąsiadów."
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+rng = np.random.default_rng(3)
+
+def f_prawdziwa(x):
+    """Funkcja regresji używana w przykładach jednowymiarowych."""
+    return np.sin(2 * np.pi * x) + 0.5 * x
+
+sigma = 0.3
+n = 60
+x = rng.uniform(0, 1, n)
+y = f_prawdziwa(x) + rng.normal(0, sigma, n)
+
+x0, k = 0.30, 7
+sasiedzi = np.argsort(np.abs(x - x0))[:k]
+predykcja = y[sasiedzi].mean()
+
+siatka = np.linspace(0, 1, 400)
+fig, ax = plt.subplots(figsize=(6.5, 4.0))
+ax.plot(siatka, f_prawdziwa(siatka), color="black", ls="--", lw=1.2,
+        label=r"funkcja regresji $f^*$")
+ax.scatter(x, y, s=18, color="0.6", label="próba ucząca")
+ax.scatter(x[sasiedzi], y[sasiedzi], s=30, color="#D7263D",
+           label=f"{k} najbliższych sąsiadów $x_0$")
+ax.hlines(predykcja, x[sasiedzi].min(), x[sasiedzi].max(),
+          color="#1B6CA8", lw=2.5, label="średnia wyników sąsiadów")
+ax.axvline(x0, color="0.3", lw=0.8, ls=":")
+ax.plot([x0], [predykcja], "o", color="#1B6CA8", ms=7)
+ax.plot([x0], [f_prawdziwa(x0)], "o", mfc="white", mec="black", ms=7)
+ax.set_xlabel("$x$")
+ax.set_ylabel("$y$")
+ax.legend(frameon=False, fontsize=8, loc="lower left")
+plt.tight_layout()
+plt.show()
+```
+
+Średnia wyników sąsiadów (niebieski punkt) jest bliska prawdziwej
+wartości $\fopt(x_0)$ (pusty punkt), choć nie jest jej równa. Rozbieżność
+ma dwie przyczyny. Pierwsza to szum: siedem obserwacji to mało, by
+uśrednić losowe odchylenia wyników. Druga to szerokość otoczenia:
+sąsiedzi leżą w pewnym przedziale wokół $x_0$, a funkcja regresji
+nie jest na nim stała, więc uśredniamy wartości z jej okolicy, a nie
+z samego punktu $x_0$. Zwiększenie $k$ osłabia pierwszy efekt i wzmacnia
+drugi. Do tego problemu wrócimy w sekcji [-@sec-knn-wybor-k].
+
+Otoczenie punktu $x_0$ można wyznaczyć na dwa sposoby. Możemy ustalić
+promień $h$ i uśredniać wszystkie obserwacje odległe od $x_0$ o mniej niż
+$h$. Możemy też ustalić liczbę obserwacji $k$ i pozwolić, by promień
+wynikał z danych. Metoda $k$-NN wybiera drugą możliwość. Tam, gdzie danych
+jest dużo, otoczenie jest wąskie, a tam, gdzie mało -- szerokie, ale nigdy
+puste. Przy ustalonym promieniu w obszarach o małej gęstości predykcja
+mogłaby opierać się na jednej obserwacji albo nie dać się wyznaczyć wcale.
+
+## Reguła $k$ najbliższych sąsiadów {#sec-knn-regula}
+
+Niech $\mathcal{D} = \{(\x_1, y_1), \dots, (\x_n, y_n)\}$ będzie zbiorem
+uczącym, w którym każda obserwacja jest opisana $p$ cechami liczbowymi,
+$\x_i \in \R^p$, a $d$ -- odległością w $\R^p$. Dla punktu $\x$
+porządkujemy obserwacje uczące według odległości $d(\x_i, \x)$ i przez
+$N_k(\x)$ oznaczamy zbiór indeksów $k$ obserwacji leżących najbliżej.
+
+W regresji predykcją jest średnia wyników sąsiadów:
+$$
+\widehat f(\x) = \frac{1}{k} \sum_{i \in N_k(\x)} y_i .
+$$ {#eq-knn-regresja}
+Jest to próbkowy odpowiednik średniej warunkowej: średnią po rozkładzie
+$Y \mid \X = \x$ zastąpiliśmy średnią z próby po obserwacjach o cechach
+bliskich $\x$. Ta sama zamiana działa dla innych strat. Przy stracie
+absolutnej optimum jest mediana warunkowa (@thm-mediana-warunkowa),
+więc jej lokalnym oszacowaniem jest mediana wyników sąsiadów
+(@exr-knn-mediana).
+
+W klasyfikacji szacujemy prawdopodobieństwa klas. Za
+$\eta_c(\x) = \Prob(Y = c \mid \X = \x)$ podstawiamy częstość klasy $c$
+wśród sąsiadów:
+$$
+\widehat\eta_c(\x) = \frac{1}{k} \sum_{i \in N_k(\x)} \ind(y_i = c).
+$$ {#eq-knn-eta}
+Jest to szczególny przypadek ([-@eq-knn-regresja]): częstość klasy to średnia
+zmiennej wskaźnikowej $\ind(Y = c)$, a jej wartość oczekiwana warunkowa
+to właśnie $\eta_c(\x)$. Klasyfikator $k$-NN wskazuje klasę najczęstszą
+wśród sąsiadów:
+$$
+\widehat g(\x) = \argmax_{c} \; \widehat\eta_c(\x).
+$$ {#eq-knn-regula}
+
+Porównanie ([-@eq-knn-regula]) z regułą bayesowską ([-@eq-klasyfikator-bayesa])
+pokazuje, że $k$-NN ma tę samą postać, tylko z nieznanym prawdopodobieństwem
+warunkowym zastąpionym jego oszacowaniem. Taką konstrukcję nazywamy
+**regułą podstawienia** (ang. *plug-in rule*). Pierwsze takie reguły
+nieparametryczne, w tym regułę najbliższego sąsiada, zaproponowali
+i zbadali @fix1951.
+
+Warto zauważyć, czego $k$-NN **nie** robi. W sekcji [-@sec-trening-modelu] opisaliśmy
+trening jako minimalizację ryzyka empirycznego w klasie modeli
+$\mathcal{F}$. Metoda $k$-NN nie wybiera żadnej funkcji z ustalonej klasy
+i niczego nie minimalizuje. Naśladuje bezpośrednio postać optymalnego
+predyktora, wstawiając w miejsce średnich teoretycznych średnie lokalne.
+Ryzyko empiryczne pojawi się dopiero przy wyborze $k$.
+
+Ponieważ ([-@eq-knn-eta]) daje prawdopodobieństwa, a nie tylko etykiety,
+można je podstawić do dowolnej reguły decyzyjnej
+z sekcji [-@sec-od-prawdopodobienstw-do-decyzji]: do progu kosztowego
+([-@eq-regula-kosztowa]) albo do reguły Chowa z opcją odmowy. Oszacowanie
+jest jednak grube. Przyjmuje tylko $k + 1$ wartości $0, 1/k, \dots, 1$,
+więc progi leżące między dwiema kolejnymi wielokrotnościami $1/k$ dają
+te same decyzje (@exr-knn-prog). Przy $k = 5$ progi $0{,}65$ i $0{,}75$
+prowadzą do tej samej reguły, bo między nimi nie leży żadna wielokrotność
+$1/5$.
+
+::: {.callout-note}
+## Remisy
+Reguła ([-@eq-knn-regula]) nie zawsze wskazuje jedną klasę. Dla dwóch klas
+remis w głosowaniu jest możliwy tylko przy parzystym $k$, dlatego często
+wybiera się $k$ nieparzyste. Przy większej liczbie klas remisu w ten
+sposób się nie uniknie. Druga możliwość to remis w odległościach: $k$-ty
+i $(k+1)$-szy sąsiad leżą w tej samej odległości od $\x$ i zbiór
+$N_k(\x)$ nie jest wyznaczony jednoznacznie. Przy cechach ciągłych zdarza
+się to z prawdopodobieństwem zero, ale przy cechach dyskretnych bywa
+częste.
+
+Implementacje rozstrzygają remisy umownie. W bibliotece scikit-learn przy
+remisie w głosowaniu wygrywa klasa występująca wcześniej w uporządkowanej
+liście klas, a przy remisie w odległościach wynik zależy od kolejności
+obserwacji w zbiorze uczącym. Dla teorii z sekcji [-@sec-knn-zbieznosc] sposób
+rozstrzygania remisów nie ma znaczenia, dopóki nie faworyzuje
+systematycznie żadnej klasy.
+:::
+
+## Co znaczy „blisko” {#sec-knn-metryka}
+
+Reguła $k$-NN wymaga odległości $d$, a jej wybór należy do modelu tak samo
+jak wybór $k$. Najczęściej używa się odległości euklidesowej
+$$
+d(\x, \x') = \Big(\sum_{j=1}^{p} (x_j - x'_j)^2\Big)^{1/2},
+$$
+rzadziej odległości miejskiej (Manhattan) $\sum_{j} |x_j - x'_j|$. Obie
+są szczególnymi przypadkami odległości Minkowskiego
+$\big(\sum_j |x_j - x'_j|^q\big)^{1/q}$, dla $q = 2$ i $q = 1$.
+
+Każda z tych odległości sumuje różnice w poszczególnych cechach i dlatego
+zależy od jednostek, w których cechy wyrażono. Rozważmy mieszkania opisane
+metrażem w m² i liczbą pokoi. Mieszkania o metrażach $50$ i $52$ m²
+mające $2$ i $4$ pokoje dzieli odległość euklidesowa
+$\sqrt{2^2 + 2^2} \approx 2{,}8$. Mieszkania o metrażach $50$ i $56$ m²
+z tą samą liczbą pokoi dzieli odległość $6$. Pierwsza para jest więc
+„bliższa”, choć różni się układem mieszkania. Jeśli metraż zapiszemy
+w cm², różnica dwóch metrów kwadratowych urośnie do $20\,000$ i liczba
+pokoi przestanie mieć jakikolwiek wpływ na wybór sąsiadów. Zmiana
+jednostek, która nie zmienia żadnej informacji w danych, zmienia
+predykcje $k$-NN.
+
+Skali cech nie da się więc pozostawić przypadkowi. Najprostszym
+rozwiązaniem jest **standaryzacja**: od każdej cechy odejmujemy jej
+średnią i dzielimy przez odchylenie standardowe, tak by wszystkie cechy
+miały porównywalny rozrzut. Jeśli $x_{ij}$ oznacza wartość $j$-tej cechy
+$i$-tej obserwacji uczącej, to dla każdej cechy $j = 1, \dots, p$
+wyznaczamy
+$$
+\bar x_j = \frac{1}{n} \sum_{i=1}^{n} x_{ij}, \qquad
+s_j = \Big(\frac{1}{n} \sum_{i=1}^{n} (x_{ij} - \bar x_j)^2\Big)^{1/2}
+$$
+i zastępujemy cechę $x_j$ dowolnego punktu $\x$ wartością
+$$
+\tilde x_j = \frac{x_j - \bar x_j}{s_j}.
+$$ {#eq-standaryzacja}
+Po tym przekształceniu każda cecha ma w zbiorze uczącym średnią $0$
+i odchylenie standardowe $1$, a odległości liczymy między punktami
+$\tilde\x$. Wielkości $\bar x_j$ i $s_j$ wyznaczamy tylko na zbiorze
+uczącym i tymi samymi wartościami przekształcamy nowe obserwacje.
+Wyznaczenie ich na danych, na których oceniamy model, byłoby subtelną
+formą podglądania danych testowych. Wrócimy do tego w rozdziale [-@sec-ocena-modeli].
+
+@fig-knn-skala pokazuje skutek pominięcia standaryzacji. Klasę wyznacza
+tylko pierwsza cecha, o odchyleniu standardowym rzędu $1$. Druga cecha
+nie niesie informacji o klasie, ale jej odchylenie standardowe wynosi
+$100$.
+
+```{python}
+#| label: fig-knn-skala
+#| fig-cap: "Klasyfikator $5$-NN bez standaryzacji (po lewej) i ze standaryzacją (po prawej), $n = 300$. Klasę wyznacza tylko cecha 1. Cecha 2 jest szumem o odchyleniu standardowym $100$, więc bez standaryzacji to ona decyduje o tym, kto jest czyim sąsiadem. Oba panele narysowano w zmiennych standaryzowanych; tło pokazuje oszacowanie $\\widehat\\eta(\\x)$, a w tytule podano błąd na dużym zbiorze testowym."
+
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+
+rng = np.random.default_rng(11)
+
+def probka_skala(n, rng):
+    """Klasa zależy od cechy 1; cecha 2 to szum w dużych jednostkach."""
+    y = rng.integers(0, 2, n)
+    x1 = rng.normal(np.where(y == 1, 1.0, -1.0), 1.0)
+    x2 = rng.normal(0, 100, n)
+    return np.column_stack([x1, x2]), y
+
+X_tr, y_tr = probka_skala(300, rng)
+X_te, y_te = probka_skala(20_000, rng)
+
+modele = {
+    "bez standaryzacji": KNeighborsClassifier(n_neighbors=5),
+    "ze standaryzacją": make_pipeline(StandardScaler(),
+                                      KNeighborsClassifier(n_neighbors=5)),
+}
+
+# Wspólny układ współrzędnych do rysowania: zmienne standaryzowane.
+skaler = StandardScaler().fit(X_tr)
+Z_tr = skaler.transform(X_tr)
+u = np.linspace(-3.2, 3.2, 250)
+U1, U2 = np.meshgrid(u, u)
+siatka_z = np.column_stack([U1.ravel(), U2.ravel()])
+siatka_x = skaler.inverse_transform(siatka_z)
+
+fig, osie = plt.subplots(1, 2, figsize=(9.5, 4.2), sharey=True)
+for ax, (nazwa, model) in zip(osie, modele.items()):
+    model.fit(X_tr, y_tr)
+    blad = np.mean(model.predict(X_te) != y_te)
+    eta_hat = model.predict_proba(siatka_x)[:, 1].reshape(U1.shape)
+    ax.contourf(U1, U2, eta_hat, levels=np.linspace(0, 1, 11),
+                cmap="RdBu_r", alpha=0.35)
+    ax.scatter(Z_tr[:, 0], Z_tr[:, 1], c=y_tr, cmap="RdBu_r",
+               s=12, edgecolor="k", linewidth=0.3)
+    ax.set_title(f"{nazwa}: błąd {blad:.3f}")
+    ax.set_xlabel("cecha 1 (standaryzowana)")
+osie[0].set_ylabel("cecha 2 (standaryzowana)")
+plt.tight_layout()
+plt.show()
+```
+
+Bez standaryzacji o wyborze sąsiadów decyduje niemal wyłącznie cecha 2,
+która nie niesie informacji o klasie. Sąsiedzi są więc dobierani tak,
+jakby klasy nie było. Tło lewego panelu układa się
+w poziome pasy: oszacowanie $\widehat\eta$ zmienia się wraz z cechą
+nieistotną, a prawie nie zmienia wraz z istotną. Po standaryzacji obie
+cechy ważą tyle samo i granica decyzyjna wyraźnie zależy od cechy 1.
+
+Prawy panel pokazuje jednak także drugi problem. Cecha 2 nadal jest
+szumem i nadal wpływa na odległości, choć już nie dominuje: granica nie
+jest pionowa, lecz poszarpana. Przy jednej takiej cesze strata jest
+niewielka, a błąd jest bliski błędowi bayesowskiemu $\Phi(-1) \approx 0{,}159$.
+Standaryzacja wyrównuje jednak tylko skale. Nie potrafi odróżnić cech
+istotnych od nieistotnych: z punktu widzenia odległości każda cecha
+jest równie ważna. Z każdą
+kolejną cechą nieistotną problem się nasila, co omówimy
+w sekcji [-@sec-przeklenstwo-wymiarowosci].
+
+Cechy jakościowe wymagają osobnej decyzji. Typowym rozwiązaniem jest
+zakodowanie każdej kategorii osobną zmienną zero-jedynkową. Odległość
+między dwiema obserwacjami zależy wtedy od liczby cech, w których się
+różnią (dla cech wyłącznie jakościowych jest to tzw. odległość Hamminga),
+a względną wagę cech jakościowych i ilościowych trzeba ustalić świadomie.
+
+## Rola liczby sąsiadów {#sec-knn-wybor-k}
+
+Parametr $k$ jest **hiperparametrem**: nie jest wyznaczany z danych
+w trakcie uczenia, tylko ustalany przed nim (por.
+@exr-knn-nieparametryczna). Jego wpływ najłatwiej zrozumieć na przypadkach
+skrajnych.
+
+Dla $k = 1$ predykcją jest wynik jednej, najbliższej obserwacji. Dla
+punktów ze zbioru uczącego najbliższym sąsiadem jest sam punkt, więc
+błąd na zbiorze uczącym wynosi zero (@exr-ryzyko-1nn). Nie wynika z tego
+nic dobrego o ryzyku. Predykcja w nowym punkcie przejmuje cały szum
+jednej obserwacji, a granica decyzyjna otacza każdy punkt uczący, także
+taki, którego klasa jest w swoim otoczeniu nietypowa.
+
+Dla $k = n$ sąsiadami każdego punktu jest cały zbiór uczący. Predykcja
+nie zależy wtedy od $\x$: w regresji jest średnią wszystkich wyników,
+w klasyfikacji -- klasą najczęstszą w próbie (@exr-knn-skrajne-k). Taki
+predyktor jest bardzo stabilny, ale ignoruje cechy.
+
+Między tymi skrajnościami $k$ reguluje stopień **wygładzenia**.
+@fig-knn-granice pokazuje to na klasycznym zbiorze dwóch półksiężyców.
+
+```{python}
+#| label: fig-knn-granice
+#| fig-cap: "Klasyfikator $k$-NN dla $k = 1, 15, 100$ na zbiorze dwóch półksiężyców ($n = 200$, szum $0{,}30$). Tło pokazuje oszacowanie $\\widehat\\eta(\\x)$, czarna linia -- granicę decyzyjną $\\widehat\\eta(\\x) = 1/2$. W tytułach podano błąd na zbiorze uczącym i na dużym zbiorze testowym z tego samego rozkładu."
+
+from sklearn.datasets import make_moons
+
+# random_state ustalony, aby rysunek był w pełni powtarzalny
+X_tr, y_tr = make_moons(n_samples=200, noise=0.30, random_state=0)
+X_te, y_te = make_moons(n_samples=20_000, noise=0.30, random_state=1)
+
+u1 = np.linspace(-2.0, 3.0, 300)
+u2 = np.linspace(-1.6, 2.1, 300)
+U1, U2 = np.meshgrid(u1, u2)
+siatka = np.column_stack([U1.ravel(), U2.ravel()])
+
+fig, osie = plt.subplots(1, 3, figsize=(11, 3.8), sharey=True)
+for ax, k in zip(osie, [1, 15, 100]):
+    klf = KNeighborsClassifier(n_neighbors=k).fit(X_tr, y_tr)
+    eta_hat = klf.predict_proba(siatka)[:, 1].reshape(U1.shape)
+    blad_tr = np.mean(klf.predict(X_tr) != y_tr)
+    blad_te = np.mean(klf.predict(X_te) != y_te)
+    ax.contourf(U1, U2, eta_hat, levels=np.linspace(0, 1, 11),
+                cmap="RdBu_r", alpha=0.35)
+    ax.contour(U1, U2, eta_hat, levels=[0.5], colors="k", linewidths=1.2)
+    ax.scatter(X_tr[:, 0], X_tr[:, 1], c=y_tr, cmap="RdBu_r",
+               s=12, edgecolor="k", linewidth=0.3)
+    ax.set_title(f"$k = {k}$: uczący {blad_tr:.2f}, testowy {blad_te:.2f}",
+                 fontsize=10)
+    ax.set_xlabel("$x_1$")
+osie[0].set_ylabel("$x_2$")
+plt.tight_layout()
+plt.show()
+```
+
+Dla $k = 1$ granica jest poszarpana i tworzy wysepki wokół pojedynczych
+punktów. Błąd uczący wynosi zero, ale błąd testowy jest wyraźnie większy
+niż dla $k = 15$. Granica dla $k = 15$ oddaje kształt półksiężyców i nie
+reaguje na pojedyncze obserwacje. Dla $k = 100$, czyli połowy próby,
+otoczenia są tak szerokie, że sięgają do drugiego półksiężyca, granica
+się wypłaszcza, a błąd znów rośnie -- tym razem zarówno testowy, jak
+i uczący.
+
+To samo widać w regresji (@fig-knn-regresja-k). Wykres predyktora
+([-@eq-knn-regresja]) jest funkcją schodkową: zmienia wartość tylko wtedy,
+gdy zmienia się zbiór sąsiadów. Przy małym $k$ schodki są gęste i podążają
+za szumem, przy dużym -- predyktor spłaszcza funkcję regresji, najmocniej
+przy krańcach przedziału, gdzie sąsiedzi leżą tylko po jednej stronie
+punktu.
+
+```{python}
+#| label: fig-knn-regresja-k
+#| fig-cap: "Regresja $k$-NN dla $k = 1, 10, 50$ na tej samej próbie ($n = 100$). Przerywana krzywa to funkcja regresji $\\fopt$, niebieska -- predyktor $\\widehat f$."
+
+from sklearn.neighbors import KNeighborsRegressor
+
+rng = np.random.default_rng(5)
+n = 100
+x = rng.uniform(0, 1, n)
+y = f_prawdziwa(x) + rng.normal(0, sigma, n)
+siatka = np.linspace(0, 1, 1000)
+
+fig, osie = plt.subplots(1, 3, figsize=(11, 3.4), sharey=True)
+for ax, k in zip(osie, [1, 10, 50]):
+    reg = KNeighborsRegressor(n_neighbors=k).fit(x.reshape(-1, 1), y)
+    ax.scatter(x, y, s=10, color="0.6")
+    ax.plot(siatka, f_prawdziwa(siatka), color="black", ls="--", lw=1.2)
+    ax.plot(siatka, reg.predict(siatka.reshape(-1, 1)),
+            color="#1B6CA8", lw=1.6, drawstyle="steps-mid")
+    ax.set_title(f"$k = {k}$")
+    ax.set_xlabel("$x$")
+osie[0].set_ylabel("$y$")
+plt.tight_layout()
+plt.show()
+```
+
+Zależność ryzyka od $k$ można w tym przykładzie policzyć dokładnie, bo
+rozkład znamy. Cecha ma rozkład jednostajny na $[0, 1]$, więc rozkład
+ryzyka ([-@eq-rozklad-bledu]) przyjmuje postać
+$$
+\Risk(\widehat f) = \int_0^1 \big(\fopt(x) - \widehat f(x)\big)^2 \, dx + \sigma^2 ,
+$$
+a całkę liczymy numerycznie. @fig-knn-blad-k zestawia tak policzone
+ryzyko z błędem na zbiorze uczącym. Oś poziomą opisaliśmy wielkością
+$n/k$. Przybliża ona liczbę grup obserwacji, w obrębie których predyktor
+uśrednia, i bywa nazywana **efektywną liczbą parametrów** metody
+[@esl, rozdz. 2.3]. Na prawo od osi rośnie więc elastyczność modelu.
+
+```{python}
+#| label: fig-knn-blad-k
+#| fig-cap: "Błąd na zbiorze uczącym i ryzyko regresji $k$-NN w zależności od $n/k$ ($n = 100$). Ryzyko policzono dokładnie, całkując po znanym rozkładzie. Punkty to średnie z 50 niezależnych prób uczących. Przerywana linia to błąd nieredukowalny $\\sigma^2$."
+
+rng = np.random.default_rng(8)
+n, powtorzenia = 100, 50
+wartosci_k = np.array([1, 2, 3, 5, 7, 10, 15, 20, 30, 50, 100])
+siatka = np.linspace(0, 1, 2001)
+f_siatka = f_prawdziwa(siatka)
+
+blad_uczacy = np.empty((len(wartosci_k), powtorzenia))
+ryzyko = np.empty((len(wartosci_k), powtorzenia))
+for j in range(powtorzenia):
+    x = rng.uniform(0, 1, n)
+    y = f_prawdziwa(x) + rng.normal(0, sigma, n)
+    for i, k in enumerate(wartosci_k):
+        reg = KNeighborsRegressor(n_neighbors=k).fit(x.reshape(-1, 1), y)
+        blad_uczacy[i, j] = np.mean((reg.predict(x.reshape(-1, 1)) - y) ** 2)
+        # Ryzyko = całka z kwadratu odchylenia od f* + błąd nieredukowalny.
+        odchylenie = reg.predict(siatka.reshape(-1, 1)) - f_siatka
+        ryzyko[i, j] = np.trapezoid(odchylenie ** 2, siatka) + sigma ** 2
+
+fig, ax = plt.subplots(figsize=(6.5, 4.0))
+ax.plot(n / wartosci_k, blad_uczacy.mean(axis=1), "o-", color="0.45",
+        label="błąd na zbiorze uczącym")
+ax.plot(n / wartosci_k, ryzyko.mean(axis=1), "o-", color="#1B6CA8",
+        label="ryzyko")
+ax.axhline(sigma ** 2, color="#D7263D", ls="--", lw=1.5,
+           label=r"błąd nieredukowalny $\sigma^2$")
+ax.set_xscale("log")
+ax.set_xlabel("$n/k$ (efektywna liczba parametrów)")
+ax.set_ylabel("średni kwadrat błędu")
+ax.legend(frameon=False)
+plt.tight_layout()
+plt.show()
+```
+
+Błąd uczący maleje monotonicznie wraz ze wzrostem elastyczności i dla
+$k = 1$ spada do zera. Ryzyko zachowuje się inaczej: najpierw maleje,
+potem rośnie, a najmniejsze jest przy pośredniej wartości $k$. Na lewym
+krańcu wykresu predyktor jest zbyt sztywny, by odtworzyć kształt
+$\fopt$, na prawym -- odtwarza głównie szum. Krzywa w kształcie litery U
+to obraz kompromisu, który w rozdziale [-@sec-bias-wariancja] rozłożymy na dwa
+składniki: obciążenie i wariancję.
+
+Wykres prowadzi też do problemu praktycznego. Najlepsze $k$ widzimy
+tylko dlatego, że znamy rozkład. W zastosowaniach mamy jedynie błąd
+uczący, który wskazuje zawsze $k = 1$, a więc wybór najgorszy z możliwych.
+Jak wybrać $k$, mając tylko dane, omówimy w rozdziale [-@sec-ocena-modeli].
+
+## Zbieżność do optimum {#sec-knn-zbieznosc}
+
+W @fig-blad-bayesa ryzyko klasyfikatora $k$-NN z $k = \sqrt{n}$
+zbliżało się do błędu bayesowskiego wraz ze wzrostem próby. Nie był to
+przypadek wybranego rozkładu. Dla obu zadań, regresji i klasyfikacji,
+zachodzi następujący wynik [@stone1977].
+
+::: {#thm-stone}
+## Zgodność uniwersalna $k$-NN
+Niech liczba sąsiadów $k = k_n$ zależy od liczności próby $n$ tak, że
+$$
+k_n \to \infty
+\qquad\text{oraz}\qquad
+\frac{k_n}{n} \to 0
+\qquad\text{przy } n \to \infty .
+$$
+Wtedy dla **każdego** rozkładu $(\X, Y)$:
+
+a) w klasyfikacji ryzyko klasyfikatora ([-@eq-knn-regula]) dąży do
+   błędu bayesowskiego, $\E\big[\Risk(\widehat g_n)\big] \to \Risk(\Bayes)$;
+b) w regresji, jeśli $\E[Y^2] < \infty$, ryzyko predyktora
+   ([-@eq-knn-regresja]) przy stracie kwadratowej dąży do ryzyka funkcji
+   regresji, $\E\big[\Risk(\widehat f_n)\big] \to \Risk(\fopt)$.
+
+Wartość oczekiwana $\E$ dotyczy tu losowości zbioru uczącego.
+:::
+
+Dowód wymaga sporo techniki i go pomijamy; pełne ujęcie podają
+@devroye1996 dla klasyfikacji i @gyorfi2002 dla regresji. Rolę obu
+warunków łatwo jednak zrozumieć, wracając do dwóch źródeł błędu
+z @fig-knn-idea. Warunek $k_n \to \infty$ sprawia, że uśredniamy coraz
+więcej obserwacji, więc szum wyników przestaje mieć znaczenie. Warunek
+$k_n / n \to 0$ sprawia, że sąsiedzi stanowią coraz mniejszy ułamek
+próby, więc ich otoczenie kurczy się do punktu $\x$ i różnice między
+$\fopt(\x_i)$ a $\fopt(\x)$ znikają. Wybór $k = \sqrt{n}$ spełnia oba
+warunki.
+
+Siła twierdzenia leży w słowie „każdego”. Nie zakładamy ciągłości
+funkcji regresji, postaci rozkładów klas ani istnienia gęstości. Metodę
+o tej własności nazywamy **uniwersalnie zgodną**. Jest to zarazem
+odpowiedź na wątpliwość z rozdziału [-@sec-predyktory-optymalne]: optimum, którego nie
+można wyznaczyć bez znajomości rozkładu, można osiągnąć w granicy, mając
+tylko dane.
+
+Co się dzieje, gdy $k$ nie rośnie? Dla reguły jednego najbliższego
+sąsiada odpowiedź podali @cover1967.
+
+::: {#thm-cover-hart}
+## Twierdzenie Covera--Harta
+Rozważmy dwie klasy i niech $\Risk^*$ oznacza błąd bayesowski. Przy
+łagodnych założeniach o regularności rozkładu ryzyko reguły jednego
+najbliższego sąsiada dąży przy $n \to \infty$ do granicy
+$$
+\Risk_{1\text{NN}} = \E\big[\,2\,\eta(\X)\big(1 - \eta(\X)\big)\big],
+$$ {#eq-ryzyko-1nn-granica}
+która spełnia
+$$
+\Risk^* \;\le\; \Risk_{1\text{NN}} \;\le\; 2 \Risk^* (1 - \Risk^*)
+\;\le\; 2 \Risk^* .
+$$ {#eq-cover-hart}
+:::
+
+::: {.proof}
+Podajemy szkic, pomijając część techniczną. Przy rosnącym $n$ najbliższy
+sąsiad punktu $\x$ leży coraz bliżej $\x$, więc jego prawdopodobieństwo
+klasy zbliża się do $\eta(\x)$. Etykieta sąsiada i nieznana etykieta
+punktu $\x$ są niezależnymi losowaniami z tego samego rozkładu
+dwupunktowego. Różnią się z prawdopodobieństwem
+$$
+\eta(\x)\big(1 - \eta(\x)\big) + \big(1 - \eta(\x)\big)\eta(\x)
+= 2\,\eta(\x)\big(1 - \eta(\x)\big).
+$$
+Uśrednienie po rozkładzie $\X$ daje ([-@eq-ryzyko-1nn-granica]).
+
+Do nierówności oznaczmy $r(\x) = \min\big(\eta(\x), 1 - \eta(\x)\big)$;
+z ([-@eq-blad-bayesa]) $\Risk^* = \E\big[r(\X)\big]$. Ponieważ
+$2\eta(1-\eta) = 2r(1-r)$, mamy $\Risk_{1\text{NN}} = \E\big[2 r(\X)(1 - r(\X))\big]$.
+Lewa nierówność wynika z $r \le \tfrac12$, czyli $2(1 - r) \ge 1$.
+Dla prawej zauważmy, że
+$\E\big[2r(1-r)\big] = 2\E[r] - 2\E[r^2]$, a z nierówności Jensena
+$\E[r^2] \ge (\E[r])^2$, więc
+$\Risk_{1\text{NN}} \le 2\Risk^* - 2(\Risk^*)^2$. $\square$
+:::
+
+Wynik ma prostą interpretację. Reguła, która nie uśrednia niczego, myli
+się asymptotycznie co najwyżej dwa razy częściej niż reguła optymalna.
+Mówi się czasem, że połowa informacji potrzebnej do klasyfikacji zawarta
+jest w etykiecie najbliższego sąsiada. Zarazem 1-NN **nie jest** zgodna:
+jeśli $\Risk^* > 0$, jej ryzyko nie spada do $\Risk^*$ nawet przy
+nieskończonej próbie, bo etykieta jednego sąsiada pozostaje losowa.
+Dopiero uśrednianie rosnącej liczby sąsiadów usuwa tę losowość.
+
+@fig-cover-hart sprawdza oba twierdzenia na rozkładzie z @fig-blad-bayesa:
+dwie równoliczne klasy $\Nrozk(\pm 1, 1)$, dla których
+$\Risk^* = \Phi(-1) \approx 0{,}159$. Granicę ([-@eq-ryzyko-1nn-granica])
+można tu policzyć numerycznie: wynosi około $0{,}225$, a ograniczenie
+górne ([-@eq-cover-hart]) -- około $0{,}267$.
+
+```{python}
+#| label: fig-cover-hart
+#| fig-cap: "Ryzyko reguły 1-NN i reguły $k$-NN z $k = \\sqrt{n}$ w zależności od liczności próby, dla dwóch klas $\\Nrozk(\\pm 1, 1)$. Ryzyko policzono dokładnie, całkując po znanym rozkładzie; punkty to średnie z 25 prób uczących. Linie poziome: błąd bayesowski $\\Risk^*$, granica ryzyka 1-NN z twierdzenia Covera--Harta i jej ograniczenie górne $2\\Risk^*(1-\\Risk^*)$."
+
+from scipy.stats import norm
+
+rng = np.random.default_rng(17)
+mu = 1.0
+
+def probka(n, rng):
+    """Losuje n obserwacji z równoliczną mieszanką N(-mu,1) i N(mu,1)."""
+    y = rng.integers(0, 2, n)
+    x = rng.normal(np.where(y == 1, mu, -mu), 1.0)
+    return x.reshape(-1, 1), y
+
+# Jak w rozdziale o predyktorach optymalnych: ryzyko liczymy całkowaniem.
+siatka = np.linspace(-7, 7, 4001)
+gestosc_klasy1 = norm.pdf(siatka - mu)
+gestosc_klasy0 = norm.pdf(siatka + mu)
+
+def ryzyko_dokladne(klasyfikator):
+    """Prawdopodobieństwo błędu klasyfikatora, liczone całkowaniem."""
+    etykiety = klasyfikator.predict(siatka.reshape(-1, 1))
+    return 0.5 * np.trapezoid(np.where(etykiety == 0, gestosc_klasy1, 0.0), siatka) \
+         + 0.5 * np.trapezoid(np.where(etykiety == 1, gestosc_klasy0, 0.0), siatka)
+
+# Granica ryzyka 1-NN: E[2 eta(X) (1 - eta(X))] po rozkładzie brzegowym X.
+eta = gestosc_klasy1 / (gestosc_klasy1 + gestosc_klasy0)
+gestosc_x = 0.5 * (gestosc_klasy1 + gestosc_klasy0)
+ryzyko_1nn_granica = np.trapezoid(2 * eta * (1 - eta) * gestosc_x, siatka)
+blad_bayesa = norm.cdf(-mu)
+
+licznosci = np.array([20, 50, 100, 300, 1000, 3000, 10_000])
+powtorzenia = 25
+ryzyko_1nn = np.empty((len(licznosci), powtorzenia))
+ryzyko_knn = np.empty((len(licznosci), powtorzenia))
+for i, n in enumerate(licznosci):
+    for j in range(powtorzenia):
+        X_tr, y_tr = probka(n, rng)
+        k = max(1, int(round(np.sqrt(n))))
+        ryzyko_1nn[i, j] = ryzyko_dokladne(
+            KNeighborsClassifier(n_neighbors=1).fit(X_tr, y_tr))
+        ryzyko_knn[i, j] = ryzyko_dokladne(
+            KNeighborsClassifier(n_neighbors=k).fit(X_tr, y_tr))
+
+fig, ax = plt.subplots(figsize=(6.5, 4.2))
+ax.plot(licznosci, ryzyko_1nn.mean(axis=1), "o-", color="0.45", label="1-NN")
+ax.plot(licznosci, ryzyko_knn.mean(axis=1), "o-", color="#1B6CA8",
+        label=r"$k$-NN, $k=\sqrt{n}$")
+ax.axhline(2 * blad_bayesa * (1 - blad_bayesa), color="0.3", ls=":", lw=1.3,
+           label=r"$2R^*(1-R^*)$")
+ax.axhline(ryzyko_1nn_granica, color="0.45", ls="--", lw=1.3,
+           label="granica ryzyka 1-NN")
+ax.axhline(blad_bayesa, color="#D7263D", ls="--", lw=1.6,
+           label=r"błąd bayesowski $R^*$")
+ax.set_xscale("log")
+ax.set_xlabel("liczność próby uczącej $n$")
+ax.set_ylabel("ryzyko")
+ax.legend(frameon=False, fontsize=8)
+plt.tight_layout()
+plt.show()
+```
+
+Ryzyko 1-NN szybko stabilizuje się na poziomie granicy
+([-@eq-ryzyko-1nn-granica]) i dalsze dane już go nie zmniejszają. Ryzyko
+reguły z $k = \sqrt{n}$ schodzi poniżej tej granicy i powoli zbliża się do
+$\Risk^*$, zgodnie z @thm-stone.
+
+::: {.callout-warning}
+## Zbieżność nie znaczy „szybko”
+@thm-stone mówi, dokąd zmierza ryzyko, ale nie mówi, jak szybko. Bez
+założeń o rozkładzie żadnej gwarancji tempa być nie może: dla dowolnej
+reguły klasyfikacji i dowolnie wolno malejącego ciągu istnieją rozkłady,
+dla których ryzyko zbliża się do $\Risk^*$ jeszcze wolniej
+[@devroye1996, rozdz. 7]. Uniwersalność ma swoją cenę.
+
+Gdy funkcja regresji jest gładka, tempo da się oszacować, ale zależy
+ono od liczby cech $p$ i maleje wraz z nią. W jednym wymiarze, jak na
+powyższym rysunku, kilkaset obserwacji wystarcza. W wielu wymiarach
+potrzebna liczba obserwacji rośnie tak szybko, że gwarancja
+asymptotyczna traci praktyczne znaczenie. Wyjaśnia to następna sekcja.
+:::
+
+## Przekleństwo wymiarowości {#sec-przeklenstwo-wymiarowosci}
+
+Metoda $k$-NN opiera się na założeniu, że w zbiorze uczącym są obserwacje
+**bliskie** punktowi $\x$, a więc takie, dla których $\fopt$ lub $\eta$
+mają podobne wartości. W jednym czy dwóch wymiarach to założenie jest
+łatwe do spełnienia. Wraz z liczbą cech $p$ przestaje być spełnione,
+nawet przy bardzo dużych próbach. Zjawisko to nazywamy **przekleństwem
+wymiarowości** (ang. *curse of dimensionality*). Pokażemy trzy jego
+przejawy.
+
+### Otoczenie przestaje być lokalne
+
+Niech cechy mają rozkład jednostajny w kostce $[0, 1]^p$. Chcemy, aby
+otoczenie punktu obejmowało ułamek $r$ wszystkich obserwacji, na przykład
+$r = 0{,}01$ przy $k = 10$ i $n = 1000$. Jeśli otoczenie jest mniejszą
+kostką o boku $b$, to obejmuje ułamek objętości $b^p$, więc
+$$
+b = r^{1/p} .
+$$ {#eq-bok-otoczenia}
+W jednym wymiarze bok wynosi $0{,}01$, czyli otoczenie jest naprawdę
+lokalne. W dwóch -- $0{,}1$. W dziesięciu wymiarach bok wynosi już
+$0{,}01^{1/10} \approx 0{,}63$: aby zebrać $1\%$ danych, musimy objąć
+$63\%$ zakresu **każdej** cechy. W stu wymiarach bok wynosi $0{,}955$.
+„Otoczenie” obejmuje wtedy prawie cały zakres każdej zmiennej, a uśrednianie
+po nim przestaje być lokalne [@esl, rozdz. 2.5].
+
+Odwracając rachunek: aby otoczenie miało bok $b = 0{,}1$ i zawierało
+średnio $10$ obserwacji, potrzebujemy $n = 10 \cdot 10^{p}$ obserwacji.
+Dla $p = 2$ to tysiąc, dla $p = 10$ -- sto miliardów (@exr-promien-otoczenia).
+Liczba potrzebnych obserwacji rośnie wykładniczo z wymiarem.
+
+### Objętość ucieka do narożników i brzegów
+
+W jednym wymiarze odcinek $[-\tfrac12, \tfrac12]$ i „kula” o promieniu
+$\tfrac12$ to ten sam zbiór. W dwóch wymiarach koło wpisane w kwadrat
+zajmuje $\pi/4 \approx 79\%$ jego pola, w trzech kula wpisana w sześcian
+-- $52\%$ objętości. W dziesięciu wymiarach ten udział spada do $0{,}25\%$,
+a w dwudziestu do około $2{,}5 \cdot 10^{-8}$ (@exr-kula-kostka). Niemal
+cała objętość kostki leży w jej narożnikach, daleko od środka.
+
+Podobnie jest z brzegami. W kuli o promieniu $1$ warstwa przy powierzchni
+o grubości $\varepsilon$ zajmuje ułamek $1 - (1 - \varepsilon)^p$
+objętości. Dla $\varepsilon = 0{,}05$ jest to $5\%$ w jednym wymiarze,
+$40\%$ w dziesięciu i ponad $99\%$ w stu. Punkty losowane jednostajnie
+leżą więc prawie wszystkie blisko brzegu, a predykcja w punkcie przy
+brzegu opiera się na sąsiadach leżących tylko po jednej jego stronie --
+jak na krańcach przedziału w @fig-knn-regresja-k.
+
+@fig-wymiar-geometria zestawia oba zjawiska.
+
+```{python}
+#| label: fig-wymiar-geometria
+#| fig-cap: "Geometria wysokich wymiarów. Po lewej: bok kostki-otoczenia, które obejmuje ułamek $r$ danych jednostajnych w $[0,1]^p$, według wzoru $b = r^{1/p}$. Po prawej: ułamek objętości kostki zajmowany przez kulę wpisaną (oś pionowa w skali logarytmicznej)."
+
+from scipy.special import gammaln
+
+r = np.linspace(0.0005, 0.6, 400)
+wymiary = [1, 2, 3, 10, 100]
+
+wymiary_kuli = np.arange(1, 31)
+# Objętość kuli o promieniu 1/2 w R^p: pi^{p/2} / Gamma(p/2 + 1) * (1/2)^p.
+log_objetosc = (wymiary_kuli / 2) * np.log(np.pi) - gammaln(wymiary_kuli / 2 + 1) \
+             - wymiary_kuli * np.log(2)
+
+fig, osie = plt.subplots(1, 2, figsize=(10, 3.9))
+kolory = plt.cm.viridis(np.linspace(0, 0.85, len(wymiary)))
+for p, kolor in zip(wymiary, kolory):
+    osie[0].plot(r, r ** (1 / p), color=kolor, lw=1.8, label=f"$p = {p}$")
+osie[0].set_xlabel("ułamek danych w otoczeniu $r$")
+osie[0].set_ylabel("bok otoczenia $b$")
+osie[0].set_ylim(0, 1.02)
+osie[0].legend(frameon=False, fontsize=8, loc="lower right")
+
+osie[1].semilogy(wymiary_kuli, np.exp(log_objetosc), "o-", color="#1B6CA8", ms=4)
+osie[1].set_xlabel("wymiar $p$")
+osie[1].set_ylabel("objętość kuli / objętość kostki")
+plt.tight_layout()
+plt.show()
+```
+
+### Odległości przestają się różnić
+
+Trzeci przejaw jest dla $k$-NN najgroźniejszy. Wylosujmy $n$ punktów
+jednostajnie z kostki $[0, 1]^p$ i dla nowego punktu porównajmy odległość
+do najbliższego i najdalszego z nich. W jednym wymiarze najbliższy
+punkt jest setki razy bliżej niż najdalszy. Wraz ze wzrostem $p$ iloraz
+tych odległości zbliża się do jedności (@fig-koncentracja-odleglosci):
+wszystkie punkty są od nowego punktu mniej więcej tak samo daleko.
+Zjawisko to, nazywane **koncentracją odległości**, zachodzi dla szerokiej
+klasy rozkładów, w których cechy nie są silnie zależne
+[@beyer1999]. Gdy wszyscy są niemal równo odlegli, „najbliższy sąsiad”
+jest wyznaczony przez drobne, przypadkowe różnice i przestaje nieść
+informację o $\x$.
+
+```{python}
+#| label: fig-koncentracja-odleglosci
+#| fig-cap: "Koncentracja odległości. Dla $n = 1000$ punktów jednostajnych w $[0,1]^p$ i losowego punktu zapytania pokazano iloraz odległości do najbliższego i najdalszego punktu (średnia z 50 punktów zapytania). Gdy iloraz zbliża się do $1$, najbliższy i najdalszy sąsiad są od punktu niemal tak samo odlegli."
+
+rng = np.random.default_rng(23)
+wymiary = np.array([1, 2, 3, 5, 10, 20, 50, 100, 200, 500, 1000])
+n, zapytania = 1000, 50
+iloraz = np.empty(len(wymiary))
+for i, p in enumerate(wymiary):
+    punkty = rng.random((n, p))
+    q = rng.random((zapytania, p))
+    # Kwadraty odległości euklidesowych między zapytaniami a punktami.
+    d2 = (q ** 2).sum(1)[:, None] + (punkty ** 2).sum(1)[None, :] - 2 * q @ punkty.T
+    d = np.sqrt(np.maximum(d2, 0))
+    iloraz[i] = np.mean(d.min(axis=1) / d.max(axis=1))
+
+fig, ax = plt.subplots(figsize=(6.5, 3.8))
+ax.semilogx(wymiary, iloraz, "o-", color="#1B6CA8")
+ax.axhline(1, color="0.5", lw=0.8, ls=":")
+ax.set_ylim(0, 1.05)
+ax.set_xlabel("wymiar $p$")
+ax.set_ylabel(r"$d_{\min} / d_{\max}$")
+plt.tight_layout()
+plt.show()
+```
+
+### Skutek dla klasyfikacji
+
+Połączmy te obserwacje z problemem z @fig-knn-skala. Weźmy dwie cechy
+istotne, w których klasy są dobrze rozdzielone, i dołączajmy do nich
+kolejne cechy będące czystym szumem, o tej samej skali. Klasyfikator
+bayesowski ignoruje szum, więc błąd bayesowski się nie zmienia. Metoda
+$k$-NN szumu zignorować nie potrafi, bo każda cecha wnosi swój wkład do
+odległości. @fig-knn-cechy-nieistotne pokazuje wynik.
+
+```{python}
+#| label: fig-knn-cechy-nieistotne
+#| fig-cap: "Błąd klasyfikatora $15$-NN w zależności od łącznej liczby cech $p$ ($n = 500$, średnia z 5 prób uczących, błąd na zbiorze testowym liczności $10\\,000$). Klasy różnią się tylko w dwóch pierwszych cechach, pozostałe $p - 2$ cech to szum. Linie poziome: błąd bayesowski, który nie zależy od cech nieistotnych, oraz błąd klasyfikatora losowego."
+
+rng = np.random.default_rng(29)
+a = 1.0   # klasy mają środki (a, a) i (-a, -a) w dwóch cechach istotnych
+
+def probka_szum(n, liczba_szumowych, rng):
+    """Dwie cechy istotne i podana liczba cech szumowych N(0, 1)."""
+    y = rng.integers(0, 2, n)
+    srodek = np.where(y == 1, a, -a)[:, None]
+    istotne = rng.normal(srodek, 1.0, (n, 2))
+    szum = rng.normal(0, 1.0, (n, liczba_szumowych))
+    return np.hstack([istotne, szum]), y
+
+# Rzut na kierunek (1, 1)/sqrt(2) daje N(+-a*sqrt(2), 1).
+blad_bayesa_2d = norm.cdf(-a * np.sqrt(2))
+
+liczby_szumowych = np.array([0, 1, 3, 8, 18, 48, 98, 198, 498, 998])
+powtorzenia = 5
+bledy = np.empty((len(liczby_szumowych), powtorzenia))
+for i, m in enumerate(liczby_szumowych):
+    for j in range(powtorzenia):
+        X_tr, y_tr = probka_szum(500, m, rng)
+        X_te, y_te = probka_szum(10_000, m, rng)
+        klf = KNeighborsClassifier(n_neighbors=15).fit(X_tr, y_tr)
+        bledy[i, j] = np.mean(klf.predict(X_te) != y_te)
+
+fig, ax = plt.subplots(figsize=(6.5, 4.0))
+ax.plot(liczby_szumowych + 2, bledy.mean(axis=1), "o-", color="#1B6CA8",
+        label="15-NN")
+ax.axhline(blad_bayesa_2d, color="#D7263D", ls="--", lw=1.6,
+           label="błąd bayesowski")
+ax.axhline(0.5, color="0.5", ls=":", lw=1.3, label="klasyfikator losowy")
+ax.set_xscale("log")
+ax.set_xlabel("liczba cech $p$ (w tym dwie istotne)")
+ax.set_ylabel("błąd klasyfikacji")
+ax.set_ylim(0, 0.55)
+ax.legend(frameon=False)
+plt.tight_layout()
+plt.show()
+```
+
+Kilka cech szumowych prawie nie szkodzi. Przy stu cechach błąd jest już
+około dwukrotnie większy od bayesowskiego, a przy tysiącu pokonał ponad
+połowę drogi od błędu bayesowskiego do zgadywania. Tymczasem informacja
+potrzebna do dobrej klasyfikacji jest w danych cały czas obecna i zawsze
+w tych samych dwóch kolumnach. Metoda po prostu nie ma
+sposobu, by się o tym dowiedzieć.
+
+### Co z tego wynika
+
+Przekleństwo wymiarowości nie przeczy @thm-stone. Twierdzenie nadal
+obowiązuje, ale liczba obserwacji, przy której jego teza staje się
+odczuwalna, rośnie z wymiarem tak szybko, że w praktyce jest
+nieosiągalna. Metoda, która nie zakłada nic o postaci zależności, musi
+każdą jej cechę „odkryć” w danych, a w wielu wymiarach na to brakuje
+danych.
+
+Wyjściem są **założenia strukturalne**. Model liniowy zakłada, że wpływ
+każdej cechy jest stały i addytywny. Dzięki temu szacuje $p + 1$
+współczynników zamiast wypełniać obserwacjami całą przestrzeń cech.
+Jeśli założenie jest w przybliżeniu prawdziwe, model liniowy wygrywa
+z $k$-NN już przy umiarkowanym $p$ [@islp, rozdz. 3.5]. Od tego zaczyna
+się część II książki (@sec-regresja-liniowa).
+
+::: {.callout-tip}
+## Dlaczego $k$-NN mimo to bywa skuteczny
+Rachunki tej sekcji dotyczą danych rozłożonych jednostajnie we
+wszystkich wymiarach. Dane rzeczywiste rzadko tak wyglądają. Cechy są
+zwykle silnie skorelowane, a obserwacje skupiają się w pobliżu
+struktur o znacznie mniejszym wymiarze niż $p$: zdjęcia twarzy zajmują
+znikomą część przestrzeni wszystkich obrazów o danej liczbie pikseli.
+O trudności zadania decyduje wtedy ten **wymiar wewnętrzny**, a nie
+liczba kolumn. Do wyznaczania takich struktur służą metody z części V
+(@sec-pca).
+:::
+
+## Metoda $k$-NN w praktyce {#sec-knn-praktyka}
+
+**Koszt obliczeniowy.** Uczenie $k$-NN polega na zapamiętaniu zbioru
+uczącego i nic nie kosztuje. Koszt przenosi się na predykcję: naiwne
+wyszukanie sąsiadów jednego punktu wymaga obliczenia $n$ odległości
+w $p$ wymiarach, czyli czasu rzędu $np$. Przy dużych zbiorach stosuje się
+struktury danych przyspieszające wyszukiwanie, takie jak drzewa $k$-d
+i drzewa kul (w scikit-learn parametr `algorithm`). W małej liczbie
+wymiarów działają one znacznie szybciej niż przegląd wszystkich punktów,
+w dużej -- z powodów opisanych w sekcji [-@sec-przeklenstwo-wymiarowosci] -- tracą
+przewagę. W bardzo dużych zbiorach używa się wyszukiwania przybliżonego,
+które zwraca punkty bliskie, choć niekoniecznie najbliższe.
+
+**Model to dane.** W sekcji [-@sec-parametryczne-nieparametryczne] zauważyliśmy,
+że opis dopasowanego modelu $k$-NN obejmuje cały zbiór uczący. Ma to
+konsekwencje praktyczne: model zajmuje tyle pamięci co dane, a jego
+udostępnienie oznacza udostępnienie danych, co bywa wykluczone, gdy
+dotyczą one osób.
+
+**Ważenie sąsiadów.** We wzorze ([-@eq-knn-regresja]) wszyscy sąsiedzi
+ważą tyle samo, także ten, który ledwo zmieścił się w otoczeniu. Często
+stosowanym wariantem jest ważenie wyników odwrotnością odległości
+(w scikit-learn `weights="distance"`). Przy takim ważeniu punkt uczący
+pokrywający się z $\x$ przejmuje całą wagę, więc błąd na zbiorze uczącym
+znów wynosi zero niezależnie od $k$.
+
+**Typowe użycie.** Standaryzację i klasyfikator łączymy w potok
+(`Pipeline`). Potok gwarantuje, że parametry standaryzacji wyznaczane są
+wyłącznie na danych przekazanych do `fit`, a przy predykcji stosowane bez
+zmian. Poniższy przykład porównuje oba warianty na zbiorze danych
+o nowotworach piersi dołączonym do scikit-learn: $569$ obserwacji
+i $30$ cech mierzonych w bardzo różnych skalach.
+
+```{python}
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+
+X, y = load_breast_cancer(return_X_y=True)
+X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.3,
+                                          random_state=0, stratify=y)
+
+print("rozrzut cech (odchylenia standardowe):",
+      f"od {X_tr.std(axis=0).min():.3g} do {X_tr.std(axis=0).max():.3g}")
+
+for nazwa, model in [
+    ("bez standaryzacji", KNeighborsClassifier(n_neighbors=10)),
+    ("ze standaryzacją ", make_pipeline(StandardScaler(),
+                                        KNeighborsClassifier(n_neighbors=10))),
+]:
+    model.fit(X_tr, y_tr)
+    blad = np.mean(model.predict(X_te) != y_te)
+    print(f"{nazwa}: błąd na zbiorze testowym {blad:.3f}")
+
+# Prawdopodobieństwa klas dla trzech pierwszych obserwacji testowych.
+print(model.predict_proba(X_te[:3]))
+```
+
+Metoda `predict_proba` zwraca oszacowania ([-@eq-knn-eta]), które można
+podstawić do reguły kosztowej zamiast używać domyślnego progu $1/2$.
+Wartość $k = 10$ przyjęliśmy tu arbitralnie. Jak ją wybrać na podstawie
+danych i jak rzetelnie ocenić błąd tak wybranego modelu, omówimy
+w rozdziale [-@sec-ocena-modeli].
+
+## Uwagi bibliograficzne {.unnumbered}
+
+Metodę $k$ najbliższych sąsiadów w ujęciu bliskim temu rozdziałowi
+przedstawiają @islp [rozdz. 2.2] oraz @esl [rozdz. 2.3]. W drugiej z tych
+książek można też znaleźć analizę przekleństwa wymiarowości dla metod
+lokalnych [@esl, rozdz. 2.5] i omówienie klasyfikatorów $k$-NN
+w zastosowaniach [@esl, rozdz. 13.3]. Porównanie regresji $k$-NN
+z regresją liniową w zależności od liczby cech zawiera @islp [rozdz. 3.5].
+
+Ścisłą teorię reguł najbliższych sąsiadów w klasyfikacji, z dowodami
+twierdzenia Stone'a i twierdzenia Covera--Harta oraz wynikami
+o braku uniwersalnego tempa zbieżności, wykładają @devroye1996.
+Analogiczną teorię dla regresji, łącznie z tempem zbieżności dla funkcji
+gładkich i jego zależnością od wymiaru, podają @gyorfi2002.
+
+Regułę najbliższego sąsiada wprowadzili w raporcie z 1951 roku
+@fix1951, którzy wykazali też jej zgodność przy rosnącym $k$. Raport
+przedrukowano w 1989 roku w *International Statistical Review*.
+@cover1967 udowodnili ograniczenie przez podwojony błąd bayesowski,
+a @stone1977 -- zgodność uniwersalną szerokiej klasy reguł uśredniania
+lokalnego, obejmującej $k$-NN. Zjawisko koncentracji odległości
+i jego skutki dla wyszukiwania najbliższych sąsiadów badają @beyer1999.
+
+## Zadania {.unnumbered}
+
+::: {#exr-knn-reczny}
+Zbiór uczący składa się z sześciu obserwacji o dwóch cechach:
+
+| $i$ | $x_1$ | $x_2$ | klasa | $y$ |
+|:---:|:-----:|:-----:|:-----:|:---:|
+| 1 | 1 | 1 | A | 2,0 |
+| 2 | 2 | 1 | A | 2,5 |
+| 3 | 4 | 3 | B | 5,0 |
+| 4 | 5 | 4 | B | 6,5 |
+| 5 | 2 | 3 | B | 4,0 |
+| 6 | 3 | 2 | A | 3,5 |
+
+a) Dla punktu $\x = (1, 3)$ wyznacz odległości euklidesowe do wszystkich
+   obserwacji i zbiory $N_1(\x)$, $N_3(\x)$.
+b) Podaj predykcję klasy dla $k = 1$ i $k = 3$ oraz oszacowanie
+   $\widehat\eta_{\mathrm{B}}(\x)$ dla $k = 3$.
+c) Traktując $y$ jako zmienną wynikową, podaj predykcję regresji $k$-NN
+   dla $k = 1$ i $k = 3$.
+d) Powtórz punkt a) dla odległości miejskiej. Czy zbiory sąsiadów się
+   zmieniają? Jak rozstrzygnąć ewentualny remis?
+:::
+
+::: {#exr-knn-skalowanie}
+W zbiorze z @exr-knn-reczny cecha $x_2$ jest mierzona w metrach.
+Przelicz ją na centymetry i powtórz punkt b) tego zadania. Następnie
+standaryzuj obie cechy (średnie i odchylenia wyznacz na zbiorze
+uczącym) i powtórz obliczenia raz jeszcze. Która z trzech wersji daje
+„właściwych” sąsiadów? Podaj przykład sytuacji, w której standaryzacja
+pogarsza wynik $k$-NN. (Wskazówka: @fig-knn-skala.)
+:::
+
+::: {#exr-knn-skrajne-k}
+Wykaż, że dla $k = n$ regresja $k$-NN przewiduje w każdym punkcie średnią
+$\bar y$, a klasyfikacja -- klasę najczęstszą w próbie. Dla dwóch klas
+z $\pi = \Prob(Y = 1) > \tfrac12$ wyznacz granicę ryzyka tego klasyfikatora
+przy $n \to \infty$ i porównaj ją z błędem bayesowskim, zapisanym przez
+$\eta$. Kiedy oba błędy są równe? Odnieś wynik do @exr-niezrownowazone-klasy.
+:::
+
+::: {#exr-knn-mediana}
+Zmodyfikuj przykład z @fig-knn-regresja-k tak, aby $10\%$ wyników
+zastąpić wartościami odstającymi, na przykład $y_i + 5$. Zaimplementuj
+regresję $k$-NN, która zamiast średniej zwraca medianę wyników sąsiadów,
+i porównaj ją z ([-@eq-knn-regresja]) dla $k = 15$: na wykresie oraz pod
+względem ryzyka przy stracie kwadratowej i absolutnej, liczonego
+względem rozkładu bez obserwacji odstających. Wyjaśnij wynik, odwołując
+się do @thm-mediana-warunkowa.
+:::
+
+::: {#exr-knn-prog}
+Klasyfikator $k$-NN z $k = 5$ zwraca oszacowania
+$\widehat\eta(\x) \in \{0, \tfrac15, \dots, 1\}$.
+
+a) Pominięcie przypadku pozytywnego kosztuje dziesięć razy więcej niż
+   fałszywy alarm. Korzystając z ([-@eq-regula-kosztowa]), wyznacz próg
+   i zapisz otrzymaną regułę w postaci „klasa 1, jeśli wśród pięciu
+   sąsiadów jest co najmniej $j$ przypadków pozytywnych”.
+b) Ile różnych reguł decyzyjnych można otrzymać, zmieniając próg
+   w przedziale $(0, 1)$? Wskaż przedziały progów dających tę samą
+   regułę.
+c) Jak zmienia się odpowiedź dla $k = 50$? Jaki wniosek płynie stąd
+   dla doboru $k$, gdy oszacowania $\widehat\eta$ mają służyć regule
+   kosztowej lub regule Chowa?
+:::
+
+::: {#exr-kula-kostka}
+Objętość kuli o promieniu $\rho$ w $\R^p$ wynosi
+$V_p(\rho) = \dfrac{\pi^{p/2}}{\Gamma(p/2 + 1)}\, \rho^p$.
+
+a) Wyznacz ułamek objętości kostki $[-\tfrac12, \tfrac12]^p$ zajmowany
+   przez kulę wpisaną i sprawdź wartości podane
+   w sekcji [-@sec-przeklenstwo-wymiarowosci] dla $p = 2, 3, 10$.
+b) Korzystając ze wzoru Stirlinga, wykaż, że ten ułamek dąży do zera
+   przy $p \to \infty$, i to szybciej niż dowolny ciąg geometryczny.
+c) Wyznacz odległość od środka kostki do jej wierzchołka. Jak zmienia
+   się ona z $p$ w porównaniu z promieniem kuli wpisanej?
+:::
+
+::: {#exr-promien-otoczenia}
+Dane mają rozkład jednostajny w $[0, 1]^p$.
+
+a) Ilu obserwacji potrzeba, aby kostka o boku $0{,}1$ wokół punktu
+   zawierała średnio $10$ obserwacji? Podaj wynik dla $p = 1, 2, 5, 10$.
+b) Przy $n = 10^6$ i $k = 10$ wyznacz bok otoczenia
+   ([-@eq-bok-otoczenia]) dla $p = 2, 10, 50$.
+c) Zakładając, że funkcja regresji spełnia
+   $|\fopt(\x) - \fopt(\x')| \le L \max_j |x_j - x'_j|$, oszacuj z góry
+   błąd, jaki wnosi do predykcji samo uśrednianie po otoczeniu o boku $b$.
+   Co ten rachunek mówi o $k$-NN dla $p = 50$?
+:::
+
+::: {#exr-cover-hart}
+Rozważ dwie równoliczne klasy $\Nrozk(-\mu, 1)$ i $\Nrozk(\mu, 1)$ na
+prostej.
+
+a) Wyznacz $\eta(x)$ i wykaż, że
+   $2\eta(x)\big(1 - \eta(x)\big) = \dfrac{1}{2\cosh^2(\mu x)}$.
+   (Wskazówka: zapisz $\eta$ przez funkcję logistyczną.)
+b) Policz numerycznie granicę ([-@eq-ryzyko-1nn-granica]) oraz
+   ograniczenie $2\Risk^*(1 - \Risk^*)$ dla $\mu \in \{0{,}25;\ 0{,}5;\ 1;\ 2;\ 3\}$.
+   Dla jakich $\mu$ ograniczenie jest bliskie granicy, a dla jakich
+   luźne?
+c) Sprawdź wynik symulacyjnie, modyfikując kod @fig-cover-hart.
+d) Podaj rozkład, dla którego w ([-@eq-cover-hart]) zachodzi równość
+   $\Risk_{1\text{NN}} = 2\Risk^*(1 - \Risk^*)$. (Wskazówka: kiedy
+   nierówność Jensena jest równością?)
+:::

@@ -20,7 +20,61 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -167,7 +221,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../1-fundamenty/03-knn.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Klasyfikator <span class="math inline">\(k\)</span> najbliższych sąsiadów</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Metoda <span class="math inline">\(k\)</span> najbliższych sąsiadów</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -299,8 +353,27 @@ window.Quarto = {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Spis treści</h2>
+   
+  <ul>
+  <li><a href="#sec-blad-uczacy-ryzyko" id="toc-sec-blad-uczacy-ryzyko" class="nav-link active" data-scroll-target="#sec-blad-uczacy-ryzyko"><span class="header-section-number">4.1</span> Błąd uczący a ryzyko</a></li>
+  <li><a href="#sec-losowy-zbior-uczacy" id="toc-sec-losowy-zbior-uczacy" class="nav-link" data-scroll-target="#sec-losowy-zbior-uczacy"><span class="header-section-number">4.2</span> Zbiór uczący jest losowy</a></li>
+  <li><a href="#sec-obciazenie-wariancja-estymatora" id="toc-sec-obciazenie-wariancja-estymatora" class="nav-link" data-scroll-target="#sec-obciazenie-wariancja-estymatora"><span class="header-section-number">4.3</span> Obciążenie i wariancja estymatora</a></li>
+  <li><a href="#sec-rozklad-obciazenie-wariancja" id="toc-sec-rozklad-obciazenie-wariancja" class="nav-link" data-scroll-target="#sec-rozklad-obciazenie-wariancja"><span class="header-section-number">4.4</span> Rozkład oczekiwanego błędu predykcji</a></li>
+  <li><a href="#sec-bw-ilustracja" id="toc-sec-bw-ilustracja" class="nav-link" data-scroll-target="#sec-bw-ilustracja"><span class="header-section-number">4.5</span> Ilustracja: <span class="math inline">\(k\)</span>-NN i regresja wielomianowa</a></li>
+  <li><a href="#sec-aproksymacja-estymacja" id="toc-sec-aproksymacja-estymacja" class="nav-link" data-scroll-target="#sec-aproksymacja-estymacja"><span class="header-section-number">4.6</span> Błąd aproksymacji i błąd estymacji</a></li>
+  <li><a href="#sec-krzywe-uczenia" id="toc-sec-krzywe-uczenia" class="nav-link" data-scroll-target="#sec-krzywe-uczenia"><span class="header-section-number">4.7</span> Krzywe uczenia</a></li>
+  <li><a href="#sec-kompromis-nieusuwalny" id="toc-sec-kompromis-nieusuwalny" class="nav-link" data-scroll-target="#sec-kompromis-nieusuwalny"><span class="header-section-number">4.8</span> Dlaczego kompromis jest nieusuwalny</a>
+  <ul class="collapse">
+  <li><a href="#ile-kosztuje-elastyczność-w-wielu-wymiarach" id="toc-ile-kosztuje-elastyczność-w-wielu-wymiarach" class="nav-link" data-scroll-target="#ile-kosztuje-elastyczność-w-wielu-wymiarach"><span class="header-section-number">4.8.1</span> Ile kosztuje elastyczność w wielu wymiarach</a></li>
+  </ul></li>
+  <li><a href="#sec-bw-klasyfikacja" id="toc-sec-bw-klasyfikacja" class="nav-link" data-scroll-target="#sec-bw-klasyfikacja"><span class="header-section-number">4.9</span> Obciążenie i wariancja w klasyfikacji</a></li>
+  <li><a href="#uwagi-bibliograficzne" id="toc-uwagi-bibliograficzne" class="nav-link" data-scroll-target="#uwagi-bibliograficzne">Uwagi bibliograficzne</a></li>
+  <li><a href="#zadania" id="toc-zadania" class="nav-link" data-scroll-target="#zadania">Zadania</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -333,7 +406,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../1-fundamenty/01-czym-jest-model.html">Fundamenty</a></li><li class="breadcrumb-item"><a href="../1-fundamenty/04-bias-wariancja.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Kompromis obciążenie–wariancja</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-bias-wariancja" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Kompromis obciążenie–wariancja</span></span></h1>
+<div class="quarto-title-block"><div><h1 class="title"><span id="sec-bias-wariancja" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Kompromis obciążenie–wariancja</span></span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Kod</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Pokaż cały kod</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Ukryj cały kod</a></li></ul></div></div>
 </div>
 
 
@@ -350,9 +423,610 @@ window.Quarto = {
 </header>
 
 
-<p><em>Rozdział w przygotowaniu.</em></p>
+<p>W rozdziale <a href="03-knn.html" class="quarto-xref"><span>3</span></a> zobaczyliśmy krzywą w kształcie litery U (<a href="03-knn.html#fig-knn-blad-k" class="quarto-xref">Rysunek&nbsp;<span>3.5</span></a>). Gdy zmniejszaliśmy liczbę sąsiadów <span class="math inline">\(k\)</span>, błąd na zbiorze uczącym malał aż do zera, a ryzyko najpierw malało, potem rosło. Wyjaśniliśmy to wtedy słownie: przy dużym <span class="math inline">\(k\)</span> predyktor jest zbyt sztywny, by odtworzyć kształt funkcji regresji, a przy małym odtwarza głównie szum. Ten rozdział nadaje temu wyjaśnieniu postać wzoru.</p>
+<p>Punktem wyjścia jest rozkład ryzyka (<a href="02-predyktory-optymalne.html#eq-rozklad-bledu" class="quarto-xref"><span>2.7</span></a>) z rozdziału <a href="02-predyktory-optymalne.html" class="quarto-xref"><span>2</span></a>. Przy stracie kwadratowej ryzyko predyktora <span class="math inline">\(f\)</span> jest sumą błędu redukowalnego, czyli średniego kwadratu odległości <span class="math inline">\(f\)</span> od funkcji regresji <span class="math inline">\(\fopt\)</span>, i błędu nieredukowalnego. Tamten rozkład dotyczył jednak ustalonej funkcji <span class="math inline">\(f\)</span>. Predyktor, którego używamy w praktyce, ustalony nie jest: wyznaczamy go ze zbioru uczącego, a ten jest losowy. Inny zbiór uczący dałby inny predyktor. Uwzględnienie tej losowości rozbija błąd redukowalny na dwie części. <strong>Obciążenie</strong> mówi, jak daleko od <span class="math inline">\(\fopt\)</span> leży predyktor przeciętny, uśredniony po możliwych zbiorach uczących. <strong>Wariancja</strong> mówi, jak bardzo predyktor zmienia się od jednego zbioru uczącego do drugiego. Są to dwa źródła błędu, które opisaliśmy przy rysunku <a href="03-knn.html#fig-knn-idea" class="quarto-xref"><span>3.1</span></a>: szerokość otoczenia i szum w wynikach sąsiadów.</p>
+<p>Pokażemy, że kompromis między tymi składnikami nie jest własnością metody <span class="math inline">\(k\)</span>-NN. Tak samo zachowuje się regresja wielomianowa, w której elastyczność reguluje stopień wielomianu. Rozkład wyjaśnia też, dlaczego najlepsza elastyczność zależy od liczności próby i dlaczego w wielu wymiarach tak trudno opanować obciążenie, nie płacąc wariancją. Wypełnimy przy tym zapowiedź z rozdziału <a href="02-predyktory-optymalne.html" class="quarto-xref"><span>2</span></a>: rozłożymy błąd redukowalny na część wynikającą ze zbyt ubogiej klasy modeli i część wynikającą ze skończoności próby, a potem porównamy ten rozkład z rozkładem na obciążenie i wariancję.</p>
+<p>Prawie cały rozdział dotyczy regresji ze stratą kwadratową. Tylko dla niej rozkład na obciążenie i wariancję ma prostą postać sumy. Co zostaje z niego w klasyfikacji, omówimy w sekcji <a href="#sec-bw-klasyfikacja" class="quarto-xref"><span>4.9</span></a>.</p>
+<section id="sec-blad-uczacy-ryzyko" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="sec-blad-uczacy-ryzyko"><span class="header-section-number">4.1</span> Błąd uczący a ryzyko</h2>
+<p>W sekcji <a href="01-czym-jest-model.html#sec-trening-modelu" class="quarto-xref"><span>1.8</span></a> zauważyliśmy, że dostatecznie bogata klasa modeli pozwala niemal zapamiętać zbiór uczący, łącznie z przypadkowymi odchyleniami wyników. Aby zbadać to zjawisko, potrzebujemy metod, których elastyczność można płynnie regulować. Jedną już znamy: w metodzie <span class="math inline">\(k\)</span>-NN elastyczność rośnie, gdy <span class="math inline">\(k\)</span> maleje, a miarą tej elastyczności jest efektywna liczba parametrów <span class="math inline">\(n/k\)</span>.</p>
+<p>Drugą jest <strong>regresja wielomianowa</strong>. Dla cechy <span class="math inline">\(x \in \R\)</span> i ustalonego stopnia <span class="math inline">\(d\)</span> rozważamy klasę wielomianów <span class="math display">\[
+\mathcal{F}_d = \big\{\, f(x) = \beta_0 + \beta_1 x + \dots + \beta_d x^d
+: \beta_0, \dots, \beta_d \in \R \,\big\}
+\]</span> i wybieramy z niej predyktor metodą najmniejszych kwadratów, czyli minimalizujemy ryzyko empiryczne przy stracie kwadratowej (<a href="01-czym-jest-model.html#eq-minimalizacja-ryzyka-empirycznego" class="quarto-xref"><span>1.9</span></a>). Jak to zrobić rachunkowo, omówimy w rozdziale <a href="../2-modele-liniowe/06-regresja-liniowa.html" class="quarto-xref"><span>6</span></a>; tu korzystamy z gotowej funkcji biblioteki NumPy. Przy ustalonym <span class="math inline">\(d\)</span> jest to metoda parametryczna z <span class="math inline">\(d + 1\)</span> współczynnikami, a stopień <span class="math inline">\(d\)</span> pełni rolę hiperparametru, podobnie jak <span class="math inline">\(k\)</span> w metodzie <span class="math inline">\(k\)</span>-NN.</p>
+<p>Klasy wielomianów są zagnieżdżone: <span class="math inline">\(\mathcal{F}_0 \subset \mathcal{F}_1
+\subset \mathcal{F}_2 \subset \cdots\)</span>, bo wielomian stopnia <span class="math inline">\(d\)</span> jest też wielomianem stopnia <span class="math inline">\(d + 1\)</span> ze współczynnikiem <span class="math inline">\(\beta_{d+1} = 0\)</span>. Minimum ryzyka empirycznego po większym zbiorze nie może być większe niż po mniejszym, więc <strong>błąd na zbiorze uczącym nie rośnie wraz z <span class="math inline">\(d\)</span></strong> – dla każdej próby, a nie tylko przeciętnie. Gdy <span class="math inline">\(d + 1\)</span> osiąga liczbę różnych wartości <span class="math inline">\(x_i\)</span> w próbie, istnieje wielomian przechodzący przez wszystkie punkty i błąd uczący spada do zera.</p>
+<p><a href="#fig-wielomiany-blad" class="quarto-xref">Rysunek&nbsp;<span>4.1</span></a> pokazuje błąd uczący i ryzyko dla wielomianów stopni od <span class="math inline">\(0\)</span> do <span class="math inline">\(12\)</span>, dopasowanych do <span class="math inline">\(n = 50\)</span> obserwacji. Dane pochodzą z tego samego rozkładu co w rozdziale <a href="03-knn.html" class="quarto-xref"><span>3</span></a>: <span class="math inline">\(X\)</span> ma rozkład jednostajny na <span class="math inline">\([0, 1]\)</span>, <span class="math inline">\(Y = \fopt(X) + \varepsilon\)</span>, gdzie <span class="math inline">\(\fopt(x) = \sin(2\pi x) + x/2\)</span>, a szum ma odchylenie standardowe <span class="math inline">\(\sigma = 0{,}3\)</span>. Ryzyko liczymy dokładnie, całkując po znanym rozkładzie, tak jak na rysunku <a href="03-knn.html#fig-knn-blad-k" class="quarto-xref"><span>3.5</span></a>.</p>
+<div id="cell-fig-wielomiany-blad" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy.polynomial <span class="im">import</span> Polynomial</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f_prawdziwa(x):</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Funkcja regresji z rozdziału o metodzie k-NN."""</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.sin(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> x) <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> x</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">=</span> <span class="fl">0.3</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>siatka <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1001</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>f_siatka <span class="op">=</span> f_prawdziwa(siatka)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> probka(n, rng):</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Losuje n obserwacji: X ~ U[0, 1], Y = f*(X) + szum N(0, sigma^2)."""</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> rng.uniform(<span class="dv">0</span>, <span class="dv">1</span>, n)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x, f_prawdziwa(x) <span class="op">+</span> rng.normal(<span class="dv">0</span>, sigma, n)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">1</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>n_wiel, powt_wiel <span class="op">=</span> <span class="dv">50</span>, <span class="dv">1000</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>stopnie <span class="op">=</span> np.arange(<span class="dv">13</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Nie przechowujemy wszystkich dopasowań. Sumy predykcji i ich kwadratów</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># na siatce wystarczą do średniej i wariancji po zbiorach uczących,</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># z których skorzystamy w dalszej części rozdziału.</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>suma_wiel <span class="op">=</span> np.zeros((<span class="bu">len</span>(stopnie), <span class="bu">len</span>(siatka)))</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>suma_kw_wiel <span class="op">=</span> np.zeros_like(suma_wiel)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>blad_uczacy_wiel <span class="op">=</span> np.zeros(<span class="bu">len</span>(stopnie))</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>ryzyko_wiel <span class="op">=</span> np.zeros(<span class="bu">len</span>(stopnie))</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(powt_wiel):</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    x, y <span class="op">=</span> probka(n_wiel, rng)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, d <span class="kw">in</span> <span class="bu">enumerate</span>(stopnie):</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Polynomial.fit przeskalowuje x do [-1, 1], co poprawia</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>        <span class="co"># uwarunkowanie zadania najmniejszych kwadratów przy dużym d.</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>        wielomian <span class="op">=</span> Polynomial.fit(x, y, d)</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>        pred <span class="op">=</span> wielomian(siatka)</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>        suma_wiel[i] <span class="op">+=</span> pred</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>        suma_kw_wiel[i] <span class="op">+=</span> pred <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>        blad_uczacy_wiel[i] <span class="op">+=</span> np.mean((wielomian(x) <span class="op">-</span> y) <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>        ryzyko_wiel[i] <span class="op">+=</span> np.trapezoid((pred <span class="op">-</span> f_siatka) <span class="op">**</span> <span class="dv">2</span>, siatka) <span class="op">+</span> sigma <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>blad_uczacy_wiel <span class="op">/=</span> powt_wiel</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>ryzyko_wiel <span class="op">/=</span> powt_wiel</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="fl">4.0</span>))</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>ax.plot(stopnie, blad_uczacy_wiel, <span class="st">"o-"</span>, color<span class="op">=</span><span class="st">"0.45"</span>,</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>        label<span class="op">=</span><span class="st">"błąd na zbiorze uczącym"</span>)</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>ax.plot(stopnie, ryzyko_wiel, <span class="st">"o-"</span>, color<span class="op">=</span><span class="st">"#1B6CA8"</span>, label<span class="op">=</span><span class="st">"ryzyko"</span>)</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>ax.axhline(sigma <span class="op">**</span> <span class="dv">2</span>, color<span class="op">=</span><span class="st">"#D7263D"</span>, ls<span class="op">=</span><span class="st">"--"</span>, lw<span class="op">=</span><span class="fl">1.5</span>,</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>           label<span class="op">=</span><span class="vs">r"błąd nieredukowalny </span><span class="dv">$\s</span><span class="vs">igma</span><span class="dv">^</span><span class="vs">2</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>ax.set_yscale(<span class="st">"log"</span>)</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"stopień wielomianu $d$"</span>)</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"średni kwadrat błędu"</span>)</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>ax.legend(frameon<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-wielomiany-blad" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-wielomiany-blad-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-bias-wariancja_files/figure-html/fig-wielomiany-blad-output-1.png" width="614" height="374" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-wielomiany-blad-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Rysunek&nbsp;4.1: Błąd na zbiorze uczącym i ryzyko regresji wielomianowej w zależności od stopnia wielomianu <span class="math inline">\(d\)</span> (<span class="math inline">\(n = 50\)</span>). Ryzyko policzono dokładnie, całkując po znanym rozkładzie; punkty to średnie z 1000 niezależnych prób uczących. Oś pionowa w skali logarytmicznej. Przerywana linia to błąd nieredukowalny <span class="math inline">\(\sigma^2\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Obraz jest taki sam jak na rysunku <a href="03-knn.html#fig-knn-blad-k" class="quarto-xref"><span>3.5</span></a>, choć metoda jest zupełnie inna. Czytelnik, który rozwiązał zadanie <a href="01-czym-jest-model.html#exr-wielomiany" class="quarto-xref"><span>1.14</span></a>, widział go już na własnej symulacji. Błąd uczący maleje monotonicznie i schodzi poniżej błędu nieredukowalnego, czego ryzyko nie może zrobić nigdy. Ryzyko najpierw spada, osiąga minimum przy stopniu <span class="math inline">\(3\)</span>–<span class="math inline">\(5\)</span>, a potem rośnie, i to gwałtownie: przy <span class="math inline">\(d = 12\)</span> jest o rzędy wielkości większe niż w minimum.</p>
+<p>Dwa krańce wykresu mają swoje nazwy. Model zbyt sztywny, jak prosta (<span class="math inline">\(d = 1\)</span>), ma duży błąd uczący i duże ryzyko, przy czym obie wielkości są sobie bliskie. Mówimy wtedy o <strong>niedopasowaniu</strong> (ang. <em>underfitting</em>): model nie jest w stanie odtworzyć zależności nawet na danych, które widział. Model zbyt elastyczny ma mały błąd uczący i duże ryzyko. To <strong>nadmierne dopasowanie</strong> (ang. <em>overfitting</em>), o którym mówiliśmy w sekcji <a href="01-czym-jest-model.html#sec-trening-modelu" class="quarto-xref"><span>1.8</span></a>: model dopasował się do przypadkowych odchyleń w próbie, których nie da się przewidzieć dla nowych obiektów.</p>
+<p>Różnicę między ryzykiem a błędem uczącym nazywa się czasem <strong>optymizmem</strong> błędu uczącego <span class="citation" data-cites="esl">(<a href="../references.html#ref-esl" role="doc-biblioref">Hastie i in. 2009, rozdz. 7.4</a>)</span>. Bierze się ona stąd, że predykcja <span class="math inline">\(\widehat f(x_i)\)</span> zależy od wyniku <span class="math inline">\(y_i\)</span>, z którym ją porównujemy: model był dobierany tak, by wypadać dobrze właśnie na tych obserwacjach. Dla metody <span class="math inline">\(k\)</span>-NN optymizm da się policzyć dokładnie (<a href="#exr-optymizm-knn" class="quarto-xref">Zadanie&nbsp;<span>4.4</span></a>). Błąd uczący nie mówi więc, dlaczego ryzyko po prawej stronie wykresu rośnie. Aby to zrozumieć, musimy zobaczyć, jak dopasowany predyktor zależy od zbioru uczącego.</p>
+</section>
+<section id="sec-losowy-zbior-uczacy" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="sec-losowy-zbior-uczacy"><span class="header-section-number">4.2</span> Zbiór uczący jest losowy</h2>
+<p>W sekcji <a href="01-czym-jest-model.html#sec-zaleznosc-i-szum" class="quarto-xref"><span>1.5</span></a> przyjęliśmy, że obserwacje <span class="math inline">\((\X_1, Y_1), \dots, (\X_n, Y_n)\)</span> są niezależnymi losowaniami z rozkładu <span class="math inline">\(P\)</span>. Zbiór uczący <span class="math inline">\(\mathcal{D}\)</span> jest więc losowy, a wraz z nim losowy jest wyznaczony z niego predyktor. Będziemy go oznaczać <span class="math inline">\(\widehat f_{\mathcal{D}}\)</span>, gdy zechcemy tę zależność podkreślić. W każdym ustalonym punkcie <span class="math inline">\(\x\)</span> wartość <span class="math inline">\(\widehat f_{\mathcal{D}}(\x)\)</span> jest zmienną losową: jej losowość pochodzi wyłącznie z losowania zbioru uczącego.</p>
+<p>Średnią i wariancję względem tego losowania oznaczamy <span class="math inline">\(\E_{\mathcal{D}}\)</span> i <span class="math inline">\(\Var_{\mathcal{D}}\)</span>. Szczególną rolę odgrywa <strong>predyktor przeciętny</strong> <span id="eq-predyktor-przecietny"><span class="math display">\[
+\bar f(\x) = \E_{\mathcal{D}}\big[\widehat f_{\mathcal{D}}(\x)\big],
+\tag{4.1}\]</span></span> czyli średnia predykcji w punkcie <span class="math inline">\(\x\)</span> po wszystkich zbiorach uczących liczności <span class="math inline">\(n\)</span>, jakie mogliśmy wylosować. Jest to konstrukcja myślowa: w praktyce mamy jeden zbiór uczący i jeden predyktor. W symulacji, gdzie rozkład <span class="math inline">\(P\)</span> znamy, możemy jednak wylosować wiele zbiorów uczących i zobaczyć, jak bardzo różnią się dopasowane do nich predyktory. Robi to <a href="#fig-wachlarz" class="quarto-xref">Rysunek&nbsp;<span>4.2</span></a>.</p>
+<div id="cell-fig-wachlarz" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">2</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>pokazane_stopnie <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">10</span>]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>proby <span class="op">=</span> [probka(n_wiel, rng) <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">20</span>)]</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>fig, osie <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="fl">3.6</span>), sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, d <span class="kw">in</span> <span class="bu">zip</span>(osie, pokazane_stopnie):</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> x, y <span class="kw">in</span> proby:</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        ax.plot(siatka, Polynomial.fit(x, y, d)(siatka), color<span class="op">=</span><span class="st">"0.55"</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                lw<span class="op">=</span><span class="fl">0.7</span>, alpha<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    ax.plot(siatka, f_siatka, color<span class="op">=</span><span class="st">"black"</span>, ls<span class="op">=</span><span class="st">"--"</span>, lw<span class="op">=</span><span class="fl">1.4</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    ax.plot(siatka, suma_wiel[d] <span class="op">/</span> powt_wiel, color<span class="op">=</span><span class="st">"#1B6CA8"</span>, lw<span class="op">=</span><span class="fl">2.4</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    ax.set_ylim(<span class="op">-</span><span class="fl">2.2</span>, <span class="fl">2.2</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"$d = </span><span class="sc">{</span>d<span class="sc">}</span><span class="ss">$"</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"$x$"</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].set_ylabel(<span class="st">"$y$"</span>)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-wachlarz" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-wachlarz-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-bias-wariancja_files/figure-html/fig-wachlarz-output-1.png" width="1048" height="336" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-wachlarz-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Rysunek&nbsp;4.2: Wielomiany stopni <span class="math inline">\(d = 1, 3, 10\)</span> dopasowane do 20 niezależnych prób uczących liczności <span class="math inline">\(n = 50\)</span> (cienkie linie). Gruba niebieska linia to predyktor przeciętny <span class="math inline">\(\bar f\)</span>, oszacowany z 1000 prób, przerywana – funkcja regresji <span class="math inline">\(\fopt\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Trzy panele pokazują trzy różne sytuacje. Proste (<span class="math inline">\(d = 1\)</span>) dopasowane do różnych prób są do siebie podobne, ale wszystkie mijają się z funkcją regresji w ten sam sposób. Ich średnia również jest prostą i również nie oddaje kształtu <span class="math inline">\(\fopt\)</span>. Błąd jest <strong>systematyczny</strong>: nie zniknąłby, nawet gdybyśmy uśrednili nieskończenie wiele dopasowań. Wielomiany stopnia <span class="math inline">\(10\)</span> zachowują się odwrotnie. Ich średnia niemal pokrywa się z <span class="math inline">\(\fopt\)</span>, ale pojedyncze dopasowania rozchodzą się w różne strony, najmocniej przy krańcach przedziału, gdzie danych jest mało, a wielomian wysokiego stopnia łatwo „ucieka”. Błąd jest <strong>losowy</strong>: zależy od tego, jaki zbiór uczący akurat wylosowaliśmy. Wielomiany stopnia <span class="math inline">\(3\)</span> leżą pośrodku: ich średnia jest bliska <span class="math inline">\(\fopt\)</span>, a rozrzut niewielki.</p>
+<p>Ryzyko na rysunku <a href="#fig-wielomiany-blad" class="quarto-xref"><span>4.1</span></a> łączy oba rodzaje błędu. Aby je rozdzielić, potrzebujemy dwóch pojęć z teorii estymacji.</p>
+</section>
+<section id="sec-obciazenie-wariancja-estymatora" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="sec-obciazenie-wariancja-estymatora"><span class="header-section-number">4.3</span> Obciążenie i wariancja estymatora</h2>
+<p>Zacznijmy od sytuacji prostszej niż predykcja: od szacowania jednej liczby.</p>
+<div id="def-obciazenie-wariancja" class="theorem definition">
+<p><span class="theorem-title"><strong>Definicja 4.1 (Obciążenie i błąd średniokwadratowy)</strong></span> Niech <span class="math inline">\(\widehat\theta\)</span> będzie estymatorem nieznanej liczby <span class="math inline">\(\theta\)</span>, czyli zmienną losową obliczaną z próby. Jego <strong>obciążeniem</strong> (ang. <em>bias</em>) nazywamy różnicę <span class="math display">\[
+\operatorname{b}(\widehat\theta) = \E[\widehat\theta] - \theta,
+\]</span> a jego <strong>błędem średniokwadratowym</strong> (ang. <em>mean squared error</em>) – wielkość <span class="math inline">\(\operatorname{MSE}(\widehat\theta) = \E\big[(\widehat\theta - \theta)^2\big]\)</span>. Estymator o zerowym obciążeniu nazywamy <strong>nieobciążonym</strong>.</p>
+</div>
+<p>Obciążenie mówi, gdzie estymator trafia przeciętnie, wariancja <span class="math inline">\(\Var\widehat\theta\)</span> – jak bardzo jego wartości rozrzucone są wokół tej przeciętnej. Błąd średniokwadratowy łączy oba składniki: <span id="eq-mse-obciazenie-wariancja"><span class="math display">\[
+\operatorname{MSE}(\widehat\theta)
+= \operatorname{b}(\widehat\theta)^2 + \Var\widehat\theta .
+\tag{4.2}\]</span></span> Jest to ta sama tożsamość, którą wyprowadziliśmy w dowodzie twierdzenia <a href="02-predyktory-optymalne.html#thm-funkcja-regresji" class="quarto-xref"><span>2.2</span></a> jako (<a href="02-predyktory-optymalne.html#eq-rozklad-ryzyka-punktowego" class="quarto-xref"><span>2.5</span></a>): średni kwadrat odległości zmiennej losowej od stałej to jej wariancja plus kwadrat odległości jej średniej od tej stałej. Wystarczy zapisać <span class="math inline">\(\widehat\theta - \theta = (\widehat\theta - \E[\widehat\theta])
++ (\E[\widehat\theta] - \theta)\)</span> i zauważyć, że iloczyn mieszany ma średnią zero.</p>
+<p>Wzór (<a href="#eq-mse-obciazenie-wariancja" class="quarto-xref"><span>4.2</span></a>) ma konsekwencję, która w pierwszej chwili zaskakuje: <strong>estymator obciążony może być lepszy od nieobciążonego</strong>, jeśli niewielkie obciążenie kupuje dużą redukcję wariancji. Rozważmy próbę <span class="math inline">\(Y_1, \dots, Y_n\)</span> z rozkładu o średniej <span class="math inline">\(\mu\)</span> i wariancji <span class="math inline">\(\sigma^2\)</span>. Średnia z próby <span class="math inline">\(\bar Y\)</span> jest nieobciążonym estymatorem <span class="math inline">\(\mu\)</span> o wariancji <span class="math inline">\(\sigma^2/n\)</span>. Porównajmy ją z rodziną estymatorów <strong>ściągających</strong> <span class="math inline">\(\widehat\mu_c = c\bar Y\)</span>, gdzie <span class="math inline">\(c \in [0, 1]\)</span>. Ściąganie do zera wprowadza obciążenie <span class="math inline">\((c - 1)\mu\)</span> i zmniejsza wariancję do <span class="math inline">\(c^2\sigma^2/n\)</span>, więc <span class="math display">\[
+\operatorname{MSE}(c\bar Y) = (1 - c)^2 \mu^2 + c^2\, \frac{\sigma^2}{n} .
+\]</span> Minimum tej funkcji kwadratowej leży w punkcie <span class="math inline">\(c^* = \mu^2 / (\mu^2 + \sigma^2/n)\)</span>, który jest zawsze mniejszy od <span class="math inline">\(1\)</span> (<a href="#exr-estymator-sciagajacy" class="quarto-xref">Zadanie&nbsp;<span>4.1</span></a>). Dla <span class="math inline">\(\mu = 1\)</span>, <span class="math inline">\(\sigma = 3\)</span> i <span class="math inline">\(n = 10\)</span> mamy <span class="math inline">\(c^* \approx 0{,}53\)</span>, a błąd średniokwadratowy spada z <span class="math inline">\(0{,}9\)</span> dla <span class="math inline">\(\bar Y\)</span> do około <span class="math inline">\(0{,}47\)</span>. Obciążony estymator jest prawie dwa razy dokładniejszy.</p>
+<p>Przykład ma oczywistą słabość: <span class="math inline">\(c^*\)</span> zależy od nieznanego <span class="math inline">\(\mu\)</span>. Pokazuje jednak zasadę, która wróci wielokrotnie. Regresja grzbietowa w rozdziale <a href="../2-modele-liniowe/07-selekcja-regularyzacja.html" class="quarto-xref"><span>7</span></a> ściąga współczynniki modelu liniowego do zera właśnie po to, by zmniejszyć wariancję kosztem obciążenia, a w rozdziale <a href="../3-probabilistyka/10-paradygmat-bayesowski.html" class="quarto-xref"><span>10</span></a> zobaczymy, że takie ściąganie wynika naturalnie z rozkładu a priori. Ile ściągać, trzeba wtedy ustalić na podstawie danych, czym zajmuje się rozdział <a href="05-ocena-modeli.html" class="quarto-xref"><span>5</span></a>.</p>
+<p>Wróćmy do predykcji. Ustalmy punkt <span class="math inline">\(\x_0\)</span> i potraktujmy predykcję <span class="math inline">\(\widehat f_{\mathcal{D}}(\x_0)\)</span> jako estymator liczby <span class="math inline">\(\theta = \fopt(\x_0)\)</span>. Jego obciążenie i wariancja to <span id="eq-obciazenie-wariancja-punkt"><span class="math display">\[
+b(\x_0) = \bar f(\x_0) - \fopt(\x_0),
+\qquad
+v(\x_0) = \Var_{\mathcal{D}}\, \widehat f_{\mathcal{D}}(\x_0) .
+\tag{4.3}\]</span></span> W rysunku <a href="#fig-wachlarz" class="quarto-xref"><span>4.2</span></a> obciążenie to pionowa odległość grubej niebieskiej linii od przerywanej, a wariancja opisuje rozrzut cienkich linii wokół niebieskiej. Obie wielkości są funkcjami punktu <span class="math inline">\(\x_0\)</span>: wielomian stopnia <span class="math inline">\(10\)</span> ma dużą wariancję przy krańcach przedziału i znacznie mniejszą w środku.</p>
+</section>
+<section id="sec-rozklad-obciazenie-wariancja" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="sec-rozklad-obciazenie-wariancja"><span class="header-section-number">4.4</span> Rozkład oczekiwanego błędu predykcji</h2>
+<p>Możemy teraz połączyć obie warstwy losowości: losowość nowej obserwacji, którą przewidujemy, i losowość zbioru uczącego, z którego wyznaczyliśmy predyktor.</p>
+<div id="thm-obciazenie-wariancja" class="theorem">
+<p><span class="theorem-title"><strong>Twierdzenie 4.1 (Rozkład na obciążenie i wariancję)</strong></span> Niech <span class="math inline">\(\widehat f_{\mathcal{D}}\)</span> będzie predyktorem wyznaczonym z losowego zbioru uczącego <span class="math inline">\(\mathcal{D}\)</span>, a <span class="math inline">\(\x_0\)</span> – ustalonym punktem. Niech <span class="math inline">\(Y_0\)</span> ma rozkład warunkowy <span class="math inline">\(Y \mid \X = \x_0\)</span>, będzie niezależne od <span class="math inline">\(\mathcal{D}\)</span> i niech <span class="math inline">\(\E[Y_0^2] &lt; \infty\)</span> oraz <span class="math inline">\(\E_{\mathcal{D}}\big[\widehat f_{\mathcal{D}}(\x_0)^2\big] &lt; \infty\)</span>. Wtedy <span id="eq-rozklad-obciazenie-wariancja"><span class="math display">\[
+\E\big[(Y_0 - \widehat f_{\mathcal{D}}(\x_0))^2\big]
+=
+\underbrace{\Var(Y \mid \X = \x_0)}_{\text{błąd nieredukowalny}}
++
+\underbrace{b(\x_0)^2}_{\text{obciążenie}^2}
++
+\underbrace{v(\x_0)}_{\text{wariancja}} ,
+\tag{4.4}\]</span></span> gdzie wartość oczekiwana po lewej stronie dotyczy łącznie <span class="math inline">\(Y_0\)</span> i <span class="math inline">\(\mathcal{D}\)</span>, a <span class="math inline">\(b\)</span> i <span class="math inline">\(v\)</span> są określone wzorem (<a href="#eq-obciazenie-wariancja-punkt" class="quarto-xref"><span>4.3</span></a>).</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Dowód</em>. </span>Rozłóżmy błąd predykcji na trzy różnice: <span class="math display">\[
+Y_0 - \widehat f_{\mathcal{D}}(\x_0)
+= \underbrace{\big(Y_0 - \fopt(\x_0)\big)}_{A}
++ \underbrace{\big(\fopt(\x_0) - \bar f(\x_0)\big)}_{B}
++ \underbrace{\big(\bar f(\x_0) - \widehat f_{\mathcal{D}}(\x_0)\big)}_{C} .
+\]</span> Składnik <span class="math inline">\(A\)</span> zależy tylko od <span class="math inline">\(Y_0\)</span> i ma średnią zero, bo <span class="math inline">\(\fopt(\x_0) = \E[Y_0]\)</span>. Składnik <span class="math inline">\(B\)</span> jest stałą równą <span class="math inline">\(-b(\x_0)\)</span>. Składnik <span class="math inline">\(C\)</span> zależy tylko od <span class="math inline">\(\mathcal{D}\)</span> i również ma średnią zero, z definicji <span class="math inline">\(\bar f\)</span>. Po podniesieniu sumy do kwadratu i uśrednieniu iloczyny mieszane znikają: <span class="math inline">\(\E[AB] = B\,\E[A] = 0\)</span>, <span class="math inline">\(\E[BC] = B\,\E[C] = 0\)</span>, a <span class="math inline">\(\E[AC] = \E[A] \cdot \E[C] = 0\)</span> dzięki niezależności <span class="math inline">\(Y_0\)</span> i <span class="math inline">\(\mathcal{D}\)</span>. Zostają <span class="math inline">\(\E[A^2] = \Var(Y \mid \X = \x_0)\)</span>, <span class="math inline">\(B^2 = b(\x_0)^2\)</span> i <span class="math inline">\(\E[C^2] = v(\x_0)\)</span>. <span class="math inline">\(\square\)</span></p>
+</div>
+<p>Pierwszy składnik zależy tylko od rozkładu <span class="math inline">\(Y \mid \X = \x_0\)</span> i żaden predyktor go nie zmniejszy. Dwa pozostałe to rozbity na części błąd redukowalny w punkcie <span class="math inline">\(\x_0\)</span>, uśredniony po zbiorach uczących. Obciążenie jest błędem systematycznym, wariancja – losowym, w znaczeniu z rysunku <a href="#fig-wachlarz" class="quarto-xref"><span>4.2</span></a>.</p>
+<p>Rozkład w jednym punkcie łatwo przenieść na całe ryzyko. Niech nowa obserwacja <span class="math inline">\((\X_0, Y_0)\)</span> ma rozkład <span class="math inline">\(P\)</span> i będzie niezależna od <span class="math inline">\(\mathcal{D}\)</span>. Uśredniając (<a href="#eq-rozklad-obciazenie-wariancja" class="quarto-xref"><span>4.4</span></a>) po rozkładzie <span class="math inline">\(\X_0\)</span>, otrzymujemy <span id="eq-rozklad-obciazenie-wariancja-globalny"><span class="math display">\[
+\E_{\mathcal{D}}\big[\Risk(\widehat f_{\mathcal{D}})\big]
+=
+\E\big[\Var(Y \mid \X)\big]
++ \E\big[b(\X)^2\big]
++ \E\big[v(\X)\big] .
+\tag{4.5}\]</span></span> Jest to rozkład (<a href="02-predyktory-optymalne.html#eq-rozklad-bledu" class="quarto-xref"><span>2.7</span></a>) z rozdziału <a href="02-predyktory-optymalne.html" class="quarto-xref"><span>2</span></a>, uśredniony po zbiorach uczących, w którym błąd redukowalny rozpadł się na całkowite obciążenie do kwadratu i całkowitą wariancję.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Trzy uśrednienia
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We wzorze (<a href="#eq-rozklad-obciazenie-wariancja-globalny" class="quarto-xref"><span>4.5</span></a>) występują trzy źródła losowości i łatwo je pomylić:</p>
+<ul>
+<li><strong>wynik <span class="math inline">\(Y\)</span> przy ustalonych cechach</strong> – jego zmienność to błąd nieredukowalny <span class="math inline">\(\Var(Y \mid \X)\)</span>, cecha zjawiska i zestawu cech;</li>
+<li><strong>zbiór uczący <span class="math inline">\(\mathcal{D}\)</span></strong> – jego zmienność odpowiada za wariancję <span class="math inline">\(v(\x)\)</span> i wyznacza predyktor przeciętny <span class="math inline">\(\bar f\)</span>, cecha metody i liczności próby;</li>
+<li><strong>punkt <span class="math inline">\(\X\)</span>, w którym przewidujemy</strong> – po nim uśredniamy na końcu, ważąc punkty rozkładem cech.</li>
+</ul>
+<p>W szczególności „wariancja” w nazwie kompromisu to wariancja <strong>predyktora</strong> po zbiorach uczących, a nie wariancja szumu <span class="math inline">\(\Var(Y \mid \X)\)</span>. Model może mieć bardzo małą wariancję przy bardzo zaszumionych danych: predyktor stały <span class="math inline">\(\widehat f = 0\)</span> ma wariancję zero niezależnie od szumu.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Wskazówka</span>Ryzyko modelu a ryzyko metody
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Ryzyko <span class="math inline">\(\Risk(\widehat f_{\mathcal{D}})\)</span> dopasowanego modelu jest liczbą zależną od tego, jaki zbiór uczący wylosowaliśmy – inną dla każdego zbioru. Wielkość <span class="math inline">\(\E_{\mathcal{D}}\big[\Risk(\widehat f_{\mathcal{D}})\big]\)</span> po lewej stronie (<a href="#eq-rozklad-obciazenie-wariancja-globalny" class="quarto-xref"><span>4.5</span></a>) jest już własnością <strong>metody uczenia</strong> zastosowanej do prób liczności <span class="math inline">\(n\)</span>, a nie konkretnego modelu. Rozkład na obciążenie i wariancję mówi więc, jak dobra jest procedura, a nie jak dobry jest model, który właśnie dopasowaliśmy. Rozróżnienie to wróci w rozdziale <a href="05-ocena-modeli.html" class="quarto-xref"><span>5</span></a>: walidacja krzyżowa szacuje raczej drugą z tych wielkości niż pierwszą <span class="citation" data-cites="esl">(<a href="../references.html#ref-esl" role="doc-biblioref">Hastie i in. 2009, rozdz. 7.12</a>)</span>.</p>
+</div>
+</div>
+<p><a href="#thm-obciazenie-wariancja" class="quarto-xref">Twierdzenie&nbsp;<span>4.1</span></a> jest tożsamością: zachodzi dla każdej metody uczenia, każdego rozkładu i każdej liczności próby. Sam w sobie nie mówi nic o kompromisie. Kompromis to obserwacja dotycząca tego, jak oba składniki zależą od elastyczności metody: zwiększając elastyczność, zwykle zmniejszamy obciążenie i zwiększamy wariancję. Sprawdźmy to na obu naszych metodach.</p>
+</section>
+<section id="sec-bw-ilustracja" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="sec-bw-ilustracja"><span class="header-section-number">4.5</span> Ilustracja: <span class="math inline">\(k\)</span>-NN i regresja wielomianowa</h2>
+<p>Dla metody <span class="math inline">\(k\)</span>-NN oba składniki można wypisać jawnie, jeśli przyjmiemy uproszczenie: punkty <span class="math inline">\(\x_1, \dots, \x_n\)</span> są ustalone, a losowe są tylko wyniki <span class="math inline">\(Y_i = \fopt(\x_i) + \varepsilon_i\)</span>, z niezależnymi szumami o wariancji <span class="math inline">\(\sigma^2\)</span>. Taki <strong>ustalony układ</strong> (ang. <em>fixed design</em>) upraszcza rachunki, bo zbiór sąsiadów <span class="math inline">\(N_k(\x_0)\)</span> zależy tylko od położenia punktów, a nie od wyników. Predykcja (<a href="03-knn.html#eq-knn-regresja" class="quarto-xref"><span>3.1</span></a>) jest wtedy średnią <span class="math inline">\(k\)</span> niezależnych zmiennych losowych o wartościach oczekiwanych <span class="math inline">\(\fopt(\x_i)\)</span> i wariancjach <span class="math inline">\(\sigma^2\)</span>, więc <span id="eq-knn-obciazenie-wariancja"><span class="math display">\[
+b(\x_0) = \frac{1}{k} \sum_{i \in N_k(\x_0)} \fopt(\x_i) - \fopt(\x_0),
+\qquad
+v(\x_0) = \frac{\sigma^2}{k} .
+\tag{4.6}\]</span></span> Oba wzory odpowiadają dwóm źródłom błędu z rysunku <a href="03-knn.html#fig-knn-idea" class="quarto-xref"><span>3.1</span></a>. Wariancja maleje jak <span class="math inline">\(1/k\)</span>: im więcej wyników uśredniamy, tym mniej znaczy szum każdego z nich. Obciążenie to różnica między średnią wartości <span class="math inline">\(\fopt\)</span> w otoczeniu a wartością w samym punkcie. Rośnie wraz z <span class="math inline">\(k\)</span>, bo otoczenie się poszerza, i jest tym większe, im bardziej <span class="math inline">\(\fopt\)</span> zmienia się w otoczeniu. Dla <span class="math inline">\(k = 1\)</span> obciążenie jest małe, a wariancja równa <span class="math inline">\(\sigma^2\)</span>, więc oczekiwany błąd predykcji wynosi w przybliżeniu <span class="math inline">\(2\sigma^2\)</span> – znów pojawia się podwojenie, jak w twierdzeniu Covera–Harta (<a href="03-knn.html#thm-cover-hart" class="quarto-xref">Twierdzenie&nbsp;<span>3.2</span></a>). Dla <span class="math inline">\(k = n\)</span> wariancja jest najmniejsza, <span class="math inline">\(\sigma^2/n\)</span>, ale obciążenie równa się odległości <span class="math inline">\(\fopt(\x_0)\)</span> od średniej wszystkich wartości <span class="math inline">\(\fopt(\x_i)\)</span>.</p>
+<p>Dla regresji wielomianowej takich prostych wzorów nie ma, ale oba składniki można oszacować symulacyjnie: wylosować wiele zbiorów uczących, w każdym punkcie siatki policzyć średnią i wariancję predykcji, a potem scałkować po rozkładzie <span class="math inline">\(X\)</span>. <a href="#fig-dekompozycja" class="quarto-xref">Rysunek&nbsp;<span>4.3</span></a> pokazuje wynik dla obu metod. Przy <span class="math inline">\(k\)</span>-NN cechy są losowe, jak na rysunku <a href="03-knn.html#fig-knn-blad-k" class="quarto-xref"><span>3.5</span></a>, a nie ustalone.</p>
+<div id="cell-fig-dekompozycja" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.neighbors <span class="im">import</span> KNeighborsRegressor</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">8</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>n_knn, powt_knn <span class="op">=</span> <span class="dv">100</span>, <span class="dv">500</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>wartosci_k <span class="op">=</span> np.array([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">7</span>, <span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">50</span>, <span class="dv">100</span>])</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>suma_knn <span class="op">=</span> np.zeros((<span class="bu">len</span>(wartosci_k), <span class="bu">len</span>(siatka)))</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>suma_kw_knn <span class="op">=</span> np.zeros_like(suma_knn)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(powt_knn):</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    x, y <span class="op">=</span> probka(n_knn, rng)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, k <span class="kw">in</span> <span class="bu">enumerate</span>(wartosci_k):</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        pred <span class="op">=</span> KNeighborsRegressor(n_neighbors<span class="op">=</span>k).fit(x.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>), y) <span class="op">\</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>                   .predict(siatka.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        suma_knn[i] <span class="op">+=</span> pred</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        suma_kw_knn[i] <span class="op">+=</span> pred <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> obciazenie_wariancja(suma, suma_kw, powtorzenia):</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Całkowite obciążenie^2 i wariancja z sum predykcji na siatce.</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">    Średnia predykcji w punkcie to predyktor przeciętny f-bar, wariancja</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">    liczona jest po próbach uczących; oba składniki całkujemy po</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">    rozkładzie jednostajnym X na [0, 1].</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    srednia <span class="op">=</span> suma <span class="op">/</span> powtorzenia</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    wariancja <span class="op">=</span> suma_kw <span class="op">/</span> powtorzenia <span class="op">-</span> srednia <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    obc2 <span class="op">=</span> np.trapezoid((srednia <span class="op">-</span> f_siatka) <span class="op">**</span> <span class="dv">2</span>, siatka, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    war <span class="op">=</span> np.trapezoid(wariancja, siatka, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> obc2, war</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>obc2_knn, war_knn <span class="op">=</span> obciazenie_wariancja(suma_knn, suma_kw_knn, powt_knn)</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>obc2_wiel, war_wiel <span class="op">=</span> obciazenie_wariancja(suma_wiel, suma_kw_wiel, powt_wiel)</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>fig, osie <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="fl">4.0</span>))</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, os_x, obc2, war <span class="kw">in</span> [(osie[<span class="dv">0</span>], n_knn <span class="op">/</span> wartosci_k, obc2_knn, war_knn),</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>                            (osie[<span class="dv">1</span>], stopnie, obc2_wiel, war_wiel)]:</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    ax.plot(os_x, obc2, <span class="st">"o-"</span>, color<span class="op">=</span><span class="st">"#E07B39"</span>, ms<span class="op">=</span><span class="dv">4</span>, label<span class="op">=</span><span class="st">"obciążenie$^2$"</span>)</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    ax.plot(os_x, war, <span class="st">"o-"</span>, color<span class="op">=</span><span class="st">"#3A9D5D"</span>, ms<span class="op">=</span><span class="dv">4</span>, label<span class="op">=</span><span class="st">"wariancja"</span>)</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    ax.plot(os_x, obc2 <span class="op">+</span> war <span class="op">+</span> sigma <span class="op">**</span> <span class="dv">2</span>, <span class="st">"o-"</span>, color<span class="op">=</span><span class="st">"#1B6CA8"</span>, ms<span class="op">=</span><span class="dv">4</span>,</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span><span class="st">"ryzyko"</span>)</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    ax.axhline(sigma <span class="op">**</span> <span class="dv">2</span>, color<span class="op">=</span><span class="st">"#D7263D"</span>, ls<span class="op">=</span><span class="st">"--"</span>, lw<span class="op">=</span><span class="fl">1.5</span>,</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>               label<span class="op">=</span><span class="vs">r"błąd nieredukowalny </span><span class="dv">$\s</span><span class="vs">igma</span><span class="dv">^</span><span class="vs">2</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    ax.set_yscale(<span class="st">"log"</span>)</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].plot(n_knn <span class="op">/</span> wartosci_k, sigma <span class="op">**</span> <span class="dv">2</span> <span class="op">/</span> wartosci_k, <span class="st">":"</span>, color<span class="op">=</span><span class="st">"#3A9D5D"</span>,</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>             lw<span class="op">=</span><span class="fl">1.3</span>, label<span class="op">=</span><span class="vs">r"</span><span class="dv">$\s</span><span class="vs">igma</span><span class="dv">^</span><span class="vs">2/k</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].set_xscale(<span class="st">"log"</span>)</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].set_xlabel(<span class="st">"$n/k$ (efektywna liczba parametrów)"</span>)</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].set_ylabel(<span class="st">"średni kwadrat błędu"</span>)</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].set_title(<span class="st">"$k$-NN"</span>)</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].legend(frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">1</span>].set_ylim(<span class="fl">1e-5</span>, <span class="fl">1e2</span>)</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">1</span>].set_xlabel(<span class="st">"stopień wielomianu $d$"</span>)</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">1</span>].set_title(<span class="st">"regresja wielomianowa"</span>)</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-dekompozycja" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dekompozycja-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-bias-wariancja_files/figure-html/fig-dekompozycja-output-1.png" width="1046" height="373" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dekompozycja-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Rysunek&nbsp;4.3: Rozkład ryzyka na obciążenie do kwadratu, wariancję i błąd nieredukowalny. Po lewej: regresja <span class="math inline">\(k\)</span>-NN w zależności od <span class="math inline">\(n/k\)</span> (<span class="math inline">\(n = 100\)</span>, 500 prób uczących); kropkowana linia to wariancja <span class="math inline">\(\sigma^2/k\)</span> z ustalonego układu (<a href="#eq-knn-obciazenie-wariancja" class="quarto-xref"><span>4.6</span></a>). Po prawej: regresja wielomianowa w zależności od stopnia <span class="math inline">\(d\)</span> (<span class="math inline">\(n = 50\)</span>, 1000 prób uczących, te same co na rysunku <a href="#fig-wielomiany-blad" class="quarto-xref"><span>4.1</span></a>). Ryzyko jest sumą trzech składników. Oś pionowa w skali logarytmicznej.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>W obu panelach widać ten sam mechanizm. Obciążenie maleje, a wariancja rośnie wraz z elastycznością. Ryzyko, ich suma powiększona o <span class="math inline">\(\sigma^2\)</span>, ma minimum tam, gdzie dalszy spadek obciążenia przestaje równoważyć wzrost wariancji. Kształt litery U z rysunków <a href="03-knn.html#fig-knn-blad-k" class="quarto-xref"><span>3.5</span></a> i <a href="#fig-wielomiany-blad" class="quarto-xref"><span>4.1</span></a> jest więc sumą dwóch monotonicznych krzywych biegnących w przeciwne strony.</p>
+<p>Przy <span class="math inline">\(k\)</span>-NN wariancja jest bliska <span class="math inline">\(\sigma^2/k\)</span>, choć nieco od niej większa: przy losowych cechach zmienia się od próby do próby także zbiór sąsiadów, a z nim średnia wartości <span class="math inline">\(\fopt\)</span> w otoczeniu. Najmniejsze ryzyko przypada na <span class="math inline">\(k\)</span> rzędu <span class="math inline">\(7\)</span>–<span class="math inline">\(10\)</span>, gdzie oba składniki są porównywalne.</p>
+<p>Przy wielomianach obciążenie spada schodkami: stopnie parzyste prawie nic nie dodają do poprzedniego nieparzystego. Powodem jest symetria naszej funkcji regresji – po odjęciu stałej <span class="math inline">\(1/4\)</span> jest ona nieparzysta względem punktu <span class="math inline">\(x = 1/2\)</span>, więc człony parzyste w rozwinięciu wokół tego punktu nic nie wnoszą. Każdy taki współczynnik zwiększa jednak wariancję i nie zmniejsza obciążenia. To czysty koszt, który dobrze widać w ryzyku: stopień <span class="math inline">\(4\)</span> jest gorszy od stopnia <span class="math inline">\(3\)</span>, a stopień <span class="math inline">\(6\)</span> od stopnia <span class="math inline">\(5\)</span>. Od stopnia <span class="math inline">\(5\)</span> obciążenie jest praktycznie zerowe – wielomian tego stopnia przybliża <span class="math inline">\(\fopt\)</span> na <span class="math inline">\([0, 1]\)</span> niemal dokładnie – a każdy kolejny stopień dokłada już tylko wariancji. Powyżej stopnia <span class="math inline">\(8\)</span> wariancja rośnie gwałtownie, bo dopasowania przy krańcach przedziału, widoczne w rysunku <a href="#fig-wachlarz" class="quarto-xref"><span>4.2</span></a>, coraz częściej „uciekają”.</p>
+<p>Wzrost krzywej obciążenia powyżej stopnia <span class="math inline">\(8\)</span> jest artefaktem symulacji, a nie własnością metody. Predyktor przeciętny <span class="math inline">\(\bar f\)</span> szacujemy średnią z tysiąca dopasowań, a średnia zmiennej o ogromnej wariancji sama jest niedokładna. Jej błąd losowy zawyża oszacowanie obciążenia do kwadratu średnio o wariancję podzieloną przez liczbę prób. Przy stopniu <span class="math inline">\(12\)</span> to około <span class="math inline">\(31/1000\)</span>, czyli tyle, ile widać na wykresie. Prawdziwe obciążenie pozostaje bliskie zera.</p>
+<p>Kompromis obciążenie–wariancja nie jest więc własnością konkretnego algorytmu. Metoda <span class="math inline">\(k\)</span>-NN i regresja wielomianowa nie mają ze sobą nic wspólnego poza tym, że obie mają pokrętło elastyczności i uczą się ze skończonej próby.</p>
+</section>
+<section id="sec-aproksymacja-estymacja" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="sec-aproksymacja-estymacja"><span class="header-section-number">4.6</span> Błąd aproksymacji i błąd estymacji</h2>
+<p>W rozdziale <a href="02-predyktory-optymalne.html" class="quarto-xref"><span>2</span></a> zapowiedzieliśmy rozbicie błędu redukowalnego na część wynikającą ze zbyt ubogiej klasy modeli i część wynikającą ze skończoności próby. Rozkład na obciążenie i wariancję jest do tego bliski, ale nie identyczny. Obciążenie mierzymy względem predyktora przeciętnego <span class="math inline">\(\bar f\)</span>, który zależy od liczności próby i od metody, a nie tylko od klasy. Zapowiedziany rozkład wygląda inaczej.</p>
+<p>Niech metoda wybiera predyktor z ustalonej klasy <span class="math inline">\(\mathcal{F}\)</span> i niech <span class="math display">\[
+f_{\mathcal{F}} \in \argmin_{f \in \mathcal{F}} \Risk(f)
+\]</span> będzie najlepszym predyktorem w tej klasie, czyli tym, który wybralibyśmy, znając rozkład <span class="math inline">\(P\)</span>. Dla dowolnego <span class="math inline">\(\widehat f \in \mathcal{F}\)</span> zachodzi <span id="eq-aproksymacja-estymacja"><span class="math display">\[
+\Risk(\widehat f)
+=
+\underbrace{\Risk(\fopt)}_{\text{błąd nieredukowalny}}
++
+\underbrace{\Risk(f_{\mathcal{F}}) - \Risk(\fopt)}_{\text{błąd aproksymacji}}
++
+\underbrace{\Risk(\widehat f) - \Risk(f_{\mathcal{F}})}_{\text{błąd estymacji}} .
+\tag{4.7}\]</span></span> Tożsamość jest trywialna, ale jej składniki mają wyraźny sens. <strong>Błąd aproksymacji</strong> mówi, ile tracimy, ograniczając się do klasy <span class="math inline">\(\mathcal{F}\)</span>. Nie zależy od danych ani od <span class="math inline">\(n\)</span>, tylko od klasy i od rozkładu. <strong>Błąd estymacji</strong> mówi, ile tracimy dlatego, że zamiast najlepszego elementu klasy wybraliśmy na podstawie skończonej próby inny. Jest losowy, bo zależy od <span class="math inline">\(\mathcal{D}\)</span>, i z definicji <span class="math inline">\(f_{\mathcal{F}}\)</span> nieujemny. Poszerzenie klasy nie zwiększa błędu aproksymacji – minimum po większym zbiorze nie jest większe – ale zwykle zwiększa błąd estymacji, bo przy tej samej liczbie danych trudniej trafić w najlepszy element bogatszej klasy. Jest to ten sam kompromis w innym języku; bywa nazywany kompromisem aproksymacja–estymacja <span class="citation" data-cites="shalevshwartz2014">(<a href="../references.html#ref-shalevshwartz2014" role="doc-biblioref">Shalev-Shwartz i Ben-David 2014, rozdz. 5</a>)</span>.</p>
+<p>Rozkład (<a href="#eq-aproksymacja-estymacja" class="quarto-xref"><span>4.7</span></a>) ma dwie zalety. Działa dla każdej straty, także dla straty 0–1, i nie wymaga uśredniania po zbiorach uczących. Ma też ograniczenie: wymaga ustalonej klasy <span class="math inline">\(\mathcal{F}\)</span>. Metoda <span class="math inline">\(k\)</span>-NN, jak zauważyliśmy w sekcji <a href="03-knn.html#sec-knn-regula" class="quarto-xref"><span>3.2</span></a>, niczego z ustalonej klasy nie wybiera, więc dla niej naturalny jest rozkład na obciążenie i wariancję.</p>
+<p>Gdy oba rozkłady mają sens, są ze sobą ściśle związane. Oznaczmy <span class="math inline">\(\|g\|^2 = \E\big[g(\X)^2\big]\)</span>, gdzie średnią liczymy po rozkładzie cech. Z (<a href="02-predyktory-optymalne.html#eq-rozklad-bledu" class="quarto-xref"><span>2.7</span></a>) przy stracie kwadratowej <span class="math inline">\(\Risk(f) - \Risk(\fopt) = \|f - \fopt\|^2\)</span>, więc <span class="math inline">\(f_{\mathcal{F}}\)</span> jest elementem <span class="math inline">\(\mathcal{F}\)</span> najbliższym <span class="math inline">\(\fopt\)</span> w tej normie.</p>
+<div id="thm-aproksymacja-obciazenie" class="theorem">
+<p><span class="theorem-title"><strong>Twierdzenie 4.2 (Obciążenie a błąd aproksymacji)</strong></span> Niech strata będzie kwadratowa, a <span class="math inline">\(\mathcal{F}\)</span> – skończenie wymiarową przestrzenią liniową funkcji, taką jak <span class="math inline">\(\mathcal{F}_d\)</span>. Niech <span class="math inline">\(\widehat f_{\mathcal{D}} \in \mathcal{F}\)</span> dla każdego zbioru uczącego, a wszystkie występujące niżej średnie niech będą skończone. Wtedy <span id="eq-obciazenie-aproksymacja"><span class="math display">\[
+\underbrace{\E\big[b(\X)^2\big]}_{\text{obciążenie}^2}
+= \underbrace{\|f_{\mathcal{F}} - \fopt\|^2}_{\text{błąd aproksymacji}}
++ \|\bar f - f_{\mathcal{F}}\|^2 ,
+\tag{4.8}\]</span></span> <span id="eq-estymacja-wariancja"><span class="math display">\[
+\underbrace{\E_{\mathcal{D}}\big[\Risk(\widehat f_{\mathcal{D}})
+- \Risk(f_{\mathcal{F}})\big]}_{\text{oczekiwany błąd estymacji}}
+= \|\bar f - f_{\mathcal{F}}\|^2
++ \underbrace{\E\big[v(\X)\big]}_{\text{wariancja}} .
+\tag{4.9}\]</span></span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Dowód</em>. </span>Norma <span class="math inline">\(\|\cdot\|\)</span> pochodzi od iloczynu skalarnego <span class="math inline">\(\langle g, h \rangle = \E\big[g(\X) h(\X)\big]\)</span>, a <span class="math inline">\(f_{\mathcal{F}}\)</span> jest rzutem ortogonalnym <span class="math inline">\(\fopt\)</span> na podprzestrzeń <span class="math inline">\(\mathcal{F}\)</span>. Różnica <span class="math inline">\(\fopt - f_{\mathcal{F}}\)</span> jest więc ortogonalna do każdego elementu <span class="math inline">\(\mathcal{F}\)</span>: gdyby <span class="math inline">\(\langle \fopt - f_{\mathcal{F}}, g \rangle \ne 0\)</span> dla pewnego <span class="math inline">\(g \in \mathcal{F}\)</span>, przesunięcie <span class="math inline">\(f_{\mathcal{F}}\)</span> o mały krok w kierunku <span class="math inline">\(g\)</span> zmniejszyłoby odległość od <span class="math inline">\(\fopt\)</span>.</p>
+<p>Predyktor przeciętny należy do <span class="math inline">\(\mathcal{F}\)</span>: jeśli <span class="math inline">\(\widehat f_{\mathcal{D}} = \sum_j \widehat\beta_j \varphi_j\)</span> w pewnej bazie <span class="math inline">\(\varphi_1, \dots, \varphi_m\)</span> przestrzeni <span class="math inline">\(\mathcal{F}\)</span>, to <span class="math inline">\(\bar f = \sum_j \E_{\mathcal{D}}[\widehat\beta_j]\, \varphi_j\)</span>. Zatem <span class="math inline">\(\bar f - f_{\mathcal{F}} \in \mathcal{F}\)</span> jest ortogonalne do <span class="math inline">\(f_{\mathcal{F}} - \fopt\)</span> i z twierdzenia Pitagorasa <span class="math display">\[
+\E\big[b(\X)^2\big] = \|\bar f - \fopt\|^2
+= \|f_{\mathcal{F}} - \fopt\|^2 + \|\bar f - f_{\mathcal{F}}\|^2 .
+\]</span> Tak samo <span class="math inline">\(\widehat f_{\mathcal{D}} - f_{\mathcal{F}} \in \mathcal{F}\)</span>, więc <span class="math inline">\(\Risk(\widehat f_{\mathcal{D}}) - \Risk(f_{\mathcal{F}})
+= \|\widehat f_{\mathcal{D}} - \fopt\|^2 - \|f_{\mathcal{F}} - \fopt\|^2
+= \|\widehat f_{\mathcal{D}} - f_{\mathcal{F}}\|^2\)</span>. Uśredniając po <span class="math inline">\(\mathcal{D}\)</span> i rozkładając <span class="math inline">\(\widehat f_{\mathcal{D}} - f_{\mathcal{F}}
+= (\widehat f_{\mathcal{D}} - \bar f) + (\bar f - f_{\mathcal{F}})\)</span> tak jak w (<a href="#eq-mse-obciazenie-wariancja" class="quarto-xref"><span>4.2</span></a>), dostajemy (<a href="#eq-estymacja-wariancja" class="quarto-xref"><span>4.9</span></a>), bo <span class="math inline">\(\E_{\mathcal{D}}\big[\|\widehat f_{\mathcal{D}} - \bar f\|^2\big] = \E\big[v(\X)\big]\)</span>. <span class="math inline">\(\square\)</span></p>
+</div>
+<p>Oba rozkłady różnią się więc tylko tym, gdzie zaliczają składnik <span class="math inline">\(\|\bar f - f_{\mathcal{F}}\|^2\)</span>, czyli odległość predyktora przeciętnego od najlepszego elementu klasy. Rozkład na obciążenie i wariancję traktuje go jako część obciążenia, rozkład na aproksymację i estymację – jako część błędu estymacji. Dla metody najmniejszych kwadratów ten składnik jest zwykle bardzo mały i znika, gdy <span class="math inline">\(n\)</span> rośnie. Wtedy obciążenie do kwadratu jest w praktyce równe błędowi aproksymacji, a wariancja – błędowi estymacji. Sprawdza to poniższe zestawienie dla wielomianów z rysunku <a href="#fig-dekompozycja" class="quarto-xref"><span>4.3</span></a>. Najlepszy wielomian <span class="math inline">\(f_{\mathcal{F}_d}\)</span> wyznaczyliśmy, dopasowując wielomian metodą najmniejszych kwadratów do samej funkcji <span class="math inline">\(\fopt\)</span> na gęstej siatce.</p>
+<div id="cdffe229" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Najlepszy wielomian stopnia d w normie E[g(X)^2] dla X ~ U[0, 1]:</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># najmniejsze kwadraty na gęstej, równomiernej siatce przybliżają całkę.</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>gesta <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">20_001</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">" d   aproksymacja   obciążenie^2   ||f_bar - f_F||^2   wariancja"</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> d <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">9</span>):</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    f_klasa <span class="op">=</span> Polynomial.fit(gesta, f_prawdziwa(gesta), d)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    aproks <span class="op">=</span> np.trapezoid((f_klasa(siatka) <span class="op">-</span> f_siatka) <span class="op">**</span> <span class="dv">2</span>, siatka)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    f_bar <span class="op">=</span> suma_wiel[d] <span class="op">/</span> powt_wiel</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    odl <span class="op">=</span> np.trapezoid((f_bar <span class="op">-</span> f_klasa(siatka)) <span class="op">**</span> <span class="dv">2</span>, siatka)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>d<span class="sc">:2d}</span><span class="ss">   </span><span class="sc">{</span>aproks<span class="sc">:12.5f}</span><span class="ss">   </span><span class="sc">{</span>obc2_wiel[d]<span class="sc">:12.5f}</span><span class="ss">"</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f"   </span><span class="sc">{</span>odl<span class="sc">:17.5f}</span><span class="ss">   </span><span class="sc">{</span>war_wiel[d]<span class="sc">:9.5f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> d   aproksymacja   obciążenie^2   ||f_bar - f_F||^2   wariancja
+ 0        0.36168        0.36168             0.00000     0.00882
+ 1        0.19604        0.19610             0.00006     0.01293
+ 2        0.19604        0.19641             0.00038     0.02410
+ 3        0.00439        0.00440             0.00001     0.00876
+ 4        0.00439        0.00445             0.00006     0.01223
+ 5        0.00002        0.00006             0.00004     0.01447
+ 6        0.00002        0.00009             0.00008     0.02336
+ 7        0.00000        0.00009             0.00009     0.03827
+ 8        0.00000        0.00007             0.00007     0.06986</code></pre>
+</div>
+</div>
+<p>Kolumny „aproksymacja” i „obciążenie<span class="math inline">\(^2\)</span>” zgadzają się do trzeciego miejsca po przecinku, a składnik <span class="math inline">\(\|\bar f - f_{\mathcal{F}}\|^2\)</span> jest kilkadziesiąt do kilkuset razy mniejszy od wariancji. Część tej różnicy to zresztą błąd symulacji, bo <span class="math inline">\(\bar f\)</span> szacujemy z tysiąca prób.</p>
+</section>
+<section id="sec-krzywe-uczenia" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="sec-krzywe-uczenia"><span class="header-section-number">4.7</span> Krzywe uczenia</h2>
+<p>Dotąd zmienialiśmy elastyczność przy ustalonej liczności próby. Zmieńmy teraz liczność próby przy ustalonej metodzie. Wykres ryzyka i błędu uczącego w zależności od <span class="math inline">\(n\)</span> nazywamy <strong>krzywą uczenia</strong> (ang. <em>learning curve</em>).</p>
+<p>Rozkład (<a href="#eq-aproksymacja-estymacja" class="quarto-xref"><span>4.7</span></a>) mówi, czego się spodziewać. Błąd aproksymacji nie zależy od <span class="math inline">\(n\)</span>. Błąd estymacji maleje, gdy danych przybywa, bo dopasowany predyktor zbliża się do <span class="math inline">\(f_{\mathcal{F}}\)</span>. Ryzyko dąży więc do poziomu <span class="math inline">\(\Risk(\fopt) + [\Risk(f_{\mathcal{F}})
+- \Risk(\fopt)]\)</span>, czyli sumy błędu nieredukowalnego i błędu aproksymacji. Błąd uczący zachowuje się odwrotnie: rośnie z <span class="math inline">\(n\)</span>, bo coraz trudniej dopasować się do coraz większej liczby punktów, i dąży do tego samego poziomu od dołu. <a href="#fig-krzywe-uczenia" class="quarto-xref">Rysunek&nbsp;<span>4.4</span></a> pokazuje to dla dwóch wielomianów: sztywnego (<span class="math inline">\(d = 1\)</span>) i elastycznego (<span class="math inline">\(d = 9\)</span>).</p>
+<div id="cell-fig-krzywe-uczenia" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">4</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>licznosci <span class="op">=</span> np.array([<span class="dv">40</span>, <span class="dv">60</span>, <span class="dv">100</span>, <span class="dv">200</span>, <span class="dv">500</span>, <span class="dv">1000</span>, <span class="dv">3000</span>])</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>powtorzenia <span class="op">=</span> <span class="dv">300</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>fig, osie <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="fl">4.0</span>), sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, d <span class="kw">in</span> <span class="bu">zip</span>(osie, [<span class="dv">1</span>, <span class="dv">9</span>]):</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    blad_uczacy <span class="op">=</span> np.zeros(<span class="bu">len</span>(licznosci))</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    ryzyko <span class="op">=</span> np.zeros(<span class="bu">len</span>(licznosci))</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, n <span class="kw">in</span> <span class="bu">enumerate</span>(licznosci):</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(powtorzenia):</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>            x, y <span class="op">=</span> probka(n, rng)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>            wielomian <span class="op">=</span> Polynomial.fit(x, y, d)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>            blad_uczacy[i] <span class="op">+=</span> np.mean((wielomian(x) <span class="op">-</span> y) <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>            ryzyko[i] <span class="op">+=</span> np.trapezoid((wielomian(siatka) <span class="op">-</span> f_siatka) <span class="op">**</span> <span class="dv">2</span>,</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>                                      siatka) <span class="op">+</span> sigma <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    blad_uczacy <span class="op">/=</span> powtorzenia</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    ryzyko <span class="op">/=</span> powtorzenia</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    f_klasa <span class="op">=</span> Polynomial.fit(gesta, f_prawdziwa(gesta), d)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    granica <span class="op">=</span> np.trapezoid((f_klasa(siatka) <span class="op">-</span> f_siatka) <span class="op">**</span> <span class="dv">2</span>, siatka) <span class="op">+</span> sigma <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    ax.plot(licznosci, blad_uczacy, <span class="st">"o-"</span>, color<span class="op">=</span><span class="st">"0.45"</span>,</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span><span class="st">"błąd na zbiorze uczącym"</span>)</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    ax.plot(licznosci, ryzyko, <span class="st">"o-"</span>, color<span class="op">=</span><span class="st">"#1B6CA8"</span>, label<span class="op">=</span><span class="st">"ryzyko"</span>)</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    ax.axhline(granica, color<span class="op">=</span><span class="st">"0.2"</span>, ls<span class="op">=</span><span class="st">"--"</span>, lw<span class="op">=</span><span class="fl">1.3</span>,</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>               label<span class="op">=</span><span class="vs">r"</span><span class="dv">$\s</span><span class="vs">igma</span><span class="dv">^</span><span class="vs">2</span><span class="dv">$</span><span class="vs"> </span><span class="op">+</span><span class="vs"> błąd aproksymacji"</span>)</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    ax.axhline(sigma <span class="op">**</span> <span class="dv">2</span>, color<span class="op">=</span><span class="st">"#D7263D"</span>, ls<span class="op">=</span><span class="st">":"</span>, lw<span class="op">=</span><span class="fl">1.5</span>,</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>               label<span class="op">=</span><span class="vs">r"</span><span class="dv">$\s</span><span class="vs">igma</span><span class="dv">^</span><span class="vs">2</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    ax.set_xscale(<span class="st">"log"</span>)</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    ax.set_yscale(<span class="st">"log"</span>)</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"$d = </span><span class="sc">{</span>d<span class="sc">}</span><span class="ss">$"</span>)</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"liczność próby uczącej $n$"</span>)</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].set_ylabel(<span class="st">"średni kwadrat błędu"</span>)</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].legend(frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-krzywe-uczenia" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-krzywe-uczenia-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-bias-wariancja_files/figure-html/fig-krzywe-uczenia-output-1.png" width="1046" height="373" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-krzywe-uczenia-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Rysunek&nbsp;4.4: Krzywe uczenia regresji wielomianowej stopnia <span class="math inline">\(d = 1\)</span> (po lewej) i <span class="math inline">\(d = 9\)</span> (po prawej): błąd na zbiorze uczącym i ryzyko w zależności od liczności próby <span class="math inline">\(n\)</span>. Punkty to średnie z 300 prób uczących. Linia przerywana: granica ryzyka przy <span class="math inline">\(n \to \infty\)</span>, równa sumie błędu nieredukowalnego i błędu aproksymacji. Linia kropkowana: błąd nieredukowalny <span class="math inline">\(\sigma^2\)</span>. Obie osie w skali logarytmicznej.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Dwa panele pokazują dwa typowe obrazy. Prosta szybko osiąga swoją granicę <span class="math inline">\(\sigma^2 + 0{,}196 \approx 0{,}286\)</span>, gdzie <span class="math inline">\(0{,}196\)</span> to błąd aproksymacji, i dalsze dane już nic nie dają. Krzywe błędu uczącego i ryzyka są blisko siebie, a obie leżą wysoko nad <span class="math inline">\(\sigma^2\)</span>. Tak wygląda model, którego ryzyko zdominowało obciążenie. Wielomian stopnia <span class="math inline">\(9\)</span> przy małym <span class="math inline">\(n\)</span> ma ogromne ryzyko i wielką szczelinę między ryzykiem a błędem uczącym. Tak wygląda model, którego ryzyko zdominowała wariancja. Z rosnącym <span class="math inline">\(n\)</span> szczelina się zamyka, a obie krzywe zbiegają do granicy praktycznie równej <span class="math inline">\(\sigma^2\)</span>, bo błąd aproksymacji wielomianu stopnia <span class="math inline">\(9\)</span> jest znikomy.</p>
+<p>Z porównania paneli wynika rzecz ważna dla praktyki: <strong>najlepsza elastyczność zależy od liczności próby</strong>. Przy <span class="math inline">\(n = 40\)</span> prosta ma ryzyko ponad dziesięć razy mniejsze niż wielomian stopnia <span class="math inline">\(9\)</span>, a już przy <span class="math inline">\(n = 100\)</span> – mniej więcej trzy razy większe. Nie ma modelu „właściwie złożonego” w oderwaniu od ilości danych.</p>
+<p>Krzywe uczenia odpowiadają też na pytanie diagnostyczne z rozdziału <a href="02-predyktory-optymalne.html" class="quarto-xref"><span>2</span></a>: czy wypłaszczenie ryzyka oznacza, że dotarliśmy do granicy zjawiska, czy że model jest za słaby? Szeroka szczelina między błędem uczącym a ryzykiem wskazuje na wariancję: pomoże więcej danych albo prostszy model. Wąska szczelina przy wysokim poziomie obu krzywych wskazuje, że więcej danych nie pomoże. Pojedyncza krzywa nie rozstrzyga jednak, czy jej granica to sam błąd nieredukowalny, czy błąd nieredukowalny powiększony o błąd aproksymacji. W lewym panelu wiemy, że to drugie, bo znamy <span class="math inline">\(\sigma^2\)</span>. W praktyce trzeba porównać różne klasy modeli: jeśli bogatsza klasa przy dużym <span class="math inline">\(n\)</span> schodzi niżej, ograniczała nas klasa. Jeśli żadna nie schodzi niżej, ograniczają nas zapewne cechy, a poprawę może dać tylko ich zmiana. W realnym problemie ryzyka nie znamy i krzywą uczenia trzeba szacować, czym zajmuje się rozdział <a href="05-ocena-modeli.html" class="quarto-xref"><span>5</span></a>.</p>
+</section>
+<section id="sec-kompromis-nieusuwalny" class="level2" data-number="4.8">
+<h2 data-number="4.8" class="anchored" data-anchor-id="sec-kompromis-nieusuwalny"><span class="header-section-number">4.8</span> Dlaczego kompromis jest nieusuwalny</h2>
+<p>W rozdziale <a href="02-predyktory-optymalne.html" class="quarto-xref"><span>2</span></a> zauważyliśmy, że gdybyśmy znali <span class="math inline">\(P\)</span> i mogli wybrać dowolną funkcję, żaden kompromis by nie istniał. Każdy kompromis bierze się z ograniczeń klasy modeli lub ze skończoności próby. Kompromis obciążenie–wariancja łączy oba te ograniczenia. Przy ustalonym <span class="math inline">\(n\)</span> obciążenie zmniejszamy, poszerzając klasę lub zawężając otoczenie, a każdy taki krok sprawia, że predyktor mocniej zależy od przypadkowych cech próby. Pokrętło elastyczności przesuwa błąd z jednego składnika do drugiego, ale nie usuwa go.</p>
+<p>Są dwa sposoby, by zmniejszyć oba składniki naraz. Pierwszy to więcej danych: przy większym <span class="math inline">\(n\)</span> ta sama elastyczność kosztuje mniej wariancji, więc optimum przesuwa się w stronę modeli bogatszych, jak w rysunku <a href="#fig-krzywe-uczenia" class="quarto-xref"><span>4.4</span></a>. Drugi to <strong>trafne założenie strukturalne</strong>. Jeśli <span class="math inline">\(\fopt\)</span> należy do małej klasy <span class="math inline">\(\mathcal{F}\)</span>, to metoda wybierająca z tej klasy ma zerowy błąd aproksymacji i małą wariancję. Gdyby <span class="math inline">\(\fopt\)</span> była liniowa, regresja liniowa z <span class="math inline">\(p\)</span> cechami miałaby zerowe obciążenie i wariancję rzędu <span class="math inline">\(\sigma^2 (p + 1)/n\)</span> (rozdział <a href="../2-modele-liniowe/06-regresja-liniowa.html" class="quarto-xref"><span>6</span></a>). Trafne założenie zastępuje dane. Nietrafne wprowadza obciążenie, którego żadna ilość danych nie usunie.</p>
+<section id="ile-kosztuje-elastyczność-w-wielu-wymiarach" class="level3" data-number="4.8.1">
+<h3 data-number="4.8.1" class="anchored" data-anchor-id="ile-kosztuje-elastyczność-w-wielu-wymiarach"><span class="header-section-number">4.8.1</span> Ile kosztuje elastyczność w wielu wymiarach</h3>
+<p>Jak drogie bywa nieprzyjmowanie żadnych założeń, pokazuje prosty rachunek dla metody <span class="math inline">\(k\)</span>-NN. Niech cechy mają rozkład jednostajny w kostce <span class="math inline">\([0, 1]^p\)</span>, szum ma wariancję <span class="math inline">\(\sigma^2\)</span>, a funkcja regresji spełnia warunek Lipschitza <span class="math inline">\(|\fopt(\x) - \fopt(\x')| \le L \max_j |x_j - x'_j|\)</span>, czyli nie zmienia się zbyt szybko. Rachunek jest przybliżony, ale jego wynik daje się uściślić <span class="citation" data-cites="gyorfi2002">(<a href="../references.html#ref-gyorfi2002" role="doc-biblioref">Györfi i in. 2002</a>)</span>.</p>
+<p>Z (<a href="03-knn.html#eq-bok-otoczenia" class="quarto-xref"><span>3.7</span></a>) otoczenie zawierające <span class="math inline">\(k\)</span> z <span class="math inline">\(n\)</span> punktów jest kostką o boku około <span class="math inline">\((k/n)^{1/p}\)</span>. Sąsiedzi leżą więc od <span class="math inline">\(\x\)</span> w odległości co najwyżej około połowy tego boku, a wartości <span class="math inline">\(\fopt\)</span> różnią się od <span class="math inline">\(\fopt(\x)\)</span> najwyżej o <span class="math inline">\(L\)</span> razy tyle. Z (<a href="#eq-knn-obciazenie-wariancja" class="quarto-xref"><span>4.6</span></a>) <span id="eq-knn-kompromis"><span class="math display">\[
+b(\x)^2 + v(\x) \;\lesssim\; \frac{L^2}{4} \Big(\frac{k}{n}\Big)^{2/p}
++ \frac{\sigma^2}{k} .
+\tag{4.10}\]</span></span> Pierwszy składnik rośnie z <span class="math inline">\(k\)</span>, drugi maleje. Minimalizując prawą stronę względem <span class="math inline">\(k\)</span>, otrzymujemy optymalną liczbę sąsiadów rzędu <span class="math inline">\(k^* \sim n^{2/(p+2)}\)</span> i nadwyżkę ryzyka nad <span class="math inline">\(\sigma^2\)</span> rzędu <span class="math display">\[
+n^{-2/(p+2)}
+\]</span> (<a href="#exr-tempo-knn" class="quarto-xref">Zadanie&nbsp;<span>4.9</span></a>). Optymalne <span class="math inline">\(k^*\)</span> rośnie z <span class="math inline">\(n\)</span>, ale wolniej niż <span class="math inline">\(n\)</span>, dokładnie tak, jak wymagają założenia twierdzenia <a href="03-knn.html#thm-stone" class="quarto-xref"><span>3.1</span></a>.</p>
+<p>Wykładnik <span class="math inline">\(2/(p+2)\)</span> maleje z wymiarem. Dla <span class="math inline">\(p = 1\)</span> nadwyżka ryzyka maleje jak <span class="math inline">\(n^{-2/3}\)</span>, dla <span class="math inline">\(p = 10\)</span> – jak <span class="math inline">\(n^{-1/6}\)</span>. Aby zmniejszyć ją o połowę, trzeba pomnożyć liczbę obserwacji przez <span class="math inline">\(2^{(p+2)/2}\)</span>: niecałe trzy razy dla <span class="math inline">\(p = 1\)</span>, cztery razy dla <span class="math inline">\(p = 2\)</span>, <span class="math inline">\(64\)</span> razy dla <span class="math inline">\(p = 10\)</span>, ponad <span class="math inline">\(2000\)</span> razy dla <span class="math inline">\(p = 20\)</span>. Jest to przekleństwo wymiarowości z sekcji <a href="03-knn.html#sec-przeklenstwo-wymiarowosci" class="quarto-xref"><span>3.6</span></a> w języku tego rozdziału: w wielu wymiarach otoczenia muszą być szerokie, żeby zawierały dość punktów, a szerokie otoczenia oznaczają duże obciążenie. Tego tempa nie poprawi przy tym żadna inna metoda. <span class="citation" data-cites="stone1982">Stone (<a href="../references.html#ref-stone1982" role="doc-biblioref">1982</a>)</span> wykazał, że przy samym założeniu Lipschitza <span class="math inline">\(n^{-2/(p+2)}\)</span> jest najlepszym tempem, jakie może zagwarantować jakikolwiek estymator. Ceną jest brak założeń, a nie słabość metody <span class="math inline">\(k\)</span>-NN. Model liniowy, jeśli jest trafny, osiąga tempo <span class="math inline">\(1/n\)</span> niezależnie od <span class="math inline">\(p\)</span>, ze stałą proporcjonalną do <span class="math inline">\(p + 1\)</span> – stąd przewaga, o której pisaliśmy pod koniec sekcji <a href="03-knn.html#sec-przeklenstwo-wymiarowosci" class="quarto-xref"><span>3.6</span></a>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Podwójne zejście
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Obraz z rysunku <a href="#fig-dekompozycja" class="quarto-xref"><span>4.3</span></a>, w którym wariancja rośnie nieograniczenie wraz z liczbą parametrów, nie jest prawem natury. <span class="citation" data-cites="belkin2019">Belkin i in. (<a href="../references.html#ref-belkin2019" role="doc-biblioref">2019</a>)</span> opisali zjawisko <strong>podwójnego zejścia</strong> (ang. <em>double descent</em>). Gdy liczba parametrów przekracza liczbę obserwacji, model może dopasować dane dokładnie na nieskończenie wiele sposobów. Jeśli algorytm wybiera spośród nich rozwiązanie w pewnym sensie najprostsze, na przykład o najmniejszej normie współczynników, ryzyko po przejściu przez maksimum w progu interpolacji może znów maleć. Rozkład z twierdzenia <a href="#thm-obciazenie-wariancja" class="quarto-xref"><span>4.1</span></a> nadal obowiązuje, bo jest tożsamością. Zmienia się tylko to, jak wariancja zależy od liczby parametrów. Do tego zjawiska wrócimy przy sieciach neuronowych (rozdział <a href="../4-poza-liniowoscia/12-mlp-backprop.html" class="quarto-xref"><span>12</span></a>).</p>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-bw-klasyfikacja" class="level2" data-number="4.9">
+<h2 data-number="4.9" class="anchored" data-anchor-id="sec-bw-klasyfikacja"><span class="header-section-number">4.9</span> Obciążenie i wariancja w klasyfikacji</h2>
+<p>Przy stracie 0–1 rozkład tak prosty jak (<a href="#eq-rozklad-obciazenie-wariancja" class="quarto-xref"><span>4.4</span></a>) nie istnieje. Zobaczmy dlaczego. Ograniczmy się do dwóch klas i reguły podstawienia <span class="math inline">\(\widehat g_{\mathcal{D}}(\x) = \ind\big(\widehat\eta_{\mathcal{D}}(\x)
+&gt; \tfrac12\big)\)</span>, takiej jak klasyfikator <span class="math inline">\(k\)</span>-NN.</p>
+<p>Ustalmy punkt <span class="math inline">\(\x\)</span>. Klasyfikator wskazujący w nim klasę <span class="math inline">\(1\)</span> myli się z prawdopodobieństwem <span class="math inline">\(1 - \eta(\x)\)</span>, wskazujący klasę <span class="math inline">\(0\)</span> – z prawdopodobieństwem <span class="math inline">\(\eta(\x)\)</span>. Klasyfikator bayesowski wybiera mniejszą z tych liczb. Jeśli <span class="math inline">\(\widehat g\)</span> wskazuje w punkcie <span class="math inline">\(\x\)</span> inną klasę niż <span class="math inline">\(\Bayes\)</span>, płaci więc nadwyżkę równą różnicy obu liczb, <span class="math inline">\(|2\eta(\x) - 1|\)</span>. Uśredniając po <span class="math inline">\(\X\)</span>, dostajemy <span id="eq-nadwyzka-ryzyka-01"><span class="math display">\[
+\Risk(\widehat g) - \Risk(\Bayes)
+= \E\Big[\, |2\eta(\X) - 1| \; \ind\big(\widehat g(\X) \ne \Bayes(\X)\big) \Big],
+\tag{4.11}\]</span></span> a po uśrednieniu po zbiorach uczących <span class="math display">\[
+\E_{\mathcal{D}}\big[\Risk(\widehat g_{\mathcal{D}})\big] - \Risk(\Bayes)
+= \E\Big[\, |2\eta(\X) - 1| \;
+\Prob_{\mathcal{D}}\big(\widehat g_{\mathcal{D}}(\X) \ne \Bayes(\X)\big) \Big].
+\]</span> Liczy się więc tylko prawdopodobieństwo, że oszacowanie <span class="math inline">\(\widehat\eta_{\mathcal{D}}(\x)\)</span> znajdzie się po złej stronie progu <span class="math inline">\(\tfrac12\)</span>. Niech na przykład <span class="math inline">\(\eta(\x) &gt; \tfrac12\)</span> i niech <span class="math inline">\(\widehat\eta_{\mathcal{D}}(\x)\)</span> ma w przybliżeniu rozkład normalny o średniej <span class="math inline">\(\bar\eta(\x)\)</span> i odchyleniu standardowym <span class="math inline">\(s(\x)\)</span>. Wtedy <span id="eq-klasyfikacja-obciazenie-wariancja"><span class="math display">\[
+\Prob_{\mathcal{D}}\big(\widehat g_{\mathcal{D}}(\x) \ne \Bayes(\x)\big)
+\approx \Phi\Big(\frac{\tfrac12 - \bar\eta(\x)}{s(\x)}\Big) .
+\tag{4.12}\]</span></span> Obciążenie i wariancja nie dodają się tu, tylko oddziałują <span class="citation" data-cites="friedman1997">(<a href="../references.html#ref-friedman1997" role="doc-biblioref">Friedman 1997</a>)</span>. Jeśli przeciętne oszacowanie leży po właściwej stronie progu (<span class="math inline">\(\bar\eta(\x) &gt; \tfrac12\)</span>), licznik jest ujemny i wzrost wariancji zwiększa prawdopodobieństwo błędu. Obciążenie może być wtedy duże i nic nie kosztować, dopóki nie przeprowadzi <span class="math inline">\(\bar\eta\)</span> przez próg. Jeśli przeciętne oszacowanie leży po złej stronie, licznik jest dodatni i wzrost wariancji prawdopodobieństwo błędu <strong>zmniejsza</strong>, bo częściej wyrzuca <span class="math inline">\(\widehat\eta\)</span> na właściwą stronę (<a href="#exr-obciazenie-01" class="quarto-xref">Zadanie&nbsp;<span>4.10</span></a>).</p>
+<p>Z tej obserwacji wynikają dwa praktyczne wnioski. Po pierwsze, w klasyfikacji liczy się przede wszystkim mała wariancja. Klasyfikator może opierać się na mocno obciążonych oszacowaniach prawdopodobieństw i mimo to klasyfikować dobrze. <span class="citation" data-cites="friedman1997">Friedman (<a href="../references.html#ref-friedman1997" role="doc-biblioref">1997</a>)</span> tłumaczy w ten sposób skuteczność prostych metod, takich jak naiwny klasyfikator Bayesa z rozdziału <a href="../3-probabilistyka/11-modele-generatywne.html" class="quarto-xref"><span>11</span></a>. Po drugie, ta tolerancja dotyczy wyłącznie decyzji podejmowanej progiem <span class="math inline">\(\tfrac12\)</span>. Gdy oszacowanie <span class="math inline">\(\widehat\eta\)</span> ma służyć regule kosztowej albo regule z opcją odmowy z sekcji <a href="02-predyktory-optymalne.html#sec-od-prawdopodobienstw-do-decyzji" class="quarto-xref"><span>2.5</span></a>, liczy się jego wartość, a nie tylko strona progu, i obciążenie znów kosztuje.</p>
+</section>
+<section id="uwagi-bibliograficzne" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="uwagi-bibliograficzne">Uwagi bibliograficzne</h2>
+<p>Kompromis obciążenie–wariancja w ujęciu bliskim temu rozdziałowi przedstawiają <span class="citation" data-cites="islp">James i in. (<a href="../references.html#ref-islp" role="doc-biblioref">2023, rozdz. 2.2</a>)</span> oraz <span class="citation" data-cites="esl">Hastie i in. (<a href="../references.html#ref-esl" role="doc-biblioref">2009, rozdz. 2.9 i 7.3</a>)</span>. Druga z tych książek omawia też optymizm błędu uczącego <span class="citation" data-cites="esl">(<a href="../references.html#ref-esl" role="doc-biblioref">Hastie i in. 2009, rozdz. 7.4</a>)</span>, różnicę między ryzykiem dopasowanego modelu a ryzykiem oczekiwanym metody <span class="citation" data-cites="esl">(<a href="../references.html#ref-esl" role="doc-biblioref">Hastie i in. 2009, rozdz. 7.2</a>)</span> oraz przykład, w którym przy stracie 0–1 składniki nie sumują się <span class="citation" data-cites="esl">(<a href="../references.html#ref-esl" role="doc-biblioref">Hastie i in. 2009, rozdz. 7.3</a>)</span>. <span class="citation" data-cites="bishop2006">Bishop (<a href="../references.html#ref-bishop2006" role="doc-biblioref">2006, rozdz. 3.2</a>)</span> wyprowadza rozkład dla regresji z funkcjami bazowymi i podkreśla jego ograniczoną wartość praktyczną: wymaga uśredniania po wielu zbiorach uczących, podczas gdy w praktyce mamy jeden.</p>
+<p>Nazwę „dylemat obciążenie–wariancja” rozpowszechnili <span class="citation" data-cites="geman1992">Geman i in. (<a href="../references.html#ref-geman1992" role="doc-biblioref">1992</a>)</span>, którzy pokazali, że ten sam kompromis rządzi estymatorami jądrowymi, metodą najbliższych sąsiadów i sieciami neuronowymi. Rozkład na błąd aproksymacji i błąd estymacji, centralny w teorii uczenia, wykładają <span class="citation" data-cites="shalevshwartz2014">Shalev-Shwartz i Ben-David (<a href="../references.html#ref-shalevshwartz2014" role="doc-biblioref">2014, rozdz. 5</a>)</span>. Ścisłą analizę tempa zbieżności nieparametrycznych estymatorów regresji, w tym metody <span class="math inline">\(k\)</span>-NN, zawiera <span class="citation" data-cites="gyorfi2002">Györfi i in. (<a href="../references.html#ref-gyorfi2002" role="doc-biblioref">2002</a>)</span>. Optymalność tempa <span class="math inline">\(n^{-2/(p+2)}\)</span> dla funkcji Lipschitza, w ogólniejszej postaci dla klas funkcji gładkich, udowodnił <span class="citation" data-cites="stone1982">Stone (<a href="../references.html#ref-stone1982" role="doc-biblioref">1982</a>)</span>.</p>
+<p>Oddziaływanie obciążenia i wariancji przy stracie 0–1 i jego związek z przekleństwem wymiarowości analizuje <span class="citation" data-cites="friedman1997">Friedman (<a href="../references.html#ref-friedman1997" role="doc-biblioref">1997</a>)</span>. Zjawisko podwójnego zejścia i jego miejsce względem klasycznego kompromisu opisują <span class="citation" data-cites="belkin2019">Belkin i in. (<a href="../references.html#ref-belkin2019" role="doc-biblioref">2019</a>)</span>.</p>
+</section>
+<section id="zadania" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="zadania">Zadania</h2>
+<div id="exr-estymator-sciagajacy" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 4.1</strong></span> Niech <span class="math inline">\(Y_1, \dots, Y_n\)</span> będzie próbą z rozkładu o średniej <span class="math inline">\(\mu \ne 0\)</span> i wariancji <span class="math inline">\(\sigma^2\)</span>, a <span class="math inline">\(\widehat\mu_c = c\bar Y\)</span> dla <span class="math inline">\(c \in \R\)</span>.</p>
+<ol type="a">
+<li>Wyznacz obciążenie, wariancję i błąd średniokwadratowy <span class="math inline">\(\widehat\mu_c\)</span>.</li>
+<li>Wykaż, że błąd średniokwadratowy jest najmniejszy dla <span class="math inline">\(c^* = \mu^2 / (\mu^2 + \sigma^2/n)\)</span>, i wyznacz jego wartość w minimum. Sprawdź liczby podane w sekcji <a href="#sec-obciazenie-wariancja-estymatora" class="quarto-xref"><span>4.3</span></a>.</li>
+<li>Wyraź <span class="math inline">\(c^*\)</span> przez stosunek sygnału do szumu <span class="math inline">\(\mu^2/(\sigma^2/n)\)</span>. Kiedy ściąganie daje duży zysk, a kiedy prawie żaden?</li>
+<li>Dlaczego <span class="math inline">\(\widehat\mu_{c^*}\)</span> nie jest estymatorem, którego można użyć w praktyce? Co by się stało, gdyby w miejsce <span class="math inline">\(\mu\)</span> podstawić <span class="math inline">\(\bar Y\)</span>?</li>
+</ol>
+</div>
+<div id="exr-rozklad-obciazenie-wariancja" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 4.2</strong></span> &nbsp;</p>
+<ol type="a">
+<li>Wskaż miejsce w dowodzie twierdzenia <a href="#thm-obciazenie-wariancja" class="quarto-xref"><span>4.1</span></a>, w którym korzystamy z niezależności <span class="math inline">\(Y_0\)</span> od zbioru uczącego. Rozważ regułę jednego najbliższego sąsiada i „nową” obserwację, która jest w istocie jedną z obserwacji uczących: <span class="math inline">\(\x_0 = \x_i\)</span>, <span class="math inline">\(Y_0 = y_i\)</span>. Ile wynosi wtedy lewa strona (<a href="#eq-rozklad-obciazenie-wariancja" class="quarto-xref"><span>4.4</span></a>), a ile prawa? Skąd bierze się różnica?</li>
+<li>Wyprowadź (<a href="#eq-rozklad-obciazenie-wariancja-globalny" class="quarto-xref"><span>4.5</span></a>) z (<a href="#eq-rozklad-obciazenie-wariancja" class="quarto-xref"><span>4.4</span></a>). Jakiego założenia o <span class="math inline">\(\X_0\)</span> potrzebujesz?</li>
+<li>Szumy mają stałą wariancję <span class="math inline">\(\sigma^2\)</span>, a punkty uczące są ustalone i parami różne. Wyznacz obciążenie, wariancję i oczekiwany błąd predykcji w punkcie <span class="math inline">\(\x_0\)</span> pokrywającym się z jednym z punktów uczących dla dwóch skrajnych predyktorów: stałego <span class="math inline">\(\widehat f \equiv 0\)</span> oraz reguły jednego najbliższego sąsiada. Kiedy predyktor stały jest lepszy?</li>
+</ol>
+</div>
+<div id="exr-knn-ustalony-uklad" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 4.3</strong></span> Punkty uczące leżą na siatce <span class="math inline">\(x_i = i/n\)</span>, <span class="math inline">\(i = 1, \dots, n\)</span>, a <span class="math inline">\(Y_i = \fopt(x_i) + \varepsilon_i\)</span> z niezależnymi szumami o wariancji <span class="math inline">\(\sigma^2\)</span>. Rozważ regresję <span class="math inline">\(k\)</span>-NN z <span class="math inline">\(k = 2m + 1\)</span> w punkcie <span class="math inline">\(x_0 = x_j\)</span> leżącym na tyle daleko od krańców, by sąsiedzi leżeli symetrycznie.</p>
+<ol type="a">
+<li>Wykaż, że dla <span class="math inline">\(\fopt(x) = ax + c\)</span> obciążenie w <span class="math inline">\(x_0\)</span> jest zerowe. Co się zmienia, gdy <span class="math inline">\(x_0 = x_1\)</span> leży na krańcu przedziału?</li>
+<li>Wykaż, że dla <span class="math inline">\(\fopt(x) = x^2\)</span> obciążenie wynosi <span class="math inline">\(m(m+1)/(3n^2)\)</span>. (Wskazówka: <span class="math inline">\(\sum_{j=-m}^{m} j^2 = m(m+1)(2m+1)/3\)</span>.)</li>
+<li>Dla <span class="math inline">\(n = 100\)</span> i <span class="math inline">\(\sigma = 0{,}1\)</span> wyznacz numerycznie <span class="math inline">\(m\)</span> minimalizujące oczekiwany błąd predykcji w <span class="math inline">\(x_0\)</span> dla <span class="math inline">\(\fopt(x) = x^2\)</span>. Jak zmienia się wynik, gdy <span class="math inline">\(\fopt(x) = 10x^2\)</span>? Wyjaśnij kierunek zmiany.</li>
+</ol>
+</div>
+<div id="exr-optymizm-knn" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 4.4</strong></span> W sytuacji z zadania <a href="#exr-knn-ustalony-uklad" class="quarto-xref"><span>4.3</span></a> (ustalone, parami różne punkty <span class="math inline">\(x_i\)</span>) niech <span class="math inline">\(Y'_i\)</span> będzie nową, niezależną obserwacją wyniku w punkcie <span class="math inline">\(x_i\)</span>, o tym samym rozkładzie co <span class="math inline">\(Y_i\)</span>. Wykaż, że dla regresji <span class="math inline">\(k\)</span>-NN <span class="math display">\[
+\E\Big[\frac1n \sum_{i=1}^{n} (Y'_i - \widehat f(x_i))^2\Big]
+- \E\Big[\frac1n \sum_{i=1}^{n} (Y_i - \widehat f(x_i))^2\Big]
+= \frac{2\sigma^2}{k} .
+\]</span> (Wskazówka: każdy punkt <span class="math inline">\(x_i\)</span> należy do swojego własnego otoczenia; rozpisz <span class="math inline">\(\Cov(Y_i, \widehat f(x_i))\)</span>.) Sprawdź wynik dla <span class="math inline">\(k = 1\)</span> (por. <a href="01-czym-jest-model.html#exr-ryzyko-1nn" class="quarto-xref">Zadanie&nbsp;<span>1.6</span></a>). Co ten wzór mówi o błędzie uczącym jako ocenie ryzyka przy małym <span class="math inline">\(k\)</span>?</p>
+</div>
+<div id="exr-aproksymacja-stale" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 4.5</strong></span> Rozważ klasę funkcji stałych <span class="math inline">\(\mathcal{F}_0\)</span> i rozkład z tego rozdziału: <span class="math inline">\(X\)</span> jednostajny na <span class="math inline">\([0, 1]\)</span>, <span class="math inline">\(\fopt(x) = \sin(2\pi x) + x/2\)</span>, szum o wariancji <span class="math inline">\(\sigma^2\)</span>. Predyktorem jest średnia <span class="math inline">\(\bar Y\)</span> z próby.</p>
+<ol type="a">
+<li>Wyznacz <span class="math inline">\(f_{\mathcal{F}_0}\)</span> i błąd aproksymacji. Wykaż, że ten drugi jest równy <span class="math inline">\(\Var\fopt(X) = \tfrac12 + \tfrac1{48} - \tfrac1{2\pi}
+\approx 0{,}362\)</span>.</li>
+<li>Wyznacz <span class="math inline">\(\bar f\)</span> i oczekiwany błąd estymacji. Wykaż, że składnik <span class="math inline">\(\|\bar f - f_{\mathcal{F}_0}\|^2\)</span> z twierdzenia <a href="#thm-aproksymacja-obciazenie" class="quarto-xref"><span>4.2</span></a> jest tu równy zeru.</li>
+<li>Wyznacz obciążenie <span class="math inline">\(b(x)\)</span> w punkcie. Jest ono duże w niektórych punktach, choć <span class="math inline">\(\bar f = f_{\mathcal{F}_0}\)</span>. Jak to pogodzić z twierdzeniem <a href="#thm-aproksymacja-obciazenie" class="quarto-xref"><span>4.2</span></a>?</li>
+<li>Porównaj wyniki z pierwszymi wierszami zestawienia w sekcji <a href="#sec-aproksymacja-estymacja" class="quarto-xref"><span>4.6</span></a> dla <span class="math inline">\(n = 50\)</span> i <span class="math inline">\(\sigma = 0{,}3\)</span>.</li>
+</ol>
+</div>
+<div id="exr-wielomiany-dekompozycja" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 4.6</strong></span> Rozwiń symulację z zadania <a href="01-czym-jest-model.html#exr-wielomiany" class="quarto-xref"><span>1.14</span></a>. Dla <span class="math inline">\(n = 30\)</span> i stopni <span class="math inline">\(d = 1, \dots, 10\)</span>:</p>
+<ol type="a">
+<li>wylosuj <span class="math inline">\(500\)</span> zbiorów uczących i w punktach <span class="math inline">\(x_0 = 0{,}5\)</span> oraz <span class="math inline">\(x_0 = 0{,}95\)</span> oszacuj obciążenie, wariancję i oczekiwany błąd predykcji <span class="math inline">\(\E\big[(Y_0 - \widehat f(x_0))^2\big]\)</span>, losując <span class="math inline">\(Y_0\)</span> niezależnie;</li>
+<li>sprawdź, że suma obciążenia do kwadratu, wariancji i <span class="math inline">\(\sigma^2\)</span> zgadza się z oczekiwanym błędem predykcji z dokładnością do błędu symulacji;</li>
+<li>porównaj optymalne stopnie w obu punktach i wyjaśnij różnicę, odwołując się do rysunku <a href="#fig-wachlarz" class="quarto-xref"><span>4.2</span></a>.</li>
+</ol>
+</div>
+<div id="exr-krzywa-uczenia-knn" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 4.7</strong></span> Narysuj krzywe uczenia regresji <span class="math inline">\(k\)</span>-NN dla rozkładu z tego rozdziału, dla <span class="math inline">\(n\)</span> od <span class="math inline">\(20\)</span> do <span class="math inline">\(5000\)</span>, w dwóch wariantach: ze stałym <span class="math inline">\(k = 5\)</span> i z <span class="math inline">\(k = \lceil \sqrt{n}\, \rceil\)</span>.</p>
+<ol type="a">
+<li>Do jakiej granicy dąży ryzyko w każdym wariancie? (Wskazówka: dla stałego <span class="math inline">\(k\)</span> obciążenie znika przy <span class="math inline">\(n \to \infty\)</span>, a wariancja nie.)</li>
+<li>Porównaj wynik wariantu ze stałym <span class="math inline">\(k\)</span> z twierdzeniem Covera–Harta (<a href="03-knn.html#thm-cover-hart" class="quarto-xref">Twierdzenie&nbsp;<span>3.2</span></a>). Który składnik ryzyka odpowiada za to, że reguła ze stałym <span class="math inline">\(k\)</span> nie jest zgodna?</li>
+<li>Jak zachowuje się szczelina między ryzykiem a błędem uczącym w obu wariantach?</li>
+</ol>
+</div>
+<div id="exr-usrednianie-predyktorow" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 4.8</strong></span> Mamy <span class="math inline">\(B\)</span> predyktorów <span class="math inline">\(\widehat f_1, \dots, \widehat f_B\)</span> o tym samym rozkładzie, z których każdy w punkcie <span class="math inline">\(\x_0\)</span> ma obciążenie <span class="math inline">\(b\)</span> i wariancję <span class="math inline">\(v\)</span>. Rozważ ich średnią <span class="math inline">\(\widehat f_{\mathrm{sr}} = \frac1B \sum_{j=1}^{B} \widehat f_j\)</span>.</p>
+<ol type="a">
+<li>Wyznacz obciążenie i wariancję <span class="math inline">\(\widehat f_{\mathrm{sr}}(\x_0)\)</span>, gdy predyktory wyznaczono z niezależnych zbiorów uczących.</li>
+<li>Powtórz rachunek przy założeniu, że każde dwa predyktory mają w punkcie <span class="math inline">\(\x_0\)</span> współczynnik korelacji <span class="math inline">\(\rho &gt; 0\)</span>. Wykaż, że wariancja średniej wynosi <span class="math inline">\(\rho v + (1 - \rho) v / B\)</span> i nie spada poniżej <span class="math inline">\(\rho v\)</span> niezależnie od <span class="math inline">\(B\)</span>.</li>
+<li>W praktyce mamy jeden zbiór uczący. Predyktory można wyznaczyć z próbek losowanych z niego ze zwracaniem (metoda bootstrap, rozdział <a href="05-ocena-modeli.html" class="quarto-xref"><span>5</span></a>). Dlaczego będą one skorelowane? Dla której z metod tego rozdziału, wielomianów niskiego czy wysokiego stopnia, spodziewasz się większego zysku z uśredniania?</li>
+</ol>
+</div>
+<div id="exr-tempo-knn" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 4.9</strong></span> &nbsp;</p>
+<ol type="a">
+<li>Wyznacz <span class="math inline">\(k\)</span> minimalizujące prawą stronę (<a href="#eq-knn-kompromis" class="quarto-xref"><span>4.10</span></a>), traktując <span class="math inline">\(k\)</span> jako zmienną ciągłą. Wykaż, że <span class="math inline">\(k^*\)</span> jest rzędu <span class="math inline">\(n^{2/(p+2)}\)</span>, a oba składniki w optimum – rzędu <span class="math inline">\(n^{-2/(p+2)}\)</span>.</li>
+<li>Wykaż, że <span class="math inline">\(k^* \to \infty\)</span> i <span class="math inline">\(k^*/n \to 0\)</span> przy <span class="math inline">\(n \to \infty\)</span>. Porównaj z założeniami twierdzenia <a href="03-knn.html#thm-stone" class="quarto-xref"><span>3.1</span></a>.</li>
+<li>O ile trzeba zwiększyć <span class="math inline">\(n\)</span>, aby nadwyżka ryzyka spadła o połowę? Podaj wynik dla <span class="math inline">\(p = 1, 2, 5, 10, 20\)</span>.</li>
+<li>Zastąp warunek Lipschitza warunkiem <span class="math inline">\(|\fopt(\x) - \fopt(\x')| \le L\)</span> dla wszystkich <span class="math inline">\(\x, \x'\)</span> (funkcja ograniczona, ale dowolnie nieregularna). Co rachunek mówi wtedy o tempie? Odnieś wynik do uwagi „Zbieżność nie znaczy »szybko«” z rozdziału <a href="03-knn.html" class="quarto-xref"><span>3</span></a>.</li>
+</ol>
+</div>
+<div id="exr-obciazenie-01" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 4.10</strong></span> W punkcie <span class="math inline">\(\x\)</span> prawdziwe prawdopodobieństwo klasy <span class="math inline">\(1\)</span> wynosi <span class="math inline">\(\eta(\x) = 0{,}7\)</span>, a oszacowanie <span class="math inline">\(\widehat\eta_{\mathcal{D}}(\x)\)</span> ma rozkład normalny o średniej <span class="math inline">\(\bar\eta\)</span> i odchyleniu standardowym <span class="math inline">\(s\)</span>.</p>
+<ol type="a">
+<li>Dla <span class="math inline">\(\bar\eta \in \{0{,}65;\ 0{,}55;\ 0{,}45\}\)</span> i <span class="math inline">\(s \in \{0{,}05;\ 0{,}1;\ 0{,}2\}\)</span> oblicz prawdopodobieństwo, że klasyfikator <span class="math inline">\(\ind(\widehat\eta &gt; \tfrac12)\)</span> wskaże w <span class="math inline">\(\x\)</span> inną klasę niż klasyfikator bayesowski, oraz błąd średniokwadratowy <span class="math inline">\(\E\big[(\widehat\eta - \eta)^2\big]\)</span>.</li>
+<li>Wskaż pary oszacowań, w których mniejszy błąd średniokwadratowy idzie w parze z większym prawdopodobieństwem złej klasyfikacji.</li>
+<li>Dla <span class="math inline">\(\bar\eta = 0{,}45\)</span> wyznacz granicę prawdopodobieństwa błędnej decyzji przy <span class="math inline">\(s \to \infty\)</span> i przy <span class="math inline">\(s \to 0\)</span>. Zinterpretuj wynik.</li>
+<li>Sprawdź symulacyjnie, że opisane zjawisko występuje dla klasyfikatora <span class="math inline">\(k\)</span>-NN, wybierając punkt, w którym przy dużym <span class="math inline">\(k\)</span> oszacowanie <span class="math inline">\(\bar\eta\)</span> przechodzi na złą stronę progu.</li>
+</ol>
+</div>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-belkin2019" class="csl-entry" role="listitem">
+Belkin, Mikhail, Daniel Hsu, Siyuan Ma i Soumik Mandal. 2019. <span>„Reconciling Modern Machine-Learning Practice and the Classical Bias–Variance Trade-Off”</span>. <em>Proceedings of the National Academy of Sciences</em> 116 (32): 15849–54. <a href="https://doi.org/10.1073/pnas.1903070116">https://doi.org/10.1073/pnas.1903070116</a>.
+</div>
+<div id="ref-bishop2006" class="csl-entry" role="listitem">
+Bishop, Christopher M. 2006. <em>Pattern Recognition and Machine Learning</em>. <span>Information Science and Statistics</span>. Springer.
+</div>
+<div id="ref-friedman1997" class="csl-entry" role="listitem">
+Friedman, Jerome H. 1997. <span>„On Bias, Variance, 0/1–Loss, and the Curse-of-Dimensionality”</span>. <em>Data Mining and Knowledge Discovery</em> 1 (1): 55–77. <a href="https://doi.org/10.1023/A:1009778005914">https://doi.org/10.1023/A:1009778005914</a>.
+</div>
+<div id="ref-geman1992" class="csl-entry" role="listitem">
+Geman, Stuart, Elie Bienenstock i René Doursat. 1992. <span>„Neural Networks and the Bias/Variance Dilemma”</span>. <em>Neural Computation</em> 4 (1): 1–58. <a href="https://doi.org/10.1162/neco.1992.4.1.1">https://doi.org/10.1162/neco.1992.4.1.1</a>.
+</div>
+<div id="ref-gyorfi2002" class="csl-entry" role="listitem">
+Györfi, László, Michael Kohler, Adam Krzyżak i Harro Walk. 2002. <em>A Distribution-Free Theory of Nonparametric Regression</em>. <span>Springer Series in Statistics</span>. Springer. <a href="https://doi.org/10.1007/b97848">https://doi.org/10.1007/b97848</a>.
+</div>
+<div id="ref-esl" class="csl-entry" role="listitem">
+Hastie, Trevor, Robert Tibshirani i Jerome Friedman. 2009. <em>The Elements of Statistical Learning: Data Mining, Inference, and Prediction</em>. 2. wyd. Springer.
+</div>
+<div id="ref-islp" class="csl-entry" role="listitem">
+James, Gareth, Daniela Witten, Trevor Hastie, Robert Tibshirani i Jonathan Taylor. 2023. <em>An Introduction to Statistical Learning with Applications in Python</em>. <span>Springer Texts in Statistics</span>. Springer.
+</div>
+<div id="ref-shalevshwartz2014" class="csl-entry" role="listitem">
+Shalev-Shwartz, Shai i Shai Ben-David. 2014. <em>Understanding Machine Learning: From Theory to Algorithms</em>. Cambridge University Press. <a href="https://doi.org/10.1017/CBO9781107298019">https://doi.org/10.1017/CBO9781107298019</a>.
+</div>
+<div id="ref-stone1982" class="csl-entry" role="listitem">
+Stone, Charles J. 1982. <span>„Optimal Global Rates of Convergence for Nonparametric Regression”</span>. <em>The Annals of Statistics</em> 10 (4): 1040–53. <a href="https://doi.org/10.1214/aos/1176345969">https://doi.org/10.1214/aos/1176345969</a>.
+</div>
+</div>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -808,8 +1482,8 @@ window.Quarto = {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../1-fundamenty/03-knn.html" class="pagination-link" aria-label="Klasyfikator $k$ najbliższych sąsiadów">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Klasyfikator <span class="math inline">\(k\)</span> najbliższych sąsiadów</span></span>
+      <a href="../1-fundamenty/03-knn.html" class="pagination-link" aria-label="Metoda $k$ najbliższych sąsiadów">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Metoda <span class="math inline">\(k\)</span> najbliższych sąsiadów</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
