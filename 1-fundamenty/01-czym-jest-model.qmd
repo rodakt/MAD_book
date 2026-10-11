@@ -492,6 +492,31 @@ lecz przekształceniem podanego wzoru na funkcję prawdopodobieństwa lub
 gęstość warunkową. Cała jego treść leży w interpretacji obu czynników
 i w tym, że zależność, która nas interesuje,
 mieści się wyłącznie w drugim z nich.
+
+**Przypadek mieszany.** W klasyfikacji cechy są często ciągłe, a wynik
+dyskretny. Funkcja $p(\x,y)$ jest wtedy gęstością względem $\x$
+i prawdopodobieństwem względem $y$:
+
+$$
+\Prob(\X\in A,\,Y=y)=\int_A p(\x,y)\,d\x .
+$$
+
+Rozkład brzegowy cech dostajemy, sumując po $y$: $p(\x)=\sum_y p(\x,y)$,
+a rozkład wyniku -- całkując po $\x$: $\Prob(Y=y)=\int p(\x,y)\,d\x$.
+Taki rozkład najłatwiej zadać w kolejności odwrotnej niż
+w ([-@eq-rozklad-laczny]): przez prawdopodobieństwa klas
+$\pi_y=\Prob(Y=y)$ i gęstości cech w obrębie klas $p(\x\mid Y=y)$,
+
+$$
+p(\x,y)=\pi_y\,p(\x\mid Y=y).
+$$
+
+Podstawienie tego iloczynu do definicji rozkładu warunkowego daje wzór
+Bayesa
+
+$$
+p(y\mid\x)=\frac{\pi_y\,p(\x\mid Y=y)}{\sum_{y'}\pi_{y'}\,p(\x\mid Y=y')} .
+$$ {#eq-bayes-klasy}
 :::
 
 Pierwszy czynnik, $p(\x)$, opisuje **rozkład brzegowy** cech. Mówi, gdzie

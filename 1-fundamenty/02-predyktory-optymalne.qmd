@@ -644,18 +644,27 @@ pytanie, jak dobrze estymują $\eta_k(\x)$, i pozwala wiedzieć,
 kiedy przestać. Poniższy eksperyment pokazuje jedno i drugie na przykładzie,
 w którym błąd bayesowski znamy dokładnie.
 
-Rozważmy dwie równoliczne klasy o rozkładach $\Nrozk(-\mu, 1)$ i
-$\Nrozk(\mu, 1)$ na prostej. Z symetrii $\eta(x) = \Prob(Y=1 \mid X=x) > \tfrac12$
-dokładnie dla $x > 0$, więc reguła bayesowska to $\Bayes(x) = \ind(x > 0)$,
-a błąd bayesowski wynosi
+Rozważmy dwie równoliczne klasy, $\pi_0 = \pi_1 = \tfrac12$, i jedną
+cechę $X$, która w klasie $0$ ma rozkład $\Nrozk(-\mu, 1)$, a w klasie $1$
+rozkład $\Nrozk(\mu, 1)$, $\mu > 0$. Oznaczając przez $\varphi$ gęstość,
+a przez $\Phi$ dystrybuantę rozkładu normalnego standardowego, mamy
+$p(x \mid Y=0) = \varphi(x + \mu)$ i $p(x \mid Y=1) = \varphi(x - \mu)$.
+Cecha jest ciągła, a klasa dyskretna, więc
+$\eta(x) = \Prob(Y=1 \mid X=x)$ wyznaczamy ze wzoru Bayesa
+([-@eq-bayes-klasy]):
 $$
-\Risk^{*} = \Prob\big(\Nrozk(\mu, 1) < 0\big) = \Phi(-\mu),
+\eta(x) = \frac{\varphi(x - \mu)}{\varphi(x - \mu) + \varphi(x + \mu)}
+= \frac{1}{1 + e^{-2\mu x}} .
 $$
-gdzie $\Phi$ to dystrybuanta rozkładu normalnego standardowego.
+Zatem $\eta(x) > \tfrac12$ dokładnie dla $x > 0$, reguła
+bayesowska to $\Bayes(x) = \ind(x > 0)$, a błąd bayesowski wynosi
+$$
+\Risk^{*} = \Prob\big(\Nrozk(\mu, 1) < 0\big) = \Phi(-\mu).
+$$
 
 ```{python}
 #| label: fig-blad-bayesa
-#| fig-cap: "Ryzyko klasyfikatora $k$-NN w zależności od liczności próby uczącej, dla dwóch klas $\\Nrozk(\\pm 1, 1)$. Punkty to średnie z 25 niezależnych prób uczących, wąsy -- kwantyle rzędu $0{,}1$ i $0{,}9$. Błąd bayesowski $\\Phi(-1) \\approx 0{,}1587$ wyznacza poziom, poniżej którego nie schodzi żaden klasyfikator, niezależnie od liczby obserwacji."
+#| fig-cap: "Ryzyko klasyfikatora $k$-NN w zależności od liczności próby uczącej; cecha ma w klasach rozkłady $\\Nrozk(-1, 1)$ i $\\Nrozk(1, 1)$. Punkty to średnie z 25 niezależnych prób uczących, wąsy -- kwantyle rzędu $0{,}1$ i $0{,}9$. Błąd bayesowski $\\Phi(-1) \\approx 0{,}1587$ wyznacza poziom, poniżej którego nie schodzi żaden klasyfikator, niezależnie od liczby obserwacji."
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -815,7 +824,8 @@ bayesowski spada poniżej 1%?
 
 ::: {#exr-niezrownowazone-klasy}
 Zmodyfikuj eksperyment z @fig-blad-bayesa tak, aby klasy miały
-prawdopodobieństwa a priori $0{,}9$ i $0{,}1$. Wyznacz nowy błąd
+prawdopodobieństwa a priori $\pi_0 = 0{,}9$ i $\pi_1 = 0{,}1$
+(klasa $0$ to ta, w której $X \sim \Nrozk(-\mu, 1)$). Wyznacz nowy błąd
 bayesowski i porównaj go z błędem klasyfikatora trywialnego, który zawsze
 wskazuje klasę częstszą. Kiedy $k$-NN zaczyna być od niego lepszy?
 :::
@@ -858,15 +868,17 @@ Co to mówi o odporności obu predyktorów?
 :::
 
 ::: {#exr-taksowki}
-W mieście jeżdżą taksówki dwóch przedsiębiorstw: $85\%$ z nich należy
-do Zielonego, $15\%$ do Niebieskiego. Jedna z taksówek spowodowała
-wypadek i odjechała. Świadek zeznaje, że była niebieska. Badanie
-świadka wykazało, że w podobnych warunkach myli kolor w $20\%$
-przypadków, niezależnie od tego, jaki kolor widzi (problem Kahnemana
-i Tversky'ego). Potraktujmy zeznanie świadka jako cechę $X$,
-a przedsiębiorstwo -- jako klasę $Y$, z klasą pozytywną Niebieskie.
+Oto klasyczny problem taksówek Kahnemana i Tversky'ego
+[@kahneman2011, rozdz. 16]. W mieście jeżdżą taksówki dwóch
+przedsiębiorstw: $85\%$ z nich należy do spółki Zielony, $15\%$ do
+spółki Niebieski. Jedna z taksówek spowodowała wypadek i odjechała.
+Świadek zeznaje, że była niebieska. Test wiarygodności wykazał, że
+w warunkach takich jak w chwili wypadku świadek myli kolor
+w $20\%$ przypadków, niezależnie od tego, jaki kolor widzi. Potraktujmy
+zeznanie świadka jako cechę $X$, a przedsiębiorstwo -- jako klasę $Y$,
+z klasą pozytywną Niebieski.
 
-a) Wyznacz $\eta(x)=\Prob(Y=\text{Niebieskie}\mid X=x)$ dla obu
+a) Wyznacz $\eta(x)=\Prob(Y=\text{Niebieski}\mid X=x)$ dla obu
    możliwych zeznań. Czy zeznanie niesie informację o klasie?
 b) Wyznacz klasyfikator bayesowski przy stracie 0--1 i jego błąd.
    Porównaj go z błędem reguły „wierz świadkowi” oraz klasyfikatora
@@ -874,9 +886,9 @@ b) Wyznacz klasyfikator bayesowski przy stracie 0--1 i jego błąd.
 c) Przy jakim prawdopodobieństwie pomyłki świadka jego zeznanie
    zaczyna zmieniać decyzję klasyfikatora bayesowskiego przy stracie
    0--1?
-d) Załóżmy, że niesłuszne oczyszczenie Niebieskiego kosztuje $c$ razy
+d) Załóżmy, że niesłuszne oczyszczenie spółki Niebieski kosztuje $c$ razy
    więcej niż niesłuszne obwinienie. Korzystając
    z ([-@eq-regula-kosztowa]), wyznacz najmniejsze $c$, przy którym
-   zeznanie „niebieska” prowadzi do decyzji Niebieskie. Odnieś wynik do
+   zeznanie „niebieska” prowadzi do decyzji Niebieski. Odnieś wynik do
    ramki „Dobry model, zły próg”.
 :::

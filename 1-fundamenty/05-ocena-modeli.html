@@ -20,7 +20,61 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -299,8 +353,40 @@ window.Quarto = {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Spis treści</h2>
+   
+  <ul>
+  <li><a href="#sec-trzy-pytania" id="toc-sec-trzy-pytania" class="nav-link active" data-scroll-target="#sec-trzy-pytania"><span class="header-section-number">5.1</span> Trzy pytania</a></li>
+  <li><a href="#sec-zbior-testowy" id="toc-sec-zbior-testowy" class="nav-link" data-scroll-target="#sec-zbior-testowy"><span class="header-section-number">5.2</span> Zbiór testowy</a>
+  <ul class="collapse">
+  <li><a href="#niepewność-oszacowania" id="toc-niepewność-oszacowania" class="nav-link" data-scroll-target="#niepewność-oszacowania"><span class="header-section-number">5.2.1</span> Niepewność oszacowania</a></li>
+  <li><a href="#porównanie-dwóch-modeli" id="toc-porównanie-dwóch-modeli" class="nav-link" data-scroll-target="#porównanie-dwóch-modeli"><span class="header-section-number">5.2.2</span> Porównanie dwóch modeli</a></li>
+  <li><a href="#cena-odłożenia-danych" id="toc-cena-odłożenia-danych" class="nav-link" data-scroll-target="#cena-odłożenia-danych"><span class="header-section-number">5.2.3</span> Cena odłożenia danych</a></li>
+  </ul></li>
+  <li><a href="#sec-zbior-walidacyjny" id="toc-sec-zbior-walidacyjny" class="nav-link" data-scroll-target="#sec-zbior-walidacyjny"><span class="header-section-number">5.3</span> Zbiór walidacyjny</a></li>
+  <li><a href="#sec-walidacja-krzyzowa" id="toc-sec-walidacja-krzyzowa" class="nav-link" data-scroll-target="#sec-walidacja-krzyzowa"><span class="header-section-number">5.4</span> Walidacja krzyżowa</a>
+  <ul class="collapse">
+  <li><a href="#loocv-bez-ponownego-dopasowania" id="toc-loocv-bez-ponownego-dopasowania" class="nav-link" data-scroll-target="#loocv-bez-ponownego-dopasowania"><span class="header-section-number">5.4.1</span> LOOCV bez ponownego dopasowania</a></li>
+  <li><a href="#ile-części" id="toc-ile-części" class="nav-link" data-scroll-target="#ile-części"><span class="header-section-number">5.4.2</span> Ile części</a></li>
+  <li><a href="#co-szacuje-walidacja-krzyżowa" id="toc-co-szacuje-walidacja-krzyżowa" class="nav-link" data-scroll-target="#co-szacuje-walidacja-krzyżowa"><span class="header-section-number">5.4.3</span> Co szacuje walidacja krzyżowa</a></li>
+  <li><a href="#błąd-standardowy-walidacji-krzyżowej" id="toc-błąd-standardowy-walidacji-krzyżowej" class="nav-link" data-scroll-target="#błąd-standardowy-walidacji-krzyżowej"><span class="header-section-number">5.4.4</span> Błąd standardowy walidacji krzyżowej</a></li>
+  <li><a href="#walidacja-krzyżowa-w-klasyfikacji" id="toc-walidacja-krzyżowa-w-klasyfikacji" class="nav-link" data-scroll-target="#walidacja-krzyżowa-w-klasyfikacji"><span class="header-section-number">5.4.5</span> Walidacja krzyżowa w klasyfikacji</a></li>
+  </ul></li>
+  <li><a href="#sec-wyciek" id="toc-sec-wyciek" class="nav-link" data-scroll-target="#sec-wyciek"><span class="header-section-number">5.5</span> Wyciek informacji</a></li>
+  <li><a href="#sec-selekcja-ocena" id="toc-sec-selekcja-ocena" class="nav-link" data-scroll-target="#sec-selekcja-ocena"><span class="header-section-number">5.6</span> Selekcja modelu a ocena modelu</a></li>
+  <li><a href="#sec-strojenie" id="toc-sec-strojenie" class="nav-link" data-scroll-target="#sec-strojenie"><span class="header-section-number">5.7</span> Strojenie hiperparametrów</a></li>
+  <li><a href="#sec-bootstrap" id="toc-sec-bootstrap" class="nav-link" data-scroll-target="#sec-bootstrap"><span class="header-section-number">5.8</span> Bootstrap</a>
+  <ul class="collapse">
+  <li><a href="#bootstrap-a-ocena-ryzyka" id="toc-bootstrap-a-ocena-ryzyka" class="nav-link" data-scroll-target="#bootstrap-a-ocena-ryzyka"><span class="header-section-number">5.8.1</span> Bootstrap a ocena ryzyka</a></li>
+  </ul></li>
+  <li><a href="#sec-krzywe-uczenia-cv" id="toc-sec-krzywe-uczenia-cv" class="nav-link" data-scroll-target="#sec-krzywe-uczenia-cv"><span class="header-section-number">5.9</span> Krzywe uczenia z danych</a></li>
+  <li><a href="#sec-ocena-praktyka" id="toc-sec-ocena-praktyka" class="nav-link" data-scroll-target="#sec-ocena-praktyka"><span class="header-section-number">5.10</span> Ocena modeli w praktyce</a></li>
+  <li><a href="#uwagi-bibliograficzne" id="toc-uwagi-bibliograficzne" class="nav-link" data-scroll-target="#uwagi-bibliograficzne">Uwagi bibliograficzne</a></li>
+  <li><a href="#zadania" id="toc-zadania" class="nav-link" data-scroll-target="#zadania">Zadania</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -333,7 +419,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../1-fundamenty/01-czym-jest-model.html">Fundamenty</a></li><li class="breadcrumb-item"><a href="../1-fundamenty/05-ocena-modeli.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Ocena modeli w praktyce</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-ocena-modeli" class="quarto-section-identifier"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Ocena modeli w praktyce</span></span></h1>
+<div class="quarto-title-block"><div><h1 class="title"><span id="sec-ocena-modeli" class="quarto-section-identifier"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Ocena modeli w praktyce</span></span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Kod</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Pokaż cały kod</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Ukryj cały kod</a></li></ul></div></div>
 </div>
 
 
@@ -350,9 +436,1014 @@ window.Quarto = {
 </header>
 
 
-<p><em>Rozdział w przygotowaniu.</em></p>
+<p>Ryzyko <span class="math inline">\(\Risk(f) = \E\big[\Loss(Y, f(\X))\big]\)</span> jest średnią po rozkładzie <span class="math inline">\(P\)</span>, którego nie znamy. W rozdziałach <a href="02-predyktory-optymalne.html" class="quarto-xref"><span>2</span></a>–<a href="04-bias-wariancja.html" class="quarto-xref"><span>4</span></a> mogliśmy je liczyć dokładnie, bo dane były sztuczne, a rozkład – zadany przez nas. W realnym problemie mamy tylko próbę. Jedyną wielkością, jaką można policzyć od razu, jest błąd na zbiorze uczącym, a ten, jak pokazała sekcja <a href="04-bias-wariancja.html#sec-blad-uczacy-ryzyko" class="quarto-xref"><span>4.1</span></a>, jest optymistyczny i to tym bardziej, im elastyczniejsza metoda. Wskazuje zawsze model najbardziej elastyczny, a więc często najgorszy.</p>
+<p>Ten rozdział omawia, jak szacować ryzyko z danych. Wszystkie metody opierają się na jednej zasadzie, którą sformułowaliśmy już w rozdziale <a href="01-czym-jest-model.html" class="quarto-xref"><span>1</span></a>: model trzeba oceniać na obserwacjach, których nie widział podczas dopasowania. Różnią się tym, jak takie obserwacje uzyskać, gdy próba jest jedna, i jaką cenę za to płacimy. Przykłady liczymy dalej na danych sztucznych z rozdziału <a href="04-bias-wariancja.html" class="quarto-xref"><span>4</span></a>, bo tylko tam możemy porównać oszacowanie z prawdziwym ryzykiem i sprawdzić, jak dobre jest.</p>
+<section id="sec-trzy-pytania" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="sec-trzy-pytania"><span class="header-section-number">5.1</span> Trzy pytania</h2>
+<p>Pytanie „jak dobry jest model?” kryje w sobie trzy różne pytania, na które odpowiada się różnymi narzędziami.</p>
+<p><strong>Selekcja modelu.</strong> Mamy kilku kandydatów: różne wartości <span class="math inline">\(k\)</span> w metodzie <span class="math inline">\(k\)</span>-NN, różne stopnie wielomianu, różne metody. Chcemy wybrać tego, którego ryzyko jest najmniejsze. Do tego wystarczy <strong>uporządkować</strong> kandydatów według ryzyka. Oszacowanie może być obciążone, byle w podobny sposób dla wszystkich.</p>
+<p><strong>Ocena modelu.</strong> Wybraliśmy model i chcemy wiedzieć, ile wynosi jego ryzyko: jaki odsetek pomyłek popełni na nowych pacjentach, o ile przeciętnie pomyli się w prognozie. Tu potrzebna jest <strong>wartość</strong> ryzyka, a obciążenie oszacowania jest błędem.</p>
+<p><strong>Ryzyko modelu czy ryzyko metody.</strong> W ramce „Ryzyko modelu a ryzyko metody” z rozdziału <a href="04-bias-wariancja.html" class="quarto-xref"><span>4</span></a> rozróżniliśmy dwie wielkości. Pierwsza to ryzyko <span class="math inline">\(\Risk(\widehat f_{\mathcal{D}})\)</span> predyktora dopasowanego do zbioru uczącego <span class="math inline">\(\mathcal{D}\)</span>, który faktycznie mamy. Druga to ryzyko oczekiwane metody uczenia, uśrednione po zbiorach uczących liczności <span class="math inline">\(n\)</span>: <span id="eq-ryzyko-metody"><span class="math display">\[
+\overline{\Risk}_n = \E_{\mathcal{D}}\big[\Risk(\widehat f_{\mathcal{D}})\big] .
+\tag{5.1}\]</span></span> Przy ocenie gotowego modelu, który trafi do użytku, interesuje nas pierwsza. Przy porównaniu metod, na przykład w pracy badawczej, częściej druga. Część narzędzi szacuje pierwszą z nich, część – drugą, choć zwykle przedstawia się je wszystkie jako oszacowania „błędu modelu”.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Pytania i narzędzia
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Pytanie</th>
+<th>Narzędzie</th>
+<th>Sekcja</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ryzyko ustalonego modelu</td>
+<td>zbiór testowy</td>
+<td><a href="#sec-zbior-testowy" class="quarto-xref"><span>5.2</span></a></td>
+</tr>
+<tr class="even">
+<td>wybór spośród kandydatów</td>
+<td>zbiór walidacyjny, walidacja krzyżowa</td>
+<td><a href="#sec-zbior-walidacyjny" class="quarto-xref"><span>5.3</span></a>, <a href="#sec-walidacja-krzyzowa" class="quarto-xref"><span>5.4</span></a></td>
+</tr>
+<tr class="odd">
+<td>ryzyko modelu wybranego z danych</td>
+<td>zagnieżdżona walidacja krzyżowa albo nietknięty zbiór testowy</td>
+<td><a href="#sec-selekcja-ocena" class="quarto-xref"><span>5.6</span></a></td>
+</tr>
+<tr class="even">
+<td>niepewność dowolnej wielkości obliczonej z próby</td>
+<td>bootstrap</td>
+<td><a href="#sec-bootstrap" class="quarto-xref"><span>5.8</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="sec-zbior-testowy" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="sec-zbior-testowy"><span class="header-section-number">5.2</span> Zbiór testowy</h2>
+<p>Najprostsza sytuacja wygląda tak. Predyktor <span class="math inline">\(\widehat f\)</span> jest już ustalony: dopasowaliśmy go do zbioru uczącego <span class="math inline">\(\mathcal{D}\)</span> i więcej go nie zmieniamy. Mamy też <strong>zbiór testowy</strong> – <span class="math inline">\(m\)</span> nowych obserwacji <span class="math inline">\((\X'_1, Y'_1), \dots, (\X'_m, Y'_m)\)</span>, niezależnych od siebie i od <span class="math inline">\(\mathcal{D}\)</span>, z tego samego rozkładu <span class="math inline">\(P\)</span>. Ryzyko szacujemy średnią stratą na zbiorze testowym: <span id="eq-ryzyko-testowe"><span class="math display">\[
+\widehat\Risk_{\mathrm{test}}
+= \frac{1}{m} \sum_{j=1}^{m} \Loss\big(Y'_j, \widehat f(\X'_j)\big) .
+\tag{5.2}\]</span></span> Jest to ryzyko empiryczne (<a href="01-czym-jest-model.html#eq-ryzyko-empiryczne" class="quarto-xref"><span>1.9</span></a>), tyle że liczone na danych, których predyktor nie widział. W rozdziale <a href="01-czym-jest-model.html" class="quarto-xref"><span>1</span></a> zauważyliśmy, że dla predyktora ustalonego niezależnie od danych taka średnia jest nieobciążonym oszacowaniem ryzyka. Teraz możemy to powiedzieć dokładniej.</p>
+<div id="thm-ocena-testowa" class="theorem">
+<p><span class="theorem-title"><strong>Twierdzenie 5.1 (Własności oszacowania testowego)</strong></span> Niech zbiór testowy będzie niezależny od <span class="math inline">\(\mathcal{D}\)</span>, a jego obserwacje niezależne i o rozkładzie <span class="math inline">\(P\)</span>. Oznaczmy <span class="math inline">\(\tau^2 = \Var\big(\Loss(Y, \widehat f(\X)) \,\big|\, \mathcal{D}\big)\)</span> wariancję straty na nowej obserwacji przy ustalonym predyktorze. Wtedy <span class="math display">\[
+\E\big[\widehat\Risk_{\mathrm{test}} \,\big|\, \mathcal{D}\big] = \Risk(\widehat f),
+\qquad
+\Var\big(\widehat\Risk_{\mathrm{test}} \,\big|\, \mathcal{D}\big) = \frac{\tau^2}{m} .
+\]</span> Przy stracie 0–1 liczba błędów <span class="math inline">\(m\widehat\Risk_{\mathrm{test}}\)</span> ma, przy ustalonym <span class="math inline">\(\mathcal{D}\)</span>, rozkład dwumianowy z parametrami <span class="math inline">\(m\)</span> i <span class="math inline">\(\Risk(\widehat f)\)</span>, a <span class="math inline">\(\tau^2 = \Risk(\widehat f)\big(1 - \Risk(\widehat f)\big)\)</span>.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Dowód</em>. </span>Przy ustalonym <span class="math inline">\(\mathcal{D}\)</span> predyktor <span class="math inline">\(\widehat f\)</span> jest ustaloną funkcją, a straty <span class="math inline">\(L_j = \Loss\big(Y'_j, \widehat f(\X'_j)\big)\)</span> są niezależnymi zmiennymi losowymi o tym samym rozkładzie, ze średnią <span class="math inline">\(\Risk(\widehat f)\)</span> i wariancją <span class="math inline">\(\tau^2\)</span>. Średnia <span class="math inline">\(m\)</span> takich zmiennych ma tę samą wartość oczekiwaną i wariancję <span class="math inline">\(\tau^2/m\)</span>. Przy stracie 0–1 każda strata <span class="math inline">\(L_j\)</span> jest zmienną zero-jedynkową z prawdopodobieństwem sukcesu <span class="math inline">\(\Risk(\widehat f)\)</span>, więc ich suma ma rozkład dwumianowy. <span class="math inline">\(\square\)</span></p>
+</div>
+<p>Założenie niezależności od <span class="math inline">\(\mathcal{D}\)</span> jest tu wszystkim. Gdyby obserwacje testowe trafiły choć częściowo do zbioru uczącego, straty <span class="math inline">\(L_j\)</span> nie miałyby średniej <span class="math inline">\(\Risk(\widehat f)\)</span> – mielibyśmy z powrotem optymizm błędu uczącego. Zwróćmy też uwagę, co twierdzenie szacuje: ryzyko <strong>tego</strong> predyktora, <span class="math inline">\(\Risk(\widehat f_{\mathcal{D}})\)</span>, a nie ryzyko metody (<a href="#eq-ryzyko-metody" class="quarto-xref"><span>5.1</span></a>).</p>
+<section id="niepewność-oszacowania" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="niepewność-oszacowania"><span class="header-section-number">5.2.1</span> Niepewność oszacowania</h3>
+<p>Pierwiastek z wariancji, <span class="math inline">\(\tau/\sqrt{m}\)</span>, to <strong>błąd standardowy</strong> oszacowania testowego. W klasyfikacji szacujemy go, podstawiając oszacowanie w miejsce ryzyka: <span id="eq-blad-standardowy-testowy"><span class="math display">\[
+\widehat{\mathrm{se}} = \sqrt{\frac{\widehat\Risk_{\mathrm{test}}\,\big(1 - \widehat\Risk_{\mathrm{test}}\big)}{m}} .
+\tag{5.3}\]</span></span> Przy dużym <span class="math inline">\(m\)</span> rozkład dwumianowy jest bliski normalnemu, więc przedział <span class="math inline">\(\widehat\Risk_{\mathrm{test}} \pm 1{,}96\,\widehat{\mathrm{se}}\)</span> pokrywa ryzyko z prawdopodobieństwem około <span class="math inline">\(95\%\)</span>. W regresji <span class="math inline">\(\tau^2\)</span> szacujemy wariancją z próby strat <span class="math inline">\(L_1, \dots, L_m\)</span>. Kwadraty błędów mają jednak zwykle rozkład silnie skośny, więc przybliżenie normalne wymaga tu większego <span class="math inline">\(m\)</span> niż w klasyfikacji.</p>
+<p>Wzór (<a href="#eq-blad-standardowy-testowy" class="quarto-xref"><span>5.3</span></a>) szybko studzi zaufanie do małych zbiorów testowych. Przy błędzie rzędu <span class="math inline">\(10\%\)</span> i <span class="math inline">\(m = 100\)</span> błąd standardowy wynosi <span class="math inline">\(0{,}03\)</span>, więc przedział ufności rozciąga się od około <span class="math inline">\(4\%\)</span> do <span class="math inline">\(16\%\)</span>. Aby połowa szerokości przedziału wynosiła <span class="math inline">\(h\)</span>, potrzeba <span class="math display">\[
+m \approx \frac{1{,}96^2\, \Risk(1 - \Risk)}{h^2}
+\]</span> obserwacji. Dla <span class="math inline">\(\Risk = 0{,}1\)</span> i <span class="math inline">\(h = 0{,}01\)</span> to około <span class="math inline">\(3500\)</span> obserwacji, dla <span class="math inline">\(h = 0{,}005\)</span> – około <span class="math inline">\(14\,000\)</span>. Dokładność rośnie jak <span class="math inline">\(\sqrt{m}\)</span>: dwukrotne zawężenie przedziału kosztuje czterokrotnie więcej danych. Ten sam rachunek stał za ramką „Dlaczego całkujemy zamiast losować zbiór testowy” w rozdziale <a href="02-predyktory-optymalne.html" class="quarto-xref"><span>2</span></a>: przy błędzie około <span class="math inline">\(0{,}16\)</span> i <span class="math inline">\(20\,000\)</span> obserwacjach testowych błąd standardowy wynosi <span class="math inline">\(\sqrt{0{,}16 \cdot 0{,}84 / 20\,000} \approx 0{,}0026\)</span>.</p>
+</section>
+<section id="porównanie-dwóch-modeli" class="level3" data-number="5.2.2">
+<h3 data-number="5.2.2" class="anchored" data-anchor-id="porównanie-dwóch-modeli"><span class="header-section-number">5.2.2</span> Porównanie dwóch modeli</h3>
+<p>Częściej niż wartość ryzyka interesuje nas, który z dwóch modeli, <span class="math inline">\(A\)</span> czy <span class="math inline">\(B\)</span>, jest lepszy. Naturalnym oszacowaniem różnicy ryzyk jest różnica oszacowań testowych. Jeśli oba modele oceniamy na <strong>tym samym</strong> zbiorze testowym, różnica ta jest średnią różnic strat <span class="math inline">\(D_j = L^A_j - L^B_j\)</span> na poszczególnych obserwacjach, a jej wariancja wynosi <span class="math display">\[
+\frac{\Var(L^A - L^B)}{m}
+= \frac{\tau_A^2 + \tau_B^2 - 2\Cov(L^A, L^B)}{m} .
+\]</span> Straty dwóch rozsądnych modeli są silnie dodatnio skorelowane: oba mylą się na trudnych przypadkach i oba trafiają na łatwych. Kowariancja odejmuje się więc od sumy wariancji, a różnica jest szacowana znacznie dokładniej niż każde z ryzyk z osobna. Porównując modele, należy zatem korzystać z par strat na tych samych obserwacjach, a nie z dwóch oddzielnych przedziałów ufności.</p>
+<p>Przy stracie 0–1 rachunek ma prostą postać. Obserwacje, na których oba modele się mylą albo oba trafiają, nic nie mówią o różnicy. Liczą się tylko obserwacje sporne: <span class="math inline">\(n_{AB}\)</span> takich, na których myli się tylko <span class="math inline">\(A\)</span>, i <span class="math inline">\(n_{BA}\)</span> takich, na których myli się tylko <span class="math inline">\(B\)</span>. Jeśli oba modele mają to samo ryzyko, to każda obserwacja sporna jest z równym prawdopodobieństwem jednego lub drugiego rodzaju, czyli <span class="math inline">\(n_{AB}\)</span> ma rozkład dwumianowy z parametrami <span class="math inline">\(n_{AB} + n_{BA}\)</span> i <span class="math inline">\(1/2\)</span>. Na tym opiera się <strong>test McNemara</strong>, polecany do porównywania dwóch klasyfikatorów na jednym zbiorze testowym <span class="citation" data-cites="dietterich1998">(<a href="../references.html#ref-dietterich1998" role="doc-biblioref">Dietterich 1998</a>)</span>. Przykład: na <span class="math inline">\(m = 1000\)</span> obserwacjach model <span class="math inline">\(A\)</span> myli się <span class="math inline">\(100\)</span> razy, a model <span class="math inline">\(B\)</span> – <span class="math inline">\(120\)</span> razy. Dwa oddzielne przedziały ufności wyraźnie na siebie nachodzą: różnica <span class="math inline">\(0{,}02\)</span> to tylko około <span class="math inline">\(1{,}4\)</span> błędu standardowego różnicy dwóch niezależnych oszacowań. Jeśli jednak modele różnią się na <span class="math inline">\(40\)</span> obserwacjach, z których na <span class="math inline">\(30\)</span> myli się tylko <span class="math inline">\(B\)</span>, a na <span class="math inline">\(10\)</span> tylko <span class="math inline">\(A\)</span>, to przy równości ryzyk wynik tak skrajny jak <span class="math inline">\(10\)</span> do <span class="math inline">\(30\)</span> ma prawdopodobieństwo około <span class="math inline">\(0{,}002\)</span>. Przewaga modelu <span class="math inline">\(A\)</span> jest dobrze udokumentowana (<a href="#exr-porownanie-sparowane" class="quarto-xref">Zadanie&nbsp;<span>5.3</span></a>).</p>
+</section>
+<section id="cena-odłożenia-danych" class="level3" data-number="5.2.3">
+<h3 data-number="5.2.3" class="anchored" data-anchor-id="cena-odłożenia-danych"><span class="header-section-number">5.2.3</span> Cena odłożenia danych</h3>
+<p>Zbiór testowy nie jest za darmo. Obserwacje odłożone do oceny nie biorą udziału w uczeniu, więc oceniamy model uczony na <span class="math inline">\(n - m\)</span> zamiast <span class="math inline">\(n\)</span> obserwacjach. Krzywe uczenia z sekcji <a href="04-bias-wariancja.html#sec-krzywe-uczenia" class="quarto-xref"><span>4.7</span></a> mówią, ile to kosztuje. Jeśli krzywa jest przy <span class="math inline">\(n - m\)</span> już płaska, niewiele. Jeśli stromo opada, model uczony na wszystkich danych byłby wyraźnie lepszy niż ten, który oceniliśmy. Mamy więc konflikt: duże <span class="math inline">\(m\)</span> daje dokładną ocenę słabszego modelu, małe <span class="math inline">\(m\)</span> – niedokładną ocenę lepszego.</p>
+<p>Druga cena jest mniej oczywista. Zbiór testowy zachowuje swoje własności tylko wtedy, gdy wynik na nim nie wpływa na model. Jeśli po obejrzeniu błędu testowego zmienimy cechy, hiperparametry czy metodę, a potem ocenimy nowy model na tym samym zbiorze, zbiór testowy stał się częścią procedury uczenia. Każde takie spojrzenie zużywa go po trochu (sekcja <a href="#sec-selekcja-ocena" class="quarto-xref"><span>5.6</span></a>).</p>
+</section>
+</section>
+<section id="sec-zbior-walidacyjny" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="sec-zbior-walidacyjny"><span class="header-section-number">5.3</span> Zbiór walidacyjny</h2>
+<p>Gdy oprócz oceny trzeba dokonać wyboru – ustalić <span class="math inline">\(k\)</span>, stopień wielomianu albo metodę – dane dzieli się na trzy części. Na <strong>zbiorze uczącym</strong> dopasowujemy kandydatów. Na <strong>zbiorze walidacyjnym</strong> szacujemy ich ryzyka i wybieramy najlepszego. Na <strong>zbiorze testowym</strong>, którego dotąd nie dotykaliśmy, oceniamy model wybrany. Zbiór walidacyjny odpowiada na pytanie o selekcję, zbiór testowy – na pytanie o ocenę.</p>
+<p>Podział na zbiór uczący i walidacyjny ma dwie wady. Obie widać na rysunku <a href="#fig-walidacja-podzialy" class="quarto-xref"><span>5.1</span></a>. Wzięliśmy próbę <span class="math inline">\(n = 100\)</span> obserwacji z rozkładu z rozdziału <a href="04-bias-wariancja.html" class="quarto-xref"><span>4</span></a>: <span class="math inline">\(X\)</span> jednostajne na <span class="math inline">\([0, 1]\)</span>, <span class="math inline">\(\fopt(x) = \sin(2\pi x) + x/2\)</span>, szum o odchyleniu standardowym <span class="math inline">\(\sigma = 0{,}3\)</span>. Połowę obserwacji przeznaczyliśmy do uczenia wielomianów stopni <span class="math inline">\(1\)</span>–<span class="math inline">\(10\)</span>, połowę – do walidacji.</p>
+<div id="cell-fig-walidacja-podzialy" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy.polynomial <span class="im">import</span> Polynomial</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f_prawdziwa(x):</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Funkcja regresji z rozdziałów o metodzie k-NN i o obciążeniu."""</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.sin(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> x) <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> x</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">=</span> <span class="fl">0.3</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>siatka <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1001</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>f_siatka <span class="op">=</span> f_prawdziwa(siatka)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> probka(n, rng):</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Losuje n obserwacji: X ~ U[0, 1], Y = f*(X) + szum N(0, sigma^2)."""</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> rng.uniform(<span class="dv">0</span>, <span class="dv">1</span>, n)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x, f_prawdziwa(x) <span class="op">+</span> rng.normal(<span class="dv">0</span>, sigma, n)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ryzyko(predyktor):</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Ryzyko przy stracie kwadratowej, policzone całkowaniem po X ~ U[0, 1]."""</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.trapezoid((predyktor(siatka) <span class="op">-</span> f_siatka) <span class="op">**</span> <span class="dv">2</span>, siatka) <span class="op">+</span> sigma <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">1</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>x, y <span class="op">=</span> probka(<span class="dv">100</span>, rng)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>stopnie <span class="op">=</span> np.arange(<span class="dv">1</span>, <span class="dv">11</span>)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> podzial_walidacyjny(x, y, rng):</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Błąd walidacyjny i ryzyko wielomianów uczonych na losowej połowie próby."""</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    perm <span class="op">=</span> rng.permutation(<span class="bu">len</span>(x))</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    ucz, wal <span class="op">=</span> perm[: <span class="bu">len</span>(x) <span class="op">//</span> <span class="dv">2</span>], perm[<span class="bu">len</span>(x) <span class="op">//</span> <span class="dv">2</span> :]</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    bledy, ryzyka <span class="op">=</span> [], []</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> d <span class="kw">in</span> stopnie:</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        wielomian <span class="op">=</span> Polynomial.fit(x[ucz], y[ucz], d)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>        bledy.append(np.mean((wielomian(x[wal]) <span class="op">-</span> y[wal]) <span class="op">**</span> <span class="dv">2</span>))</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>        ryzyka.append(ryzyko(wielomian))</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array(bledy), np.array(ryzyka)</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>fig, osie <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="fl">4.0</span>), sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>bledy, ryzyka <span class="op">=</span> podzial_walidacyjny(x, y, rng)</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].plot(stopnie, bledy, <span class="st">"o-"</span>, color<span class="op">=</span><span class="st">"#1B6CA8"</span>, label<span class="op">=</span><span class="st">"błąd walidacyjny"</span>)</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].plot(stopnie, ryzyka, <span class="st">"o--"</span>, color<span class="op">=</span><span class="st">"0.45"</span>, label<span class="op">=</span><span class="st">"ryzyko"</span>)</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].legend(frameon<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].set_title(<span class="st">"jeden podział"</span>)</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    bledy, _ <span class="op">=</span> podzial_walidacyjny(x, y, rng)</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    osie[<span class="dv">1</span>].plot(stopnie, bledy, <span class="st">"o-"</span>, ms<span class="op">=</span><span class="dv">3</span>, lw<span class="op">=</span><span class="dv">1</span>, alpha<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">1</span>].set_title(<span class="st">"dziesięć podziałów"</span>)</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax <span class="kw">in</span> osie:</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>    ax.axhline(sigma <span class="op">**</span> <span class="dv">2</span>, color<span class="op">=</span><span class="st">"#D7263D"</span>, ls<span class="op">=</span><span class="st">"--"</span>, lw<span class="op">=</span><span class="fl">1.2</span>)</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>    ax.set_yscale(<span class="st">"log"</span>)</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"stopień wielomianu $d$"</span>)</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].set_ylabel(<span class="st">"średni kwadrat błędu"</span>)</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-walidacja-podzialy" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-walidacja-podzialy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-ocena-modeli_files/figure-html/fig-walidacja-podzialy-output-1.png" width="1046" height="374" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-walidacja-podzialy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Rysunek&nbsp;5.1: Błąd na zbiorze walidacyjnym regresji wielomianowej w zależności od stopnia <span class="math inline">\(d\)</span>. Próba liczności <span class="math inline">\(n = 100\)</span> podzielona losowo na połowę uczącą i połowę walidacyjną. Po lewej: jeden podział; szara linia to ryzyko tych samych wielomianów, policzone całkowaniem po znanym rozkładzie. Po prawej: dziesięć różnych podziałów tej samej próby. Oś pionowa w skali logarytmicznej.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Lewy panel pokazuje, że błąd walidacyjny dobrze oddaje kształt krzywej ryzyka: obie gwałtownie spadają między stopniem <span class="math inline">\(2\)</span> a <span class="math inline">\(3\)</span>, mają minimum w okolicy stopnia <span class="math inline">\(5\)</span> i dalej powoli rosną. Do selekcji to wystarcza. Prawy panel pokazuje pierwszą wadę: wynik zależy od tego, które obserwacje trafiły do której części. Różne podziały tej samej próby dają krzywe przesunięte względem siebie i wskazują różne stopnie jako najlepsze. Zbiór walidacyjny liczy <span class="math inline">\(50\)</span> obserwacji, a jak widzieliśmy w sekcji <a href="#sec-zbior-testowy" class="quarto-xref"><span>5.2</span></a>, przy takiej liczności oszacowanie ma duży błąd standardowy. Druga wada to marnotrawstwo: wielomiany uczymy na połowie danych, więc oceniamy modele gorsze niż te, które moglibyśmy dopasować do całej próby. Przy stromej krzywej uczenia błąd walidacyjny przeszacowuje wtedy ryzyko, a przy stopniach wysokich, których wariancja najsilniej zależy od <span class="math inline">\(n\)</span>, przeszacowuje je najbardziej. Selekcja przesuwa się przez to w stronę modeli prostszych, niż na to pozwala pełna próba.</p>
+</section>
+<section id="sec-walidacja-krzyzowa" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="sec-walidacja-krzyzowa"><span class="header-section-number">5.4</span> Walidacja krzyżowa</h2>
+<p>Obie wady łagodzi pomysł prosty: zamiast jednego podziału zrobić kilka i tak je dobrać, by każda obserwacja trafiła do części oceniającej dokładnie raz.</p>
+<div id="def-walidacja-krzyzowa" class="theorem definition">
+<p><span class="theorem-title"><strong>Definicja 5.1 (Walidacja krzyżowa)</strong></span> Podzielmy indeksy <span class="math inline">\(\{1, \dots, n\}\)</span> losowo na <span class="math inline">\(K\)</span> rozłącznych części <span class="math inline">\(F_1, \dots, F_K\)</span> możliwie równej liczności. Niech <span class="math inline">\(\widehat f^{(-k)}\)</span> oznacza predyktor dopasowany do wszystkich obserwacji poza częścią <span class="math inline">\(F_k\)</span>. <strong><span class="math inline">\(K\)</span>-krotną walidacją krzyżową</strong> (ang. <em><span class="math inline">\(K\)</span>-fold cross-validation</em>) nazywamy oszacowanie ryzyka <span id="eq-cv"><span class="math display">\[
+\mathrm{CV}_K = \frac{1}{n} \sum_{k=1}^{K} \sum_{i \in F_k}
+\Loss\big(y_i, \widehat f^{(-k)}(\x_i)\big) .
+\tag{5.4}\]</span></span> Przypadek <span class="math inline">\(K = n\)</span>, w którym każda część zawiera jedną obserwację, nazywamy <strong>walidacją typu „pozostaw jeden”</strong> (ang. <em>leave-one-out cross-validation</em>, LOOCV).</p>
+</div>
+<p>Każda obserwacja jest oceniana dokładnie raz, przez predyktor, który jej nie widział, i bierze udział w uczeniu <span class="math inline">\(K - 1\)</span> razy. Wszystkie dane służą więc zarówno do uczenia, jak i do oceny, choć nigdy jednocześnie. Kosztem jest <span class="math inline">\(K\)</span> dopasowań zamiast jednego. Pomysł ma długą historię; jego ujęcie jako ogólnej metody wyboru i oceny predyktorów zawdzięczamy <span class="citation" data-cites="stone1974">Stone (<a href="../references.html#ref-stone1974" role="doc-biblioref">1974</a>)</span>.</p>
+<p>Przy wyborze spośród kandydatów każdy z nich oceniamy na tym samym podziale na części, a wybieramy tego o najmniejszym <span class="math inline">\(\mathrm{CV}_K\)</span>. Dzięki temu porównanie jest sparowane w sensie sekcji <a href="#sec-zbior-testowy" class="quarto-xref"><span>5.2</span></a>: losowość podziału wpływa podobnie na wszystkich kandydatów.</p>
+<section id="loocv-bez-ponownego-dopasowania" class="level3" data-number="5.4.1">
+<h3 data-number="5.4.1" class="anchored" data-anchor-id="loocv-bez-ponownego-dopasowania"><span class="header-section-number">5.4.1</span> LOOCV bez ponownego dopasowania</h3>
+<p>Walidacja typu „pozostaw jeden” wymaga <span class="math inline">\(n\)</span> dopasowań, ale dla niektórych metod da się ją policzyć z jednego. Prześledźmy to na regresji <span class="math inline">\(k\)</span>-NN (<a href="03-knn.html#eq-knn-regresja" class="quarto-xref"><span>3.1</span></a>). Niech wszystkie odległości między punktami będą różne, aby nie było remisów. Każdy punkt uczący <span class="math inline">\(\x_i\)</span> należy do swojego otoczenia <span class="math inline">\(N_k(\x_i)\)</span>, bo sam od siebie ma odległość zero. Predykcja w punkcie uczącym to więc <span class="math display">\[
+\widehat f(\x_i) = \frac{1}{k} \Big( y_i + \sum_{j \in N_k(\x_i),\, j \ne i} y_j \Big)
+= \frac{1}{k}\, y_i + \frac{k - 1}{k}\, \widehat f^{(-i)}(\x_i),
+\]</span> gdzie <span class="math inline">\(\widehat f^{(-i)}(\x_i)\)</span> jest średnią wyników <span class="math inline">\(k - 1\)</span> pozostałych sąsiadów. Te <span class="math inline">\(k - 1\)</span> punktów to dokładnie najbliżsi sąsiedzi <span class="math inline">\(\x_i\)</span> po usunięciu obserwacji <span class="math inline">\(i\)</span> ze zbioru uczącego, więc <span class="math inline">\(\widehat f^{(-i)}\)</span> jest predyktorem <span class="math inline">\((k-1)\)</span>-NN dopasowanym bez obserwacji <span class="math inline">\(i\)</span>. Odejmując obie strony od <span class="math inline">\(y_i\)</span>, dostajemy <span id="eq-loo-knn"><span class="math display">\[
+y_i - \widehat f(\x_i) = \frac{k - 1}{k}\, \big( y_i - \widehat f^{(-i)}(\x_i) \big) .
+\tag{5.5}\]</span></span> Reszta na zbiorze uczącym jest więc resztą „pozostaw jeden” pomniejszoną o czynnik <span class="math inline">\((k-1)/k\)</span>. Stąd błąd LOOCV reguły <span class="math inline">\((k-1)\)</span>-NN jest równy błędowi uczącemu reguły <span class="math inline">\(k\)</span>-NN pomnożonemu przez <span class="math inline">\(\big(k/(k-1)\big)^2\)</span> (<a href="#exr-loo-knn" class="quarto-xref">Zadanie&nbsp;<span>5.5</span></a>). Dla dużego <span class="math inline">\(k\)</span> ten czynnik wynosi w przybliżeniu <span class="math inline">\(1 + 2/k\)</span>, co zgadza się z wynikiem zadania <a href="04-bias-wariancja.html#exr-optymizm-knn" class="quarto-xref"><span>4.4</span></a>: optymizm błędu uczącego reguły <span class="math inline">\(k\)</span>-NN jest rzędu <span class="math inline">\(2\sigma^2/k\)</span>.</p>
+<p>Podobną postać mają wszystkie metody, w których wektor predykcji na zbiorze uczącym jest liniową funkcją wektora wyników, <span class="math inline">\(\widehat{\mathbf{y}} = \mathbf{S}\mathbf{y}\)</span>, a usunięcie obserwacji nie zmienia sposobu ważenia pozostałych. Reszta „pozostaw jeden” wynosi wtedy <span class="math inline">\((y_i - \widehat f(\x_i))/(1 - S_{ii})\)</span>, gdzie <span class="math inline">\(S_{ii}\)</span> to waga, jaką predykcja w <span class="math inline">\(\x_i\)</span> przypisuje własnemu wynikowi <span class="citation" data-cites="esl">(<a href="../references.html#ref-esl" role="doc-biblioref">Hastie i in. 2009, rozdz. 7.10</a>)</span>. Dla <span class="math inline">\(k\)</span>-NN <span class="math inline">\(S_{ii} = 1/k\)</span>. Do tej klasy należy też metoda najmniejszych kwadratów, w tym regresja wielomianowa z rozdziału <a href="04-bias-wariancja.html" class="quarto-xref"><span>4</span></a>.</p>
+</section>
+<section id="ile-części" class="level3" data-number="5.4.2">
+<h3 data-number="5.4.2" class="anchored" data-anchor-id="ile-części"><span class="header-section-number">5.4.2</span> Ile części</h3>
+<p>Wybór <span class="math inline">\(K\)</span> to znów kompromis między obciążeniem a wariancją, tym razem nie predyktora, tylko oszacowania ryzyka.</p>
+<p>Najpierw obciążenie. Każdy z predyktorów <span class="math inline">\(\widehat f^{(-k)}\)</span> uczy się na <span class="math inline">\(n(K-1)/K\)</span> obserwacjach i jest oceniany na obserwacjach, których nie widział. Jeśli części mają równe liczności, każdy składnik sumy (<a href="#eq-cv" class="quarto-xref"><span>5.4</span></a>) ma więc wartość oczekiwaną równą ryzyku oczekiwanemu metody uczonej na próbie mniejszej niż <span class="math inline">\(n\)</span>: <span id="eq-cv-wartosc-oczekiwana"><span class="math display">\[
+\E\big[\mathrm{CV}_K\big] = \overline{\Risk}_{n(K-1)/K} .
+\tag{5.6}\]</span></span> Walidacja krzyżowa jest zatem <strong>pesymistyczna</strong>: szacuje ryzyko metody uczonej na mniejszej próbie, niż ta, której użyjemy. Wielkość pesymizmu zależy od nachylenia krzywej uczenia w okolicy <span class="math inline">\(n\)</span>. Przy <span class="math inline">\(K = 2\)</span> uczymy na połowie danych i pesymizm bywa znaczny, przy <span class="math inline">\(K = n\)</span> jest praktycznie zerowy.</p>
+<p>Z wariancją sprawa jest mniej oczywista. Przy dużym <span class="math inline">\(K\)</span> zbiory uczące różnych części pokrywają się prawie całkowicie, więc predyktory <span class="math inline">\(\widehat f^{(-k)}\)</span> są do siebie bardzo podobne, a ich błędy – silnie skorelowane. Średnia skorelowanych wielkości ma większą wariancję niż średnia niezależnych (<a href="04-bias-wariancja.html#exr-usrednianie-predyktorow" class="quarto-xref">Zadanie&nbsp;<span>4.8</span></a>). Z tego powodu często mówi się, że LOOCV ma dużą wariancję. Z drugiej strony przy dużym <span class="math inline">\(K\)</span> każdy predyktor jest lepszy, a podziałów nie trzeba losować. Który efekt przeważa, zależy od metody. Sprawdźmy to na naszym przykładzie: dla wielomianu stopnia <span class="math inline">\(3\)</span> i <span class="math inline">\(n = 50\)</span> wylosowaliśmy <span class="math inline">\(500\)</span> prób i w każdej policzyliśmy <span class="math inline">\(\mathrm{CV}_K\)</span> dla <span class="math inline">\(K = 2, 5, 10, 50\)</span> oraz, całkowaniem, prawdziwe ryzyko dopasowanego modelu.</p>
+<div id="a7a9193e" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">5</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>n_cv, d_cv, powt_cv <span class="op">=</span> <span class="dv">50</span>, <span class="dv">3</span>, <span class="dv">500</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>wartosci_K <span class="op">=</span> [<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">10</span>, n_cv]</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> walidacja_krzyzowa(x, y, d, K, rng):</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""K-krotna walidacja krzyżowa wielomianu stopnia d; zwraca straty</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">    poszczególnych obserwacji, ocenianych przez model, który ich nie widział."""</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    straty <span class="op">=</span> np.empty(<span class="bu">len</span>(x))</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> czesc <span class="kw">in</span> np.array_split(rng.permutation(<span class="bu">len</span>(x)), K):</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        ucz <span class="op">=</span> np.ones(<span class="bu">len</span>(x), dtype<span class="op">=</span><span class="bu">bool</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        ucz[czesc] <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        wielomian <span class="op">=</span> Polynomial.fit(x[ucz], y[ucz], d)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        straty[czesc] <span class="op">=</span> (wielomian(x[czesc]) <span class="op">-</span> y[czesc]) <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> straty</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>cv <span class="op">=</span> np.zeros((powt_cv, <span class="bu">len</span>(wartosci_K)))</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>blad_std_naiwny <span class="op">=</span> np.zeros(powt_cv)     <span class="co"># dla K = 10, patrz dalej</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>ryzyko_modelu <span class="op">=</span> np.zeros(powt_cv)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> r <span class="kw">in</span> <span class="bu">range</span>(powt_cv):</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    x, y <span class="op">=</span> probka(n_cv, rng)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    ryzyko_modelu[r] <span class="op">=</span> ryzyko(Polynomial.fit(x, y, d_cv))</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j, K <span class="kw">in</span> <span class="bu">enumerate</span>(wartosci_K):</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        straty <span class="op">=</span> walidacja_krzyzowa(x, y, d_cv, K, rng)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        cv[r, j] <span class="op">=</span> straty.mean()</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> K <span class="op">==</span> <span class="dv">10</span>:</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>            blad_std_naiwny[r] <span class="op">=</span> straty.std(ddof<span class="op">=</span><span class="dv">1</span>) <span class="op">/</span> np.sqrt(n_cv)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Ryzyko oczekiwane metody przy liczności zbioru uczącego n(K-1)/K.</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ryzyko_oczekiwane(n, rng, powtorzenia<span class="op">=</span><span class="dv">3000</span>):</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.mean([ryzyko(Polynomial.fit(<span class="op">*</span>probka(n, rng), d_cv))</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(powtorzenia)])</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"ryzyko oczekiwane przy n = </span><span class="sc">{</span>n_cv<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>ryzyko_modelu<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">" K   uczących   E[R] przy n(K-1)/K   średnia CV   odch. std. CV"</span>)</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> j, K <span class="kw">in</span> <span class="bu">enumerate</span>(wartosci_K):</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    m <span class="op">=</span> n_cv <span class="op">*</span> (K <span class="op">-</span> <span class="dv">1</span>) <span class="op">//</span> K</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>K<span class="sc">:2d}</span><span class="ss">   </span><span class="sc">{</span>m<span class="sc">:8d}</span><span class="ss">   </span><span class="sc">{</span>ryzyko_oczekiwane(m, rng)<span class="sc">:18.4f}</span><span class="ss">"</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f"   </span><span class="sc">{</span>cv[:, j]<span class="sc">.</span>mean()<span class="sc">:10.4f}</span><span class="ss">   </span><span class="sc">{</span>cv[:, j]<span class="sc">.</span>std()<span class="sc">:13.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>ryzyko oczekiwane przy n = 50: 0.1028
+ K   uczących   E[R] przy n(K-1)/K   średnia CV   odch. std. CV
+ 2         25               0.1176       0.1143          0.0349
+ 5         40               0.1057       0.1041          0.0233
+10         45               0.1043       0.1029          0.0221
+50         49               0.1034       0.1020          0.0215</code></pre>
+</div>
+</div>
+<p>Średnie oszacowań układają się zgodnie z (<a href="#eq-cv-wartosc-oczekiwana" class="quarto-xref"><span>5.6</span></a>). Dla <span class="math inline">\(K = 2\)</span> średnia jest bliska ryzyku metody uczonej na <span class="math inline">\(25\)</span> obserwacjach i wyraźnie wyższa niż ryzyko przy <span class="math inline">\(n = 50\)</span>. Dla <span class="math inline">\(K \ge 5\)</span> pesymizm jest już mały w porównaniu z rozrzutem oszacowania. Odchylenie standardowe maleje z <span class="math inline">\(K\)</span>, ale dla <span class="math inline">\(K = 5, 10, 50\)</span> jest prawie takie samo. W tym przykładzie LOOCV nie ma więc większej wariancji niż walidacja dziesięciokrotna. Wariancja LOOCV bywa duża przy metodach niestabilnych, których dopasowanie zmienia się skokowo przy niewielkiej zmianie danych <span class="citation" data-cites="arlot2010">(<a href="../references.html#ref-arlot2010" role="doc-biblioref">Arlot i Celisse 2010</a>)</span>. Przy małym <span class="math inline">\(K\)</span> niestabilność dotyka też walidacji krzyżowej: wielomian wysokiego stopnia uczony na połowie próby czasem „ucieka” przy krańcach przedziału, jak na rysunku <a href="04-bias-wariancja.html#fig-wachlarz" class="quarto-xref"><span>4.2</span></a>, i pojedyncza część daje wtedy ogromny błąd.</p>
+<p>W praktyce standardem jest <span class="math inline">\(K = 5\)</span> lub <span class="math inline">\(K = 10\)</span> <span class="citation" data-cites="islp">(<a href="../references.html#ref-islp" role="doc-biblioref">James i in. 2023, rozdz. 5.1</a>)</span>. Pesymizm jest wtedy zwykle niewielki, koszt – pięć lub dziesięć dopasowań, a wynik nie zależy od szczególnych własności metody.</p>
+</section>
+<section id="co-szacuje-walidacja-krzyżowa" class="level3" data-number="5.4.3">
+<h3 data-number="5.4.3" class="anchored" data-anchor-id="co-szacuje-walidacja-krzyżowa"><span class="header-section-number">5.4.3</span> Co szacuje walidacja krzyżowa</h3>
+<p>Z (<a href="#eq-cv-wartosc-oczekiwana" class="quarto-xref"><span>5.6</span></a>) wynika, że walidacja krzyżowa jest oszacowaniem ryzyka oczekiwanego metody, a nie ryzyka modelu dopasowanego do naszej próby. Można by jednak sądzić, że skoro oszacowanie liczymy z naszej próby, to przynajmniej podąża za ryzykiem naszego modelu: w próbach, z których wyszedł model gorszy niż przeciętny, powinno być wyższe. Rysunek <a href="#fig-cv-ryzyko" class="quarto-xref"><span>5.2</span></a> pokazuje, że tak nie jest.</p>
+<div id="cell-fig-cv-ryzyko" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>j10 <span class="op">=</span> wartosci_K.index(<span class="dv">10</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">5.5</span>, <span class="fl">5.0</span>))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>ax.scatter(ryzyko_modelu, cv[:, j10], s<span class="op">=</span><span class="dv">8</span>, color<span class="op">=</span><span class="st">"#1B6CA8"</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>srednia <span class="op">=</span> ryzyko_modelu.mean()</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>ax.axvline(srednia, color<span class="op">=</span><span class="st">"0.3"</span>, ls<span class="op">=</span><span class="st">"--"</span>, lw<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>ax.axhline(srednia, color<span class="op">=</span><span class="st">"0.3"</span>, ls<span class="op">=</span><span class="st">"--"</span>, lw<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>granice <span class="op">=</span> [<span class="fl">0.03</span>, <span class="fl">0.2</span>]</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>ax.plot(granice, granice, <span class="st">":"</span>, color<span class="op">=</span><span class="st">"#D7263D"</span>, lw<span class="op">=</span><span class="fl">1.5</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>ax.set_xlim(<span class="fl">0.03</span>, <span class="fl">0.2</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>ax.set_ylim(granice)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>ax.set_aspect(<span class="st">"equal"</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="vs">r"ryzyko dopasowanego modelu </span><span class="dv">$</span><span class="vs">R</span><span class="kw">(</span><span class="dv">\w</span><span class="vs">idehat f_{</span><span class="dv">\m</span><span class="vs">athcal{D}}</span><span class="kw">)</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="vs">r"oszacowanie </span><span class="dv">$\m</span><span class="vs">athrm{CV}_</span><span class="op">{10}</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"odch. std. ryzyka modelu:  </span><span class="sc">{</span>ryzyko_modelu<span class="sc">.</span>std()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"odch. std. CV_10:          </span><span class="sc">{</span>cv[:, j10]<span class="sc">.</span>std()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"korelacja:                 </span><span class="sc">{</span>np<span class="sc">.</span>corrcoef(ryzyko_modelu, cv[:, j10])[<span class="dv">0</span>, <span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-cv-ryzyko" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cv-ryzyko-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-ocena-modeli_files/figure-html/fig-cv-ryzyko-output-1.png" width="494" height="470" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cv-ryzyko-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Rysunek&nbsp;5.2: Oszacowanie dziesięciokrotną walidacją krzyżową a ryzyko dopasowanego modelu <span class="math inline">\(\Risk(\widehat f_{\mathcal{D}})\)</span> dla 500 prób liczności <span class="math inline">\(n = 50\)</span> (wielomian stopnia <span class="math inline">\(3\)</span>). Linie przerywane: ryzyko oczekiwane metody <span class="math inline">\(\overline{\Risk}_n\)</span>. Linia kropkowana: prosta <span class="math inline">\(y = x\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>odch. std. ryzyka modelu:  0.0090
+odch. std. CV_10:          0.0221
+korelacja:                 -0.022</code></pre>
+</div>
+</div>
+<p>Chmura punktów jest wydłużona w pionie i nie układa się wzdłuż przekątnej. Ryzyko dopasowanego modelu zmienia się od próby do próby niewiele, a oszacowanie walidacją krzyżową – ponad dwa razy bardziej, i obie wielkości są praktycznie nieskorelowane. Większość rozrzutu oszacowania pochodzi z szumu w <span class="math inline">\(n\)</span> obserwacjach, na których je liczymy, a nie z różnic między dopasowanymi modelami. Oszacowanie trafia przeciętnie w <span class="math inline">\(\overline{\Risk}_n\)</span> – środek chmury leży na przecięciu linii przerywanych – ale nie mówi, czy nasz model jest lepszy, czy gorszy od przeciętnego. Podobny obraz w przykładzie klasyfikacyjnym przedstawiają <span class="citation" data-cites="esl">Hastie i in. (<a href="../references.html#ref-esl" role="doc-biblioref">2009, rozdz. 7.12</a>)</span>. <span class="citation" data-cites="bates2024">Bates i in. (<a href="../references.html#ref-bates2024" role="doc-biblioref">2024</a>)</span> wykazali, że dla modelu liniowego dopasowanego metodą najmniejszych kwadratów wielkością szacowaną przez walidację krzyżową nie jest ryzyko modelu dopasowanego do posiadanych danych, lecz ryzyko uśrednione po wielu hipotetycznych próbach, czyli <span class="math inline">\(\overline{\Risk}_n\)</span>. Ramka „Ryzyko modelu a ryzyko metody” z rozdziału <a href="04-bias-wariancja.html" class="quarto-xref"><span>4</span></a> dostaje w ten sposób konkretną treść: walidacja krzyżowa ocenia procedurę uczenia zastosowaną do prób liczności <span class="math inline">\(n\)</span>, a nie konkretny dopasowany model. Ocenę konkretnego modelu daje tylko niezależny zbiór testowy.</p>
+</section>
+<section id="błąd-standardowy-walidacji-krzyżowej" class="level3" data-number="5.4.4">
+<h3 data-number="5.4.4" class="anchored" data-anchor-id="błąd-standardowy-walidacji-krzyżowej"><span class="header-section-number">5.4.4</span> Błąd standardowy walidacji krzyżowej</h3>
+<p>Wynik walidacji krzyżowej podaje się zwykle z błędem standardowym. Najprostszy przepis traktuje <span class="math inline">\(n\)</span> strat z (<a href="#eq-cv" class="quarto-xref"><span>5.4</span></a>) jak straty na zbiorze testowym i dzieli ich odchylenie standardowe przez <span class="math inline">\(\sqrt{n}\)</span>. Te straty nie są jednak niezależne: każda para obserwacji z różnych części ma wspólną większość zbioru uczącego. <span class="citation" data-cites="bengio2004">Bengio i Grandvalet (<a href="../references.html#ref-bengio2004" role="doc-biblioref">2004</a>)</span> wykazali, że nieobciążony estymator wariancji <span class="math inline">\(\mathrm{CV}_K\)</span> nie istnieje dla żadnego <span class="math inline">\(K\)</span>. Naiwny błąd standardowy jest zwykle zaniżony. W symulacji z rysunku <a href="#fig-cv-ryzyko" class="quarto-xref"><span>5.2</span></a> wygląda to tak:</p>
+<div id="aaf4113a" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>pokrycie <span class="op">=</span> np.mean(np.<span class="bu">abs</span>(cv[:, j10] <span class="op">-</span> ryzyko_modelu.mean())</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                   <span class="op">&lt;</span> <span class="fl">1.96</span> <span class="op">*</span> blad_std_naiwny)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"rzeczywiste odch. std. CV_10:      </span><span class="sc">{</span>cv[:, j10]<span class="sc">.</span>std()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"średni naiwny błąd standardowy:    </span><span class="sc">{</span>blad_std_naiwny<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"pokrycie przedziału +- 1,96 se:    </span><span class="sc">{</span>pokrycie<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>rzeczywiste odch. std. CV_10:      0.0221
+średni naiwny błąd standardowy:    0.0202
+pokrycie przedziału +- 1,96 se:    0.890</code></pre>
+</div>
+</div>
+<p>Naiwny błąd standardowy jest tu zaniżony o około <span class="math inline">\(10\%\)</span>, a przedział, który nominalnie ma pokrywać ryzyko oczekiwane w <span class="math inline">\(95\%\)</span> prób, pokrywa je w <span class="math inline">\(89\%\)</span>. Przy metodach mniej stabilnych różnica bywa większa. Poprawne przedziały ufności dla walidacji krzyżowej wymagają dodatkowej pracy obliczeniowej <span class="citation" data-cites="bates2024">(<a href="../references.html#ref-bates2024" role="doc-biblioref">Bates i in. 2024</a>)</span>. Do porównań i do wyboru modelu naiwny błąd standardowy wystarcza jednak jako miara skali niepewności.</p>
+<p>Tak używa go <strong>reguła jednego błędu standardowego</strong> <span class="citation" data-cites="esl">(<a href="../references.html#ref-esl" role="doc-biblioref">Hastie i in. 2009, rozdz. 7.10</a>)</span>. Spośród kandydatów uporządkowanych od najprostszego do najbardziej elastycznego wybieramy najprostszego, którego oszacowanie <span class="math inline">\(\mathrm{CV}_K\)</span> nie przekracza minimum o więcej niż jeden błąd standardowy. Uzasadnienie jest heurystyczne: różnice mniejsze niż błąd standardowy mogą być przypadkowe, a w razie wątpliwości model prostszy ma mniejszą wariancję i łatwiej go interpretować.</p>
+</section>
+<section id="walidacja-krzyżowa-w-klasyfikacji" class="level3" data-number="5.4.5">
+<h3 data-number="5.4.5" class="anchored" data-anchor-id="walidacja-krzyżowa-w-klasyfikacji"><span class="header-section-number">5.4.5</span> Walidacja krzyżowa w klasyfikacji</h3>
+<p>W klasyfikacji podział na części losuje się zwykle <strong>warstwowo</strong> (ang. <em>stratified</em>): tak, by proporcje klas w każdej części były takie jak w całej próbie. Przy rzadkiej klasie podział niewarstwowy może dać część bez żadnej obserwacji z tej klasy i błąd tej części nic o niej nie powie.</p>
+<p>Druga decyzja dotyczy straty, którą oceniamy. Strata 0–1 odpowiada pytaniu o odsetek pomyłek, ale jest bardzo zgrubna: oszacowanie zmienia się skokami <span class="math inline">\(1/n\)</span> i nie odróżnia modelu, który pomylił się, podając <span class="math inline">\(\widehat\eta = 0{,}51\)</span>, od modelu, który podał <span class="math inline">\(0{,}99\)</span>. Jeśli model ma zwracać prawdopodobieństwa, na przykład dla reguły kosztowej z sekcji <a href="02-predyktory-optymalne.html#sec-od-prawdopodobienstw-do-decyzji" class="quarto-xref"><span>2.5</span></a>, należy go oceniać stratą właściwą: Briera albo logarytmiczną. Oszacowanie jest wtedy mniej zmienne, bo każda obserwacja wnosi informację ciągłą, a nie tylko „trafił–nie trafił”. Strata logarytmiczna ma przy tym pułapkę: model <span class="math inline">\(k\)</span>-NN zwraca <span class="math inline">\(\widehat\eta = 0\)</span> albo <span class="math inline">\(1\)</span>, gdy wszyscy sąsiedzi są z jednej klasy. Jedna taka pomyłka daje stratę nieskończoną.</p>
+</section>
+</section>
+<section id="sec-wyciek" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="sec-wyciek"><span class="header-section-number">5.5</span> Wyciek informacji</h2>
+<p>Twierdzenie <a href="#thm-ocena-testowa" class="quarto-xref"><span>5.1</span></a> i równość (<a href="#eq-cv-wartosc-oczekiwana" class="quarto-xref"><span>5.6</span></a>) mają wspólne założenie: obserwacje, na których oceniamy, nie mają żadnego wpływu na predyktor. W walidacji krzyżowej dotyczy to <strong>całej procedury</strong>, która z danych tworzy predyktor, a nie tylko ostatniego kroku, czyli dopasowania modelu. Każdy krok, w którym coś wyznaczamy z danych – parametry standaryzacji (<a href="03-knn.html#eq-standaryzacja" class="quarto-xref"><span>3.4</span></a>), uzupełnianie braków średnimi, wybór cech – trzeba powtarzać wewnątrz każdej części, korzystając wyłącznie z jej danych uczących. Złamanie tej zasady nazywa się <strong>wyciekiem informacji</strong> (ang. <em>data leakage</em>): informacja o obserwacjach oceniających przecieka do predyktora.</p>
+<p>Przy standaryzacji wyciek jest zwykle niewielki. Średnia i odchylenie standardowe liczone z <span class="math inline">\(n\)</span> zamiast z <span class="math inline">\(n(K-1)/K\)</span> obserwacji różnią się niewiele i prawie nic nie mówią o wynikach. Przy wyborze cech może być ogromny. Rozważmy przykład z <span class="citation" data-cites="esl">Hastie i in. (<a href="../references.html#ref-esl" role="doc-biblioref">2009, rozdz. 7.10.2</a>)</span>. Mamy <span class="math inline">\(n = 50\)</span> obserwacji z dwóch równolicznych klas i <span class="math inline">\(p = 5000\)</span> cech, które są czystym szumem: nie zależą od klasy. Każdy klasyfikator ma tu ryzyko <span class="math inline">\(1/2\)</span>. Procedura jest następująca: wybieramy <span class="math inline">\(100\)</span> cech najsilniej skorelowanych z klasą, a na nich budujemy klasyfikator jednego najbliższego sąsiada. Procedurę oceniamy pięciokrotną walidacją krzyżową na dwa sposoby. W <strong>złym</strong> wybór cech robimy raz, na całej próbie, a walidacji poddajemy tylko klasyfikator. W <strong>dobrym</strong> wybór cech powtarzamy w każdej części, na jej danych uczących.</p>
+<div id="cell-fig-wyciek-selekcja" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">7</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>n_w, p_w, q_w, powt_w <span class="op">=</span> <span class="dv">50</span>, <span class="dv">5000</span>, <span class="dv">100</span>, <span class="dv">100</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> najblizszy_sasiad(X_ucz, y_ucz, X_ocen):</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Klasyfikator 1-NN w metryce euklidesowej."""</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    odl <span class="op">=</span> ((X_ocen[:, <span class="va">None</span>, :] <span class="op">-</span> X_ucz[<span class="va">None</span>, :, :]) <span class="op">**</span> <span class="dv">2</span>).<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> y_ucz[odl.argmin(axis<span class="op">=</span><span class="dv">1</span>)]</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> najsilniej_skorelowane(X, y, q):</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Indeksy q cech o największej bezwzględnej korelacji z y."""</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    Xc, yc <span class="op">=</span> X <span class="op">-</span> X.mean(axis<span class="op">=</span><span class="dv">0</span>), y <span class="op">-</span> y.mean()</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    kor <span class="op">=</span> np.<span class="bu">abs</span>(Xc.T <span class="op">@</span> yc) <span class="op">/</span> np.sqrt((Xc <span class="op">**</span> <span class="dv">2</span>).<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">0</span>) <span class="op">*</span> (yc <span class="op">**</span> <span class="dv">2</span>).<span class="bu">sum</span>())</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.argsort(kor)[<span class="op">-</span>q:]</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>zle, dobre <span class="op">=</span> [], []</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(powt_w):</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> rng.normal(size<span class="op">=</span>(n_w, p_w))</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> np.repeat([<span class="dv">0</span>, <span class="dv">1</span>], n_w <span class="op">//</span> <span class="dv">2</span>)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    cechy_calosc <span class="op">=</span> najsilniej_skorelowane(X, y, q_w)    <span class="co"># wyciek</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    bledy_zle <span class="op">=</span> bledy_dobre <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> czesc <span class="kw">in</span> np.array_split(rng.permutation(n_w), <span class="dv">5</span>):</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>        ucz <span class="op">=</span> np.ones(n_w, dtype<span class="op">=</span><span class="bu">bool</span>)</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>        ucz[czesc] <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>        c <span class="op">=</span> cechy_calosc</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>        bledy_zle <span class="op">+=</span> np.<span class="bu">sum</span>(najblizszy_sasiad(X[ucz][:, c], y[ucz],</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>                                              X[czesc][:, c]) <span class="op">!=</span> y[czesc])</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>        c <span class="op">=</span> najsilniej_skorelowane(X[ucz], y[ucz], q_w)  <span class="co"># tylko dane uczące</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>        bledy_dobre <span class="op">+=</span> np.<span class="bu">sum</span>(najblizszy_sasiad(X[ucz][:, c], y[ucz],</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>                                                X[czesc][:, c]) <span class="op">!=</span> y[czesc])</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>    zle.append(bledy_zle <span class="op">/</span> n_w)</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>    dobre.append(bledy_dobre <span class="op">/</span> n_w)</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>fig, osie <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="fl">3.6</span>), sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>przedzialy <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="fl">0.9</span>, <span class="dv">46</span>)</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, wyniki, tytul <span class="kw">in</span> [(osie[<span class="dv">0</span>], zle, <span class="st">"wybór cech przed walidacją"</span>),</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>                          (osie[<span class="dv">1</span>], dobre, <span class="st">"wybór cech wewnątrz walidacji"</span>)]:</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>    ax.hist(wyniki, bins<span class="op">=</span>przedzialy, color<span class="op">=</span><span class="st">"#1B6CA8"</span>, alpha<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>    ax.axvline(<span class="fl">0.5</span>, color<span class="op">=</span><span class="st">"#D7263D"</span>, ls<span class="op">=</span><span class="st">"--"</span>, lw<span class="op">=</span><span class="fl">1.5</span>)</span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>    ax.set_title(tytul)</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"oszacowanie błędu walidacją krzyżową"</span>)</span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].set_ylabel(<span class="st">"liczba prób"</span>)</span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"średnie oszacowanie: zły sposób </span><span class="sc">{</span>np<span class="sc">.</span>mean(zle)<span class="sc">:.3f}</span><span class="ss">, "</span></span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>      <span class="ss">f"dobry sposób </span><span class="sc">{</span>np<span class="sc">.</span>mean(dobre)<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-wyciek-selekcja" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-wyciek-selekcja-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-ocena-modeli_files/figure-html/fig-wyciek-selekcja-output-1.png" width="1047" height="336" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-wyciek-selekcja-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Rysunek&nbsp;5.3: Oszacowania błędu procedury „wybór 100 cech najsilniej skorelowanych z klasą + klasyfikator 1-NN” pięciokrotną walidacją krzyżową, dla 100 prób (<span class="math inline">\(n = 50\)</span>, <span class="math inline">\(p = 5000\)</span> cech niezależnych od klasy). Po lewej: wybór cech na całej próbie, przed walidacją. Po prawej: wybór cech wewnątrz każdej części. Czerwona linia: prawdziwe ryzyko <span class="math inline">\(1/2\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>średnie oszacowanie: zły sposób 0.017, dobry sposób 0.525</code></pre>
+</div>
+</div>
+<p>Zły sposób przekonuje, że klasyfikator niemal się nie myli, choć w danych nie ma żadnej informacji o klasie. Mechanizm jest prosty. Wśród <span class="math inline">\(5000\)</span> cech szumu przy <span class="math inline">\(50\)</span> obserwacjach zawsze znajdą się takie, które przypadkiem silnie korelują z klasą. Wybierając je na całej próbie, wybieramy cechy dopasowane także do klas obserwacji, które później posłużą do oceny. Klasyfikator „wie” o nich coś, czego w nowych danych nie będzie. Dobry sposób daje oszacowania rozrzucone wokół <span class="math inline">\(1/2\)</span>, jak być powinno. Ten błąd metodologiczny nie jest wymyślony: <span class="citation" data-cites="ambroise2002">Ambroise i McLachlan (<a href="../references.html#ref-ambroise2002" role="doc-biblioref">2002</a>)</span> pokazali, że w opublikowanych analizach danych z mikromacierzy, gdzie cech są tysiące, a obserwacji kilkadziesiąt, prowadził on do raportowania błędów bliskich zera dla klasyfikatorów bez wartości predykcyjnej.</p>
+<p>W bibliotece scikit-learn przed tym błędem chroni potok (<code>Pipeline</code>), o którym mówiliśmy w sekcji <a href="03-knn.html#sec-knn-praktyka" class="quarto-xref"><span>3.7</span></a>. Funkcje walidacji krzyżowej wywołują <code>fit</code> całego potoku osobno w każdej części, więc standaryzacja, wybór cech i model widzą tylko jej dane uczące.</p>
+<p>Wyciek ma też źródła, przed którymi potok nie chroni, bo dotyczą samego podziału na części. Walidacja krzyżowa zakłada, że obserwacje są niezależne, a nowe dane pochodzą z tego samego rozkładu. Gdy to założenie zawodzi, losowy podział daje ocenę zbyt optymistyczną:</p>
+<ul>
+<li><strong>Obserwacje zgrupowane.</strong> Jeśli mamy po kilka pomiarów każdego pacjenta, a model ma działać dla nowych pacjentów, to losowy podział pomiarów pozwala ocenić model na pacjencie, którego inne pomiary widział. Dzielić trzeba całe grupy (w scikit-learn <code>GroupKFold</code>).</li>
+<li><strong>Dane uporządkowane w czasie.</strong> Jeśli model ma przewidywać przyszłość, ocenia się go tylko na obserwacjach późniejszych niż te, na których się uczył (<code>TimeSeriesSplit</code>). Losowy podział pozwala „przewidywać” przeszłość na podstawie przyszłości.</li>
+<li><strong>Duplikaty.</strong> Te same lub prawie te same obserwacje w części uczącej i oceniającej działają jak obserwacje testowe w zbiorze uczącym. Do tej kategorii należy też powielanie obserwacji rzadkiej klasy przeprowadzone przed podziałem.</li>
+<li><strong>Cechy z przyszłości.</strong> Cecha zarejestrowana po zdarzeniu, które przewidujemy – na przykład kod zabiegu wykonywanego tylko u chorych – daje świetne wyniki w walidacji i jest niedostępna w momencie, gdy predykcja jest potrzebna.</li>
+</ul>
+<p>Ogólna zasada jest taka: podział na część uczącą i oceniającą ma naśladować sytuację, w której model będzie używany. Jeśli przyszłe dane będą pochodzić z innego szpitala, innego roku albo innej populacji niż próba, żaden podział próby tego nie odtworzy. Walidacja krzyżowa szacuje ryzyko w populacji, z której pochodzi próba, a wiarygodność tej oceny, jak zauważyliśmy w rozdziale <a href="01-czym-jest-model.html" class="quarto-xref"><span>1</span></a>, zależy od sposobu zebrania danych.</p>
+</section>
+<section id="sec-selekcja-ocena" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="sec-selekcja-ocena"><span class="header-section-number">5.6</span> Selekcja modelu a ocena modelu</h2>
+<p>Wróćmy do trzech pytań z początku rozdziału. Walidacja krzyżowa służy do wyboru spośród kandydatów. Po wyborze kusi, by jako ocenę wybranego modelu podać jego wynik walidacji krzyżowej, najmniejszy wśród kandydatów. To błąd, i to systematyczny.</p>
+<div id="thm-optymizm-wyboru" class="theorem">
+<p><span class="theorem-title"><strong>Twierdzenie 5.2 (Optymizm wyboru)</strong></span> Niech <span class="math inline">\(\widehat\Risk_1, \dots, \widehat\Risk_M\)</span> będą oszacowaniami ryzyk <span class="math inline">\(\Risk_1, \dots, \Risk_M\)</span> kandydatów, nieobciążonymi: <span class="math inline">\(\E[\widehat\Risk_j] = \Risk_j\)</span>. Niech <span class="math inline">\(\widehat\jmath\)</span> będzie indeksem najmniejszego oszacowania. Wtedy <span class="math display">\[
+\E\big[\widehat\Risk_{\widehat\jmath}\big]
+= \E\Big[\min_{j} \widehat\Risk_j\Big]
+\le \min_{j} \Risk_j
+\le \E\big[\Risk_{\widehat\jmath}\big] .
+\]</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Dowód</em>. </span>Dla każdego <span class="math inline">\(l\)</span> zachodzi <span class="math inline">\(\min_j \widehat\Risk_j \le \widehat\Risk_l\)</span>. Biorąc wartość oczekiwaną, dostajemy <span class="math inline">\(\E[\min_j \widehat\Risk_j] \le \Risk_l\)</span> dla każdego <span class="math inline">\(l\)</span>, a więc także dla tego, przy którym <span class="math inline">\(\Risk_l\)</span> jest najmniejsze. Druga nierówność wynika stąd, że <span class="math inline">\(\Risk_{\widehat\jmath}\)</span> jest jednym z ryzyk <span class="math inline">\(\Risk_j\)</span>, więc nie jest mniejsze od najmniejszego z nich. <span class="math inline">\(\square\)</span></p>
+</div>
+<p>Wynik wybranego kandydata zaniża więc ryzyko nawet najlepszego z kandydatów, a ryzyko faktycznie wybranego modelu, który nie musi być najlepszy, jest jeszcze większe. Nierówność jest ostra, gdy oszacowania są losowe i kilku kandydatów ma podobne ryzyka: wybieramy wtedy tego, któremu szum akurat najbardziej pomógł. Zjawisko to bywa nazywane <strong>klątwą zwycięzcy</strong>. Rośnie z liczbą kandydatów i z wariancją oszacowań, a maleje, gdy jeden kandydat jest wyraźnie lepszy od pozostałych.</p>
+<p>Jak zmierzyć ryzyko modelu, który wybieramy? Trzeba ocenić całą procedurę – „wybierz kandydata walidacją krzyżową i dopasuj go do danych” – tak samo, jak oceniamy każdą inną metodę uczenia: na danych, których ta procedura nie widziała. Prowadzi to do <strong>zagnieżdżonej walidacji krzyżowej</strong> <span class="citation" data-cites="varma2006">(<a href="../references.html#ref-varma2006" role="doc-biblioref">Varma i Simon 2006</a>)</span>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Zagnieżdżona walidacja krzyżowa
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Dzielimy dane na <span class="math inline">\(K\)</span> części zewnętrznych. Dla każdej części zewnętrznej <span class="math inline">\(F_k\)</span>:</p>
+<ol type="1">
+<li>Na pozostałych danych przeprowadzamy całą procedurę wyboru: dzielimy je na części wewnętrzne, walidacją krzyżową oceniamy wszystkich kandydatów i wybieramy najlepszego.</li>
+<li>Wybranego kandydata dopasowujemy do wszystkich danych poza <span class="math inline">\(F_k\)</span>.</li>
+<li>Oceniamy go na <span class="math inline">\(F_k\)</span>.</li>
+</ol>
+<p>Średnia strat z kroku 3 jest oszacowaniem ryzyka całej procedury, łącznie z wyborem. W różnych częściach zewnętrznych wybrany może zostać inny kandydat – to normalne, bo oceniamy procedurę wyboru, a nie jednego kandydata.</p>
+</div>
+</div>
+<p>Rysunek <a href="#fig-klatwa-zwyciezcy" class="quarto-xref"><span>5.4</span></a> pokazuje skalę zjawiska na danych bez żadnej informacji. Mamy <span class="math inline">\(n = 100\)</span> obserwacji z <span class="math inline">\(p = 10\)</span> cechami i klasą wylosowaną niezależnie od cech, więc każdy klasyfikator ma ryzyko <span class="math inline">\(1/2\)</span>. Kandydatami są klasyfikatory <span class="math inline">\(k\)</span>-NN o dziesięciu różnych wartościach <span class="math inline">\(k\)</span>, uczone na dziesięciu różnych losowych trójkach cech – razem <span class="math inline">\(100\)</span> kandydatów. Porównujemy dwie liczby: najmniejszy wynik pięciokrotnej walidacji krzyżowej spośród pierwszych <span class="math inline">\(M\)</span> kandydatów i wynik zagnieżdżonej walidacji krzyżowej procedury wybierającej spośród nich.</p>
+<div id="cell-fig-klatwa-zwyciezcy" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">11</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>n_kl, p_kl, powt_kl <span class="op">=</span> <span class="dv">100</span>, <span class="dv">10</span>, <span class="dv">200</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>wartosci_k <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">7</span>, <span class="dv">9</span>, <span class="dv">11</span>, <span class="dv">15</span>, <span class="dv">21</span>, <span class="dv">31</span>, <span class="dv">41</span>]</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>liczby_M <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">50</span>, <span class="dv">100</span>]</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>M_max <span class="op">=</span> <span class="bu">max</span>(liczby_M)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bledy_knn(odl, y, ucz, ocen):</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Liczba błędów klasyfikatorów k-NN dla wszystkich k z listy wartosci_k</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">    na obserwacjach ocen, przy uczeniu na obserwacjach ucz. Macierz odległości</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">    jest liczona raz; nieparzyste k wykluczają remisy przy dwóch klasach."""</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    kolejnosc <span class="op">=</span> np.argsort(odl[np.ix_(ocen, ucz)], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    jedynki <span class="op">=</span> np.cumsum(y[ucz][kolejnosc], axis<span class="op">=</span><span class="dv">1</span>)  <span class="co"># klasy 1 wśród j najbliższych</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array([np.<span class="bu">sum</span>((jedynki[:, k <span class="op">-</span> <span class="dv">1</span>] <span class="op">&gt;</span> k <span class="op">/</span> <span class="dv">2</span>) <span class="op">!=</span> y[ocen])</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>                     <span class="cf">for</span> k <span class="kw">in</span> wartosci_k])</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> walidacja_kandydatow(odleglosci, y, indeksy, rng, K<span class="op">=</span><span class="dv">5</span>):</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Liczba błędów K-krotnej walidacji krzyżowej każdego kandydata</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co">    na obserwacjach indeksy; kandydaci: (trójka cech, k)."""</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    bledy <span class="op">=</span> np.zeros(<span class="bu">len</span>(odleglosci) <span class="op">*</span> <span class="bu">len</span>(wartosci_k))</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> czesc <span class="kw">in</span> np.array_split(rng.permutation(indeksy), K):</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>        ucz <span class="op">=</span> np.setdiff1d(indeksy, czesc)</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>        bledy <span class="op">+=</span> np.concatenate([bledy_knn(o, y, ucz, czesc) <span class="cf">for</span> o <span class="kw">in</span> odleglosci])</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> bledy</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>min_cv <span class="op">=</span> np.zeros((powt_kl, <span class="bu">len</span>(liczby_M)))</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>zagniezdzona <span class="op">=</span> np.zeros((powt_kl, <span class="bu">len</span>(liczby_M)))</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>wszystkie <span class="op">=</span> np.arange(n_kl)</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> r <span class="kw">in</span> <span class="bu">range</span>(powt_kl):</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> rng.normal(size<span class="op">=</span>(n_kl, p_kl))</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> rng.integers(<span class="dv">0</span>, <span class="dv">2</span>, n_kl)</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>    trojki <span class="op">=</span> [rng.choice(p_kl, <span class="dv">3</span>, replace<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>              <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(M_max <span class="op">//</span> <span class="bu">len</span>(wartosci_k))]</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>    odleglosci <span class="op">=</span> [((X[:, t][:, <span class="va">None</span>] <span class="op">-</span> X[:, t][<span class="va">None</span>]) <span class="op">**</span> <span class="dv">2</span>).<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>                  <span class="cf">for</span> t <span class="kw">in</span> trojki]</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>    kolej <span class="op">=</span> rng.permutation(M_max)          <span class="co"># kandydaci w losowej kolejności</span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>    cv_kand <span class="op">=</span> walidacja_kandydatow(odleglosci, y, wszystkie, rng)[kolej] <span class="op">/</span> n_kl</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>    min_cv[r] <span class="op">=</span> [cv_kand[:M].<span class="bu">min</span>() <span class="cf">for</span> M <span class="kw">in</span> liczby_M]</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> czesc <span class="kw">in</span> np.array_split(rng.permutation(n_kl), <span class="dv">5</span>):</span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>        reszta <span class="op">=</span> np.setdiff1d(wszystkie, czesc)</span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>        cv_wew <span class="op">=</span> walidacja_kandydatow(odleglosci, y, reszta, rng)[kolej]</span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>        bledy_zew <span class="op">=</span> np.concatenate([bledy_knn(o, y, reszta, czesc)</span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>                                    <span class="cf">for</span> o <span class="kw">in</span> odleglosci])[kolej]</span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j, M <span class="kw">in</span> <span class="bu">enumerate</span>(liczby_M):</span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>            zagniezdzona[r, j] <span class="op">+=</span> bledy_zew[np.argmin(cv_wew[:M])] <span class="op">/</span> n_kl</span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="fl">4.0</span>))</span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> wyniki, kolor, opis <span class="kw">in</span> [(min_cv, <span class="st">"#1B6CA8"</span>, <span class="st">"najmniejszy wynik CV"</span>),</span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>                            (zagniezdzona, <span class="st">"#3A9D5D"</span>, <span class="st">"zagnieżdżona CV"</span>)]:</span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>    sr <span class="op">=</span> wyniki.mean(axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a>    bs <span class="op">=</span> wyniki.std(axis<span class="op">=</span><span class="dv">0</span>) <span class="op">/</span> np.sqrt(powt_kl)</span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>    ax.plot(liczby_M, sr, <span class="st">"o-"</span>, color<span class="op">=</span>kolor, label<span class="op">=</span>opis)</span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>    ax.fill_between(liczby_M, sr <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> bs, sr <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> bs, color<span class="op">=</span>kolor, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>ax.axhline(<span class="fl">0.5</span>, color<span class="op">=</span><span class="st">"#D7263D"</span>, ls<span class="op">=</span><span class="st">"--"</span>, lw<span class="op">=</span><span class="fl">1.5</span>, label<span class="op">=</span><span class="st">"ryzyko kandydatów"</span>)</span>
+<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a>ax.set_xscale(<span class="st">"log"</span>)</span>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"liczba kandydatów $M$"</span>)</span>
+<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"oszacowanie błędu"</span>)</span>
+<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a>ax.legend(frameon<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-klatwa-zwyciezcy" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-klatwa-zwyciezcy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-ocena-modeli_files/figure-html/fig-klatwa-zwyciezcy-output-1.png" width="616" height="374" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-klatwa-zwyciezcy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Rysunek&nbsp;5.4: Optymizm wyboru. Dane bez informacji o klasie (<span class="math inline">\(n = 100\)</span>, <span class="math inline">\(p = 10\)</span>), kandydaci to klasyfikatory <span class="math inline">\(k\)</span>-NN na losowych trójkach cech. Niebieska linia: najmniejsze oszacowanie pięciokrotną walidacją krzyżową wśród <span class="math inline">\(M\)</span> kandydatów. Zielona linia: zagnieżdżona walidacja krzyżowa procedury wyboru (5 części zewnętrznych, 5 wewnętrznych). Średnie z 200 prób; pas to <span class="math inline">\(\pm 2\)</span> błędy standardowe średniej. Czerwona linia: ryzyko każdego kandydata.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Przy jednym kandydacie nie ma wyboru, obie metody są zwykłą walidacją krzyżową i trafiają w <span class="math inline">\(1/2\)</span>. Z każdym kolejnym kandydatem minimum wyników walidacji krzyżowej spada, a przy stu kandydatach procedura bez żadnej wartości predykcyjnej „osiąga” błąd poniżej <span class="math inline">\(40\%\)</span>. Zagnieżdżona walidacja krzyżowa pozostaje przy <span class="math inline">\(1/2\)</span> niezależnie od <span class="math inline">\(M\)</span>. Spadek minimum jest przy tym wolniejszy, niż byłby dla niezależnych oszacowań (<a href="#exr-minimum-oszacowan" class="quarto-xref">Zadanie&nbsp;<span>5.6</span></a>), bo kandydaci o podobnych <span class="math inline">\(k\)</span> albo wspólnych cechach mają silnie skorelowane wyniki.</p>
+<p>W tym przykładzie wybór jest bezwartościowy, bo kandydaci są równi. Gdy jeden z nich jest wyraźnie lepszy, optymizm wyboru jest mniejszy, ale zawsze ma ten sam kierunek. <span class="citation" data-cites="cawley2010">Cawley i Talbot (<a href="../references.html#ref-cawley2010" role="doc-biblioref">2010</a>)</span> pokazali, że przy wielu hiperparametrach i małych próbach przekracza on różnice między porównywanymi metodami, więc porównanie metod na podstawie najmniejszych wyników walidacji krzyżowej może wskazać złego zwycięzcę.</p>
+<p>Zostaje pytanie, który model ostatecznie oddajemy do użytku. Zagnieżdżona walidacja krzyżowa ocenia procedurę, a nie jeden model, więc po jej zakończeniu procedurę wyboru przeprowadza się jeszcze raz, na wszystkich danych, i wybranego kandydata dopasowuje do całej próby. Ocena z zagnieżdżonej walidacji odnosi się do tego modelu w takim sensie, w jakim walidacja krzyżowa odnosi się do każdego modelu: jest oszacowaniem ryzyka oczekiwanego procedury, nieco pesymistycznym, bo liczonym dla mniejszych prób. Alternatywą, prostszą i często lepszą, gdy danych jest dużo, jest odłożenie na samym początku zbioru testowego, na który nie patrzy się aż do końca. Ten zbiór ocenia wtedy konkretny, ostatecznie wybrany model.</p>
+</section>
+<section id="sec-strojenie" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="sec-strojenie"><span class="header-section-number">5.7</span> Strojenie hiperparametrów</h2>
+<p>Wybór hiperparametrów na podstawie walidacji krzyżowej to <strong>strojenie</strong> (ang. <em>hyperparameter tuning</em>). Gdy hiperparametr jest jeden, jak <span class="math inline">\(k\)</span> w metodzie <span class="math inline">\(k\)</span>-NN, wystarczy policzyć wynik dla każdej rozsądnej wartości. Gdy jest ich kilka, liczba kombinacji rośnie wykładniczo i trzeba wybrać, które sprawdzić.</p>
+<p><strong>Przeszukiwanie siatki</strong> (ang. <em>grid search</em>) sprawdza wszystkie kombinacje z ustalonych list wartości. Jest proste i łatwe do zrównoleglenia, ale marnotrawne, gdy hiperparametry są nierówno ważne. <span class="citation" data-cites="bergstra2012">Bergstra i Bengio (<a href="../references.html#ref-bergstra2012" role="doc-biblioref">2012</a>)</span> zwrócili uwagę, że tak bywa zwykle: ryzyko zależy silnie od jednego lub dwóch hiperparametrów, a od reszty słabo. Siatka <span class="math inline">\(3 \times 3\)</span> w dwóch wymiarach sprawdza dziewięć kombinacji, ale tylko trzy różne wartości każdego hiperparametru z osobna. Jeśli ważny jest tylko jeden, osiem z dziewięciu dopasowań niewiele wnosi. <strong>Przeszukiwanie losowe</strong> (ang. <em>random search</em>) losuje dziewięć punktów z tego samego obszaru, więc sprawdza dziewięć różnych wartości ważnego hiperparametru. Przy tej samej liczbie dopasowań przeszukiwanie losowe znajduje zwykle konfiguracje nie gorsze niż siatka, a w wielu wymiarach – wyraźnie lepsze.</p>
+<p>Obie metody nie korzystają z wyników dotychczasowych prób. Metody <strong>sekwencyjne</strong> budują przybliżony model zależności wyniku walidacji od hiperparametrów i kolejne punkty wybierają tam, gdzie ten model przewiduje dobry wynik albo jest najbardziej niepewny. Należą do nich optymalizacja bayesowska i metoda TPE (ang. <em>tree-structured Parzen estimator</em>), stosowana domyślnie w bibliotece Optuna. Przy kosztownych modelach pozwalają one dodatkowo przerywać w trakcie uczenia próby, które od początku wypadają słabo.</p>
+<p>Każda z tych metod jest procedurą wyboru spośród kandydatów, więc podlega twierdzeniu <a href="#thm-optymizm-wyboru" class="quarto-xref"><span>5.2</span></a>. Im więcej konfiguracji sprawdzimy i im skuteczniej szukamy minimum, tym bardziej najlepszy znaleziony wynik walidacji krzyżowej jest optymistyczny. Można dopasować się do szumu w walidacji tak samo, jak model dopasowuje się do szumu w danych uczących. Wynik strojenia nie jest więc oceną modelu. Ocenę daje zagnieżdżona walidacja krzyżowa albo zbiór testowy, który w strojeniu nie uczestniczył.</p>
+</section>
+<section id="sec-bootstrap" class="level2" data-number="5.8">
+<h2 data-number="5.8" class="anchored" data-anchor-id="sec-bootstrap"><span class="header-section-number">5.8</span> Bootstrap</h2>
+<p>Dotąd szacowaliśmy ryzyko. Równie często potrzebujemy niepewności innej wielkości obliczonej z próby: współczynnika modelu, predykcji w danym punkcie, pola pod krzywą, a nawet samego oszacowania ryzyka. Gdybyśmy znali rozkład <span class="math inline">\(P\)</span>, sprawa byłaby prosta. Wylosowalibyśmy z niego wiele prób, w każdej policzyli interesującą nas wielkość i zobaczyli jej rozrzut – tak jak w rozdziale <a href="04-bias-wariancja.html" class="quarto-xref"><span>4</span></a> oglądaliśmy rozrzut dopasowanych wielomianów na rysunku <a href="04-bias-wariancja.html#fig-wachlarz" class="quarto-xref"><span>4.2</span></a>. Rozkładu <span class="math inline">\(P\)</span> nie znamy, mamy tylko próbę.</p>
+<p><strong>Bootstrap</strong> <span class="citation" data-cites="efron1979">(<a href="../references.html#ref-efron1979" role="doc-biblioref">Efron 1979</a>)</span> zastępuje nieznany rozkład <span class="math inline">\(P\)</span> jego najlepszym przybliżeniem, jakim dysponujemy: <strong>rozkładem empirycznym</strong> <span class="math inline">\(\widehat P_n\)</span>, który każdej z <span class="math inline">\(n\)</span> obserwacji próby przypisuje prawdopodobieństwo <span class="math inline">\(1/n\)</span>. Losowanie <span class="math inline">\(n\)</span> obserwacji z <span class="math inline">\(\widehat P_n\)</span> to losowanie <span class="math inline">\(n\)</span> obserwacji z próby <strong>ze zwracaniem</strong>. Taką <strong>próbę bootstrapową</strong> <span class="math inline">\(\mathcal{D}^*\)</span> traktujemy jak nową próbę z populacji.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Błąd standardowy metodą bootstrap
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Niech <span class="math inline">\(\widehat\theta = s(\mathcal{D})\)</span> będzie wielkością obliczoną z próby.</p>
+<ol type="1">
+<li>Dla <span class="math inline">\(b = 1, \dots, B\)</span> wylosuj z próby ze zwracaniem <span class="math inline">\(n\)</span> obserwacji, tworząc próbę <span class="math inline">\(\mathcal{D}^*_b\)</span>, i oblicz <span class="math inline">\(\widehat\theta^*_b = s(\mathcal{D}^*_b)\)</span>.</li>
+<li>Oszacowaniem błędu standardowego <span class="math inline">\(\widehat\theta\)</span> jest odchylenie standardowe liczb <span class="math inline">\(\widehat\theta^*_1, \dots, \widehat\theta^*_B\)</span>.</li>
+<li>Przedziałem ufności na poziomie <span class="math inline">\(95\%\)</span> jest przedział między kwantylami rzędu <span class="math inline">\(0{,}025\)</span> i <span class="math inline">\(0{,}975\)</span> tych liczb (<strong>przedział percentylowy</strong>).</li>
+</ol>
+</div>
+</div>
+<p>Metoda zawiera dwa przybliżenia. Pierwsze, statystyczne, to zastąpienie <span class="math inline">\(P\)</span> przez <span class="math inline">\(\widehat P_n\)</span>; jego jakość zależy od <span class="math inline">\(n\)</span> i od tego, jak gładko <span class="math inline">\(\widehat\theta\)</span> zależy od danych. Drugie, numeryczne, to skończone <span class="math inline">\(B\)</span>; to przybliżenie poprawiamy po prostu, zwiększając <span class="math inline">\(B\)</span>. Do błędu standardowego wystarcza zwykle <span class="math inline">\(B\)</span> rzędu kilkuset, do kwantyli w przedziale – kilku tysięcy.</p>
+<p>Próba bootstrapowa zawiera niektóre obserwacje wielokrotnie, a innych wcale. Prawdopodobieństwo, że ustalona obserwacja nie zostanie wylosowana w żadnym z <span class="math inline">\(n\)</span> losowań, wynosi <span id="eq-bootstrap-poza-proba"><span class="math display">\[
+\Big(1 - \frac{1}{n}\Big)^{n} \xrightarrow[n \to \infty]{} e^{-1} \approx 0{,}368 .
+\tag{5.7}\]</span></span> Próba bootstrapowa zawiera więc przeciętnie około <span class="math inline">\(63{,}2\%\)</span> różnych obserwacji z próby, a pozostałe <span class="math inline">\(36{,}8\%\)</span> w niej nie występują (<a href="#exr-bootstrap-poza-proba" class="quarto-xref">Zadanie&nbsp;<span>5.4</span></a>).</p>
+<p>Rysunek <a href="#fig-bootstrap" class="quarto-xref"><span>5.5</span></a> pokazuje działanie metody na przykładzie, w którym znamy prawdziwy rozkład. Szacujemy błąd standardowy predykcji wielomianu stopnia <span class="math inline">\(3\)</span> w punkcie <span class="math inline">\(x_0 = 0{,}95\)</span>, blisko krańca przedziału, gdzie dopasowania są najmniej stabilne.</p>
+<div id="cell-fig-bootstrap" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">6</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>n_b, d_b, x0 <span class="op">=</span> <span class="dv">50</span>, <span class="dv">3</span>, <span class="fl">0.95</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>prawdziwy <span class="op">=</span> np.array([Polynomial.fit(<span class="op">*</span>probka(n_b, rng), d_b)(x0)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                      <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5000</span>)])</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bootstrap_predykcji(x, y, B, rng):</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Replikacje bootstrapowe predykcji wielomianu stopnia d_b w punkcie x0."""</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    indeksy <span class="op">=</span> rng.integers(<span class="dv">0</span>, <span class="bu">len</span>(x), size<span class="op">=</span>(B, <span class="bu">len</span>(x)))</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array([Polynomial.fit(x[i], y[i], d_b)(x0) <span class="cf">for</span> i <span class="kw">in</span> indeksy])</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>x, y <span class="op">=</span> probka(n_b, rng)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>f_hat_x0 <span class="op">=</span> Polynomial.fit(x, y, d_b)(x0)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>replikacje <span class="op">=</span> bootstrap_predykcji(x, y, <span class="dv">2000</span>, rng)</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>oszacowania_se <span class="op">=</span> np.array([bootstrap_predykcji(<span class="op">*</span>probka(n_b, rng), <span class="dv">200</span>, rng).std()</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>                           <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">200</span>)])</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>fig, osie <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="fl">3.8</span>))</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>przedzialy <span class="op">=</span> np.linspace(<span class="op">-</span><span class="fl">0.8</span>, <span class="fl">1.4</span>, <span class="dv">56</span>)</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].hist(prawdziwy, bins<span class="op">=</span>przedzialy, density<span class="op">=</span><span class="va">True</span>, histtype<span class="op">=</span><span class="st">"step"</span>,</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>             color<span class="op">=</span><span class="st">"0.4"</span>, lw<span class="op">=</span><span class="fl">1.5</span>, label<span class="op">=</span><span class="vs">r"rozkład </span><span class="dv">$\w</span><span class="vs">idehat f_{</span><span class="dv">\m</span><span class="vs">athcal{D}}</span><span class="kw">(</span><span class="vs">x_0</span><span class="kw">)</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].hist(replikacje, bins<span class="op">=</span>przedzialy, density<span class="op">=</span><span class="va">True</span>, color<span class="op">=</span><span class="st">"#1B6CA8"</span>,</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>             alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">"replikacje bootstrapowe"</span>)</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].axvline(f_hat_x0, color<span class="op">=</span><span class="st">"#1B6CA8"</span>, lw<span class="op">=</span><span class="fl">1.8</span>)</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].axvline(f_prawdziwa(x0), color<span class="op">=</span><span class="st">"black"</span>, ls<span class="op">=</span><span class="st">"--"</span>, lw<span class="op">=</span><span class="fl">1.4</span>)</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].set_xlabel(<span class="st">"predykcja w $x_0$"</span>)</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].legend(frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">1</span>].hist(oszacowania_se, bins<span class="op">=</span><span class="dv">30</span>, color<span class="op">=</span><span class="st">"#1B6CA8"</span>, alpha<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">1</span>].axvline(prawdziwy.std(), color<span class="op">=</span><span class="st">"#D7263D"</span>, ls<span class="op">=</span><span class="st">"--"</span>, lw<span class="op">=</span><span class="fl">1.5</span>)</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">1</span>].set_xlabel(<span class="st">"bootstrapowe oszacowanie błędu standardowego"</span>)</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">1</span>].set_ylabel(<span class="st">"liczba prób"</span>)</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"prawdziwy błąd standardowy:           </span><span class="sc">{</span>prawdziwy<span class="sc">.</span>std()<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"bootstrap w jednej próbie:            </span><span class="sc">{</span>replikacje<span class="sc">.</span>std()<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"przedział percentylowy:              "</span>,</span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>      np.<span class="bu">round</span>(np.percentile(replikacje, [<span class="fl">2.5</span>, <span class="fl">97.5</span>]), <span class="dv">3</span>))</span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"mediana oszacowań w 200 próbach:      </span><span class="sc">{</span>np<span class="sc">.</span>median(oszacowania_se)<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"kwantyle 10</span><span class="sc">% i</span><span class="st"> 90</span><span class="sc">% o</span><span class="st">szacowań:        "</span>,</span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>      np.<span class="bu">round</span>(np.percentile(oszacowania_se, [<span class="dv">10</span>, <span class="dv">90</span>]), <span class="dv">3</span>))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-bootstrap" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bootstrap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-ocena-modeli_files/figure-html/fig-bootstrap-output-1.png" width="1048" height="355" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bootstrap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Rysunek&nbsp;5.5: Bootstrap dla predykcji <span class="math inline">\(\widehat f(x_0)\)</span> wielomianu stopnia <span class="math inline">\(3\)</span> w punkcie <span class="math inline">\(x_0 = 0{,}95\)</span> (<span class="math inline">\(n = 50\)</span>). Po lewej: dla jednej próby rozkład 2000 replikacji bootstrapowych (niebieski) na tle prawdziwego rozkładu <span class="math inline">\(\widehat f_{\mathcal{D}}(x_0)\)</span> po 5000 próbach z populacji (szary kontur); pionowe linie: <span class="math inline">\(\widehat f(x_0)\)</span> z tej próby (niebieska) i <span class="math inline">\(\fopt(x_0)\)</span> (przerywana). Po prawej: bootstrapowe oszacowania błędu standardowego (<span class="math inline">\(B = 200\)</span>) dla 200 różnych prób; czerwona linia to prawdziwy błąd standardowy.
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>prawdziwy błąd standardowy:           0.135
+bootstrap w jednej próbie:            0.293
+przedział percentylowy:               [-0.14   1.016]
+mediana oszacowań w 200 próbach:      0.125
+kwantyle 10% i 90% oszacowań:         [0.087 0.198]</code></pre>
+</div>
+</div>
+<p>Lewy panel pokazuje najważniejszą własność bootstrapu. Replikacje rozkładają się wokół predykcji <span class="math inline">\(\widehat f(x_0)\)</span> z naszej próby, a nie wokół prawdziwej wartości <span class="math inline">\(\fopt(x_0)\)</span>: próba bootstrapowa „nie wie” więcej o populacji niż próba, z której ją wylosowano. Bootstrap odtwarza więc co najwyżej <strong>rozrzut</strong> estymatora, a nie jego położenie. W tej akurat próbie odtwarza go źle: replikacje są ponad dwa razy szersze niż prawdziwy rozkład. Prawy panel pokazuje, że to próba nietypowa. Oszacowania błędu standardowego skupiają się w pobliżu prawdziwej wartości, z medianą nieco poniżej niej, a w osiemdziesięciu procentach prób różnią się od niej o mniej niż połowę. Rozkład oszacowań jest jednak prawostronnie skośny, a próba z lewego panelu leży w jego dalekim ogonie. W takich próbach przy krańcu przedziału jest mało punktów i wielomiany dopasowane do prób bootstrapowych mocno się tam rozchodzą. Bootstrap jest zawodny dokładnie tam, gdzie estymator jest niestabilny.</p>
+<section id="bootstrap-a-ocena-ryzyka" class="level3" data-number="5.8.1">
+<h3 data-number="5.8.1" class="anchored" data-anchor-id="bootstrap-a-ocena-ryzyka"><span class="header-section-number">5.8.1</span> Bootstrap a ocena ryzyka</h3>
+<p>Bootstrap można też wykorzystać do szacowania ryzyka. Pierwszy pomysł – uczyć predyktor na próbie bootstrapowej i oceniać go na całej próbie – jest optymistyczny, bo około <span class="math inline">\(63\%\)</span> obserwacji oceniających było w zbiorze uczącym. Poprawka nasuwa się sama: każdą obserwację <span class="math inline">\(i\)</span> oceniać tylko predyktorami z tych prób bootstrapowych, które jej nie zawierają. Średnia takich strat po wszystkich obserwacjach to <strong>bootstrap „pozostaw jeden”</strong>, oznaczany <span class="math inline">\(\widehat\Risk^{(1)}\)</span>. Każda obserwacja jest tu oceniana przez predyktor, który jej nie widział, więc optymizmu nie ma. Jest za to pesymizm podobny do walidacji krzyżowej: próba bootstrapowa zawiera tylko około <span class="math inline">\(0{,}632n\)</span> różnych obserwacji i predyktor zachowuje się mniej więcej tak, jakby uczył się na tej liczbie danych.</p>
+<p><span class="citation" data-cites="efron1983">Efron (<a href="../references.html#ref-efron1983" role="doc-biblioref">1983</a>)</span> zaproponował, by oba błędy zrównoważyć, łącząc pesymistyczne <span class="math inline">\(\widehat\Risk^{(1)}\)</span> z optymistycznym błędem uczącym <span class="math inline">\(\overline{\mathrm{err}}\)</span>: <span class="math display">\[
+\widehat\Risk^{(.632)} = 0{,}368\, \overline{\mathrm{err}} + 0{,}632\, \widehat\Risk^{(1)} .
+\]</span> Waga <span class="math inline">\(0{,}632\)</span> to przeciętny odsetek obserwacji wylosowanych do próby bootstrapowej (<a href="#eq-bootstrap-poza-proba" class="quarto-xref"><span>5.7</span></a>); jej uzasadnienie jest przybliżone <span class="citation" data-cites="esl">(<a href="../references.html#ref-esl" role="doc-biblioref">Hastie i in. 2009, rozdz. 7.11</a>)</span>. Estymator ten zawodzi przy metodach, które silnie dopasowują się do próby. Dla reguły jednego najbliższego sąsiada <span class="math inline">\(\overline{\mathrm{err}} = 0\)</span>, więc nawet przy danych bez żadnej informacji, gdy ryzyko wynosi <span class="math inline">\(1/2\)</span>, dostajemy około <span class="math inline">\(0{,}632 \cdot
+0{,}5 \approx 0{,}32\)</span>. Wersja <strong>.632+</strong> <span class="citation" data-cites="efron1997">(<a href="../references.html#ref-efron1997" role="doc-biblioref">Efron i Tibshirani 1997</a>)</span> przesuwa wagę w stronę <span class="math inline">\(\widehat\Risk^{(1)}\)</span>, gdy różnica między <span class="math inline">\(\widehat\Risk^{(1)}\)</span> a <span class="math inline">\(\overline{\mathrm{err}}\)</span> jest duża w porównaniu z błędem klasyfikatora bezwartościowego. Dla dwóch klas błędem tym jest <span class="math inline">\(\widehat\gamma = \widehat p_1 (1 - \widehat q_1) + (1 - \widehat p_1) \widehat q_1\)</span>, gdzie <span class="math inline">\(\widehat p_1\)</span> to odsetek klasy <span class="math inline">\(1\)</span> w próbie, a <span class="math inline">\(\widehat q_1\)</span> – odsetek obserwacji, którym predyktor przypisuje klasę <span class="math inline">\(1\)</span>. Względny stopień nadmiernego dopasowania <span class="math inline">\(\widehat R = (\widehat\Risk^{(1)} - \overline{\mathrm{err}})/(\widehat\gamma
+- \overline{\mathrm{err}})\)</span>, obcięty do przedziału <span class="math inline">\([0, 1]\)</span>, wyznacza wagę <span class="math display">\[
+\widehat w = \frac{0{,}632}{1 - 0{,}368\, \widehat R},
+\qquad
+\widehat\Risk^{(.632+)} = (1 - \widehat w)\, \overline{\mathrm{err}}
++ \widehat w\, \widehat\Risk^{(1)} .
+\]</span> Bez nadmiernego dopasowania (<span class="math inline">\(\widehat R = 0\)</span>) jest to estymator .632, przy skrajnym (<span class="math inline">\(\widehat R = 1\)</span>) – sam <span class="math inline">\(\widehat\Risk^{(1)}\)</span>.</p>
+<p>Porównajmy te estymatory z dziesięciokrotną walidacją krzyżową na zbiorze dwóch półksiężyców z rozdziału <a href="03-knn.html" class="quarto-xref"><span>3</span></a>, dla klasyfikatorów <span class="math inline">\(1\)</span>-NN i <span class="math inline">\(15\)</span>-NN uczonych na <span class="math inline">\(n = 100\)</span> obserwacjach. Prawdziwe ryzyko dopasowanego modelu szacujemy na <span class="math inline">\(20\,000\)</span> obserwacjach testowych; jego błąd standardowy jest rzędu <span class="math inline">\(0{,}002\)</span>.</p>
+<div id="1b199b27" class="cell" data-execution_count="9">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_moons</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">3</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>n_e, B_e, powt_e <span class="op">=</span> <span class="dv">100</span>, <span class="dv">100</span>, <span class="dv">200</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>X_test, y_test <span class="op">=</span> make_moons(n_samples<span class="op">=</span><span class="dv">20_000</span>, noise<span class="op">=</span><span class="fl">0.30</span>, random_state<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> knn_klasy(odl, y_ucz, k):</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Klasyfikator k-NN z macierzy odległości (wiersze: punkty oceniane)."""</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    najblizsi <span class="op">=</span> np.argsort(odl, axis<span class="op">=</span><span class="dv">1</span>)[:, :k]</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (y_ucz[najblizsi].mean(axis<span class="op">=</span><span class="dv">1</span>) <span class="op">&gt;</span> <span class="fl">0.5</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> knn_test(X_ucz, y_ucz, k):</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Błąd na dużym zbiorze testowym, liczony porcjami dla oszczędności pamięci."""</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    bledy <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> porcja <span class="kw">in</span> np.array_split(np.arange(<span class="bu">len</span>(X_test)), <span class="dv">20</span>):</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>        odl <span class="op">=</span> ((X_test[porcja][:, <span class="va">None</span>] <span class="op">-</span> X_ucz[<span class="va">None</span>]) <span class="op">**</span> <span class="dv">2</span>).<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>        bledy <span class="op">+=</span> np.<span class="bu">sum</span>(knn_klasy(odl, y_ucz, k) <span class="op">!=</span> y_test[porcja])</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> bledy <span class="op">/</span> <span class="bu">len</span>(X_test)</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>nazwy <span class="op">=</span> [<span class="st">"prawdziwe ryzyko"</span>, <span class="st">"błąd uczący"</span>, <span class="st">"bootstrap (1)"</span>,</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>         <span class="st">".632"</span>, <span class="st">".632+"</span>, <span class="st">"CV, K = 10"</span>]</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>wyniki <span class="op">=</span> {k: np.zeros((powt_e, <span class="bu">len</span>(nazwy))) <span class="cf">for</span> k <span class="kw">in</span> [<span class="dv">1</span>, <span class="dv">15</span>]}</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> r <span class="kw">in</span> <span class="bu">range</span>(powt_e):</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>    X, y <span class="op">=</span> make_moons(n_samples<span class="op">=</span>n_e, noise<span class="op">=</span><span class="fl">0.30</span>,</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>                      random_state<span class="op">=</span><span class="bu">int</span>(rng.integers(<span class="dv">2</span><span class="op">**</span><span class="dv">31</span>)))</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>    odl <span class="op">=</span> ((X[:, <span class="va">None</span>] <span class="op">-</span> X[<span class="va">None</span>]) <span class="op">**</span> <span class="dv">2</span>).<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>    proby <span class="op">=</span> rng.integers(<span class="dv">0</span>, n_e, size<span class="op">=</span>(B_e, n_e))</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>    czesci <span class="op">=</span> np.array_split(rng.permutation(n_e), <span class="dv">10</span>)</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k <span class="kw">in</span> [<span class="dv">1</span>, <span class="dv">15</span>]:</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>        err <span class="op">=</span> np.mean(knn_klasy(odl, y, k) <span class="op">!=</span> y)</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Bootstrap "pozostaw jeden": obserwację i oceniają tylko</span></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>        <span class="co"># predyktory z prób bootstrapowych, które jej nie zawierają.</span></span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>        bledy, liczby <span class="op">=</span> np.zeros(n_e), np.zeros(n_e)</span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i_b <span class="kw">in</span> proby:</span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>            poza <span class="op">=</span> np.setdiff1d(np.arange(n_e), i_b)</span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>            pred <span class="op">=</span> knn_klasy(odl[np.ix_(poza, i_b)], y[i_b], k)</span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>            bledy[poza] <span class="op">+=</span> pred <span class="op">!=</span> y[poza]</span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>            liczby[poza] <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>        err1 <span class="op">=</span> np.mean(bledy[liczby <span class="op">&gt;</span> <span class="dv">0</span>] <span class="op">/</span> liczby[liczby <span class="op">&gt;</span> <span class="dv">0</span>])</span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>        e632 <span class="op">=</span> <span class="fl">0.368</span> <span class="op">*</span> err <span class="op">+</span> <span class="fl">0.632</span> <span class="op">*</span> err1</span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>        <span class="co"># .632+: błąd klasyfikatora bezwartościowego i względne przeuczenie.</span></span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>        p1, q1 <span class="op">=</span> y.mean(), knn_klasy(odl, y, k).mean()</span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>        gamma <span class="op">=</span> p1 <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> q1) <span class="op">+</span> (<span class="dv">1</span> <span class="op">-</span> p1) <span class="op">*</span> q1</span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>        err1 <span class="op">=</span> <span class="bu">min</span>(err1, gamma)</span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>        R_wzgl <span class="op">=</span> (err1 <span class="op">-</span> err) <span class="op">/</span> (gamma <span class="op">-</span> err) <span class="cf">if</span> err1 <span class="op">&gt;</span> err <span class="cf">else</span> <span class="fl">0.0</span></span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a>        w <span class="op">=</span> <span class="fl">0.632</span> <span class="op">/</span> (<span class="dv">1</span> <span class="op">-</span> <span class="fl">0.368</span> <span class="op">*</span> R_wzgl)</span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a>        e632p <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> w) <span class="op">*</span> err <span class="op">+</span> w <span class="op">*</span> err1</span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a>        cv10 <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> czesc <span class="kw">in</span> czesci:</span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a>            ucz <span class="op">=</span> np.setdiff1d(np.arange(n_e), czesc)</span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a>            pred <span class="op">=</span> knn_klasy(odl[np.ix_(czesc, ucz)], y[ucz], k)</span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a>            cv10 <span class="op">+=</span> np.<span class="bu">sum</span>(pred <span class="op">!=</span> y[czesc]) <span class="op">/</span> n_e</span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a>        wyniki[k][r] <span class="op">=</span> [knn_test(X, y, k), err, err1, e632, e632p, cv10]</span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> [<span class="dv">1</span>, <span class="dv">15</span>]:</span>
+<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">-NN               średnia   odch. std.   pierwiastek ze śr. kw. błędu"</span>)</span>
+<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a>    prawdziwe <span class="op">=</span> wyniki[k][:, <span class="dv">0</span>]</span>
+<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j, nazwa <span class="kw">in</span> <span class="bu">enumerate</span>(nazwy):</span>
+<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a>        w <span class="op">=</span> wyniki[k][:, j]</span>
+<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a>        rmse <span class="op">=</span> np.sqrt(np.mean((w <span class="op">-</span> prawdziwe) <span class="op">**</span> <span class="dv">2</span>))</span>
+<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>nazwa<span class="sc">:18s}</span><span class="ss"> </span><span class="sc">{</span>w<span class="sc">.</span>mean()<span class="sc">:8.3f}</span><span class="ss">   </span><span class="sc">{</span>w<span class="sc">.</span>std()<span class="sc">:10.3f}</span><span class="ss">   </span><span class="sc">{</span>rmse<span class="sc">:10.3f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+1-NN               średnia   odch. std.   pierwiastek ze śr. kw. błędu
+prawdziwe ryzyko      0.132        0.015        0.000
+błąd uczący           0.000        0.000        0.133
+bootstrap (1)         0.144        0.035        0.032
+.632                  0.091        0.022        0.045
+.632+                 0.103        0.028        0.038
+CV, K = 10            0.140        0.039        0.036
+
+15-NN               średnia   odch. std.   pierwiastek ze śr. kw. błędu
+prawdziwe ryzyko      0.097        0.006        0.000
+błąd uczący           0.094        0.026        0.025
+bootstrap (1)         0.122        0.026        0.036
+.632                  0.112        0.025        0.028
+.632+                 0.112        0.025        0.029
+CV, K = 10            0.111        0.030        0.033</code></pre>
+</div>
+</div>
+<p>Wyniki potwierdzają, że żaden estymator nie wygrywa zawsze. Dla <span class="math inline">\(1\)</span>-NN błąd uczący jest zerowy, a .632 wyraźnie zaniża ryzyko. Wersja .632+ poprawia go, ale nie do końca, a <span class="math inline">\(\widehat\Risk^{(1)}\)</span> i walidacja krzyżowa są lekko pesymistyczne. Dla <span class="math inline">\(15\)</span>-NN, który dopasowuje się do próby słabo, sam błąd uczący jest bliski ryzyku, a pozostałe estymatory nieco je zawyżają. W obu przypadkach odchylenia standardowe oszacowań są wyraźnie większe niż odchylenie standardowe samego ryzyka, a dla <span class="math inline">\(15\)</span>-NN – kilkakrotnie. Każdy estymator trafia przeciętnie mniej więcej we właściwe miejsce, ale pojedyncze oszacowanie z próby liczności <span class="math inline">\(100\)</span> jest niepewne – to ten sam wniosek, który dał rysunek <a href="#fig-cv-ryzyko" class="quarto-xref"><span>5.2</span></a>. W praktyce dominuje walidacja krzyżowa, bo jest prostsza, nie wymaga poprawek zależnych od metody i nie zakłada nic o stracie; estymatory bootstrapowe bywają przydatne przy bardzo małych próbach.</p>
+</section>
+</section>
+<section id="sec-krzywe-uczenia-cv" class="level2" data-number="5.9">
+<h2 data-number="5.9" class="anchored" data-anchor-id="sec-krzywe-uczenia-cv"><span class="header-section-number">5.9</span> Krzywe uczenia z danych</h2>
+<p>W sekcji <a href="04-bias-wariancja.html#sec-krzywe-uczenia" class="quarto-xref"><span>4.7</span></a> krzywe uczenia rysowaliśmy, znając ryzyko. Z danych szacuje się je tak samo jak każde ryzyko: walidacją krzyżową. Dla każdej części <span class="math inline">\(F_k\)</span> i każdej liczności <span class="math inline">\(m\)</span> mniejszej niż liczność zbioru uczącego losujemy z danych spoza <span class="math inline">\(F_k\)</span> podpróbę liczności <span class="math inline">\(m\)</span>, dopasowujemy do niej model i liczymy jego błąd na <span class="math inline">\(F_k\)</span> oraz na samej podpróbie. Losowanie podpróby powtarzamy kilkakrotnie i uśredniamy. W bibliotece scikit-learn robi to funkcja <code>learning_curve</code>. Rysunek <a href="#fig-krzywa-uczenia-cv" class="quarto-xref"><span>5.6</span></a> porównuje tak oszacowane krzywe z prawdziwymi dla wielomianów stopnia <span class="math inline">\(1\)</span> i <span class="math inline">\(9\)</span> z rysunku <a href="04-bias-wariancja.html#fig-krzywe-uczenia" class="quarto-xref"><span>4.4</span></a>, przy jednej próbie liczności <span class="math inline">\(N = 1000\)</span>.</p>
+<div id="cell-fig-krzywa-uczenia-cv" class="cell" data-execution_count="10">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">9</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>N_lc, K_lc, podproby <span class="op">=</span> <span class="dv">1000</span>, <span class="dv">5</span>, <span class="dv">20</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>licznosci <span class="op">=</span> np.array([<span class="dv">40</span>, <span class="dv">60</span>, <span class="dv">100</span>, <span class="dv">200</span>, <span class="dv">400</span>, <span class="dv">800</span>])</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>x, y <span class="op">=</span> probka(N_lc, rng)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>czesci <span class="op">=</span> np.array_split(rng.permutation(N_lc), K_lc)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>fig, osie <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="fl">4.0</span>), sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, d <span class="kw">in</span> <span class="bu">zip</span>(osie, [<span class="dv">1</span>, <span class="dv">9</span>]):</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    uczacy_cv <span class="op">=</span> np.zeros(<span class="bu">len</span>(licznosci))</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    walid_cv <span class="op">=</span> np.zeros(<span class="bu">len</span>(licznosci))</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> czesc <span class="kw">in</span> czesci:</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>        reszta <span class="op">=</span> np.setdiff1d(np.arange(N_lc), czesc)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(podproby):</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> i, m <span class="kw">in</span> <span class="bu">enumerate</span>(licznosci):</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>                podproba <span class="op">=</span> rng.choice(reszta, m, replace<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>                wielomian <span class="op">=</span> Polynomial.fit(x[podproba], y[podproba], d)</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>                uczacy_cv[i] <span class="op">+=</span> np.mean((wielomian(x[podproba]) <span class="op">-</span> y[podproba]) <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>                walid_cv[i] <span class="op">+=</span> np.mean((wielomian(x[czesc]) <span class="op">-</span> y[czesc]) <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    uczacy_cv <span class="op">/=</span> K_lc <span class="op">*</span> podproby</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    walid_cv <span class="op">/=</span> K_lc <span class="op">*</span> podproby</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>    ryzyko_prawdziwe <span class="op">=</span> np.zeros(<span class="bu">len</span>(licznosci))</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>    uczacy_prawdziwy <span class="op">=</span> np.zeros(<span class="bu">len</span>(licznosci))</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, m <span class="kw">in</span> <span class="bu">enumerate</span>(licznosci):</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">300</span>):</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>            xs, ys <span class="op">=</span> probka(m, rng)</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>            wielomian <span class="op">=</span> Polynomial.fit(xs, ys, d)</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>            ryzyko_prawdziwe[i] <span class="op">+=</span> ryzyko(wielomian) <span class="op">/</span> <span class="dv">300</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>            uczacy_prawdziwy[i] <span class="op">+=</span> np.mean((wielomian(xs) <span class="op">-</span> ys) <span class="op">**</span> <span class="dv">2</span>) <span class="op">/</span> <span class="dv">300</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>    ax.plot(licznosci, ryzyko_prawdziwe, <span class="st">"-"</span>, color<span class="op">=</span><span class="st">"#1B6CA8"</span>, lw<span class="op">=</span><span class="fl">1.5</span>,</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span><span class="st">"ryzyko"</span>)</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>    ax.plot(licznosci, walid_cv, <span class="st">"o"</span>, color<span class="op">=</span><span class="st">"#1B6CA8"</span>,</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span><span class="st">"ryzyko: walidacja krzyżowa"</span>)</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>    ax.plot(licznosci, uczacy_prawdziwy, <span class="st">"-"</span>, color<span class="op">=</span><span class="st">"0.45"</span>, lw<span class="op">=</span><span class="fl">1.5</span>,</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span><span class="st">"błąd uczący"</span>)</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>    ax.plot(licznosci, uczacy_cv, <span class="st">"o"</span>, color<span class="op">=</span><span class="st">"0.45"</span>,</span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span><span class="st">"błąd uczący: z podprób"</span>)</span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>    ax.axhline(sigma <span class="op">**</span> <span class="dv">2</span>, color<span class="op">=</span><span class="st">"#D7263D"</span>, ls<span class="op">=</span><span class="st">":"</span>, lw<span class="op">=</span><span class="fl">1.5</span>)</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>    ax.set_xscale(<span class="st">"log"</span>)</span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>    ax.set_yscale(<span class="st">"log"</span>)</span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>    ax.set_xticks(licznosci, [<span class="bu">str</span>(m) <span class="cf">for</span> m <span class="kw">in</span> licznosci])</span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>    ax.xaxis.set_minor_locator(plt.NullLocator())</span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"$d = </span><span class="sc">{</span>d<span class="sc">}</span><span class="ss">$"</span>)</span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"liczność próby uczącej $m$"</span>)</span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"d = </span><span class="sc">{</span>d<span class="sc">}</span><span class="ss">: walidacja krzyżowa"</span>, np.<span class="bu">round</span>(walid_cv, <span class="dv">3</span>))</span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"        prawdziwe ryzyko   "</span>, np.<span class="bu">round</span>(ryzyko_prawdziwe, <span class="dv">3</span>))</span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].set_ylabel(<span class="st">"średni kwadrat błędu"</span>)</span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">1</span>].legend(frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>d = 1: walidacja krzyżowa [0.293 0.29  0.284 0.282 0.279 0.278]
+        prawdziwe ryzyko    [0.303 0.296 0.293 0.289 0.288 0.287]
+d = 9: walidacja krzyżowa [1.423 0.167 0.111 0.098 0.094 0.093]
+        prawdziwe ryzyko    [3.249 0.182 0.103 0.095 0.092 0.091]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div id="fig-krzywa-uczenia-cv" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-krzywa-uczenia-cv-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-ocena-modeli_files/figure-html/fig-krzywa-uczenia-cv-output-2.png" width="1046" height="374" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-krzywa-uczenia-cv-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Rysunek&nbsp;5.6: Krzywe uczenia regresji wielomianowej stopnia <span class="math inline">\(d = 1\)</span> (po lewej) i <span class="math inline">\(d = 9\)</span> (po prawej) oszacowane z jednej próby liczności <span class="math inline">\(N = 1000\)</span> pięciokrotną walidacją krzyżową, z 20 podpróbami dla każdej części i liczności (punkty), na tle prawdziwych krzywych z 300 prób z populacji (linie). Linia kropkowana: błąd nieredukowalny <span class="math inline">\(\sigma^2\)</span>. Obie osie w skali logarytmicznej.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Oszacowane krzywe odtwarzają obraz z sekcji <a href="04-bias-wariancja.html#sec-krzywe-uczenia" class="quarto-xref"><span>4.7</span></a>: dla prostej szczelina między krzywymi jest wąska, a obie leżą wysoko nad <span class="math inline">\(\sigma^2\)</span>; dla wielomianu stopnia <span class="math inline">\(9\)</span> szczelina jest szeroka przy małych licznościach i zamyka się, gdy danych przybywa. Diagnostyka z tamtej sekcji – szeroka szczelina wskazuje na wariancję, wąska przy wysokim poziomie na obciążenie – działa więc także bez znajomości ryzyka. Największa rozbieżność występuje dla <span class="math inline">\(d = 9\)</span> przy najmniejszej liczności. Ryzyko oczekiwane jest tam średnią zdominowaną przez nieliczne próby, w których wielomian wysokiego stopnia „ucieka” przy krańcu przedziału. Sto dopasowań z podprób jednej próby takie rzadkie zdarzenia łapie nieregularnie, więc w tym punkcie oszacowanie jest niedokładne.</p>
+<p>Krzywa uczenia oszacowana z danych kończy się na liczności zbioru uczącego w walidacji krzyżowej, czyli <span class="math inline">\(N(K-1)/K\)</span>. Czy dodanie danych pomoże, ocenia się więc, ekstrapolując jej przebieg poza zakres obserwacji. Jeśli krzywa ryzyka przy największych licznościach jest już płaska, więcej danych tej samej natury niewiele da.</p>
+</section>
+<section id="sec-ocena-praktyka" class="level2" data-number="5.10">
+<h2 data-number="5.10" class="anchored" data-anchor-id="sec-ocena-praktyka"><span class="header-section-number">5.10</span> Ocena modeli w praktyce</h2>
+<p>Wróćmy do przykładu z sekcji <a href="03-knn.html#sec-knn-praktyka" class="quarto-xref"><span>3.7</span></a>: klasyfikatora <span class="math inline">\(k\)</span>-NN dla danych o nowotworach piersi, w którym <span class="math inline">\(k = 10\)</span> przyjęliśmy arbitralnie. Teraz wybierzemy <span class="math inline">\(k\)</span> walidacją krzyżową i ocenimy procedurę wyboru zagnieżdżoną walidacją krzyżową. Standaryzacja jest częścią potoku, więc w każdej części jej parametry są wyznaczane tylko z danych uczących.</p>
+<div id="121e53eb" class="cell" data-execution_count="11">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> load_breast_cancer</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> GridSearchCV, StratifiedKFold, cross_validate</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.neighbors <span class="im">import</span> KNeighborsClassifier</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>X, y <span class="op">=</span> load_breast_cancer(return_X_y<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>potok <span class="op">=</span> make_pipeline(StandardScaler(), KNeighborsClassifier())</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>siatka_k <span class="op">=</span> {<span class="st">"kneighborsclassifier__n_neighbors"</span>: [<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">7</span>, <span class="dv">9</span>, <span class="dv">11</span>, <span class="dv">15</span>, <span class="dv">21</span>, <span class="dv">31</span>, <span class="dv">51</span>]}</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Wybór k: pięciokrotna warstwowa walidacja krzyżowa na całych danych.</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>wewnetrzna <span class="op">=</span> StratifiedKFold(n_splits<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>strojenie <span class="op">=</span> GridSearchCV(potok, siatka_k, cv<span class="op">=</span>wewnetrzna, scoring<span class="op">=</span><span class="st">"accuracy"</span>)</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>strojenie.fit(X, y)</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>wyniki_cv <span class="op">=</span> strojenie.cv_results_</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>bledy <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> wyniki_cv[<span class="st">"mean_test_score"</span>]</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>bledy_std <span class="op">=</span> wyniki_cv[<span class="st">"std_test_score"</span>] <span class="op">/</span> np.sqrt(<span class="dv">5</span>)   <span class="co"># naiwny błąd standardowy</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"  k   błąd CV   błąd std."</span>)</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k, b, s <span class="kw">in</span> <span class="bu">zip</span>(siatka_k[<span class="st">"kneighborsclassifier__n_neighbors"</span>], bledy, bledy_std):</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>k<span class="sc">:3d}</span><span class="ss">   </span><span class="sc">{</span>b<span class="sc">:7.4f}</span><span class="ss">   </span><span class="sc">{</span>s<span class="sc">:9.4f}</span><span class="ss">"</span>)</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>najlepszy <span class="op">=</span> np.argmin(bledy)</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>prog <span class="op">=</span> bledy[najlepszy] <span class="op">+</span> bledy_std[najlepszy]</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Najprostszy model to największe k, czyli najsilniejsze wygładzanie.</span></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>k_1se <span class="op">=</span> <span class="bu">max</span>(k <span class="cf">for</span> k, b <span class="kw">in</span> <span class="bu">zip</span>(siatka_k[<span class="st">"kneighborsclassifier__n_neighbors"</span>], bledy)</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> b <span class="op">&lt;=</span> prog)</span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">najmniejszy błąd CV: k = </span><span class="sc">{</span>strojenie<span class="sc">.</span>best_params_[<span class="st">'kneighborsclassifier__n_neighbors'</span>]<span class="sc">}</span><span class="ss">,"</span></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>      <span class="ss">f" błąd </span><span class="sc">{</span>bledy[najlepszy]<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"reguła jednego błędu standardowego: k = </span><span class="sc">{</span>k_1se<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Ocena procedury wyboru: zagnieżdżona walidacja krzyżowa.</span></span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>zewnetrzna <span class="op">=</span> StratifiedKFold(n_splits<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>zagn <span class="op">=</span> cross_validate(strojenie, X, y, cv<span class="op">=</span>zewnetrzna, scoring<span class="op">=</span><span class="st">"accuracy"</span>,</span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>                      return_estimator<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">zagnieżdżona walidacja krzyżowa: błąd </span><span class="sc">{</span><span class="dv">1</span> <span class="op">-</span> zagn[<span class="st">'test_score'</span>]<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"k wybrane w częściach zewnętrznych:"</span>,</span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>      [e.best_params_[<span class="st">"kneighborsclassifier__n_neighbors"</span>] <span class="cf">for</span> e <span class="kw">in</span> zagn[<span class="st">"estimator"</span>]])</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>  k   błąd CV   błąd std.
+  1    0.0422      0.0063
+  3    0.0351      0.0070
+  5    0.0351      0.0096
+  7    0.0351      0.0086
+  9    0.0351      0.0096
+ 11    0.0334      0.0058
+ 15    0.0387      0.0047
+ 21    0.0422      0.0063
+ 31    0.0457      0.0057
+ 51    0.0527      0.0074
+
+najmniejszy błąd CV: k = 11, błąd 0.0334
+reguła jednego błędu standardowego: k = 15
+
+zagnieżdżona walidacja krzyżowa: błąd 0.0334
+k wybrane w częściach zewnętrznych: [5, 5, 11, 3, 3]</code></pre>
+</div>
+</div>
+<p>Krzywa błędu walidacji krzyżowej jest w szerokim zakresie <span class="math inline">\(k\)</span> płaska: między <span class="math inline">\(k = 3\)</span> a <span class="math inline">\(k = 15\)</span> wyniki różnią się mniej więcej o jeden błąd standardowy. Najmniejszy wynik osiąga jedna z wartości z tego zakresu, ale reguła jednego błędu standardowego wskazuje większe <span class="math inline">\(k\)</span>, czyli model gładszy, statystycznie nieodróżnialny od najlepszego. Zagnieżdżona walidacja krzyżowa daje tu, przy innym podziale na części, przypadkiem dokładnie ten sam błąd co najmniejszy wynik walidacji. Przy dziesięciu kandydatach i dość stabilnej metodzie optymizm wyboru okazał się więc mały w porównaniu z niepewnością oszacowania. Nie mogliśmy tego jednak wiedzieć bez zagnieżdżonej walidacji. Wartości <span class="math inline">\(k\)</span> wybrane w częściach zewnętrznych różnią się między sobą. Wybór konkretnego <span class="math inline">\(k\)</span> jest niestabilny, bo kilka wartości jest prawie równie dobrych, a zagnieżdżona walidacja ocenia procedurę, która tę niestabilność obejmuje. Model do użytku otrzymujemy, dopasowując <code>strojenie</code> do wszystkich danych, co zrobiliśmy w pierwszym kroku.</p>
+</section>
+<section id="uwagi-bibliograficzne" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="uwagi-bibliograficzne">Uwagi bibliograficzne</h2>
+<p>Zbiór walidacyjny, walidację krzyżową i bootstrap na poziomie tego rozdziału przedstawiają <span class="citation" data-cites="islp">James i in. (<a href="../references.html#ref-islp" role="doc-biblioref">2023, rozdz. 5</a>)</span>. Pełniejsze omówienie, z analizą optymizmu błędu uczącego, walidacji krzyżowej, estymatorów bootstrapowych .632 i .632+ oraz różnicy między ryzykiem modelu a ryzykiem metody, zawiera <span class="citation" data-cites="esl">Hastie i in. (<a href="../references.html#ref-esl" role="doc-biblioref">2009, rozdz. 7</a>)</span>; przykład z wyborem cech przed walidacją pochodzi z <span class="citation" data-cites="esl">Hastie i in. (<a href="../references.html#ref-esl" role="doc-biblioref">2009, rozdz. 7.10.2</a>)</span>. Przegląd wariantów walidacji krzyżowej i ich własności teoretycznych, z zaleceniami co do wyboru <span class="math inline">\(K\)</span>, dają <span class="citation" data-cites="arlot2010">Arlot i Celisse (<a href="../references.html#ref-arlot2010" role="doc-biblioref">2010</a>)</span>.</p>
+<p>Walidację krzyżową jako ogólną metodę wyboru i oceny predyktorów sformułował <span class="citation" data-cites="stone1974">Stone (<a href="../references.html#ref-stone1974" role="doc-biblioref">1974</a>)</span>. Pytanie, co właściwie szacuje, i jak budować dla niej poprawne przedziały ufności, analizują <span class="citation" data-cites="bates2024">Bates i in. (<a href="../references.html#ref-bates2024" role="doc-biblioref">2024</a>)</span>. Brak nieobciążonego estymatora wariancji wykazali <span class="citation" data-cites="bengio2004">Bengio i Grandvalet (<a href="../references.html#ref-bengio2004" role="doc-biblioref">2004</a>)</span>, a testy statystyczne do porównywania klasyfikatorów, w tym test McNemara, omawia <span class="citation" data-cites="dietterich1998">Dietterich (<a href="../references.html#ref-dietterich1998" role="doc-biblioref">1998</a>)</span>.</p>
+<p>Optymizm wyniku walidacji krzyżowej po wyborze modelu i zagnieżdżoną walidację krzyżową opisali <span class="citation" data-cites="varma2006">Varma i Simon (<a href="../references.html#ref-varma2006" role="doc-biblioref">2006</a>)</span>, a skalę tego zjawiska przy porównywaniu metod – <span class="citation" data-cites="cawley2010">Cawley i Talbot (<a href="../references.html#ref-cawley2010" role="doc-biblioref">2010</a>)</span>. Klasycznym przykładem wycieku przez wybór cech jest praca <span class="citation" data-cites="ambroise2002">Ambroise i McLachlan (<a href="../references.html#ref-ambroise2002" role="doc-biblioref">2002</a>)</span>. Przewagę przeszukiwania losowego nad siatką uzasadnili <span class="citation" data-cites="bergstra2012">Bergstra i Bengio (<a href="../references.html#ref-bergstra2012" role="doc-biblioref">2012</a>)</span>.</p>
+<p>Bootstrap wprowadził <span class="citation" data-cites="efron1979">Efron (<a href="../references.html#ref-efron1979" role="doc-biblioref">1979</a>)</span>. Estymator .632 zaproponował <span class="citation" data-cites="efron1983">Efron (<a href="../references.html#ref-efron1983" role="doc-biblioref">1983</a>)</span> w pracy o szacowaniu błędu reguł predykcyjnych, a wersję .632+ podali <span class="citation" data-cites="efron1997">Efron i Tibshirani (<a href="../references.html#ref-efron1997" role="doc-biblioref">1997</a>)</span>. Systematyczny wykład metody, z przedziałami ufności i wieloma przykładami, zawiera podręcznik <span class="citation" data-cites="efron1993">Efron i Tibshirani (<a href="../references.html#ref-efron1993" role="doc-biblioref">1993</a>)</span>.</p>
+</section>
+<section id="zadania" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="zadania">Zadania</h2>
+<div id="exr-licznosc-testu" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 5.1</strong></span> Klasyfikator ma ryzyko około <span class="math inline">\(8\%\)</span>.</p>
+<ol type="a">
+<li>Ile obserwacji testowych potrzeba, aby połowa szerokości przedziału ufności na poziomie <span class="math inline">\(95\%\)</span> wynosiła <span class="math inline">\(0{,}01\)</span>? A <span class="math inline">\(0{,}002\)</span>?</li>
+<li>Wykaż, że <span class="math inline">\(\Risk(1 - \Risk) \le 1/4\)</span>, i podaj liczność zbioru testowego wystarczającą dla zadanej szerokości przedziału niezależnie od ryzyka. Ile razy jest ona większa od wyniku z punktu a)?</li>
+<li>Klasa <span class="math inline">\(1\)</span> stanowi <span class="math inline">\(1\%\)</span> populacji, a interesuje nas czułość, czyli odsetek obserwacji klasy <span class="math inline">\(1\)</span> rozpoznanych poprawnie. Ile obserwacji testowych trzeba, aby oszacować czułość rzędu <span class="math inline">\(0{,}9\)</span> z dokładnością <span class="math inline">\(\pm 0{,}02\)</span>?</li>
+</ol>
+</div>
+<div id="exr-bledy-procedury" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 5.2</strong></span> Każda z opisanych procedur zawiera błąd metodologiczny. Wskaż go, określ kierunek, w którym zniekształca on ocenę, i zaproponuj poprawkę.</p>
+<ol type="a">
+<li>Wszystkie cechy standaryzujemy na całej próbie, a następnie przeprowadzamy dziesięciokrotną walidację krzyżową klasyfikatora <span class="math inline">\(k\)</span>-NN.</li>
+<li>Dzielimy dane na zbiór uczący i testowy. Dla <span class="math inline">\(k = 1, \dots, 50\)</span> uczymy klasyfikator <span class="math inline">\(k\)</span>-NN na zbiorze uczącym, wybieramy <span class="math inline">\(k\)</span> o najmniejszym błędzie testowym i ten błąd podajemy jako ocenę modelu.</li>
+<li>Dane zawierają po kilka wizyt każdego pacjenta. Wizyty dzielimy losowo na pięć części i przeprowadzamy walidację krzyżową modelu, który ma służyć do diagnozowania nowych pacjentów.</li>
+<li>Model prognozuje dzienną sprzedaż na podstawie sprzedaży z poprzednich dni. Oceniamy go dziesięciokrotną walidacją krzyżową z losowym tasowaniem dni.</li>
+<li>Klasa <span class="math inline">\(1\)</span> jest rzadka, więc przed walidacją krzyżową powielamy jej obserwacje, aż klasy staną się równoliczne.</li>
+</ol>
+</div>
+<div id="exr-porownanie-sparowane" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 5.3</strong></span> Dwa klasyfikatory oceniono na tym samym zbiorze testowym liczności <span class="math inline">\(m = 1000\)</span>. Model <span class="math inline">\(A\)</span> pomylił się <span class="math inline">\(100\)</span> razy, model <span class="math inline">\(B\)</span> – <span class="math inline">\(120\)</span> razy. Na <span class="math inline">\(70\)</span> obserwacjach pomyliły się oba.</p>
+<ol type="a">
+<li>Wyznacz liczby <span class="math inline">\(n_{AB}\)</span> i <span class="math inline">\(n_{BA}\)</span> obserwacji, na których myli się tylko jeden z modeli.</li>
+<li>Oblicz błąd standardowy różnicy oszacowań ryzyka, traktując je jak niezależne. Czy różnica jest wyraźna?</li>
+<li>Przy założeniu, że oba modele mają to samo ryzyko, wyznacz dokładnie prawdopodobieństwo wyniku co najmniej tak skrajnego jak zaobserwowany podział obserwacji spornych (w dowolną stronę). Porównaj z wynikiem punktu b) i wyjaśnij różnicę, odwołując się do kowariancji strat.</li>
+<li>W przykładzie z sekcji <a href="#sec-zbior-testowy" class="quarto-xref"><span>5.2</span></a> liczby błędów były te same, ale oba modele pomyliły się na <span class="math inline">\(90\)</span> obserwacjach. Dlaczego przewaga modelu <span class="math inline">\(A\)</span> była tam lepiej udokumentowana?</li>
+<li>Wykaż, że dla straty 0–1 estymator wariancji różnicy strat <span class="math inline">\(\widehat{\Var}(L^A - L^B)\)</span> zależy tylko od <span class="math inline">\(n_{AB}\)</span>, <span class="math inline">\(n_{BA}\)</span> i <span class="math inline">\(m\)</span>.</li>
+</ol>
+</div>
+<div id="exr-bootstrap-poza-proba" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 5.4</strong></span> Próbę bootstrapową tworzymy, losując <span class="math inline">\(n\)</span> razy ze zwracaniem z próby liczności <span class="math inline">\(n\)</span>.</p>
+<ol type="a">
+<li>Wykaż, że prawdopodobieństwo, że ustalona obserwacja nie znajdzie się w próbie bootstrapowej, wynosi <span class="math inline">\((1 - 1/n)^n\)</span>, i że dąży ono do <span class="math inline">\(e^{-1}\)</span>. Oblicz je dla <span class="math inline">\(n = 10, 50, 1000\)</span>.</li>
+<li>Wyznacz oczekiwaną liczbę różnych obserwacji w próbie bootstrapowej.</li>
+<li>Wyznacz prawdopodobieństwo, że ustalona obserwacja znajdzie się w obu z dwóch niezależnie wylosowanych prób bootstrapowych. Odnieś wynik do pytania c) zadania <a href="04-bias-wariancja.html#exr-usrednianie-predyktorow" class="quarto-xref"><span>4.8</span></a>.</li>
+<li>Sprawdź wyniki a) i b) symulacją.</li>
+</ol>
+</div>
+<div id="exr-loo-knn" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 5.5</strong></span> &nbsp;</p>
+<ol type="a">
+<li>Wyprowadź (<a href="#eq-loo-knn" class="quarto-xref"><span>5.5</span></a>) i wywnioskuj z niego, że błąd LOOCV reguły <span class="math inline">\((k-1)\)</span>-NN jest równy błędowi uczącemu reguły <span class="math inline">\(k\)</span>-NN pomnożonemu przez <span class="math inline">\(\big(k/(k-1)\big)^2\)</span>. Gdzie korzystasz z założenia, że odległości są różne?</li>
+<li>Sprawdź tę równość numerycznie: dla danych z rozdziału <a href="04-bias-wariancja.html" class="quarto-xref"><span>4</span></a> (<span class="math inline">\(n = 100\)</span>) i <span class="math inline">\(k = 2, 5, 20\)</span> porównaj wynik <code>cross_val_score</code> z <code>LeaveOneOut()</code> dla <code>KNeighborsRegressor(n_neighbors=k-1)</code> z przeskalowanym błędem uczącym <code>KNeighborsRegressor(n_neighbors=k)</code>.</li>
+<li>Dlaczego ta sztuczka nie daje LOOCV reguły <span class="math inline">\(k\)</span>-NN, lecz <span class="math inline">\((k-1)\)</span>-NN? Co z niej wynika dla <span class="math inline">\(k = 1\)</span>?</li>
+<li>W ustalonym układzie z zadania <a href="04-bias-wariancja.html#exr-knn-ustalony-uklad" class="quarto-xref"><span>4.3</span></a>, przy zerowym obciążeniu, oblicz wartość oczekiwaną błędu uczącego reguły <span class="math inline">\(k\)</span>-NN i przeskaluj ją jak w punkcie a). Porównaj wynik z oczekiwanym błędem predykcji reguły <span class="math inline">\((k-1)\)</span>-NN w punktach uczących, wyznaczonym z (<a href="04-bias-wariancja.html#eq-knn-obciazenie-wariancja" class="quarto-xref"><span>4.6</span></a>).</li>
+</ol>
+</div>
+<div id="exr-minimum-oszacowan" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 5.6</strong></span> Mamy <span class="math inline">\(M\)</span> kandydatów o tym samym ryzyku <span class="math inline">\(\Risk\)</span>, a ich oszacowania <span class="math inline">\(\widehat\Risk_1, \dots, \widehat\Risk_M\)</span> są niezależne i mają rozkład normalny <span class="math inline">\(\Nrozk(\Risk, s^2)\)</span>.</p>
+<ol type="a">
+<li>Wykaż, że <span class="math inline">\(\E[\min_j \widehat\Risk_j] = \Risk - s\, c_M\)</span>, gdzie <span class="math inline">\(c_M\)</span> to wartość oczekiwana maksimum <span class="math inline">\(M\)</span> niezależnych zmiennych o rozkładzie <span class="math inline">\(\Nrozk(0, 1)\)</span>.</li>
+<li>Wyznacz <span class="math inline">\(c_2\)</span> analitycznie. (Wskazówka: <span class="math inline">\(\max(Z_1, Z_2) = \tfrac12(Z_1 + Z_2) + \tfrac12|Z_1 - Z_2|\)</span>.)</li>
+<li>Oszacuj symulacyjnie <span class="math inline">\(c_M\)</span> dla <span class="math inline">\(M = 5, 10, 100\)</span>. Przyjmując <span class="math inline">\(s = 0{,}05\)</span>, porównaj otrzymany optymizm z rysunkiem <a href="#fig-klatwa-zwyciezcy" class="quarto-xref"><span>5.4</span></a>.</li>
+<li>Powtórz symulację dla oszacowań skorelowanych: każde dwa mają współczynnik korelacji <span class="math inline">\(\rho\)</span>. (Wskazówka: <span class="math inline">\(\widehat\Risk_j = \Risk
++ s(\sqrt{\rho}\, Z_0 + \sqrt{1 - \rho}\, Z_j)\)</span>.) Jak optymizm zależy od <span class="math inline">\(\rho\)</span>? Wyjaśnij, dlaczego krzywa na rysunku <a href="#fig-klatwa-zwyciezcy" class="quarto-xref"><span>5.4</span></a> opada wolniej niż w punkcie c).</li>
+</ol>
+</div>
+<div id="exr-wyciek-selekcja" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 5.7</strong></span> Rozwiń symulację z rysunku <a href="#fig-wyciek-selekcja" class="quarto-xref"><span>5.3</span></a>.</p>
+<ol type="a">
+<li>Zbadaj, jak średnie oszacowanie przy złym sposobie zależy od liczby wybieranych cech <span class="math inline">\(q \in \{1, 10, 100, 1000\}\)</span> i od liczby cech <span class="math inline">\(p \in \{100, 1000, 5000\}\)</span>. Wyjaśnij obserwowane zależności.</li>
+<li>Zbuduj poprawną procedurę w scikit-learn jako potok <code>make_pipeline(SelectKBest(f_classif, k=100), KNeighborsClassifier(n_neighbors=1))</code> i oceń ją funkcją <code>cross_val_score</code>. Sprawdź, że wynik zgadza się z dobrym sposobem.</li>
+<li>Zastąp wybór cech standaryzacją wyznaczaną na całej próbie i sprawdź, czy ten wyciek ma mierzalny wpływ na oszacowanie.</li>
+</ol>
+</div>
+<div id="exr-wybor-k-cv" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 5.8</strong></span> Dane pochodzą z rozkładu dwóch półksiężyców z szumem <span class="math inline">\(0{,}30\)</span> (<code>make_moons</code>), <span class="math inline">\(n = 200\)</span>. Prawdziwe ryzyko szacuj na zbiorze testowym liczności <span class="math inline">\(20\,000\)</span>.</p>
+<ol type="a">
+<li>Dla jednej próby narysuj na jednym wykresie wynik dziesięciokrotnej walidacji krzyżowej i ryzyko klasyfikatora <span class="math inline">\(k\)</span>-NN dla <span class="math inline">\(k = 1, 3, \dots, 99\)</span>. Zaznacz <span class="math inline">\(k\)</span> wybrane walidacją krzyżową, regułą jednego błędu standardowego i <span class="math inline">\(k\)</span> o najmniejszym ryzyku.</li>
+<li>Powtórz punkt a) dla <span class="math inline">\(100\)</span> prób. Narysuj histogram wybranych <span class="math inline">\(k\)</span>. Oblicz średnią stratę wynikającą z wyboru, czyli różnicę między ryzykiem wybranego modelu a najmniejszym ryzykiem wśród kandydatów, dla obu reguł wyboru.</li>
+<li>Oblicz średnią różnicę między najmniejszym wynikiem walidacji krzyżowej a ryzykiem wybranego modelu. Odnieś wynik do twierdzenia <a href="#thm-optymizm-wyboru" class="quarto-xref"><span>5.2</span></a>.</li>
+</ol>
+</div>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-ambroise2002" class="csl-entry" role="listitem">
+Ambroise, Christophe i Geoffrey J. McLachlan. 2002. <span>„Selection Bias in Gene Extraction on the Basis of Microarray Gene-Expression Data”</span>. <em>Proceedings of the National Academy of Sciences</em> 99 (10): 6562–66. <a href="https://doi.org/10.1073/pnas.102102699">https://doi.org/10.1073/pnas.102102699</a>.
+</div>
+<div id="ref-arlot2010" class="csl-entry" role="listitem">
+Arlot, Sylvain i Alain Celisse. 2010. <span>„A Survey of Cross-Validation Procedures for Model Selection”</span>. <em>Statistics Surveys</em> 4: 40–79. <a href="https://doi.org/10.1214/09-SS054">https://doi.org/10.1214/09-SS054</a>.
+</div>
+<div id="ref-bates2024" class="csl-entry" role="listitem">
+Bates, Stephen, Trevor Hastie i Robert Tibshirani. 2024. <span>„Cross-Validation: What Does It Estimate and How Well Does It Do It?”</span> <em>Journal of the American Statistical Association</em> 119 (546): 1434–45. <a href="https://doi.org/10.1080/01621459.2023.2197686">https://doi.org/10.1080/01621459.2023.2197686</a>.
+</div>
+<div id="ref-bengio2004" class="csl-entry" role="listitem">
+Bengio, Yoshua i Yves Grandvalet. 2004. <span>„No Unbiased Estimator of the Variance of <span>K</span>-Fold Cross-Validation”</span>. <em>Journal of Machine Learning Research</em> 5: 1089–105.
+</div>
+<div id="ref-bergstra2012" class="csl-entry" role="listitem">
+Bergstra, James i Yoshua Bengio. 2012. <span>„Random Search for Hyper-Parameter Optimization”</span>. <em>Journal of Machine Learning Research</em> 13: 281–305.
+</div>
+<div id="ref-cawley2010" class="csl-entry" role="listitem">
+Cawley, Gavin C. i Nicola L. C. Talbot. 2010. <span>„On Over-Fitting in Model Selection and Subsequent Selection Bias in Performance Evaluation”</span>. <em>Journal of Machine Learning Research</em> 11: 2079–107.
+</div>
+<div id="ref-dietterich1998" class="csl-entry" role="listitem">
+Dietterich, Thomas G. 1998. <span>„Approximate Statistical Tests for Comparing Supervised Classification Learning Algorithms”</span>. <em>Neural Computation</em> 10 (7): 1895–923. <a href="https://doi.org/10.1162/089976698300017197">https://doi.org/10.1162/089976698300017197</a>.
+</div>
+<div id="ref-efron1979" class="csl-entry" role="listitem">
+Efron, Bradley. 1979. <span>„Bootstrap Methods: Another Look at the Jackknife”</span>. <em>The Annals of Statistics</em> 7 (1): 1–26. <a href="https://doi.org/10.1214/aos/1176344552">https://doi.org/10.1214/aos/1176344552</a>.
+</div>
+<div id="ref-efron1983" class="csl-entry" role="listitem">
+Efron, Bradley. 1983. <span>„Estimating the Error Rate of a Prediction Rule: Improvement on Cross-Validation”</span>. <em>Journal of the American Statistical Association</em> 78 (382): 316–31. <a href="https://doi.org/10.1080/01621459.1983.10477973">https://doi.org/10.1080/01621459.1983.10477973</a>.
+</div>
+<div id="ref-efron1993" class="csl-entry" role="listitem">
+Efron, Bradley i Robert Tibshirani. 1993. <em>An Introduction to the Bootstrap</em>. <span>Monographs on Statistics and Applied Probability</span> 57. Chapman &amp; Hall. <a href="https://doi.org/10.1201/9780429246593">https://doi.org/10.1201/9780429246593</a>.
+</div>
+<div id="ref-efron1997" class="csl-entry" role="listitem">
+Efron, Bradley i Robert Tibshirani. 1997. <span>„Improvements on Cross-Validation: The .632+ Bootstrap Method”</span>. <em>Journal of the American Statistical Association</em> 92 (438): 548–60. <a href="https://doi.org/10.1080/01621459.1997.10474007">https://doi.org/10.1080/01621459.1997.10474007</a>.
+</div>
+<div id="ref-esl" class="csl-entry" role="listitem">
+Hastie, Trevor, Robert Tibshirani i Jerome Friedman. 2009. <em>The Elements of Statistical Learning: Data Mining, Inference, and Prediction</em>. 2. wyd. Springer.
+</div>
+<div id="ref-islp" class="csl-entry" role="listitem">
+James, Gareth, Daniela Witten, Trevor Hastie, Robert Tibshirani i Jonathan Taylor. 2023. <em>An Introduction to Statistical Learning with Applications in Python</em>. <span>Springer Texts in Statistics</span>. Springer.
+</div>
+<div id="ref-stone1974" class="csl-entry" role="listitem">
+Stone, M. 1974. <span>„Cross-Validatory Choice and Assessment of Statistical Predictions”</span>. <em>Journal of the Royal Statistical Society: Series B (Methodological)</em> 36 (2): 111–33. <a href="https://doi.org/10.1111/j.2517-6161.1974.tb00994.x">https://doi.org/10.1111/j.2517-6161.1974.tb00994.x</a>.
+</div>
+<div id="ref-varma2006" class="csl-entry" role="listitem">
+Varma, Sudhir i Richard Simon. 2006. <span>„Bias in Error Estimation When Using Cross-Validation for Model Selection”</span>. <em>BMC Bioinformatics</em> 7: 91. <a href="https://doi.org/10.1186/1471-2105-7-91">https://doi.org/10.1186/1471-2105-7-91</a>.
+</div>
+</div>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

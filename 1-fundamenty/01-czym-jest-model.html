@@ -617,6 +617,18 @@ p(y\mid\x)=\frac{p(\x,y)}{p(\x)} .
 \]</span></p>
 <p>Przy ustalonym <span class="math inline">\(\x\)</span> funkcja ta jest nieujemna i sumuje się (całkuje) po <span class="math inline">\(y\)</span> do jedynki, opisuje więc rozkład prawdopodobieństwa zmiennej <span class="math inline">\(Y\)</span>. Dla zmiennych dyskretnych <span class="math inline">\(p(y\mid\x)\)</span> jest zwykłym prawdopodobieństwem warunkowym <span class="math inline">\(\Prob(Y=y\mid\X=\x)\)</span>; gdy cechy są ciągłe, zdarzenie <span class="math inline">\(\{\X=\x\}\)</span> ma prawdopodobieństwo zero i definicja wymaga ostrożności – wracamy do tego na końcu sekcji.</p>
 <p><strong>Skąd bierze się wzór (<a href="#eq-rozklad-laczny" class="quarto-xref"><span>1.1</span></a>).</strong> Wystarczy pomnożyć ostatnią równość przez <span class="math inline">\(p(\x)\)</span>. Wzór ten nie jest więc twierdzeniem o strukturze rozkładu, lecz przekształceniem podanego wzoru na funkcję prawdopodobieństwa lub gęstość warunkową. Cała jego treść leży w interpretacji obu czynników i w tym, że zależność, która nas interesuje, mieści się wyłącznie w drugim z nich.</p>
+<p><strong>Przypadek mieszany.</strong> W klasyfikacji cechy są często ciągłe, a wynik dyskretny. Funkcja <span class="math inline">\(p(\x,y)\)</span> jest wtedy gęstością względem <span class="math inline">\(\x\)</span> i prawdopodobieństwem względem <span class="math inline">\(y\)</span>:</p>
+<p><span class="math display">\[
+\Prob(\X\in A,\,Y=y)=\int_A p(\x,y)\,d\x .
+\]</span></p>
+<p>Rozkład brzegowy cech dostajemy, sumując po <span class="math inline">\(y\)</span>: <span class="math inline">\(p(\x)=\sum_y p(\x,y)\)</span>, a rozkład wyniku – całkując po <span class="math inline">\(\x\)</span>: <span class="math inline">\(\Prob(Y=y)=\int p(\x,y)\,d\x\)</span>. Taki rozkład najłatwiej zadać w kolejności odwrotnej niż w (<a href="#eq-rozklad-laczny" class="quarto-xref"><span>1.1</span></a>): przez prawdopodobieństwa klas <span class="math inline">\(\pi_y=\Prob(Y=y)\)</span> i gęstości cech w obrębie klas <span class="math inline">\(p(\x\mid Y=y)\)</span>,</p>
+<p><span class="math display">\[
+p(\x,y)=\pi_y\,p(\x\mid Y=y).
+\]</span></p>
+<p>Podstawienie tego iloczynu do definicji rozkładu warunkowego daje wzór Bayesa</p>
+<p><span id="eq-bayes-klasy"><span class="math display">\[
+p(y\mid\x)=\frac{\pi_y\,p(\x\mid Y=y)}{\sum_{y'}\pi_{y'}\,p(\x\mid Y=y')} .
+\tag{1.2}\]</span></span></p>
 </div>
 </div>
 </div>
@@ -646,7 +658,7 @@ Y\mid\X=\x .
 <p>W przypadku regresji część systematyczną opisujemy za pomocą warunkowej wartości oczekiwanej, nazywanej <strong>funkcją regresji</strong>:</p>
 <p><span id="eq-funkcja-regresji-wstep"><span class="math display">\[
 \fopt(\x)=\E[Y\mid\X=\x].
-\tag{1.2}\]</span></span></p>
+\tag{1.3}\]</span></span></p>
 <p>Oznacza ona przeciętną wartość zmiennej wyjściowej wśród obiektów o cechach <span class="math inline">\(\x\)</span>. Gwiazdka oznacza predyktor optymalny – w jakim sensie, wyjaśniamy niżej – a więc wielkość teoretyczną, opisującą badaną populację, a nie funkcję wyznaczoną z danych; symbolu <span class="math inline">\(f\)</span> bez gwiazdki będziemy używać dla dowolnego predyktora, a <span class="math inline">\(\widehat f\)</span> – dla predyktora dopasowanego do konkretnego zbioru obserwacji.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
@@ -667,7 +679,7 @@ Y\mid\X=\x .
 \E[Y\mid\X=\x]=\int y\,p(y\mid\x)\,dy .
 \]</span></p>
 <p>Jest to <strong>liczba</strong> zależna od <span class="math inline">\(\x\)</span>, a więc funkcja zmiennej <span class="math inline">\(\x\)</span> – i właśnie tę funkcję nazywamy funkcją regresji.</p>
-<p><strong>Dwa zapisy, dwa różne obiekty.</strong> Podstawiając w miejsce <span class="math inline">\(\x\)</span> losowy wektor <span class="math inline">\(\X\)</span>, otrzymujemy <span class="math inline">\(\E[Y\mid\X]=\fopt(\X)\)</span>, czyli <strong>zmienną losową</strong>: jej wartość zmienia się wraz z wylosowanym obiektem. Wzór (<a href="#eq-funkcja-regresji-wstep" class="quarto-xref"><span>1.2</span></a>) mówi o liczbie przypisanej ustalonym cechom, natomiast warunek <span class="math inline">\(\E[\varepsilon\mid\X]=0\)</span> we wzorze (<a href="#eq-rozklad-addytywny" class="quarto-xref"><span>1.3</span></a>) jest równością zmiennych losowych – znaczy tyle, że dla <strong>każdego</strong> <span class="math inline">\(\x\)</span> zachodzi <span class="math inline">\(\E[\varepsilon\mid\X=\x]=0\)</span>.</p>
+<p><strong>Dwa zapisy, dwa różne obiekty.</strong> Podstawiając w miejsce <span class="math inline">\(\x\)</span> losowy wektor <span class="math inline">\(\X\)</span>, otrzymujemy <span class="math inline">\(\E[Y\mid\X]=\fopt(\X)\)</span>, czyli <strong>zmienną losową</strong>: jej wartość zmienia się wraz z wylosowanym obiektem. Wzór (<a href="#eq-funkcja-regresji-wstep" class="quarto-xref"><span>1.3</span></a>) mówi o liczbie przypisanej ustalonym cechom, natomiast warunek <span class="math inline">\(\E[\varepsilon\mid\X]=0\)</span> we wzorze (<a href="#eq-rozklad-addytywny" class="quarto-xref"><span>1.4</span></a>) jest równością zmiennych losowych – znaczy tyle, że dla <strong>każdego</strong> <span class="math inline">\(\x\)</span> zachodzi <span class="math inline">\(\E[\varepsilon\mid\X=\x]=0\)</span>.</p>
 <p><strong>Prawo iterowanej wartości oczekiwanej.</strong> Uśrednienie funkcji <span class="math inline">\(\fopt(\X)\)</span> po rozkładzie cech odtwarza zwykłą wartość oczekiwaną:</p>
 <p><span class="math display">\[
 \E\big[\E[Y\mid\X]\big]=\E[Y].
@@ -687,7 +699,7 @@ Y\mid\X=\x .
 Y=\fopt(\X)+\varepsilon,
 \qquad
 \E[\varepsilon\mid\X]=0 .
-\tag{1.3}\]</span></span></p>
+\tag{1.4}\]</span></span></p>
 <p>Składnik <span class="math inline">\(\varepsilon\)</span> opisuje odchylenie obserwowanego wyniku od części systematycznej. Dwa obiekty o takich samych wartościach cech otrzymują tę samą wartość <span class="math inline">\(\fopt(\x)\)</span>, ale ich rzeczywiste wyniki mogą się różnić ze względu na różne realizacje <span class="math inline">\(\varepsilon\)</span>. Warunek <span class="math inline">\(\E[\varepsilon\mid\X]=0\)</span> wynika z definicji <span class="math inline">\(\varepsilon\)</span> i oznacza, że odchylenia przy ustalonych cechach przeciętnie się znoszą.</p>
 <p>Przykładowo model może opisywać zależność między czasem hospitalizacji a wiekiem pacjenta, rozpoznaniem i wynikami badań. Pacjenci o takich samych wartościach zarejestrowanych cech nie muszą jednak przebywać w szpitalu dokładnie tyle samo dni. Na czas hospitalizacji wpływają również czynniki, których model nie uwzględnia, oraz zdarzenia, których nie da się przewidzieć na podstawie dostępnych informacji.</p>
 <p>Funkcja <span class="math inline">\(\fopt\)</span> opisuje zależność występującą w badanej populacji, ale zazwyczaj nie jest znana. Na podstawie danych treningowych wyznaczamy jej oszacowanie <span class="math inline">\(\widehat f\)</span>, a predykcja dla obiektu o cechach <span class="math inline">\(\x\)</span> ma postać</p>
@@ -697,12 +709,12 @@ Y=\fopt(\X)+\varepsilon,
 </section>
 <section id="klasyfikacja" class="level3" data-number="1.5.2">
 <h3 data-number="1.5.2" class="anchored" data-anchor-id="klasyfikacja"><span class="header-section-number">1.5.2</span> Klasyfikacja</h3>
-<p>W klasyfikacji podział na zależność systematyczną i szum ma ten sam sens, ale nie da się go zapisać addytywnie. Suma etykiety klasy i odchylenia nie byłaby etykietą klasy, więc rozkład (<a href="#eq-rozklad-addytywny" class="quarto-xref"><span>1.3</span></a>) traci tu zastosowanie. Opisujemy zatem rozkład warunkowy wprost.</p>
+<p>W klasyfikacji podział na zależność systematyczną i szum ma ten sam sens, ale nie da się go zapisać addytywnie. Suma etykiety klasy i odchylenia nie byłaby etykietą klasy, więc rozkład (<a href="#eq-rozklad-addytywny" class="quarto-xref"><span>1.4</span></a>) traci tu zastosowanie. Opisujemy zatem rozkład warunkowy wprost.</p>
 <p>Jeżeli zmienna wyjściowa przyjmuje wartości w zbiorze klas <span class="math inline">\(\{1,\ldots,K\}\)</span>, część systematyczną opisują prawdopodobieństwa warunkowe</p>
 <p><span id="eq-eta"><span class="math display">\[
 \eta_k(\x)=\Prob(Y=k\mid\X=\x),
 \qquad k=1,\ldots,K,
-\tag{1.4}\]</span></span></p>
+\tag{1.5}\]</span></span></p>
 <p>spełniające dla każdego <span class="math inline">\(\x\)</span> warunek <span class="math inline">\(\sum_{k=1}^{K}\eta_k(\x)=1\)</span>. W klasyfikacji binarnej wystarczy jedna funkcja <span class="math inline">\(\eta(\x)=\Prob(Y=1\mid\X=\x)\)</span>, a rozkład wyniku przy ustalonych cechach zapisujemy jako</p>
 <p><span class="math display">\[
 Y\mid\X=\x\sim\operatorname{Bernoulli}\big(\eta(\x)\big).
@@ -756,11 +768,11 @@ Y\mid\X=\x\sim\operatorname{Bernoulli}\big(\eta(\x)\big).
 <p>W regresji standardowym wyborem jest <strong>strata kwadratowa</strong></p>
 <p><span id="eq-strata-kwadratowa-wstep"><span class="math display">\[
 \Loss(y,\widehat y)=(y-\widehat y)^2,
-\tag{1.5}\]</span></span></p>
+\tag{1.6}\]</span></span></p>
 <p>karząca duże pomyłki nieproporcjonalnie mocniej niż małe: jeden błąd o wartości <span class="math inline">\(10\)</span> kosztuje tyle, co sto błędów o wartości <span class="math inline">\(1\)</span>. W klasyfikacji najprostszą stratą jest <strong>strata 0–1</strong></p>
 <p><span id="eq-strata-01-wstep"><span class="math display">\[
 \Loss(y,\widehat y)=\ind(y\neq\widehat y),
-\tag{1.6}\]</span></span></p>
+\tag{1.7}\]</span></span></p>
 <p>wyceniająca każdą pomyłkę na jednostkę, niezależnie od tego, jakich klas dotyczy. Oba wybory są domyślne, ale nie są jedyne możliwe ani zawsze właściwe – do konsekwencji zmiany straty wrócimy w rozdziale <a href="02-predyktory-optymalne.html" class="quarto-xref"><span>2</span></a>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
@@ -782,7 +794,7 @@ Y\mid\X=\x\sim\operatorname{Bernoulli}\big(\eta(\x)\big).
 0, &amp; \text{w przeciwnym razie}.
 \end{cases}
 \]</span></p>
-<p>We wzorze (<a href="#eq-strata-01-wstep" class="quarto-xref"><span>1.6</span></a>) warunkiem jest <span class="math inline">\(y\neq\widehat y\)</span>. Strata wynosi więc <span class="math inline">\(1\)</span>, gdy przewidywana klasa różni się od rzeczywistej, oraz <span class="math inline">\(0\)</span>, gdy klasy są zgodne.</p>
+<p>We wzorze (<a href="#eq-strata-01-wstep" class="quarto-xref"><span>1.7</span></a>) warunkiem jest <span class="math inline">\(y\neq\widehat y\)</span>. Strata wynosi więc <span class="math inline">\(1\)</span>, gdy przewidywana klasa różni się od rzeczywistej, oraz <span class="math inline">\(0\)</span>, gdy klasy są zgodne.</p>
 </div>
 </div>
 </div>
@@ -791,7 +803,7 @@ Y\mid\X=\x\sim\operatorname{Bernoulli}\big(\eta(\x)\big).
 <p><span class="theorem-title"><strong>Definicja 1.1 (Ryzyko)</strong></span> <strong>Ryzykiem</strong> predyktora <span class="math inline">\(f\)</span> nazywamy oczekiwaną stratę</p>
 <p><span id="eq-ryzyko-podstawowe"><span class="math display">\[
 \Risk(f)=\E\big[\Loss\big(Y,f(\X)\big)\big],
-\tag{1.7}\]</span></span></p>
+\tag{1.8}\]</span></span></p>
 <p>gdzie wartość oczekiwaną liczymy względem łącznego rozkładu pary <span class="math inline">\((\X,Y)\)</span>.</p>
 </div>
 <p><a href="#def-ryzyko-podstawowe" class="quarto-xref">Definicja&nbsp;<span>1.1</span></a> jest wspólna dla regresji i klasyfikacji – różni je wyłącznie podstawiona strata. Dla straty kwadratowej ryzyko jest <strong>błędem średniokwadratowym</strong></p>
@@ -813,16 +825,16 @@ Y\mid\X=\x\sim\operatorname{Bernoulli}\big(\eta(\x)\big).
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Wartość oczekiwana we wzorze (<a href="#eq-ryzyko-podstawowe" class="quarto-xref"><span>1.7</span></a>) jest liczona względem rozkładu całej populacji, a nie względem zbioru obserwacji, którym dysponujemy. Wielkość, którą faktycznie umiemy obliczyć, to <strong>ryzyko empiryczne</strong></p>
+<p>Wartość oczekiwana we wzorze (<a href="#eq-ryzyko-podstawowe" class="quarto-xref"><span>1.8</span></a>) jest liczona względem rozkładu całej populacji, a nie względem zbioru obserwacji, którym dysponujemy. Wielkość, którą faktycznie umiemy obliczyć, to <strong>ryzyko empiryczne</strong></p>
 <p><span id="eq-ryzyko-empiryczne"><span class="math display">\[
 \widehat{\Risk}_n(f)=\frac1n\sum_{i=1}^{n}\Loss\big(y_i,f(\x_i)\big).
-\tag{1.8}\]</span></span></p>
+\tag{1.9}\]</span></span></p>
 <p>Są to dwie różne rzeczy. Na <span class="math inline">\(\Risk(f)\)</span> nam zależy, ale nie umiemy jej obliczyć, bo nie znamy rozkładu populacji. <span class="math inline">\(\widehat{\Risk}_n(f)\)</span> umiemy obliczyć, lecz jeżeli te same dane posłużyły do dopasowania modelu, jest ona systematycznie zaniżona: model był dobierany tak, aby na nich wypadać dobrze. Dla predyktora ustalonego niezależnie od danych średnia ta byłaby nieobciążonym oszacowaniem ryzyka.</p>
 <p>Do rzetelnego szacowania ryzyka wracamy w rozdziale <a href="05-ocena-modeli.html" class="quarto-xref"><span>5</span></a>.</p>
 </div>
 </div>
 <p>Ryzyko określa przeciętny koszt błędów predyktora w populacji. Chcemy, by koszt ten był jak najmniejszy, dlatego pytamy: <strong>która funkcja <span class="math inline">\(f\)</span> minimalizuje <span class="math inline">\(\Risk(f)\)</span>?</strong> Zauważmy, że pytanie to nie dotyczy żadnego konkretnego algorytmu ani klasy modeli – minimalizujemy po <strong>wszystkich</strong> funkcjach. Odpowiedź wyznacza więc granicę osiągalności, do której metody uczenia mogą się jedynie zbliżać.</p>
-<p>Okaże się, że odpowiedź zależy wyłącznie od wybranej straty. Przy stracie kwadratowej (<a href="#eq-strata-kwadratowa-wstep" class="quarto-xref"><span>1.5</span></a>) optymalna jest funkcja regresji (<a href="#eq-funkcja-regresji-wstep" class="quarto-xref"><span>1.2</span></a>). Przy stracie 0–1 (<a href="#eq-strata-01-wstep" class="quarto-xref"><span>1.6</span></a>) optymalna jest reguła wskazująca klasę o największym prawdopodobieństwie <span class="math inline">\(\eta_k(\x)\)</span>. Wyprowadzenie obu wyników, wraz z konsekwencjami dla praktyki, jest treścią rozdziału <a href="02-predyktory-optymalne.html" class="quarto-xref"><span>2</span></a>.</p>
+<p>Okaże się, że odpowiedź zależy wyłącznie od wybranej straty. Przy stracie kwadratowej (<a href="#eq-strata-kwadratowa-wstep" class="quarto-xref"><span>1.6</span></a>) optymalna jest funkcja regresji (<a href="#eq-funkcja-regresji-wstep" class="quarto-xref"><span>1.3</span></a>). Przy stracie 0–1 (<a href="#eq-strata-01-wstep" class="quarto-xref"><span>1.7</span></a>) optymalna jest reguła wskazująca klasę o największym prawdopodobieństwie <span class="math inline">\(\eta_k(\x)\)</span>. Wyprowadzenie obu wyników, wraz z konsekwencjami dla praktyki, jest treścią rozdziału <a href="02-predyktory-optymalne.html" class="quarto-xref"><span>2</span></a>.</p>
 <section id="błąd-redukowalny-i-nieredukowalny" class="level3" data-number="1.6.1">
 <h3 data-number="1.6.1" class="anchored" data-anchor-id="błąd-redukowalny-i-nieredukowalny"><span class="header-section-number">1.6.1</span> Błąd redukowalny i nieredukowalny</h3>
 <p>Ryzyko pozwala rozdzielić dwa źródła błędów predykcji. Rozróżnienie to dotyczy zarówno regresji, jak i klasyfikacji.</p>
@@ -865,7 +877,7 @@ Y\mid\X=\x\sim\operatorname{Bernoulli}\big(\eta(\x)\big).
 <h2 data-number="1.8" class="anchored" data-anchor-id="sec-trening-modelu"><span class="header-section-number">1.8</span> Trening modelu</h2>
 <p>Wiemy już, jakie zadania może spełniać model i jak oceniać jego predykcje. Pozostaje pytanie, jak na podstawie danych wyznaczyć regułę predykcji <span class="math inline">\(\widehat f\)</span>, która nowym obserwacjom przypisze przewidywaną wartość lub klasę. Chcielibyśmy wyznaczyć predyktor o możliwie małym ryzyku <span class="math inline">\(\Risk(f)\)</span>. Nie znamy jednak rozkładu populacji <span class="math inline">\(P\)</span>, względem którego ryzyko jest zdefiniowane. Dysponujemy jedynie zbiorem treningowym <span class="math inline">\(\mathcal{D}=\{(\x_1,y_1),\ldots,(\x_n,y_n)\}\)</span>. <strong>Trening modelu</strong> polega na wykorzystaniu tej próby do wyznaczenia reguły, którą będziemy stosować także do nowych obserwacji. Poniżej opiszemy ten proces z perspektywy zadania predykcyjnego.</p>
 <p>Najpierw określamy klasę modeli <span class="math inline">\(\mathcal{F}\)</span> (por. <a href="#sec-model-w-analizie-danych" class="quarto-xref"><span>Sekcja 1.2</span></a>), czyli zbiór dopuszczalnych predyktorów. Każda funkcja <span class="math inline">\(f\in\mathcal{F}\)</span> przypisuje wektorowi cech <span class="math inline">\(\x\)</span> przewidywany wynik: w regresji jest to liczba, a w klasyfikacji – etykieta klasy. Wybór <span class="math inline">\(\mathcal{F}\)</span> wyraża założenie o tym, jakie zależności chcemy odtwarzać: możemy dopuścić na przykład tylko zależności liniowe albo również funkcje o bardziej złożonym przebiegu. Klasa zbyt wąska może nie zawierać funkcji, która dobrze opisuje interesującą nas zależność. Samo poszerzanie klasy nie gwarantuje jednak lepszego wyniku uczenia.</p>
-<p>Aby porównać dopuszczalne predyktory, potrzebujemy <strong>kryterium dopasowania</strong>. Podstawowym wyborem jest ryzyko empiryczne zdefiniowane wzorem (<a href="#eq-ryzyko-empiryczne" class="quarto-xref"><span>1.8</span></a>):</p>
+<p>Aby porównać dopuszczalne predyktory, potrzebujemy <strong>kryterium dopasowania</strong>. Podstawowym wyborem jest ryzyko empiryczne zdefiniowane wzorem (<a href="#eq-ryzyko-empiryczne" class="quarto-xref"><span>1.9</span></a>):</p>
 <p><span class="math display">\[
 \widehat{\Risk}_n(f)
 =\frac1n\sum_{i=1}^{n}\Loss\big(y_i,f(\x_i)\big).
@@ -875,7 +887,7 @@ Y\mid\X=\x\sim\operatorname{Bernoulli}\big(\eta(\x)\big).
 <p><span id="eq-minimalizacja-ryzyka-empirycznego"><span class="math display">\[
 \widehat f\in\operatorname*{arg\,min}_{f\in\mathcal{F}}
 \widehat{\Risk}_n(f).
-\tag{1.9}\]</span></span></p>
+\tag{1.10}\]</span></span></p>
 <p>Równoważnie możemy zapisać:</p>
 <p><span class="math display">\[
 \widehat f\in\mathcal{F}
@@ -1046,7 +1058,7 @@ f(\x)=\beta_0+g_1(x_1)+\ldots+g_p(x_p)
 <p><span class="theorem-title"><strong>Zadanie 1.5</strong></span> Metoda <span class="math inline">\(k\)</span> najbliższych sąsiadów jest nieparametryczna. Wskaż jej hiperparametry i założenia, które przyjmujemy, stosując ją (<a href="#sec-parametryczne-nieparametryczne" class="quarto-xref"><span>Sekcja 1.9</span></a>). Czy regresja wielomianowa, w której stopień wielomianu dobieramy na podstawie danych, jest metodą parametryczną? Uzasadnij odpowiedź.</p>
 </div>
 <div id="exr-ryzyko-1nn" class="theorem exercise">
-<p><span class="theorem-title"><strong>Zadanie 1.6</strong></span> Wykaż, że w regresji jednego najbliższego sąsiada ryzyko empiryczne (<a href="#eq-ryzyko-empiryczne" class="quarto-xref"><span>1.8</span></a>) obliczone na zbiorze treningowym jest równe zeru, o ile w zbiorze tym nie ma dwóch obserwacji o tych samych cechach. Czy wynika stąd cokolwiek o ryzyku tego predyktora? Co się zmienia, jeżeli w zbiorze występują obserwacje o jednakowych cechach i różnych wynikach?</p>
+<p><span class="theorem-title"><strong>Zadanie 1.6</strong></span> Wykaż, że w regresji jednego najbliższego sąsiada ryzyko empiryczne (<a href="#eq-ryzyko-empiryczne" class="quarto-xref"><span>1.9</span></a>) obliczone na zbiorze treningowym jest równe zeru, o ile w zbiorze tym nie ma dwóch obserwacji o tych samych cechach. Czy wynika stąd cokolwiek o ryzyku tego predyktora? Co się zmienia, jeżeli w zbiorze występują obserwacje o jednakowych cechach i różnych wynikach?</p>
 </div>
 <div id="exr-blad-redukowalny-nieredukowalny" class="theorem exercise">
 <p><span class="theorem-title"><strong>Zadanie 1.7</strong></span> Podaj przykład zadania predykcyjnego, w którym dodanie jednej cechy zmniejsza błąd nieredukowalny, oraz przykład, w którym zwiększenie liczby obserwacji nie zmniejsza ryzyka dopasowanego modelu. Wyjaśnij każdy z nich w kategoriach błędu redukowalnego i nieredukowalnego.</p>
@@ -1092,7 +1104,7 @@ f(\x)=\beta_0+g_1(x_1)+\ldots+g_p(x_p)
 <ol type="a">
 <li>Zapisz tabelę rozkładu łącznego <span class="math inline">\(p(x,y)\)</span>.</li>
 <li>Wyznacz <span class="math inline">\(\fopt(x)=\E[Y\mid X=x]\)</span> oraz możliwe wartości <span class="math inline">\(\varepsilon=Y-\fopt(X)\)</span> przy każdym <span class="math inline">\(x\)</span>.</li>
-<li>Sprawdź, że <span class="math inline">\(\E[\varepsilon\mid X=x]=0\)</span> dla każdego <span class="math inline">\(x\)</span>, i oblicz <span class="math inline">\(\Var(\varepsilon\mid X=x)\)</span>. Czy <span class="math inline">\(\varepsilon\)</span> jest niezależny od <span class="math inline">\(X\)</span>? Co to mówi o warunku w (<a href="#eq-rozklad-addytywny" class="quarto-xref"><span>1.3</span></a>)?</li>
+<li>Sprawdź, że <span class="math inline">\(\E[\varepsilon\mid X=x]=0\)</span> dla każdego <span class="math inline">\(x\)</span>, i oblicz <span class="math inline">\(\Var(\varepsilon\mid X=x)\)</span>. Czy <span class="math inline">\(\varepsilon\)</span> jest niezależny od <span class="math inline">\(X\)</span>? Co to mówi o warunku w (<a href="#eq-rozklad-addytywny" class="quarto-xref"><span>1.4</span></a>)?</li>
 <li>Oblicz ryzyko kwadratowe predyktora <span class="math inline">\(\fopt\)</span> oraz predyktora stałego <span class="math inline">\(f(x)=\E[Y]\)</span>. Różnica tych wartości jest ceną za pominięcie cechy.</li>
 </ol>
 </div>
