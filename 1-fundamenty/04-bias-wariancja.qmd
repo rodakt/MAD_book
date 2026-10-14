@@ -349,7 +349,7 @@ z rysunku [-@fig-wachlarz].
 Rozkład w jednym punkcie łatwo przenieść na całe ryzyko. Niech nowa
 obserwacja $(\X_0, Y_0)$ ma rozkład $P$ i będzie niezależna od
 $\mathcal{D}$. Uśredniając ([-@eq-rozklad-obciazenie-wariancja]) po
-rozkładzie $\X_0$, otrzymujemy
+rozkładzie $\X_0$ i pomijając po uśrednieniu indeks $0$, otrzymujemy
 $$
 \E_{\mathcal{D}}\big[\Risk(\fD)\big]
 =
@@ -745,15 +745,22 @@ ilości danych.
 
 Krzywe uczenia odpowiadają też na pytanie diagnostyczne z rozdziału
 [-@sec-predyktory-optymalne]: czy wypłaszczenie ryzyka oznacza, że
-dotarliśmy do granicy zjawiska, czy że model jest za słaby? Szeroka
-szczelina między błędem uczącym a ryzykiem wskazuje na wariancję: pomoże
-więcej danych albo prostszy model. Wąska szczelina przy wysokim poziomie
-obu krzywych wskazuje, że więcej danych nie pomoże. Pojedyncza krzywa
-nie rozstrzyga jednak, czy jej granica to sam błąd nieredukowalny, czy
-błąd nieredukowalny powiększony o błąd aproksymacji. W lewym panelu
-wiemy, że to drugie, bo znamy $\sigma^2$. W praktyce trzeba porównać
-różne klasy modeli: jeśli bogatsza klasa przy dużym $n$ schodzi niżej,
-ograniczała nas klasa. Jeśli żadna nie schodzi niżej, ograniczają nas
+dotarliśmy do granicy zjawiska, czy że model jest za słaby? Rozstrzyga
+przebieg obu krzywych w funkcji $n$, a nie ich wygląd przy jednej
+liczności. Jeśli ryzyko wciąż spada, a szczelina między nim a błędem
+uczącym się zamyka, dominuje wariancja: pomoże więcej danych albo
+prostszy model. Jeśli obie krzywe są już płaskie i zbieżne, dominuje
+obciążenie i więcej danych nie pomoże. Samą szerokość szczeliny, czyli
+optymizm, trzeba
+czytać jako liczbę w jednostkach straty, bo jej wrażenie na rysunku
+zależy od skali osi: na rysunku [-@fig-krzywe-uczenia] oś pionowa jest
+logarytmiczna, więc widać iloraz obu błędów, nie ich różnicę. Płaskie
+i zbieżne krzywe nie rozstrzygają jednak, czy ich granica to sam błąd
+nieredukowalny, czy błąd nieredukowalny powiększony o błąd aproksymacji;
+„wysoki poziom” wymaga punktu odniesienia. W lewym panelu wiemy, że to
+drugie, bo znamy $\sigma^2$. W praktyce punktem odniesienia jest
+porównanie różnych klas modeli: jeśli bogatsza klasa przy dużym $n$
+schodzi niżej, ograniczała nas klasa. Jeśli żadna nie schodzi niżej, ograniczają nas
 zapewne cechy, a poprawę może dać tylko ich zmiana. W realnym problemie
 ryzyka nie znamy i krzywą uczenia trzeba szacować, czym zajmuje się
 rozdział [-@sec-ocena-modeli].

@@ -1201,8 +1201,9 @@ Oszacowane krzywe odtwarzają obraz z sekcji [-@sec-krzywe-uczenia]:
 dla prostej szczelina między krzywymi jest wąska, a obie leżą wysoko nad
 $\sigma^2$; dla wielomianu stopnia $9$ szczelina jest szeroka przy małych
 licznościach i zamyka się, gdy danych przybywa. Diagnostyka z tamtej
-sekcji -- szeroka szczelina wskazuje na wariancję, wąska przy wysokim
-poziomie na obciążenie -- działa więc także bez znajomości ryzyka.
+sekcji -- ryzyko spada z $n$ i szczelina się zamyka, więc dominuje
+wariancja; obie krzywe płaskie i zbieżne, więc dominuje obciążenie --
+działa więc także bez znajomości ryzyka.
 Największa rozbieżność występuje dla $d = 9$ przy najmniejszej liczności.
 Ryzyko oczekiwane jest tam średnią zdominowaną przez nieliczne próby,
 w których wielomian wysokiego stopnia „ucieka” przy krańcu przedziału.
