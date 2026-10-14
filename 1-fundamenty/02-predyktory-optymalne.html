@@ -402,6 +402,7 @@ window.Quarto = {
 \newcommand{\Risk}{R}
 \newcommand{\Bayes}{g^{*}}
 \newcommand{\fopt}{f^{*}}
+\newcommand{\fD}{\widehat f_{\!\mathcal{D}}}
 \newcommand{\argmin}{\operatorname*{arg\,min}}
 \newcommand{\argmax}{\operatorname*{arg\,max}}
 \newcommand{\med}{\operatorname*{med}}
@@ -913,7 +914,7 @@ Rysunek&nbsp;2.2: Ryzyko klasyfikatora <span class="math inline">\(k\)</span>-NN
 <div id="exr-taksowki" class="theorem exercise">
 <p><span class="theorem-title"><strong>Zadanie 2.8</strong></span> Oto klasyczny problem taksówek Kahnemana i Tversky’ego <span class="citation" data-cites="kahneman2011">(<a href="../references.html#ref-kahneman2011" role="doc-biblioref">Kahneman 2011, rozdz. 16</a>)</span>. W mieście jeżdżą taksówki dwóch przedsiębiorstw: <span class="math inline">\(85\%\)</span> z nich należy do spółki Zielony, <span class="math inline">\(15\%\)</span> do spółki Niebieski. Jedna z taksówek spowodowała wypadek i odjechała. Świadek zeznaje, że była niebieska. Test wiarygodności wykazał, że w warunkach takich jak w chwili wypadku świadek myli kolor w <span class="math inline">\(20\%\)</span> przypadków, niezależnie od tego, jaki kolor widzi. Potraktujmy zeznanie świadka jako cechę <span class="math inline">\(X\)</span>, a przedsiębiorstwo – jako klasę <span class="math inline">\(Y\)</span>, z klasą pozytywną Niebieski.</p>
 <ol type="a">
-<li>Wyznacz <span class="math inline">\(\eta(x)=\Prob(Y=\text{Niebieski}\mid X=x)\)</span> dla obu możliwych zeznań. Czy zeznanie niesie informację o klasie?</li>
+<li>Wyznacz <span class="math inline">\(\eta(x)=\Prob(Y=\text{Niebieski}\mid X=x)\)</span> dla obu możliwych zeznań i porównaj obie wartości z prawdopodobieństwem a priori <span class="math inline">\(\Prob(Y=\text{Niebieski})=0{,}15\)</span>. W którą stronę i jak mocno każde z zeznań przesuwa ocenę, że wypadek spowodowała taksówka niebieska?</li>
 <li>Wyznacz klasyfikator bayesowski przy stracie 0–1 i jego błąd. Porównaj go z błędem reguły „wierz świadkowi” oraz klasyfikatora stałego. Jak pogodzić wynik z odpowiedzią z punktu a)?</li>
 <li>Przy jakim prawdopodobieństwie pomyłki świadka jego zeznanie zaczyna zmieniać decyzję klasyfikatora bayesowskiego przy stracie 0–1?</li>
 <li>Załóżmy, że niesłuszne oczyszczenie spółki Niebieski kosztuje <span class="math inline">\(c\)</span> razy więcej niż niesłuszne obwinienie. Korzystając z (<a href="#eq-regula-kosztowa" class="quarto-xref"><span>2.11</span></a>), wyznacz najmniejsze <span class="math inline">\(c\)</span>, przy którym zeznanie „niebieska” prowadzi do decyzji Niebieski. Odnieś wynik do ramki „Dobry model, zły próg”.</li>

@@ -36,12 +36,12 @@ ryzyka, a obciążenie oszacowania jest błędem.
 
 **Ryzyko modelu czy ryzyko metody.** W ramce „Ryzyko modelu a ryzyko
 metody” z rozdziału [-@sec-bias-wariancja] rozróżniliśmy dwie wielkości.
-Pierwsza to ryzyko $\Risk(\widehat f_{\mathcal{D}})$ predyktora
+Pierwsza to ryzyko $\Risk(\fD)$ predyktora
 dopasowanego do zbioru uczącego $\mathcal{D}$, który faktycznie mamy.
 Druga to ryzyko oczekiwane metody uczenia, uśrednione po zbiorach
 uczących liczności $n$:
 $$
-\overline{\Risk}_n = \E_{\mathcal{D}}\big[\Risk(\widehat f_{\mathcal{D}})\big] .
+\overline{\Risk}_n = \E_{\mathcal{D}}\big[\Risk(\fD)\big] .
 $$ {#eq-ryzyko-metody}
 Przy ocenie gotowego modelu, który trafi do użytku, interesuje nas
 pierwsza. Przy porównaniu metod, na przykład w pracy badawczej, częściej
@@ -106,7 +106,7 @@ Założenie niezależności od $\mathcal{D}$ jest tu wszystkim. Gdyby
 obserwacje testowe trafiły choć częściowo do zbioru uczącego, straty $L_j$
 nie miałyby średniej $\Risk(\widehat f)$ -- mielibyśmy z powrotem
 optymizm błędu uczącego. Zwróćmy też uwagę, co twierdzenie szacuje:
-ryzyko **tego** predyktora, $\Risk(\widehat f_{\mathcal{D}})$, a nie
+ryzyko **tego** predyktora, $\Risk(\fD)$, a nie
 ryzyko metody ([-@eq-ryzyko-metody]).
 
 ### Niepewność oszacowania

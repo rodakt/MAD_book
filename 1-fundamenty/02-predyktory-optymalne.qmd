@@ -879,7 +879,10 @@ zeznanie świadka jako cechę $X$, a przedsiębiorstwo -- jako klasę $Y$,
 z klasą pozytywną Niebieski.
 
 a) Wyznacz $\eta(x)=\Prob(Y=\text{Niebieski}\mid X=x)$ dla obu
-   możliwych zeznań. Czy zeznanie niesie informację o klasie?
+   możliwych zeznań i porównaj obie wartości z prawdopodobieństwem
+   a priori $\Prob(Y=\text{Niebieski})=0{,}15$. W którą stronę i jak
+   mocno każde z zeznań przesuwa ocenę, że wypadek spowodowała taksówka
+   niebieska?
 b) Wyznacz klasyfikator bayesowski przy stracie 0--1 i jego błąd.
    Porównaj go z błędem reguły „wierz świadkowi” oraz klasyfikatora
    stałego. Jak pogodzić wynik z odpowiedzią z punktu a)?

@@ -411,6 +411,7 @@ window.Quarto = {
 \newcommand{\Risk}{R}
 \newcommand{\Bayes}{g^{*}}
 \newcommand{\fopt}{f^{*}}
+\newcommand{\fD}{\widehat f_{\!\mathcal{D}}}
 \newcommand{\argmin}{\operatorname*{arg\,min}}
 \newcommand{\argmax}{\operatorname*{arg\,max}}
 \newcommand{\med}{\operatorname*{med}}
@@ -443,8 +444,8 @@ window.Quarto = {
 <p>Pytanie „jak dobry jest model?” kryje w sobie trzy różne pytania, na które odpowiada się różnymi narzędziami.</p>
 <p><strong>Selekcja modelu.</strong> Mamy kilku kandydatów: różne wartości <span class="math inline">\(k\)</span> w metodzie <span class="math inline">\(k\)</span>-NN, różne stopnie wielomianu, różne metody. Chcemy wybrać tego, którego ryzyko jest najmniejsze. Do tego wystarczy <strong>uporządkować</strong> kandydatów według ryzyka. Oszacowanie może być obciążone, byle w podobny sposób dla wszystkich.</p>
 <p><strong>Ocena modelu.</strong> Wybraliśmy model i chcemy wiedzieć, ile wynosi jego ryzyko: jaki odsetek pomyłek popełni na nowych pacjentach, o ile przeciętnie pomyli się w prognozie. Tu potrzebna jest <strong>wartość</strong> ryzyka, a obciążenie oszacowania jest błędem.</p>
-<p><strong>Ryzyko modelu czy ryzyko metody.</strong> W ramce „Ryzyko modelu a ryzyko metody” z rozdziału <a href="04-bias-wariancja.html" class="quarto-xref"><span>4</span></a> rozróżniliśmy dwie wielkości. Pierwsza to ryzyko <span class="math inline">\(\Risk(\widehat f_{\mathcal{D}})\)</span> predyktora dopasowanego do zbioru uczącego <span class="math inline">\(\mathcal{D}\)</span>, który faktycznie mamy. Druga to ryzyko oczekiwane metody uczenia, uśrednione po zbiorach uczących liczności <span class="math inline">\(n\)</span>: <span id="eq-ryzyko-metody"><span class="math display">\[
-\overline{\Risk}_n = \E_{\mathcal{D}}\big[\Risk(\widehat f_{\mathcal{D}})\big] .
+<p><strong>Ryzyko modelu czy ryzyko metody.</strong> W ramce „Ryzyko modelu a ryzyko metody” z rozdziału <a href="04-bias-wariancja.html" class="quarto-xref"><span>4</span></a> rozróżniliśmy dwie wielkości. Pierwsza to ryzyko <span class="math inline">\(\Risk(\fD)\)</span> predyktora dopasowanego do zbioru uczącego <span class="math inline">\(\mathcal{D}\)</span>, który faktycznie mamy. Druga to ryzyko oczekiwane metody uczenia, uśrednione po zbiorach uczących liczności <span class="math inline">\(n\)</span>: <span id="eq-ryzyko-metody"><span class="math display">\[
+\overline{\Risk}_n = \E_{\mathcal{D}}\big[\Risk(\fD)\big] .
 \tag{5.1}\]</span></span> Przy ocenie gotowego modelu, który trafi do użytku, interesuje nas pierwsza. Przy porównaniu metod, na przykład w pracy badawczej, częściej druga. Część narzędzi szacuje pierwszą z nich, część – drugą, choć zwykle przedstawia się je wszystkie jako oszacowania „błędu modelu”.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -511,7 +512,7 @@ window.Quarto = {
 <div class="proof">
 <p><span class="proof-title"><em>Dowód</em>. </span>Przy ustalonym <span class="math inline">\(\mathcal{D}\)</span> predyktor <span class="math inline">\(\widehat f\)</span> jest ustaloną funkcją, a straty <span class="math inline">\(L_j = \Loss\big(Y'_j, \widehat f(\X'_j)\big)\)</span> są niezależnymi zmiennymi losowymi o tym samym rozkładzie, ze średnią <span class="math inline">\(\Risk(\widehat f)\)</span> i wariancją <span class="math inline">\(\tau^2\)</span>. Średnia <span class="math inline">\(m\)</span> takich zmiennych ma tę samą wartość oczekiwaną i wariancję <span class="math inline">\(\tau^2/m\)</span>. Przy stracie 0–1 każda strata <span class="math inline">\(L_j\)</span> jest zmienną zero-jedynkową z prawdopodobieństwem sukcesu <span class="math inline">\(\Risk(\widehat f)\)</span>, więc ich suma ma rozkład dwumianowy. <span class="math inline">\(\square\)</span></p>
 </div>
-<p>Założenie niezależności od <span class="math inline">\(\mathcal{D}\)</span> jest tu wszystkim. Gdyby obserwacje testowe trafiły choć częściowo do zbioru uczącego, straty <span class="math inline">\(L_j\)</span> nie miałyby średniej <span class="math inline">\(\Risk(\widehat f)\)</span> – mielibyśmy z powrotem optymizm błędu uczącego. Zwróćmy też uwagę, co twierdzenie szacuje: ryzyko <strong>tego</strong> predyktora, <span class="math inline">\(\Risk(\widehat f_{\mathcal{D}})\)</span>, a nie ryzyko metody (<a href="#eq-ryzyko-metody" class="quarto-xref"><span>5.1</span></a>).</p>
+<p>Założenie niezależności od <span class="math inline">\(\mathcal{D}\)</span> jest tu wszystkim. Gdyby obserwacje testowe trafiły choć częściowo do zbioru uczącego, straty <span class="math inline">\(L_j\)</span> nie miałyby średniej <span class="math inline">\(\Risk(\widehat f)\)</span> – mielibyśmy z powrotem optymizm błędu uczącego. Zwróćmy też uwagę, co twierdzenie szacuje: ryzyko <strong>tego</strong> predyktora, <span class="math inline">\(\Risk(\fD)\)</span>, a nie ryzyko metody (<a href="#eq-ryzyko-metody" class="quarto-xref"><span>5.1</span></a>).</p>
 <section id="niepewność-oszacowania" class="level3" data-number="5.2.1">
 <h3 data-number="5.2.1" class="anchored" data-anchor-id="niepewność-oszacowania"><span class="header-section-number">5.2.1</span> Niepewność oszacowania</h3>
 <p>Pierwiastek z wariancji, <span class="math inline">\(\tau/\sqrt{m}\)</span>, to <strong>błąd standardowy</strong> oszacowania testowego. W klasyfikacji szacujemy go, podstawiając oszacowanie w miejsce ryzyka: <span id="eq-blad-standardowy-testowy"><span class="math display">\[

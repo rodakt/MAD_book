@@ -167,15 +167,15 @@ W sekcji [-@sec-zaleznosc-i-szum] przyjęliśmy, że obserwacje
 $(\X_1, Y_1), \dots, (\X_n, Y_n)$ są niezależnymi losowaniami z rozkładu
 $P$. Zbiór uczący $\mathcal{D}$ jest więc losowy, a wraz z nim losowy
 jest wyznaczony z niego predyktor. Będziemy go oznaczać
-$\widehat f_{\mathcal{D}}$, gdy zechcemy tę zależność podkreślić.
-W każdym ustalonym punkcie $\x$ wartość $\widehat f_{\mathcal{D}}(\x)$ jest
+$\fD$, gdy zechcemy tę zależność podkreślić.
+W każdym ustalonym punkcie $\x$ wartość $\fD(\x)$ jest
 zmienną losową: jej losowość pochodzi wyłącznie z losowania zbioru
 uczącego.
 
 Średnią i wariancję względem tego losowania oznaczamy $\E_{\mathcal{D}}$
 i $\Var_{\mathcal{D}}$. Szczególną rolę odgrywa **predyktor przeciętny**
 $$
-\bar f(\x) = \E_{\mathcal{D}}\big[\widehat f_{\mathcal{D}}(\x)\big],
+\bar f(\x) = \E_{\mathcal{D}}\big[\fD(\x)\big],
 $$ {#eq-predyktor-przecietny}
 czyli średnia predykcji w punkcie $\x$ po wszystkich zbiorach uczących
 liczności $n$, jakie mogliśmy wylosować. Jest to konstrukcja myślowa:
@@ -282,12 +282,12 @@ trzeba wtedy ustalić na podstawie danych, czym zajmuje się
 rozdział [-@sec-ocena-modeli].
 
 Wróćmy do predykcji. Ustalmy punkt $\x_0$ i potraktujmy predykcję
-$\widehat f_{\mathcal{D}}(\x_0)$ jako estymator liczby
+$\fD(\x_0)$ jako estymator liczby
 $\theta = \fopt(\x_0)$. Jego obciążenie i wariancja to
 $$
 b(\x_0) = \bar f(\x_0) - \fopt(\x_0),
 \qquad
-v(\x_0) = \Var_{\mathcal{D}}\, \widehat f_{\mathcal{D}}(\x_0) .
+v(\x_0) = \Var_{\mathcal{D}}\, \fD(\x_0) .
 $$ {#eq-obciazenie-wariancja-punkt}
 W rysunku [-@fig-wachlarz] obciążenie to pionowa odległość grubej
 niebieskiej linii od przerywanej, a wariancja opisuje rozrzut cienkich
@@ -303,13 +303,13 @@ predyktor.
 
 ::: {#thm-obciazenie-wariancja}
 ## Rozkład na obciążenie i wariancję
-Niech $\widehat f_{\mathcal{D}}$ będzie predyktorem wyznaczonym z losowego
+Niech $\fD$ będzie predyktorem wyznaczonym z losowego
 zbioru uczącego $\mathcal{D}$, a $\x_0$ -- ustalonym punktem. Niech $Y_0$
 ma rozkład warunkowy $Y \mid \X = \x_0$, będzie niezależne od $\mathcal{D}$
 i niech $\E[Y_0^2] < \infty$ oraz
-$\E_{\mathcal{D}}\big[\widehat f_{\mathcal{D}}(\x_0)^2\big] < \infty$. Wtedy
+$\E_{\mathcal{D}}\big[\fD(\x_0)^2\big] < \infty$. Wtedy
 $$
-\E\big[(Y_0 - \widehat f_{\mathcal{D}}(\x_0))^2\big]
+\E\big[(Y_0 - \fD(\x_0))^2\big]
 =
 \underbrace{\Var(Y \mid \X = \x_0)}_{\text{błąd nieredukowalny}}
 +
@@ -325,10 +325,10 @@ i $\mathcal{D}$, a $b$ i $v$ są określone wzorem
 ::: {.proof}
 Rozłóżmy błąd predykcji na trzy różnice:
 $$
-Y_0 - \widehat f_{\mathcal{D}}(\x_0)
+Y_0 - \fD(\x_0)
 = \underbrace{\big(Y_0 - \fopt(\x_0)\big)}_{A}
 + \underbrace{\big(\fopt(\x_0) - \bar f(\x_0)\big)}_{B}
-+ \underbrace{\big(\bar f(\x_0) - \widehat f_{\mathcal{D}}(\x_0)\big)}_{C} .
++ \underbrace{\big(\bar f(\x_0) - \fD(\x_0)\big)}_{C} .
 $$
 Składnik $A$ zależy tylko od $Y_0$ i ma średnią zero, bo
 $\fopt(\x_0) = \E[Y_0]$. Składnik $B$ jest stałą równą $-b(\x_0)$.
@@ -351,7 +351,7 @@ obserwacja $(\X_0, Y_0)$ ma rozkład $P$ i będzie niezależna od
 $\mathcal{D}$. Uśredniając ([-@eq-rozklad-obciazenie-wariancja]) po
 rozkładzie $\X_0$, otrzymujemy
 $$
-\E_{\mathcal{D}}\big[\Risk(\widehat f_{\mathcal{D}})\big]
+\E_{\mathcal{D}}\big[\Risk(\fD)\big]
 =
 \E\big[\Var(Y \mid \X)\big]
 + \E\big[b(\X)^2\big]
@@ -384,9 +384,9 @@ niezależnie od szumu.
 
 ::: {.callout-tip}
 ## Ryzyko modelu a ryzyko metody
-Ryzyko $\Risk(\widehat f_{\mathcal{D}})$ dopasowanego modelu jest liczbą
+Ryzyko $\Risk(\fD)$ dopasowanego modelu jest liczbą
 zależną od tego, jaki zbiór uczący wylosowaliśmy -- inną dla każdego
-zbioru. Wielkość $\E_{\mathcal{D}}\big[\Risk(\widehat f_{\mathcal{D}})\big]$ po
+zbioru. Wielkość $\E_{\mathcal{D}}\big[\Risk(\fD)\big]$ po
 lewej stronie ([-@eq-rozklad-obciazenie-wariancja-globalny]) jest już
 własnością **metody uczenia** zastosowanej do prób liczności $n$, a nie
 konkretnego modelu. Rozkład na obciążenie i wariancję mówi więc, jak
@@ -505,10 +505,12 @@ wzrost wariancji. Kształt litery U z rysunków [-@fig-knn-blad-k]
 i [-@fig-wielomiany-blad] jest więc sumą dwóch monotonicznych krzywych
 biegnących w przeciwne strony.
 
-Przy $k$-NN wariancja jest bliska $\sigma^2/k$, choć nieco od niej
-większa: przy losowych cechach zmienia się od próby do próby także zbiór
-sąsiadów, a z nim średnia wartości $\fopt$ w otoczeniu. Najmniejsze ryzyko
-przypada na $k$ rzędu $7$--$10$, gdzie oba składniki są porównywalne.
+Przy $k$-NN wariancja jest bliska $\sigma^2/k$ dla małych $k$, ale
+przy dużych $k$ jest od niej wyraźnie większa: przy losowych cechach
+zmienia się od próby do próby także zbiór sąsiadów, a z nim średnia
+wartości $\fopt$ w otoczeniu, i ten składnik nie maleje jak $1/k$.
+Najmniejsze ryzyko przypada na $k$ rzędu $7$--$10$, gdzie obciążenie
+i wariancja są porównywalne.
 
 Przy wielomianach obciążenie spada schodkami: stopnie parzyste prawie
 nic nie dodają do poprzedniego nieparzystego. Powodem jest symetria
@@ -589,7 +591,7 @@ elementem $\mathcal{F}$ najbliższym $\fopt$ w tej normie.
 ## Obciążenie a błąd aproksymacji
 Niech strata będzie kwadratowa, a $\mathcal{F}$ -- skończenie wymiarową
 przestrzenią liniową funkcji, taką jak $\mathcal{F}_d$. Niech
-$\widehat f_{\mathcal{D}} \in \mathcal{F}$ dla każdego zbioru uczącego,
+$\fD \in \mathcal{F}$ dla każdego zbioru uczącego,
 a wszystkie występujące niżej średnie niech będą skończone. Wtedy
 $$
 \underbrace{\E\big[b(\X)^2\big]}_{\text{obciążenie}^2}
@@ -597,7 +599,7 @@ $$
 + \|\bar f - f_{\mathcal{F}}\|^2 ,
 $$ {#eq-obciazenie-aproksymacja}
 $$
-\underbrace{\E_{\mathcal{D}}\big[\Risk(\widehat f_{\mathcal{D}})
+\underbrace{\E_{\mathcal{D}}\big[\Risk(\fD)
 - \Risk(f_{\mathcal{F}})\big]}_{\text{oczekiwany błąd estymacji}}
 = \|\bar f - f_{\mathcal{F}}\|^2
 + \underbrace{\E\big[v(\X)\big]}_{\text{wariancja}} .
@@ -614,7 +616,7 @@ pewnego $g \in \mathcal{F}$, przesunięcie $f_{\mathcal{F}}$ o mały krok
 w kierunku $g$ zmniejszyłoby odległość od $\fopt$.
 
 Predyktor przeciętny należy do $\mathcal{F}$: jeśli
-$\widehat f_{\mathcal{D}} = \sum_j \widehat\beta_j \varphi_j$ w pewnej
+$\fD = \sum_j \widehat\beta_j \varphi_j$ w pewnej
 bazie $\varphi_1, \dots, \varphi_m$ przestrzeni $\mathcal{F}$, to
 $\bar f = \sum_j \E_{\mathcal{D}}[\widehat\beta_j]\, \varphi_j$. Zatem
 $\bar f - f_{\mathcal{F}} \in \mathcal{F}$ jest ortogonalne do
@@ -623,16 +625,16 @@ $$
 \E\big[b(\X)^2\big] = \|\bar f - \fopt\|^2
 = \|f_{\mathcal{F}} - \fopt\|^2 + \|\bar f - f_{\mathcal{F}}\|^2 .
 $$
-Tak samo $\widehat f_{\mathcal{D}} - f_{\mathcal{F}} \in \mathcal{F}$, więc
-$\Risk(\widehat f_{\mathcal{D}}) - \Risk(f_{\mathcal{F}})
-= \|\widehat f_{\mathcal{D}} - \fopt\|^2 - \|f_{\mathcal{F}} - \fopt\|^2
-= \|\widehat f_{\mathcal{D}} - f_{\mathcal{F}}\|^2$. Uśredniając po
+Tak samo $\fD - f_{\mathcal{F}} \in \mathcal{F}$, więc
+$\Risk(\fD) - \Risk(f_{\mathcal{F}})
+= \|\fD - \fopt\|^2 - \|f_{\mathcal{F}} - \fopt\|^2
+= \|\fD - f_{\mathcal{F}}\|^2$. Uśredniając po
 $\mathcal{D}$ i rozkładając
-$\widehat f_{\mathcal{D}} - f_{\mathcal{F}}
-= (\widehat f_{\mathcal{D}} - \bar f) + (\bar f - f_{\mathcal{F}})$ tak
+$\fD - f_{\mathcal{F}}
+= (\fD - \bar f) + (\bar f - f_{\mathcal{F}})$ tak
 jak w ([-@eq-mse-obciazenie-wariancja]), dostajemy
 ([-@eq-estymacja-wariancja]), bo
-$\E_{\mathcal{D}}\big[\|\widehat f_{\mathcal{D}} - \bar f\|^2\big] = \E\big[v(\X)\big]$.
+$\E_{\mathcal{D}}\big[\|\fD - \bar f\|^2\big] = \E\big[v(\X)\big]$.
 $\square$
 :::
 
