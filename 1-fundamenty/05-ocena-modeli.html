@@ -406,6 +406,8 @@ window.Quarto = {
 % --- Wektory i macierze ---
 \newcommand{\x}{\mathbf{x}}
 \newcommand{\X}{\mathbf{X}}
+\newcommand{\y}{\mathbf{y}}
+\newcommand{\bbeta}{\boldsymbol{\beta}}
 % --- Teoria decyzji ---
 \newcommand{\Loss}{L}
 \newcommand{\Risk}{R}
@@ -442,7 +444,7 @@ window.Quarto = {
 <section id="sec-trzy-pytania" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="sec-trzy-pytania"><span class="header-section-number">5.1</span> Trzy pytania</h2>
 <p>Pytanie „jak dobry jest model?” kryje w sobie trzy różne pytania, na które odpowiada się różnymi narzędziami.</p>
-<p><strong>Selekcja modelu.</strong> Mamy kilku kandydatów: różne wartości <span class="math inline">\(k\)</span> w metodzie <span class="math inline">\(k\)</span>-NN, różne stopnie wielomianu, różne metody. Chcemy wybrać tego, którego ryzyko jest najmniejsze. Do tego wystarczy <strong>uporządkować</strong> kandydatów według ryzyka. Oszacowanie może być obciążone, byle w podobny sposób dla wszystkich.</p>
+<p><strong>Selekcja modelu.</strong> Mamy kilku kandydatów: różne wartości <span class="math inline">\(k\)</span> w metodzie <span class="math inline">\(k\)</span>-NN, różne stopnie wielomianu, różne metody. Chcemy wybrać tego, którego ryzyko jest najmniejsze. Do tego wystarczy <strong>uporządkować</strong> kandydatów według ryzyka. Oszacowanie może systematycznie zawyżać ryzyko, na przykład dlatego, że modele uczymy na części danych, byle o podobną wielkość dla wszystkich kandydatów: wspólne przesunięcie nie zmienia kolejności. Liczy się dokładność, z jaką szacujemy <strong>różnice</strong> ryzyk.</p>
 <p><strong>Ocena modelu.</strong> Wybraliśmy model i chcemy wiedzieć, ile wynosi jego ryzyko: jaki odsetek pomyłek popełni na nowych pacjentach, o ile przeciętnie pomyli się w prognozie. Tu potrzebna jest <strong>wartość</strong> ryzyka, a obciążenie oszacowania jest błędem.</p>
 <p><strong>Ryzyko modelu czy ryzyko metody.</strong> W ramce „Ryzyko modelu a ryzyko metody” z rozdziału <a href="04-bias-wariancja.html" class="quarto-xref"><span>4</span></a> rozróżniliśmy dwie wielkości. Pierwsza to ryzyko <span class="math inline">\(\Risk(\fD)\)</span> predyktora dopasowanego do zbioru uczącego <span class="math inline">\(\mathcal{D}\)</span>, który faktycznie mamy. Druga to ryzyko oczekiwane metody uczenia, uśrednione po zbiorach uczących liczności <span class="math inline">\(n\)</span>: <span id="eq-ryzyko-metody"><span class="math display">\[
 \overline{\Risk}_n = \E_{\mathcal{D}}\big[\Risk(\fD)\big] .
@@ -472,7 +474,7 @@ window.Quarto = {
 </thead>
 <tbody>
 <tr class="odd">
-<td>ryzyko ustalonego modelu</td>
+<td>ryzyko dopasowanego predyktora, gdy nic już nie wybieramy</td>
 <td>zbiór testowy</td>
 <td><a href="#sec-zbior-testowy" class="quarto-xref"><span>5.2</span></a></td>
 </tr>
@@ -482,8 +484,8 @@ window.Quarto = {
 <td><a href="#sec-zbior-walidacyjny" class="quarto-xref"><span>5.3</span></a>, <a href="#sec-walidacja-krzyzowa" class="quarto-xref"><span>5.4</span></a></td>
 </tr>
 <tr class="odd">
-<td>ryzyko modelu wybranego z danych</td>
-<td>zagnieżdżona walidacja krzyżowa albo nietknięty zbiór testowy</td>
+<td>ryzyko predyktora wybranego spośród kandydatów na tych samych danych</td>
+<td>nietknięty zbiór testowy (ryzyko wybranego modelu) albo zagnieżdżona walidacja krzyżowa (ryzyko oczekiwane procedury wyboru)</td>
 <td><a href="#sec-selekcja-ocena" class="quarto-xref"><span>5.6</span></a></td>
 </tr>
 <tr class="even">
@@ -517,7 +519,7 @@ window.Quarto = {
 <h3 data-number="5.2.1" class="anchored" data-anchor-id="niepewność-oszacowania"><span class="header-section-number">5.2.1</span> Niepewność oszacowania</h3>
 <p>Pierwiastek z wariancji, <span class="math inline">\(\tau/\sqrt{m}\)</span>, to <strong>błąd standardowy</strong> oszacowania testowego. W klasyfikacji szacujemy go, podstawiając oszacowanie w miejsce ryzyka: <span id="eq-blad-standardowy-testowy"><span class="math display">\[
 \widehat{\mathrm{se}} = \sqrt{\frac{\widehat\Risk_{\mathrm{test}}\,\big(1 - \widehat\Risk_{\mathrm{test}}\big)}{m}} .
-\tag{5.3}\]</span></span> Przy dużym <span class="math inline">\(m\)</span> rozkład dwumianowy jest bliski normalnemu, więc przedział <span class="math inline">\(\widehat\Risk_{\mathrm{test}} \pm 1{,}96\,\widehat{\mathrm{se}}\)</span> pokrywa ryzyko z prawdopodobieństwem około <span class="math inline">\(95\%\)</span>. W regresji <span class="math inline">\(\tau^2\)</span> szacujemy wariancją z próby strat <span class="math inline">\(L_1, \dots, L_m\)</span>. Kwadraty błędów mają jednak zwykle rozkład silnie skośny, więc przybliżenie normalne wymaga tu większego <span class="math inline">\(m\)</span> niż w klasyfikacji.</p>
+\tag{5.3}\]</span></span> Przy dużym <span class="math inline">\(m\)</span> rozkład dwumianowy jest bliski normalnemu, więc przedział <span class="math inline">\(\widehat\Risk_{\mathrm{test}} \pm 1{,}96\,\widehat{\mathrm{se}}\)</span> pokrywa ryzyko z prawdopodobieństwem około <span class="math inline">\(95\%\)</span>. W regresji nie ma takiego wzoru i wariancję <span class="math inline">\(\tau^2\)</span> szacujemy wariancją z próby strat testowych <span class="math inline">\(L_j = \Loss\big(Y'_j, \widehat f(\X'_j)\big)\)</span>, <span class="math inline">\(j = 1, \dots, m\)</span>. Kwadraty błędów mają jednak zwykle rozkład silnie skośny, więc przybliżenie normalne wymaga tu większego <span class="math inline">\(m\)</span> niż w klasyfikacji.</p>
 <p>Wzór (<a href="#eq-blad-standardowy-testowy" class="quarto-xref"><span>5.3</span></a>) szybko studzi zaufanie do małych zbiorów testowych. Przy błędzie rzędu <span class="math inline">\(10\%\)</span> i <span class="math inline">\(m = 100\)</span> błąd standardowy wynosi <span class="math inline">\(0{,}03\)</span>, więc przedział ufności rozciąga się od około <span class="math inline">\(4\%\)</span> do <span class="math inline">\(16\%\)</span>. Aby połowa szerokości przedziału wynosiła <span class="math inline">\(h\)</span>, potrzeba <span class="math display">\[
 m \approx \frac{1{,}96^2\, \Risk(1 - \Risk)}{h^2}
 \]</span> obserwacji. Dla <span class="math inline">\(\Risk = 0{,}1\)</span> i <span class="math inline">\(h = 0{,}01\)</span> to około <span class="math inline">\(3500\)</span> obserwacji, dla <span class="math inline">\(h = 0{,}005\)</span> – około <span class="math inline">\(14\,000\)</span>. Dokładność rośnie jak <span class="math inline">\(\sqrt{m}\)</span>: dwukrotne zawężenie przedziału kosztuje czterokrotnie więcej danych. Ten sam rachunek stał za ramką „Dlaczego całkujemy zamiast losować zbiór testowy” w rozdziale <a href="02-predyktory-optymalne.html" class="quarto-xref"><span>2</span></a>: przy błędzie około <span class="math inline">\(0{,}16\)</span> i <span class="math inline">\(20\,000\)</span> obserwacjach testowych błąd standardowy wynosi <span class="math inline">\(\sqrt{0{,}16 \cdot 0{,}84 / 20\,000} \approx 0{,}0026\)</span>.</p>
@@ -610,7 +612,7 @@ Rysunek&nbsp;5.1: Błąd na zbiorze walidacyjnym regresji wielomianowej w zależ
 </div>
 </div>
 </div>
-<p>Lewy panel pokazuje, że błąd walidacyjny dobrze oddaje kształt krzywej ryzyka: obie gwałtownie spadają między stopniem <span class="math inline">\(2\)</span> a <span class="math inline">\(3\)</span>, mają minimum w okolicy stopnia <span class="math inline">\(5\)</span> i dalej powoli rosną. Do selekcji to wystarcza. Prawy panel pokazuje pierwszą wadę: wynik zależy od tego, które obserwacje trafiły do której części. Różne podziały tej samej próby dają krzywe przesunięte względem siebie i wskazują różne stopnie jako najlepsze. Zbiór walidacyjny liczy <span class="math inline">\(50\)</span> obserwacji, a jak widzieliśmy w sekcji <a href="#sec-zbior-testowy" class="quarto-xref"><span>5.2</span></a>, przy takiej liczności oszacowanie ma duży błąd standardowy. Druga wada to marnotrawstwo: wielomiany uczymy na połowie danych, więc oceniamy modele gorsze niż te, które moglibyśmy dopasować do całej próby. Przy stromej krzywej uczenia błąd walidacyjny przeszacowuje wtedy ryzyko, a przy stopniach wysokich, których wariancja najsilniej zależy od <span class="math inline">\(n\)</span>, przeszacowuje je najbardziej. Selekcja przesuwa się przez to w stronę modeli prostszych, niż na to pozwala pełna próba.</p>
+<p>Lewy panel pokazuje, że błąd walidacyjny dobrze oddaje kształt krzywej ryzyka: obie gwałtownie spadają między stopniem <span class="math inline">\(2\)</span> a <span class="math inline">\(3\)</span>, mają minimum w okolicy stopnia <span class="math inline">\(5\)</span> i dalej powoli rosną. Do selekcji to wystarcza. Prawy panel pokazuje pierwszą wadę: wynik zależy od tego, które obserwacje trafiły do której części. Różne podziały tej samej próby dają krzywe przesunięte względem siebie i wskazują różne stopnie jako najlepsze. Zbiór walidacyjny liczy <span class="math inline">\(50\)</span> obserwacji, a jak widzieliśmy w sekcji <a href="#sec-zbior-testowy" class="quarto-xref"><span>5.2</span></a>, przy takiej liczności oszacowanie ma duży błąd standardowy. Druga wada to marnotrawstwo: wielomiany uczymy na połowie danych, więc oceniamy modele gorsze niż te, które moglibyśmy dopasować do całej próby. Przy stromej krzywej uczenia błąd walidacyjny przeszacowuje wtedy ryzyko, a przy stopniach wysokich, których wariancja najsilniej zależy od <span class="math inline">\(n\)</span>, przeszacowuje je najbardziej. Wybieramy przez to model zwykle prostszy niż ten, który byłby najlepszy po dopasowaniu do całej próby.</p>
 </section>
 <section id="sec-walidacja-krzyzowa" class="level2" data-number="5.4">
 <h2 data-number="5.4" class="anchored" data-anchor-id="sec-walidacja-krzyzowa"><span class="header-section-number">5.4</span> Walidacja krzyżowa</h2>

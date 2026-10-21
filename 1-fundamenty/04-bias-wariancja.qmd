@@ -53,7 +53,7 @@ $$
 i wybieramy z niej predyktor metodą najmniejszych kwadratów, czyli
 minimalizujemy ryzyko empiryczne przy stracie kwadratowej
 ([-@eq-minimalizacja-ryzyka-empirycznego]). Jak to zrobić rachunkowo,
-omówimy w rozdziale [-@sec-regresja-liniowa]; tu korzystamy z gotowej
+omawia sekcja [-@sec-mnk]; tu korzystamy z gotowej
 funkcji biblioteki NumPy. Przy ustalonym $d$ jest to metoda
 parametryczna z $d + 1$ współczynnikami, a stopień $d$ pełni rolę
 hiperparametru, podobnie jak $k$ w metodzie $k$-NN.
@@ -440,7 +440,7 @@ losowe, jak na rysunku [-@fig-knn-blad-k], a nie ustalone.
 
 ```{python}
 #| label: fig-dekompozycja
-#| fig-cap: "Rozkład ryzyka na obciążenie do kwadratu, wariancję i błąd nieredukowalny. Po lewej: regresja $k$-NN w zależności od $n/k$ ($n = 100$, 500 prób uczących); kropkowana linia to wariancja $\\sigma^2/k$ z ustalonego układu ([-@eq-knn-obciazenie-wariancja]). Po prawej: regresja wielomianowa w zależności od stopnia $d$ ($n = 50$, 1000 prób uczących, te same co na rysunku [-@fig-wielomiany-blad]). Ryzyko jest sumą trzech składników. Oś pionowa w skali logarytmicznej."
+#| fig-cap: "Rozkład ryzyka na obciążenie do kwadratu, wariancję i błąd nieredukowalny. Po lewej: regresja $k$-NN w zależności od $n/k$ ($n = 100$, 500 prób uczących); kropkowana linia to wariancja $\\sigma^2/k$ z ustalonego układu ([-@eq-knn-obciazenie-wariancja]). Po prawej: regresja wielomianowa w zależności od stopnia $d$ ($n = 50$, 1000 prób uczących, te same co na rysunku [-@fig-wielomiany-blad]). Ryzyko jest sumą trzech składników. Wzrost obciążenia powyżej $d = 8$ to błąd losowy oszacowania $\\bar f$ z 1000 prób, a nie własność metody. Oś pionowa w skali logarytmicznej."
 
 from sklearn.neighbors import KNeighborsRegressor
 
@@ -783,7 +783,7 @@ więc optimum przesuwa się w stronę modeli bogatszych, jak w rysunku
 $\fopt$ należy do małej klasy $\mathcal{F}$, to metoda wybierająca z tej
 klasy ma zerowy błąd aproksymacji i małą wariancję. Gdyby $\fopt$ była
 liniowa, regresja liniowa z $p$ cechami miałaby zerowe obciążenie
-i wariancję rzędu $\sigma^2 (p + 1)/n$ (rozdział [-@sec-regresja-liniowa]).
+i wariancję rzędu $\sigma^2 (p + 1)/n$ ([-@eq-mnk-srednia-wariancja]).
 Trafne założenie zastępuje dane. Nietrafne wprowadza obciążenie, którego
 żadna ilość danych nie usunie.
 

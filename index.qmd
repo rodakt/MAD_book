@@ -11,7 +11,8 @@ część wątków rozszerzono, część przeredagowano, dodano nowe przykłady i
 Fragmenty kodu są w pełni reprodukowalne: wszystkie losowania mają ustalone
 ziarno. Kod każdego rysunku można rozwinąć i skopiować. Do jego uruchomienia
 wystarczy Python 3.12 z pakietami `numpy`, `scipy`, `pandas`, `matplotlib`,
-`scikit-learn` i `statsmodels`.
+`scikit-learn` i `statsmodels`. Pliki z danymi, z których korzystają
+przykłady, są w katalogu `dane/` repozytorium książki.
 
 ## Literatura {.unnumbered}
 
