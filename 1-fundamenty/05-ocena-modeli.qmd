@@ -527,10 +527,12 @@ modelu naiwny błąd standardowy wystarcza jednak jako miara skali
 niepewności.
 
 Tak używa go **reguła jednego błędu standardowego** [@esl, rozdz. 7.10].
-Spośród kandydatów uporządkowanych od najprostszego do najbardziej
-elastycznego wybieramy najprostszego, którego oszacowanie
-$\mathrm{CV}_K$ nie przekracza minimum o więcej niż jeden błąd
-standardowy. Uzasadnienie jest heurystyczne: różnice mniejsze niż błąd
+Niech $j^*$ będzie kandydatem o najmniejszym oszacowaniu
+$\mathrm{CV}_K$, a $\mathrm{se}_{j^*}$ jego błędem standardowym.
+Spośród kandydatów, dla których
+$\mathrm{CV}_K(j)\le\mathrm{CV}_K(j^*)+\mathrm{se}_{j^*}$,
+wybieramy najprostszego, czyli najmniej elastycznego.
+Uzasadnienie jest heurystyczne: różnice mniejsze niż błąd
 standardowy mogą być przypadkowe, a w razie wątpliwości model prostszy
 ma mniejszą wariancję i łatwiej go interpretować.
 
@@ -1339,9 +1341,11 @@ a) Wszystkie cechy standaryzujemy na całej próbie, a następnie
 b) Dzielimy dane na zbiór uczący i testowy. Dla $k = 1, \dots, 50$
    uczymy klasyfikator $k$-NN na zbiorze uczącym, wybieramy $k$
    o najmniejszym błędzie testowym i ten błąd podajemy jako ocenę modelu.
-c) Dane zawierają po kilka wizyt każdego pacjenta. Wizyty dzielimy losowo
-   na pięć części i przeprowadzamy walidację krzyżową modelu, który ma
-   służyć do diagnozowania nowych pacjentów.
+c) Dane zawierają po kilka wizyt każdego pacjenta; obserwacją jest
+   wizyta, czyli wyniki badań i postawiona diagnoza. Model ma diagnozować
+   pacjentów, których dotąd nie badaliśmy. Jego błąd dla takich pacjentów
+   szacujemy pięciokrotną walidacją krzyżową, dzieląc wizyty losowo
+   na pięć części.
 d) Model prognozuje dzienną sprzedaż na podstawie sprzedaży z poprzednich
    dni. Oceniamy go dziesięciokrotną walidacją krzyżową z losowym
    tasowaniem dni.
