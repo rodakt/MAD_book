@@ -288,7 +288,7 @@ po dopasowaniu do całej próby.
 
 ## Walidacja krzyżowa {#sec-walidacja-krzyzowa}
 
-Obie wady łagodzi pomysł prosty: zamiast jednego podziału zrobić kilka
+Obie wady łagodzi prosty pomysł: zamiast jednego podziału zrobić kilka
 i tak je dobrać, by każda obserwacja trafiła do części oceniającej
 dokładnie raz.
 
@@ -321,11 +321,12 @@ Dzięki temu porównanie jest sparowane w sensie sekcji
 [-@sec-zbior-testowy]: losowość podziału wpływa podobnie na wszystkich
 kandydatów.
 
-### LOOCV bez ponownego dopasowania
+### Błąd uczący a LOOCV
 
-Walidacja typu „pozostaw jeden” wymaga $n$ dopasowań, ale dla niektórych
-metod da się ją policzyć z jednego. Prześledźmy to na regresji $k$-NN
-([-@eq-knn-regresja]). Niech wszystkie odległości między punktami będą
+Błąd uczący zaniża ryzyko, bo każdy punkt uczący wpływa na własną
+predykcję. W regresji $k$-NN ([-@eq-knn-regresja]) ten wpływ ma prostą
+postać: wynik $y_i$ wchodzi do predykcji w $\x_i$ z wagą $1/k$. Pozwala
+to wyrazić resztę „pozostaw jeden” przez resztę na zbiorze uczącym. Niech wszystkie odległości między punktami będą
 różne, aby nie było remisów. Każdy punkt uczący $\x_i$ należy do swojego
 otoczenia $N_k(\x_i)$, bo sam od siebie ma odległość zero. Predykcja
 w punkcie uczącym to więc
@@ -356,6 +357,9 @@ wtedy $(y_i - \widehat f(\x_i))/(1 - S_{ii})$, gdzie $S_{ii}$ to waga, jaką
 predykcja w $\x_i$ przypisuje własnemu wynikowi [@esl, rozdz. 7.10].
 Dla $k$-NN $S_{ii} = 1/k$. Do tej klasy należy też metoda najmniejszych
 kwadratów, w tym regresja wielomianowa z rozdziału [-@sec-bias-wariancja].
+Im większa waga $S_{ii}$, tym mniejsza jest reszta na zbiorze uczącym
+w porównaniu z resztą „pozostaw jeden”. Ubocznym skutkiem jest oszczędność obliczeń:
+walidacja „pozostaw jeden” wymaga wtedy jednego dopasowania zamiast $n$.
 
 ### Ile części
 
@@ -693,31 +697,96 @@ kandydatów. To błąd, i to systematyczny.
 Niech $\widehat\Risk_1, \dots, \widehat\Risk_M$ będą oszacowaniami ryzyk
 $\Risk_1, \dots, \Risk_M$ kandydatów, nieobciążonymi:
 $\E[\widehat\Risk_j] = \Risk_j$. Niech $\widehat\jmath$ będzie indeksem
-najmniejszego oszacowania. Wtedy
+najmniejszego oszacowania. Ryzyka $\Risk_j$ są tu liczbami, a losowe są
+oszacowania i wraz z nimi indeks $\widehat\jmath$, więc także
+$\Risk_{\widehat\jmath}$. Wtedy
 $$
 \E\big[\widehat\Risk_{\widehat\jmath}\big]
 = \E\Big[\min_{j} \widehat\Risk_j\Big]
 \le \min_{j} \Risk_j
 \le \E\big[\Risk_{\widehat\jmath}\big] .
 $$
+Gdy kandydaci są dopasowani do zbioru uczącego $\mathcal D$, a oceniani
+na niezależnym zbiorze walidacyjnym, twierdzenie stosujemy przy ustalonym
+$\mathcal D$, z wartościami oczekiwanymi warunkowymi względem $\mathcal D$.
 :::
 
 ::: {.proof}
 Dla każdego $l$ zachodzi $\min_j \widehat\Risk_j \le \widehat\Risk_l$.
 Biorąc wartość oczekiwaną, dostajemy
 $\E[\min_j \widehat\Risk_j] \le \Risk_l$ dla każdego $l$, a więc także dla
-tego, przy którym $\Risk_l$ jest najmniejsze. Druga nierówność wynika
-stąd, że $\Risk_{\widehat\jmath}$ jest jednym z ryzyk $\Risk_j$, więc nie
-jest mniejsze od najmniejszego z nich. $\square$
+tego, przy którym $\Risk_l$ jest najmniejsze. Zmienna
+$\Risk_{\widehat\jmath}$ zależy od danych tylko przez indeks
+$\widehat\jmath$, więc
+$$
+\E\big[\Risk_{\widehat\jmath}\big] = \sum_{j=1}^{M} \Risk_j \, P(\widehat\jmath = j) .
+$$
+Jest to średnia ważona ryzyk $\Risk_1, \dots, \Risk_M$, a średnia ważona
+nie jest mniejsza od najmniejszego ze składników. Stąd druga
+nierówność. $\square$
 :::
 
+Trzydziestu uczniów pisze test z dwudziestu pytań. Wszyscy umieją tyle
+samo: każdy myli się w każdym pytaniu z prawdopodobieństwem $0{,}3$, więc
+przeciętnie popełnia $6$ błędów. Liczba błędów każdego ucznia z osobna
+jest uczciwym oszacowaniem jego umiejętności. Wyniki rozrzucą się jednak
+wokół $6$ z odchyleniem standardowym około $2$, a najlepszy z trzydziestu
+popełni zwykle dwa albo trzy błędy. Nauczyciel, który uzna na tej
+podstawie, że zwycięzca myli się w co dziesiątym pytaniu, będzie
+w błędzie: zwycięzca umie tyle samo co reszta. Wygrał, bo los sprzyjał
+mu najbardziej, a jego wynik zawiera całe to szczęście. W następnym
+teście popełni przeciętnie $6$ błędów.
+
+Uczniowie to kandydaci, pytania -- obserwacje walidacyjne, a odsetek
+błędnych odpowiedzi -- oszacowanie $\widehat\Risk_j$. Wybierając
+najmniejsze oszacowanie, wybieramy zarazem najkorzystniejszy szum, stąd
+pierwsza nierówność. Gdy umiejętności się różnią, szczęście może wynieść
+na pierwsze miejsce kogoś słabszego od najlepszego, stąd druga. Obie
+sytuacje pokazuje rysunek [-@fig-wybor-schemat].
+
+```{python}
+#| label: fig-wybor-schemat
+#| fig-cap: "Jedna realizacja oszacowań dla sześciu kandydatów. Pasek: typowy rozrzut oszacowania $\\widehat\\Risk_j$ (dwa błędy standardowe w każdą stronę), kreska: ryzyko $\\Risk_j$, kropka: wylosowane oszacowanie. Najmniejsze oszacowanie (czerwone) wypadło na lewym krańcu rozrzutu kandydata $3$ i leży na lewo od wszystkich ryzyk, także od najmniejszego, które ma kandydat $4$. Wybrany kandydat nie jest najlepszy, więc jego ryzyko $\\Risk_{\\widehat\\jmath}$ przekracza $\\min_j \\Risk_j$."
+
+niebieski, czerwony, szary = "#1B6CA8", "#D7263D", "#888888"
+ryzyka = np.array([0.30, 0.26, 0.28, 0.24, 0.27, 0.31])
+oszacowania = np.array([0.33, 0.23, 0.21, 0.27, 0.29, 0.28])
+se = 0.04
+wybrany, najlepszy = oszacowania.argmin(), ryzyka.argmin()
+wiersze = np.arange(len(ryzyka))[::-1]      # kandydat 1 na górze
+
+fig, ax = plt.subplots(figsize=(7, 3.4))
+for j, y in enumerate(wiersze):
+    kolor = czerwony if j == wybrany else niebieski
+    ax.plot([ryzyka[j] - 2 * se, ryzyka[j] + 2 * se], [y, y], color=kolor,
+            alpha=0.2, lw=10, solid_capstyle="butt")
+    ax.plot([ryzyka[j]] * 2, [y - 0.25, y + 0.25], color="black", lw=2)
+    ax.plot(oszacowania[j], y, "o", color=kolor, ms=8)
+
+y_gora = len(ryzyka) - 0.3
+for x, kol, napis in [(oszacowania[wybrany], czerwony,
+                       r"$\min_j \widehat{R}_j$"),
+                      (ryzyka[najlepszy], szary, r"$\min_j R_j$"),
+                      (ryzyka[wybrany], szary, r"$R_{\hat{\jmath}}$")]:
+    ax.axvline(x, color=kol, ls="--", lw=1, zorder=0)
+    ax.text(x, y_gora + 0.1, napis, color=kol, ha="center", va="bottom",
+            fontsize=11)
+
+ax.set_yticks(wiersze, [f"kandydat {j + 1}" for j in range(len(ryzyka))])
+ax.set_ylim(-0.6, y_gora + 1.0)
+ax.set_xlabel("ryzyko i jego oszacowanie")
+for bok in ["top", "right", "left"]:
+    ax.spines[bok].set_visible(False)
+ax.tick_params(axis="y", length=0)
+plt.tight_layout()
+plt.show()
+```
+
 Wynik wybranego kandydata zaniża więc ryzyko nawet najlepszego
-z kandydatów, a ryzyko faktycznie wybranego modelu, który nie musi być
-najlepszy, jest jeszcze większe. Nierówność jest ostra, gdy oszacowania
-są losowe i kilku kandydatów ma podobne ryzyka: wybieramy wtedy tego,
-któremu szum akurat najbardziej pomógł. Zjawisko to bywa nazywane
-**klątwą zwycięzcy**. Rośnie z liczbą kandydatów i z wariancją oszacowań,
-a maleje, gdy jeden kandydat jest wyraźnie lepszy od pozostałych.
+z kandydatów, a ryzyko faktycznie wybranego modelu jest jeszcze większe.
+Zjawisko to bywa nazywane **klątwą zwycięzcy**. Rośnie z liczbą
+kandydatów i z wariancją oszacowań, a maleje, gdy jeden kandydat jest
+wyraźnie lepszy od pozostałych.
 
 Jak zmierzyć ryzyko modelu, który wybieramy? Trzeba ocenić całą
 procedurę -- „wybierz kandydata walidacją krzyżową i dopasuj go do
@@ -727,20 +796,90 @@ walidacji krzyżowej** [@varma2006].
 
 ::: {.callout-note}
 ## Zagnieżdżona walidacja krzyżowa
-Dzielimy dane na $K$ części zewnętrznych. Dla każdej części zewnętrznej
-$F_k$:
+Niech $\mathcal W$ oznacza procedurę wyboru: dla zbioru uczącego
+$\mathcal D'$
 
-1. Na pozostałych danych przeprowadzamy całą procedurę wyboru: dzielimy je
-   na części wewnętrzne, walidacją krzyżową oceniamy wszystkich
-   kandydatów i wybieramy najlepszego.
-2. Wybranego kandydata dopasowujemy do wszystkich danych poza $F_k$.
-3. Oceniamy go na $F_k$.
+1. dzieli $\mathcal D'$ na $L$ części wewnętrznych i dla każdego
+   kandydata $j$ oblicza na $\mathcal D'$ oszacowanie $\mathrm{CV}_L^{(j)}$
+   według ([-@eq-cv]);
+2. wybiera kandydata $\widehat\jmath$ o najmniejszym $\mathrm{CV}_L^{(j)}$;
+3. dopasowuje go do całego $\mathcal D'$ i zwraca otrzymany predyktor
+   $\mathcal W(\mathcal D')$.
 
-Średnia strat z kroku 3 jest oszacowaniem ryzyka całej procedury, łącznie
-z wyborem. W różnych częściach zewnętrznych wybrany może zostać inny
-kandydat -- to normalne, bo oceniamy procedurę wyboru, a nie jednego
-kandydata.
+Zagnieżdżona walidacja krzyżowa to walidacja krzyżowa ([-@eq-cv])
+procedury $\mathcal W$. Dzielimy dane na $K$ części zewnętrznych
+$F_1, \dots, F_K$; niech $\mathcal D^{(-k)}$ oznacza dane poza $F_k$.
+Oszacowaniem ryzyka całej procedury, łącznie z wyborem, jest
+$$
+\mathrm{CV}_K^{\mathrm{zagn}} = \frac{1}{n} \sum_{k=1}^{K} \sum_{i \in F_k}
+\Loss\big(y_i, \mathcal W(\mathcal D^{(-k)})(\x_i)\big) .
+$$
+Część $F_k$ nie bierze udziału ani w wyborze, ani w dopasowaniu.
+W różnych częściach zewnętrznych wybrany może zostać inny kandydat --
+to normalne, bo oceniamy procedurę wyboru, a nie jednego kandydata.
 :::
+
+Jeden krok zewnętrzny przedstawia rysunek [-@fig-zagniezdzona-schemat].
+
+```{python}
+#| label: fig-zagniezdzona-schemat
+#| fig-cap: "Jeden krok zagnieżdżonej walidacji krzyżowej ($K = L = 5$). Górny pasek: części zewnętrzne; część $F_k$ (czerwona) jest odłożona do oceny. Dolny pasek: pozostałe dane $\\mathcal{D}^{(-k)}$ podzielone na części wewnętrzne; każda z nich kolejno (pomarańczowa) służy do walidacji kandydatów uczonych na pozostałych. Wybrany kandydat $\\widehat\\jmath$ jest dopasowywany do całego $\\mathcal{D}^{(-k)}$ i oceniany na $F_k$. Krok powtarzamy dla $k = 1, \\dots, K$."
+
+from matplotlib.patches import Rectangle, FancyArrowPatch
+
+K, L = 5, 5
+niebieski, czerwony, pomaranczowy = "#1B6CA8", "#D7263D", "#F28E2B"
+
+fig, ax = plt.subplots(figsize=(8, 2.9))
+
+def pasek(x0, y0, szer, wys, kolory, napisy):
+    """Rysuje pasek podzielony na równe części o podanych kolorach i napisach."""
+    w = szer / len(kolory)
+    for i, (kol, nap) in enumerate(zip(kolory, napisy)):
+        ax.add_patch(Rectangle((x0 + i * w, y0), w, wys, facecolor=kol,
+                               edgecolor="white", lw=2))
+        ax.text(x0 + (i + 0.5) * w, y0 + wys / 2, nap, ha="center",
+                va="center", color="white", fontsize=11)
+
+# Części zewnętrzne: F_k (tu ostatnia) odłożona do oceny.
+y_zew, y_wew, wys = 2.6, 0.6, 0.7
+pasek(0, y_zew, 10, wys, [niebieski] * (K - 1) + [czerwony],
+      [""] * (K - 1) + [r"$F_k$"])
+ax.text(4, y_zew + wys + 0.15, r"$\mathcal{D}^{(-k)}$", ha="center",
+        va="bottom", fontsize=12)
+ax.text(-0.2, y_zew + wys / 2, "części\nzewnętrzne", ha="right",
+        va="center", fontsize=10)
+
+# Części wewnętrzne: D^(-k) rozpięte na całą szerokość.
+kolory_wew = [niebieski] * L
+kolory_wew[1] = pomaranczowy
+pasek(0, y_wew, 8, wys, kolory_wew, [""] * L)
+ax.text(-0.2, y_wew + wys / 2, "części\nwewnętrzne", ha="right",
+        va="center", fontsize=10)
+for x_gora, x_dol in [(0, 0), (8, 8)]:
+    ax.plot([x_gora, x_dol], [y_zew, y_wew + wys], ":", color="0.5", lw=1)
+
+ax.text(4, y_wew - 0.15,
+        "walidacja krzyżowa każdego kandydata na $\\mathcal{D}^{(-k)}$"
+        " $\\rightarrow$ wybór $\\widehat\\jmath$",
+        ha="center", va="top", fontsize=10)
+
+# Wybrany kandydat dopasowany do D^(-k) i oceniony na F_k.
+ax.add_patch(FancyArrowPatch((8.3, y_wew + wys / 2), (9, y_zew - 0.05),
+                             connectionstyle="arc3,rad=0.35",
+                             arrowstyle="-|>", mutation_scale=15,
+                             color="0.25", lw=1.3))
+ax.text(9.3, (y_wew + y_zew) / 2 + 0.35,
+        "dopasowanie $\\widehat\\jmath$\ndo $\\mathcal{D}^{(-k)}$,\nocena na $F_k$",
+        ha="left", va="center", fontsize=10)
+
+ax.set_xlim(-1.9, 11.6)
+ax.set_ylim(-0.1, 3.6)
+ax.set_aspect("equal")
+ax.axis("off")
+plt.tight_layout()
+plt.show()
+```
 
 Rysunek [-@fig-klatwa-zwyciezcy] pokazuje skalę zjawiska na danych bez
 żadnej informacji. Mamy $n = 100$ obserwacji z $p = 10$ cechami
@@ -1347,8 +1486,10 @@ c) Dane zawierają po kilka wizyt każdego pacjenta; obserwacją jest
    szacujemy pięciokrotną walidacją krzyżową, dzieląc wizyty losowo
    na pięć części.
 d) Model prognozuje dzienną sprzedaż na podstawie sprzedaży z poprzednich
-   dni. Oceniamy go dziesięciokrotną walidacją krzyżową z losowym
-   tasowaniem dni.
+   dni. Obserwacją jest dzień $t$: cechami są wartości sprzedaży z dni
+   $t-1, \dots, t-7$, odpowiedzią sprzedaż w dniu $t$. Tak zbudowane
+   obserwacje dzielimy losowo na dziesięć części i oceniamy model
+   dziesięciokrotną walidacją krzyżową.
 e) Klasa $1$ jest rzadka, więc przed walidacją krzyżową powielamy
    jej obserwacje, aż klasy staną się równoliczne.
 :::
