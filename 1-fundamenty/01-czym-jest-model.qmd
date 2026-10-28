@@ -964,38 +964,63 @@ możemy szukać odpowiedzi na dwa różne pytania. Pytanie predykcyjne brzmi:
 mieszkania o powierzchni 60 m² w danej lokalizacji?”. Pytanie dotyczące
 wnioskowania może brzmieć: „O ile różni się przeciętna cena mieszkań
 o powierzchni 60 m² od przeciętnej ceny mieszkań o powierzchni 50 m²
-w tej samej lokalizacji?”. W pierwszym przypadku wynikiem jest przewidywana
-cena konkretnego mieszkania, w drugim -- oszacowanie różnicy między
-średnimi cenami dwóch grup mieszkań w populacji, wraz z oceną niepewności
-tego oszacowania. Sam fakt, że model zwraca przewidywania, nie przesądza
-więc o celu analizy: różnica dwóch przewidywanych średnich może służyć
-oszacowaniu interesującej nas zależności w populacji.
+w tej samej lokalizacji?”.
+
+Zapiszmy oba pytania wzorami. Dla prostoty niech funkcja regresji
+$\fopt(s,\ell)$ zależy tylko od metrażu $s$ i lokalizacji $\ell$,
+a $\widehat f$ oznacza jej oszacowanie z danych. Odpowiedzią na pierwsze
+pytanie jest liczba $\widehat y=\widehat f(60,\ell)$, przewidywana cena
+konkretnego mieszkania. Drugie pytanie dotyczy wielkości opisującej
+populację:
+
+$$
+\Delta(\ell)=\fopt(60,\ell)-\fopt(50,\ell),
+$$ {#eq-roznica-srednich-cen}
+
+czyli różnicy między średnimi cenami dwóch grup mieszkań. Szacujemy ją
+na przykład przez $\widehat\Delta(\ell)=\widehat f(60,\ell)-\widehat f(50,\ell)$
+i podajemy niepewność tego oszacowania. Sam fakt, że model zwraca
+przewidywania, nie przesądza więc o celu analizy: różnica dwóch
+przewidywanych średnich może służyć oszacowaniu zależności w populacji.
+
+Wielkość $\Delta(\ell)$ porównuje mieszkania w obrębie tej samej
+lokalizacji. Porównanie mieszkań o różnym metrażu ogółem jest innym
+porównaniem: większe mieszkania mogą częściej leżeć w innych miejscach,
+a różnica średnich cen obejmuje wtedy także różnicę lokalizacji.
+To samo dotyczy współczynników modelu. Niech lokalizację opisuje
+odległość $\ell$ od centrum miasta i niech średnia cena zależy liniowo
+od obu cech: $\fopt(s,\ell)=\alpha+\beta s+\gamma\ell$. Wtedy
+$\Delta(\ell)=10\beta$ niezależnie od lokalizacji, więc $\beta$ jest
+różnicą średnich cen przypadającą na dodatkowy metr kwadratowy przy
+ustalonej odległości od centrum. Pomińmy teraz lokalizację i opiszmy
+średnią cenę samą prostą $\alpha'+\beta's$. Jeżeli większe mieszkania
+leżą przeciętnie dalej od centrum, a ceny spadają z odległością
+($\gamma<0$), to nachylenie $\beta'$ obejmuje także różnicę lokalizacji
+i jest mniejsze od $\beta$; przy silnym powiązaniu metrażu z odległością
+może być nawet ujemne. Ten sam „współczynnik przy metrażu” oznacza więc
+w obu modelach różne wielkości.
 
 O sukcesie predykcyjnym decyduje **generalizacja**, czyli zdolność modelu
 do skutecznego przewidywania wyników dla nowych przypadków z populacji,
 do której chcemy go stosować. Dobre dopasowanie do danych uczących samo
 w sobie jej nie zapewnia. Jakość generalizacji szacujemy na danych
 niewykorzystanych do dopasowania modelu, na przykład na zbiorze
-walidacyjnym. Wynik na takim zbiorze jest oszacowaniem jakości w danej
-populacji, a jego wiarygodność zależy od sposobu zebrania i wykorzystania
-danych. Do zasad tej oceny wrócimy w rozdziale [-@sec-ocena-modeli].
+walidacyjnym. Wynik na takim zbiorze jest oszacowaniem ryzyka
+$\Risk(\widehat f)$ w danej populacji, a jego wiarygodność zależy
+od sposobu zebrania i wykorzystania danych. Miarę jakości dobieramy
+do zadania; nie zawsze jest nią średnia strata pojedynczych obserwacji.
+Do zasad tej oceny wrócimy w rozdziale [-@sec-ocena-modeli].
 
-Miarę jakości predykcyjnej dobieramy do zadania. Może nią być średnia
-strata, jak przy ocenie błędu średniokwadratowego, ale stosuje się też
-miary, które nie są średnią strat liczonych osobno dla każdej obserwacji.
-Na przykład w klasyfikacji binarnej miara ROC AUC ocenia, na ile model
-przypisuje wyższe wyniki przypadkom klasy dodatniej niż przypadkom
-klasy ujemnej. Niezależnie od wyboru miary pytamy o jakość przewidywania
-na nowych danych.
+We wnioskowaniu oceniamy dokładność oszacowania wybranej wielkości,
+takiej jak $\Delta(\ell)$, oraz wiarygodność towarzyszącej mu oceny
+niepewności. Możemy w tym celu badać parametry modelu lub
+charakterystyki wyznaczone z jego odpowiedzi. Interpretacja tych
+wielkości wymaga uzasadnienia założeń, na których opiera się
+zastosowana procedura.
 
-We wnioskowaniu oceniamy dokładność oszacowania wybranej wielkości
-oraz wiarygodność towarzyszącej mu oceny niepewności. Możemy w tym celu
-badać parametry modelu lub charakterystyki wyznaczone z jego odpowiedzi,
-takie jak różnica średnich cen. Interpretacja tych wielkości wymaga
-uzasadnienia założeń, na których opiera się zastosowana procedura.
-
-Dobra jakość predykcji nie gwarantuje jednak dokładnego oszacowania
-każdej interesującej nas zależności. Załóżmy, że w danych o mieszkaniach
+Mogłoby się wydawać, że model o małym ryzyku $\Risk(\widehat f)$ daje
+też dokładne oszacowanie $\widehat\Delta$ każdej interesującej nas
+różnicy średnich. Tak jednak nie jest. Załóżmy, że w danych o mieszkaniach
 większemu metrażowi niemal zawsze towarzyszy większa liczba pokoi.
 Model może dobrze przewidywać ceny kolejnych mieszkań, w których te
 dwie cechy są powiązane w podobny sposób. Trudniej natomiast ustalić, jak
@@ -1006,32 +1031,27 @@ a jednocześnie wskazywać wyraźnie różne zależności ceny od metrażu
 przy ustalonej liczbie pokoi. Sam mały błąd predykcji nie rozstrzyga,
 które oszacowanie tej zależności jest trafne.
 
-Warto przy tym odróżnić **precyzję oszacowania** od jego **dokładności**.
-Precyzja dotyczy rozrzutu oszacowań, które otrzymywalibyśmy, powtarzając
-badanie na próbach tej samej wielkości, dobieranych w ten sam sposób,
-i stosując tę samą metodę. Im mniejszy ten rozrzut, tym większa precyzja.
-Dokładność dotyczy bliskości oszacowań do rzeczywistej wartości
-szacowanej wielkości. Oszacowania mogą być
-precyzyjne, a mimo to systematycznie odbiegać od tej wartości.
+::: {.callout-note}
+## Precyzja a dokładność
+**Precyzja** oszacowania dotyczy rozrzutu oszacowań, które
+otrzymywalibyśmy, powtarzając badanie na próbach tej samej wielkości,
+dobieranych w ten sam sposób, i stosując tę samą metodę. Im mniejszy
+ten rozrzut, tym większa precyzja. **Dokładność** dotyczy bliskości
+oszacowań do rzeczywistej wartości szacowanej wielkości. Oszacowania
+mogą być precyzyjne, a mimo to systematycznie odbiegać od tej wartości.
+
 Na przykład duża próba mieszkań wyłącznie z rynku pierwotnego może
 pozwolić precyzyjnie oszacować średnią cenę na tym rynku, ale użycie
 tej średniej jako oszacowania średniej ceny wszystkich mieszkań może
 prowadzić do systematycznego błędu. Sam wąski przedział ufności nie
 gwarantuje więc wiarygodnego wnioskowania: jego uzasadnienie zależy
-od założeń metody i sposobu doboru próby.
-
-Interpretacja wyników wymaga uwzględnienia założeń modelu i sposobu
-zebrania danych. Jeżeli przyjmujemy, że średnia cena mieszkania zależy
-liniowo od metrażu, to współczynnik przy metrażu opisuje w tym modelu
-różnicę średnich cen przypadającą na dodatkowy metr kwadratowy, przy
-ustalonych wartościach pozostałych uwzględnionych cech. Jego znaczenie
-zależy więc także od tego, jakie cechy włączymy do modelu: porównanie
-mieszkań o różnym metrażu ogółem jest innym porównaniem niż zestawienie
-ich w obrębie tej samej lokalizacji. Zarówno przy wnioskowaniu, jak
-i przy predykcji musimy też określić, do jakiej populacji odnosimy
+od założeń metody i sposobu doboru próby. Zarówno przy wnioskowaniu,
+jak i przy predykcji musimy określić, do jakiej populacji odnosimy
 wyniki i co uzasadnia wykorzystanie w tym celu dostępnej próby.
+:::
 
-Osobnego rozróżnienia wymagają **zależność statystyczna i przyczynowość**.
+::: {.callout-note}
+## Zależność a przyczynowość
 Jeżeli mieszkania po remoncie mają przeciętnie wyższe ceny, nie oznacza
 to jeszcze, że zaobserwowana różnica jest skutkiem samego remontu.
 Obie grupy mogą różnić się także lokalizacją, metrażem czy standardem
@@ -1039,31 +1059,86 @@ budynku. Pytanie o skutek remontu dotyczy natomiast porównania ceny tego
 samego mieszkania w dwóch sytuacjach: gdy przeprowadzimy remont i gdy
 go nie przeprowadzimy. Dla danego mieszkania obserwujemy tylko jedną
 z tych sytuacji, więc nie możemy bezpośrednio wyznaczyć jego
-indywidualnego skutku remontu. Zwykle celem badania jest oszacowanie
+indywidualnego skutku remontu.
+
+Zwykle celem badania jest oszacowanie
 **przeciętnego skutku remontu w określonej populacji mieszkań**.
 Wymaga to odpowiedniego sposobu zaplanowania badania lub dodatkowych
 założeń pozwalających uzasadnić porównanie mieszkań remontowanych
 i nieremontowanych. Oszacowanie przeciętnego skutku nie oznacza jednak
 poznania skutku dla każdego mieszkania z osobna. Samo dopasowanie modelu
 opisującego zależność cen od cech mieszkań nie dostarcza uzasadnienia
-dla interpretacji przyczynowej.
+dla interpretacji przyczynowej. Dotyczy to także wielkości
+([-@eq-roznica-srednich-cen]): opisuje ona różnicę między grupami
+mieszkań, a nie zmianę ceny po powiększeniu mieszkania.
+:::
 
-Niepewność towarzyszy zarówno wnioskowaniu, jak i predykcji, lecz może
-dotyczyć różnych wielkości. **Przedział ufności dla średniej ceny**
+Niepewność towarzyszy zarówno wnioskowaniu, jak i predykcji, ale dotyczy
+w nich różnych wielkości: we wnioskowaniu -- ustalonej, choć nieznanej
+charakterystyki populacji, w predykcji -- losowej wartości nowej
+obserwacji. **Przedział ufności dla średniej ceny**
 mieszkań o ustalonych cechach wyraża niepewność oszacowania tej średniej
 na podstawie próby. **Przedział predykcji dla ceny pojedynczego
 mieszkania** musi dodatkowo uwzględniać zróżnicowanie cen mieszkań
 o tych samych obserwowanych cechach. Możemy więc precyzyjnie oszacować
 średnią cenę w danej grupie, a mimo to przewidywać cenę konkretnego
-mieszkania z dużą niepewnością. Zwiększanie liczby obserwacji może
-poprawiać precyzję oszacowania średniej, ale samo w sobie nie usuwa
+mieszkania z dużą niepewnością. Zwiększanie liczby obserwacji poprawia
+precyzję oszacowania średniej, ale samo w sobie nie usuwa
 zmienności cen wokół niej -- tej samej, którą wcześniej wiązaliśmy
 z błędem nieredukowalnym.
+
+@fig-ufnosc-predykcja pokazuje oba przedziały dla symulowanych cen
+mieszkań zależnych od metrażu, przy dwóch liczebnościach próby.
+Wzory, z których je wyznaczono, wyprowadzamy w rozdziale
+[-@sec-regresja-liniowa].
+
+```{python}
+#| label: fig-ufnosc-predykcja
+#| fig-cap: "Przedziały $95\\%$ wokół prostej dopasowanej do symulowanych cen mieszkań: ciemne pasmo -- przedział ufności dla średniej ceny przy danym metrażu, jasne pasmo -- przedział predykcji dla ceny pojedynczego mieszkania. Linia przerywana przedstawia średnią warunkową, znaną dzięki symulacji. Przy dziesięciokrotnie większej próbie przedział ufności wyraźnie się zwęża, a przedział predykcji prawie się nie zmienia."
+
+import numpy as np
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+
+rng_przedzialy = np.random.default_rng(7)
+siatka_metrazu = np.linspace(30, 90, 200)
+fig, osie = plt.subplots(1, 2, figsize=(10, 4), sharex=True, sharey=True)
+for ax, n_mieszkan in zip(osie, [30, 300]):
+    metraz = rng_przedzialy.uniform(30, 90, n_mieszkan)
+    cena = 150 + 9 * metraz + rng_przedzialy.normal(0, 60, n_mieszkan)
+    model_cen = sm.OLS(cena, sm.add_constant(metraz)).fit()
+    pasma = model_cen.get_prediction(sm.add_constant(siatka_metrazu)).summary_frame(alpha=0.05)
+    ax.fill_between(siatka_metrazu, pasma["obs_ci_lower"], pasma["obs_ci_upper"],
+                    color="#0072B2", alpha=0.15, label="Przedział predykcji")
+    ax.fill_between(siatka_metrazu, pasma["mean_ci_lower"], pasma["mean_ci_upper"],
+                    color="#0072B2", alpha=0.45, label="Przedział ufności dla średniej")
+    ax.scatter(metraz, cena, s=10, color="0.45", alpha=0.6, label="Dane")
+    ax.plot(siatka_metrazu, 150 + 9 * siatka_metrazu, "--", color="0.15", lw=1.5,
+            label="Średnia warunkowa")
+    ax.set(title=f"$n = {n_mieszkan}$", xlabel="metraż [m²]")
+    ax.grid(alpha=0.2)
+osie[0].set_ylabel("cena [tys. zł]")
+osie[0].legend(fontsize=8, loc="upper left")
+fig.tight_layout()
+plt.show()
+```
 
 Ten sam model może służyć obu celom: oszacowana funkcja średniej ceny
 pozwala zarówno przewidywać ceny mieszkań, jak i porównywać średnie
 ceny przy różnych wartościach cech. Każde zastosowanie wymaga jednak
 oceny według kryteriów właściwych dla danego celu.
+@tbl-predykcja-wnioskowanie zestawia te kryteria.
+
+| | Predykcja | Wnioskowanie |
+|:--|:--|:--|
+| Pytanie | Jaka będzie cena tego mieszkania? | O ile różnią się średnie ceny dwóch grup mieszkań? |
+| Wynik | przewidywanie $\widehat y=\widehat f(\x)$ | oszacowanie $\widehat\Delta$ charakterystyki populacji $\Delta$ |
+| Kryterium jakości | ryzyko $\Risk(\widehat f)$ na nowych danych | dokładność $\widehat\Delta$ i wiarygodność oceny jej niepewności |
+| Niepewność dotyczy | losowej wartości nowej obserwacji | ustalonej, choć nieznanej wielkości $\Delta$ |
+| Typowe narzędzie | zbiór walidacyjny, przedział predykcji | przedział ufności |
+| Co może zawieść | generalizacja na nowe przypadki | założenia metody, dobór próby, rozdzielenie powiązanych cech |
+
+: Predykcja i wnioskowanie na przykładzie cen mieszkań. {#tbl-predykcja-wnioskowanie}
 
 ## Trening modelu {#sec-trening-modelu}
 

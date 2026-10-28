@@ -36,7 +36,7 @@ czyli że funkcja regresji $\fopt(\x) = \E[Y \mid \X = \x]$ jest funkcją
 liniową (ściślej: afiniczną) cech. Liczby $\beta_0, \dots, \beta_p$ są
 nieznanymi parametrami. Współczynnik $\beta_0$ nazywamy **wyrazem wolnym**
 (ang. *intercept*), a $\beta_j$ dla $j \ge 1$ -- **współczynnikiem
-regresji** przy cesze $X_j$.
+regresji** dla cechy $X_j$.
 
 Założenie ([-@eq-model-liniowy]) można czytać na dwa sposoby. Pierwszy
 to twierdzenie o świecie: funkcja regresji naprawdę należy do klasy
@@ -49,11 +49,9 @@ zerowy, a cały błąd redukowalny pochodzi ze skończoności próby. Drugi
 sposób nie wymaga tej wiary. Niezależnie od tego, czym jest $\fopt$,
 w klasie $\mathcal{F}_{\mathrm{lin}}$ istnieje element
 $f_{\mathcal{F}}$ najbliższy $\fopt$ w sensie średniego kwadratu, i to
-on jest celem estymacji. Dla jednej cechy jego współczynnik kierunkowy
-wynosi $\Cov(X, Y)/\Var X$ (@exr-mnk-regresja-prosta). Rachunki
-z sekcji [-@sec-mnk] mają sens przy obu odczytaniach. Wyniki z sekcji
-[-@sec-wlasnosci-mnk] i [-@sec-wnioskowanie-mnk] opierają się na
-pierwszym.
+on jest celem estymacji. Rachunki z sekcji [-@sec-mnk] mają sens przy
+obu odczytaniach. Wyniki z sekcji [-@sec-wlasnosci-mnk]
+i [-@sec-wnioskowanie-mnk] opierają się na pierwszym.
 
 Liniowość dotyczy parametrów, a nie cech. Regresja wielomianowa
 z rozdziału [-@sec-bias-wariancja] jest modelem liniowym z cechami
@@ -61,15 +59,9 @@ $x, x^2, \dots, x^d$: predykcja jest kombinacją liniową współczynników,
 choć jest nieliniową funkcją $x$. Wszystko, co wyprowadzimy dla modelu
 ([-@eq-model-liniowy]), stosuje się więc do niej bez zmian.
 
-Współczynnik $\beta_j$ mówi, o ile zmienia się średni wynik, gdy cecha
-$X_j$ rośnie o jednostkę, **a pozostałe cechy się nie zmieniają**.
-Porównujemy więc dwie grupy obiektów, które różnią się tylko wartością
-$X_j$. Ta interpretacja opisuje zależność w populacji, a nie skutek
-interwencji. Rynki, na których budżet telewizyjny jest wyższy o tysiąc
-dolarów przy tych samych budżetach radiowym i prasowym, sprzedają
-przeciętnie o $1000\,\beta_1$ sztuk więcej. Czy podniesienie budżetu na
-danym rynku spowodowałoby taki wzrost, zależy od tego, co jeszcze różni
-te rynki, a tego model nie widzi.
+Wróćmy do danych *Advertising* ze wstępu do rozdziału. Rysunek
+[-@fig-reklama-rozrzut] pokazuje sprzedaż na $200$ rynkach w zależności
+od każdego z trzech budżetów osobno.
 
 ```{python}
 #| label: fig-reklama-rozrzut
@@ -96,12 +88,35 @@ plt.tight_layout()
 plt.show()
 ```
 
-Na rysunku [-@fig-reklama-rozrzut] sprzedaż wyraźnie rośnie z budżetem
-telewizyjnym, słabiej z radiowym, a z prasowym ledwie. Rozrzut wokół
-prostej dla telewizji rośnie przy tym z budżetem. Każdy z tych wykresów
-pokazuje jednak tylko jedną cechę naraz. Pytanie, co wnosi prasa, gdy
-znamy już budżety telewizyjny i radiowy, wymaga modelu z trzema cechami
-jednocześnie.
+Sprzedaż wyraźnie rośnie z budżetem telewizyjnym, słabiej z radiowym,
+a z prasowym ledwie. Rozrzut wokół prostej dla telewizji rośnie przy tym
+z budżetem. Każdy z wykresów pokazuje jednak tylko jedną cechę naraz,
+a budżety na różne media nie są od siebie niezależne. Wszystkie trzy
+uwzględnia model
+$$
+\texttt{sales} = \beta_0 + \beta_1\,\texttt{TV} + \beta_2\,\texttt{radio}
++ \beta_3\,\texttt{newspaper} + \varepsilon .
+$$ {#eq-model-reklama}
+
+::: {.callout-important}
+## Współczynnik opisuje porównanie, nie interwencję
+Współczynnik $\beta_j$ mówi, o ile zmienia się średni wynik, gdy cecha
+$X_j$ rośnie o jednostkę, **a pozostałe cechy się nie zmieniają**.
+W modelu ([-@eq-model-reklama]) $\beta_3$ porównuje rynki, których
+budżety prasowe różnią się o tysiąc dolarów, a budżety telewizyjny
+i radiowy są takie same: na pierwszych sprzedaż jest przeciętnie
+o $1000\,\beta_3$ sztuk większa. Nachylenie prostej z prawego panelu
+rysunku [-@fig-reklama-rozrzut] odpowiada na inne pytanie -- porównuje
+rynki o różnym budżecie prasowym bez względu na pozostałe budżety. Dla
+danych *Advertising* obie liczby porównujemy w sekcji
+[-@sec-dopasowanie-advertising].
+
+Obie opisują zależność w populacji, a **nie skutek interwencji**. Czy
+podniesienie budżetu prasowego na danym rynku zwiększyłoby sprzedaż
+o $1000\,\beta_3$ sztuk, zależy od tego, co jeszcze różni rynki
+o różnych budżetach -- liczba mieszkańców, siła nabywcza, konkurencja --
+a tych cech model nie widzi.
+:::
 
 ## Metoda najmniejszych kwadratów {#sec-mnk}
 
@@ -111,14 +126,50 @@ macierzowo. **Macierz projektowa** $\X$ ma wymiary $n \times (p+1)$:
 jej $i$-ty wiersz to $(1, x_{i1}, \dots, x_{ip})$, a pierwsza kolumna
 złożona z jedynek odpowiada wyrazowi wolnemu. Wyniki tworzą wektor
 $\y = (y_1, \dots, y_n)^\top$, a współczynniki -- wektor
-$\bbeta = (\beta_0, \dots, \beta_p)^\top$. Predykcje modelu
-w punktach uczących to wtedy $\X\bbeta$, a suma kwadratów reszt wynosi
+$\bbeta = (\beta_0, \dots, \beta_p)^\top$:
+$$
+\X =
+\begin{pmatrix}
+1 & x_{11} & \cdots & x_{1p}\\
+1 & x_{21} & \cdots & x_{2p}\\
+\vdots & \vdots & & \vdots\\
+1 & x_{n1} & \cdots & x_{np}
+\end{pmatrix},
+\qquad
+\y =
+\begin{pmatrix} y_1\\ y_2\\ \vdots\\ y_n \end{pmatrix},
+\qquad
+\bbeta =
+\begin{pmatrix} \beta_0\\ \beta_1\\ \vdots\\ \beta_p \end{pmatrix}.
+$$
+Predykcje modelu w punktach uczących tworzą wektor $\X\bbeta$. Można go
+czytać wierszami albo kolumnami:
+$$
+\X\bbeta =
+\begin{pmatrix}
+\beta_0 + \beta_1 x_{11} + \dots + \beta_p x_{1p}\\
+\vdots\\
+\beta_0 + \beta_1 x_{n1} + \dots + \beta_p x_{np}
+\end{pmatrix}
+= \beta_0
+\begin{pmatrix} 1\\ \vdots\\ 1 \end{pmatrix}
++ \beta_1
+\begin{pmatrix} x_{11}\\ \vdots\\ x_{n1} \end{pmatrix}
++ \dots
++ \beta_p
+\begin{pmatrix} x_{1p}\\ \vdots\\ x_{np} \end{pmatrix}.
+$$ {#eq-xbeta-kolumny}
+Odczyt wierszami daje predykcję $f(\x_i)$ dla każdej obserwacji. Odczyt
+kolumnami pokazuje, że $\X\bbeta$ jest kombinacją liniową kolumny jedynek
+i kolumn cech, a współczynniki $\bbeta$ są jej wagami. Suma kwadratów
+reszt wynosi
 $$
 \mathrm{RSS}(\bbeta) = \sum_{i=1}^{n} \big(y_i - \beta_0 - \beta_1 x_{i1}
 - \dots - \beta_p x_{ip}\big)^2 = \|\y - \X\bbeta\|^2 .
 $$ {#eq-rss}
-**Metoda najmniejszych kwadratów** (MNK) wybiera $\bbeta$ minimalizujące
-$\mathrm{RSS}$. Jest to minimalizacja ryzyka empirycznego
+**Metoda najmniejszych kwadratów** (ang. *ordinary least squares*, OLS)
+wybiera $\bbeta$ minimalizujące $\mathrm{RSS}$. Jest to minimalizacja
+ryzyka empirycznego
 ([-@eq-minimalizacja-ryzyka-empirycznego]) przy stracie kwadratowej
 w klasie $\mathcal{F}_{\mathrm{lin}}$, bo $\mathrm{RSS}/n$ jest błędem
 na zbiorze uczącym.
@@ -183,15 +234,19 @@ $$
 $$ {#eq-mnk-prosta}
 (@exr-mnk-regresja-prosta). Współczynnik kierunkowy to iloraz
 kowariancji z próby przez wariancję z próby, czyli próbkowy odpowiednik
-$\Cov(X, Y)/\Var X$. Druga równość mówi, że prosta regresji przechodzi
+$\Cov(X, Y)/\Var X$ -- współczynnika kierunkowego najlepszej prostej
+$f_{\mathcal{F}}$. Druga równość mówi, że prosta regresji przechodzi
 przez punkt $(\bar x, \bar y)$.
 
 ### Geometria najmniejszych kwadratów
 
-Wektor predykcji $\X\bbeta$ jest kombinacją liniową kolumn $\X$.
-Gdy $\bbeta$ przebiega $\R^{p+1}$, wektor ten przebiega przestrzeń kolumn
-$\mathcal{C}(\X)$ -- podprzestrzeń $\R^n$ wymiaru $p + 1$. Minimalizacja
-$\|\y - \X\bbeta\|$ to więc szukanie punktu tej podprzestrzeni
+Z ([-@eq-xbeta-kolumny]) wektor predykcji $\X\bbeta$ jest kombinacją
+liniową kolumn $\X$ o współczynnikach $\beta_0, \dots, \beta_p$.
+Zbiorem wszystkich takich
+wektorów jest więc podprzestrzeń liniowa $\R^n$ rozpięta na kolumnach $\X$;
+oznaczamy ją $\mathcal{C}(\X)$. Kolumny są liniowo niezależne, więc jej
+wymiar to $p + 1$. Zatem minimalizacja
+$\|\y - \X\bbeta\|$ to szukanie punktu tej podprzestrzeni
 najbliższego $\y$, czyli **rzutu ortogonalnego** $\y$ na $\mathcal{C}(\X)$.
 Równania normalne zapisane jako
 $$
@@ -235,7 +290,7 @@ $\widehat\y = \mathbf S\y$. Metoda najmniejszych kwadratów do nich
 należy, z $\mathbf S = \mathbf H$. Dla regresji $k$-NN na przekątnej
 $\mathbf S$ stoi $1/k$, więc $\operatorname{tr}\mathbf S = n/k$ -- to
 dokładnie efektywna liczba parametrów, którą w rozdziale
-[-@sec-bias-wariancja] mierzyliśmy elastyczność tej metody. Dla MNK ślad
+[-@sec-bias-wariancja] mierzyliśmy elastyczność tej metody. Dla OLS ślad
 $\mathbf H$ to $p + 1$, czyli liczba współczynników. Ślad macierzy
 $\mathbf S$ jest więc wspólną miarą elastyczności metod liniowych
 względem $\y$ [@esl, rozdz. 7.6]. Element przekątny $h_{ii}$ mówi, jaką
@@ -272,7 +327,7 @@ Dlatego w rozdziale [-@sec-bias-wariancja] używaliśmy funkcji
 `Polynomial.fit`, która przed dopasowaniem przeskalowuje $x$ do
 przedziału $[-1, 1]$.
 
-### Dopasowanie do danych *Advertising*
+### Dopasowanie do danych *Advertising* {#sec-dopasowanie-advertising}
 
 Zacznijmy od regresji sprzedaży względem budżetu telewizyjnego.
 @fig-reklama-tv pokazuje prostą najmniejszych kwadratów i reszty, czyli
@@ -283,7 +338,7 @@ pionowe odcinki, których kwadraty minimalizujemy.
 #| fig-cap: "Regresja sprzedaży względem budżetu telewizyjnego metodą najmniejszych kwadratów. Pionowe odcinki to reszty $e_i = y_i - \\widehat y_i$; prosta minimalizuje sumę ich kwadratów."
 
 def dopasuj(cechy, dane=reklama):
-    """Współczynniki MNK dla regresji sprzedaży względem podanych cech."""
+    """Współczynniki OLS dla regresji sprzedaży względem podanych cech."""
     X = np.column_stack([np.ones(len(dane)), dane[cechy].to_numpy()])
     beta, *_ = np.linalg.lstsq(X, dane["sales"].to_numpy(), rcond=None)
     return beta
@@ -309,8 +364,9 @@ sprzedanego produktu więcej. Wyraz wolny to przewidywana sprzedaż przy
 zerowym budżecie telewizyjnym. Tutaj ma on sens, bo w danych są rynki
 z budżetem bliskim zera.
 
-Teraz dopasujmy model ze wszystkimi trzema mediami i porównajmy jego
-współczynniki ze współczynnikami trzech regresji z jedną cechą.
+Teraz dopasujmy model ([-@eq-model-reklama]) ze wszystkimi trzema
+mediami i porównajmy jego współczynniki ze współczynnikami trzech
+regresji z jedną cechą.
 
 ```{python}
 wielokrotna = dopasuj(media)
@@ -335,7 +391,7 @@ Współczynnik w regresji wielokrotnej jest równy współczynnikowi
 regresji $\y$ względem tej części cechy, której nie da się liniowo
 przewidzieć z pozostałych cech (@exr-reklama-czastkowa).
 
-## Własności estymatora MNK {#sec-wlasnosci-mnk}
+## Własności estymatora OLS {#sec-wlasnosci-mnk}
 
 Dopasowanie metodą najmniejszych kwadratów to rachunek na danych.
 Aby powiedzieć, jak daleko $\widehat{\bbeta}$ może leżeć od $\bbeta$,
@@ -361,7 +417,7 @@ wyklucza między innymi sytuację z rysunku [-@fig-reklama-rozrzut],
 w której rozrzut wokół prostej rośnie z budżetem.
 
 ::: {#thm-mnk-momenty}
-## Średnia i macierz kowariancji estymatora MNK
+## Średnia i macierz kowariancji estymatora OLS
 Przy założeniach (Z1)--(Z2)
 $$
 \E\widehat{\bbeta} = \bbeta,
@@ -389,7 +445,7 @@ $$
 $$
 :::
 
-Estymator MNK jest więc nieobciążony, a jego rozrzut zależy od dwóch
+Estymator OLS jest więc nieobciążony, a jego rozrzut zależy od dwóch
 rzeczy: od poziomu szumu $\sigma^2$ i od układu punktów, zapisanego
 w $\X^\top\X$. Dla jednej cechy, odwracając macierz $2 \times 2$,
 otrzymujemy
@@ -399,9 +455,10 @@ $$
 \Var\widehat\beta_0 = \sigma^2\Big(\frac1n
 + \frac{\bar x^2}{\sum_{i=1}^n (x_i - \bar x)^2}\Big)
 $$ {#eq-mnk-prosta-wariancje}
-(@exr-mnk-regresja-prosta). Nachylenie jest wyznaczone tym dokładniej, im
-szerzej rozrzucone są punkty $x_i$. Gdy wszystkie leżą blisko siebie,
-niewielki szum w wynikach wystarcza, by mocno przechylić prostą. Ponieważ
+(@exr-mnk-regresja-prosta). Przy ustalonym poziomie szumu nachylenie jest
+wyznaczone tym dokładniej, im szerzej rozrzucone są punkty $x_i$. Gdy
+wszystkie leżą blisko siebie, niewielki szum w wynikach wystarcza, by mocno
+przechylić prostą. Ponieważ
 $\sum_i (x_i - \bar x)^2 = n s_x^2$, gdzie $s_x^2$ jest wariancją
 z próby, odchylenie standardowe $\widehat\beta_1$ maleje jak
 $\sigma/(s_x\sqrt n)$.
@@ -414,7 +471,7 @@ $y_i = 1 + 0{,}5\,x_i + \varepsilon_i$, z $\varepsilon_i \sim
 
 ```{python}
 #| label: fig-mnk-rozklad
-#| fig-cap: "Estymator MNK w $10\\,000$ próbach z modelu $y_i = 1 + 0{,}5\\,x_i + \\varepsilon_i$ przy ustalonych punktach $x_i$ ($n = 30$, $\\sigma = 1{,}5$). Po lewej: proste dopasowane do 20 prób (cienkie linie) i prawdziwa prosta (przerywana). Po prawej: histogram $\\widehat\\beta_1$ na tle gęstości rozkładu normalnego o średniej $\\beta_1$ i wariancji z ([-@eq-mnk-prosta-wariancje])."
+#| fig-cap: "Estymator OLS w $10\\,000$ próbach z modelu $y_i = 1 + 0{,}5\\,x_i + \\varepsilon_i$ przy ustalonych punktach $x_i$ ($n = 30$, $\\sigma = 1{,}5$). Po lewej: proste dopasowane do 20 prób (cienkie linie) i prawdziwa prosta (przerywana). Po prawej: histogram $\\widehat\\beta_1$ na tle gęstości rozkładu normalnego o średniej $\\beta_1$ i wariancji z ([-@eq-mnk-prosta-wariancje])."
 
 from scipy import stats
 
@@ -475,7 +532,7 @@ $$
 $$ {#eq-mnk-srednia-wariancja}
 To jest fakt, na który powoływaliśmy się w sekcji
 [-@sec-kompromis-nieusuwalny]. Jeśli model liniowy jest trafny, predyktor
-MNK nie ma obciążenia, a jego wariancja maleje jak $1/n$ ze stałą
+OLS nie ma obciążenia, a jego wariancja maleje jak $1/n$ ze stałą
 proporcjonalną do liczby współczynników, bez względu na wymiar cech.
 Porównajmy to z wariancją $\sigma^2/k$ regresji $k$-NN
 w ustalonym układzie ([-@eq-knn-obciazenie-wariancja]). Można ją zapisać
@@ -535,14 +592,14 @@ $n - 1$ jest szczególnym przypadkiem $p = 0$ (@exr-estymator-wariancji-mnk).
 Błąd na zbiorze uczącym, $\mathrm{RSS}/n$, ma wartość oczekiwaną
 $\sigma^2(1 - (p+1)/n)$, czyli zaniża nawet błąd nieredukowalny. To jest
 optymizm błędu uczącego z sekcji [-@sec-blad-uczacy-ryzyko], który dla
-MNK można policzyć dokładnie (@exr-optymizm-mnk).
+OLS można policzyć dokładnie (@exr-optymizm-mnk).
 
 ### Twierdzenie Gaussa--Markowa
 
-Estymator MNK jest nieobciążony, ale czy jest najlepszy? Odpowiedź zależy
+Estymator OLS jest nieobciążony, ale czy jest najlepszy? Odpowiedź zależy
 od tego, z czym go porównujemy. Estymator $\tilde{\bbeta}$ nazywamy
 **liniowym**, jeśli $\tilde{\bbeta} = \mathbf C\y$ dla macierzy $\mathbf C$
-zależnej tylko od $\X$. Estymator MNK jest liniowy, z
+zależnej tylko od $\X$. Estymator OLS jest liniowy, z
 $\mathbf C = (\X^\top\X)^{-1}\X^\top$.
 
 ::: {#thm-gauss-markow}
@@ -575,7 +632,7 @@ $\mathbf c^\top\mathbf D\mathbf D^\top\mathbf c = \|\mathbf D^\top\mathbf c\|^2
 \ge 0$.
 :::
 
-Estymator MNK jest więc najlepszym liniowym estymatorem nieobciążonym
+Estymator OLS jest więc najlepszym liniowym estymatorem nieobciążonym
 (ang. *best linear unbiased estimator*, BLUE) [@esl, rozdz. 3.2.2].
 Dotyczy to też każdej kombinacji liniowej współczynników, w tym predykcji
 $\tilde\x_0^\top\widehat{\bbeta}$ w dowolnym punkcie. Dla modelu z samym
@@ -584,13 +641,13 @@ nieobciążoną średnią ważoną obserwacji (@exr-gauss-markow-srednia).
 
 ::: {.callout-note}
 ## Czego twierdzenie nie mówi
-Twierdzenie porównuje MNK tylko z estymatorami liniowymi
+Twierdzenie porównuje OLS tylko z estymatorami liniowymi
 i nieobciążonymi. W sekcji [-@sec-obciazenie-wariancja-estymatora]
 widzieliśmy, że estymator ściągający $c\bar Y$, obciążony, może mieć
 wyraźnie mniejszy błąd średniokwadratowy niż nieobciążona średnia $\bar Y$.
 Ten sam mechanizm działa dla współczynników regresji. Założenie (Z2) też
 jest istotne: gdy błędy mają różne wariancje, lepiej ważyć obserwacje
-odwrotnościami tych wariancji, a MNK traktuje wszystkie jednakowo.
+odwrotnościami tych wariancji, a OLS traktuje wszystkie jednakowo.
 :::
 
 ## Wnioskowanie o parametrach {#sec-wnioskowanie-mnk}
@@ -819,8 +876,9 @@ prawdziwą hipotezę w około $5\%$ prób, tak jak powinien.
 
 Wyprowadzimy go od razu w ogólniejszej postaci. Niech model $M_0$
 powstaje z modelu $M$ przez usunięcie $q$ cech, czyli przez hipotezę,
-że ich współczynniki są zerowe. Przestrzeń kolumn $\mathcal{C}(\X_0)$
-modelu $M_0$ jest zawarta w $\mathcal{C}(\X)$, więc
+że ich współczynniki są zerowe. Podprzestrzeń $\mathcal{C}(\X_0)$
+rozpięta na kolumnach macierzy $\X_0$ modelu $M_0$ jest zawarta
+w $\mathcal{C}(\X)$, więc
 $\mathrm{RSS}_0 \ge \mathrm{RSS}$. Pytamy, czy spadek
 $\mathrm{RSS}_0 - \mathrm{RSS}$ jest większy, niż dałby sam szum.
 Wektor $\y - \widehat\y_0$ rozkłada się na
@@ -955,7 +1013,7 @@ $x_i = 1$, gdy $i$-ty klient ma dom, i $x_i = 0$ w przeciwnym razie.
 Model $y_i = \beta_0 + \beta_1 x_i + \varepsilon_i$ mówi wtedy, że średnie
 saldo wynosi $\beta_0$ w grupie bez domu i $\beta_0 + \beta_1$ w grupie
 z domem. Współczynnik $\beta_1$ jest różnicą średnich obu grup, a jego
-estymatorem MNK -- różnica średnich z próby (@exr-kodowanie-cech).
+estymatorem OLS -- różnica średnich z próby (@exr-kodowanie-cech).
 
 ```{python}
 kredyt = pd.read_csv("../dane/Credit.csv")
@@ -1250,7 +1308,7 @@ z budżetem telewizyjnym (rysunek [-@fig-reklama-tv]), a w danych *Auto* --
 z predykcją (rysunek [-@fig-auto-reszty]). Taką sytuację nazywamy
 **heteroskedastycznością**. Skutki są te same co przy skorelowanych
 błędach: $\widehat{\bbeta}$ jest nieobciążony, ale klasyczne błędy
-standardowe są niepoprawne, a MNK przestaje być najlepszym liniowym
+standardowe są niepoprawne, a OLS przestaje być najlepszym liniowym
 estymatorem nieobciążonym.
 
 Przy niezależnych błędach o wariancjach $\sigma_i^2$ macierz
@@ -1307,10 +1365,11 @@ $0{,}00195$, a przy radiu z $0{,}0080$ do $0{,}0102$.
 
 Gdy wariancje $\sigma_i^2$ są znane z dokładnością do stałej, można
 zrobić więcej: minimalizować ważoną sumę kwadratów
-$\sum_i (y_i - \tilde\x_i^\top\bbeta)^2/\sigma_i^2$. Jest to MNK dla
+$\sum_i (y_i - \tilde\x_i^\top\bbeta)^2/\sigma_i^2$. Jest to OLS dla
 danych podzielonych przez $\sigma_i$, które spełniają (Z2), więc z
-twierdzenia Gaussa--Markowa **ważona MNK** jest najlepszym liniowym
-estymatorem nieobciążonym. W praktyce wag zwykle nie znamy. Gdy rozrzut
+twierdzenia Gaussa--Markowa **ważona metoda najmniejszych kwadratów**
+(ang. *weighted least squares*, WLS) jest najlepszym liniowym estymatorem
+nieobciążonym. W praktyce wag zwykle nie znamy. Gdy rozrzut
 rośnie proporcjonalnie do poziomu wyniku, często pomaga modelowanie
 $\log Y$ zamiast $Y$ (@exr-logarytm-wyniku).
 
@@ -1359,7 +1418,7 @@ pozostałych.
 
 ```{python}
 #| label: fig-wplywowe
-#| fig-cap: "Trzy rodzaje nietypowych obserwacji, dodanych (czerwony punkt) do 30 obserwacji z modelu $y = 1 + 0{,}5\\,x + \\varepsilon$. Linia ciągła: prosta MNK ze wszystkimi obserwacjami; przerywana: bez czerwonego punktu. W tytułach: dźwignia $h$, reszta studentyzowana $t$ i odległość Cooka $D$ dodanego punktu."
+#| fig-cap: "Trzy rodzaje nietypowych obserwacji, dodanych (czerwony punkt) do 30 obserwacji z modelu $y = 1 + 0{,}5\\,x + \\varepsilon$. Linia ciągła: prosta OLS ze wszystkimi obserwacjami; przerywana: bez czerwonego punktu. W tytułach: dźwignia $h$, reszta studentyzowana $t$ i odległość Cooka $D$ dodanego punktu."
 
 rng = np.random.default_rng(7)
 x_baza = rng.uniform(0, 10, 30)
@@ -1520,8 +1579,8 @@ podają geometrię najmniejszych kwadratów, twierdzenie Gaussa--Markowa
 [@esl, rozdz. 3.2.2] oraz interpretację współczynników regresji
 wielokrotnej przez kolejne regresje na resztach, wykorzystaną
 w zadaniu [-@exr-reklama-czastkowa] [@esl, rozdz. 3.2.3]. Geometryczny
-obraz MNK jako rzutu ortogonalnego rysuje też @bishop2006 [rozdz. 3.1],
-który wyprowadza MNK jako metodę największej wiarygodności przy
+obraz OLS jako rzutu ortogonalnego rysuje też @bishop2006 [rozdz. 3.1],
+który wyprowadza OLS jako metodę największej wiarygodności przy
 normalnych błędach.
 Ślad macierzy wygładzającej jako efektywną liczbę parametrów omawiają
 @esl [rozdz. 7.6].
@@ -1585,7 +1644,7 @@ d) Porównaj własności z punktów (a)--(b) z macierzą $\mathbf S$
 :::
 
 ::: {#exr-loocv-mnk}
-Niech $\widehat{\bbeta}^{(-i)}$ będzie estymatorem MNK wyznaczonym bez
+Niech $\widehat{\bbeta}^{(-i)}$ będzie estymatorem OLS wyznaczonym bez
 obserwacji $i$, a $\tilde\x_i^\top$ -- $i$-tym wierszem $\X$.
 
 a) Korzystając ze wzoru Shermana--Morrisona
@@ -1645,7 +1704,7 @@ c) Przeprowadź symulację z rysunku [-@fig-mnk-rozklad] dla modelu
 Niech $Y_i = \mu + \varepsilon_i$, $i = 1, \dots, n$, z nieskorelowanymi
 błędami o średniej zero.
 
-a) Wykaż, że estymatorem MNK parametru $\mu$ jest $\bar Y$.
+a) Wykaż, że estymatorem OLS parametru $\mu$ jest $\bar Y$.
 b) Estymator liniowy $\sum_i c_i Y_i$ jest nieobciążony wtedy i tylko
    wtedy, gdy $\sum_i c_i = 1$. Przy $\Var\varepsilon_i = \sigma^2$ wykaż
    bezpośrednio, bez twierdzenia [-@thm-gauss-markow], że jego wariancja
