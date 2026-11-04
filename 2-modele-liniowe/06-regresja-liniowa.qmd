@@ -24,6 +24,12 @@ i jak dokładnie możemy przewidzieć sprzedaż przy zadanym budżecie.
 Odpowiedź na każde z nich wymaga nie tylko dopasowania modelu, ale też
 oceny, ile w dopasowaniu jest przypadku.
 
+Wnioskowanie opiera się na założeniach o modelu i błędach. Dlatego po nim
+rozszerzamy model o cechy jakościowe, interakcje i składniki nieliniowe
+(sekcje [-@sec-cechy-jakosciowe] i [-@sec-interakcje-nieliniowosc]),
+a w sekcji [-@sec-diagnostyka] sprawdzamy na resztach, czy dane te
+założenia spełniają.
+
 ## Model liniowy {#sec-model-liniowy}
 
 Niech $\X = (X_1, \dots, X_p)$ będzie wektorem cech, a $Y$ wynikiem.
@@ -38,19 +44,15 @@ nieznanymi parametrami. Współczynnik $\beta_0$ nazywamy **wyrazem wolnym**
 (ang. *intercept*), a $\beta_j$ dla $j \ge 1$ -- **współczynnikiem
 regresji** dla cechy $X_j$.
 
-Założenie ([-@eq-model-liniowy]) można czytać na dwa sposoby. Pierwszy
-to twierdzenie o świecie: funkcja regresji naprawdę należy do klasy
-$$
-\mathcal{F}_{\mathrm{lin}} = \big\{\, f(\x) = \beta_0 + \beta_1 x_1 +
-\dots + \beta_p x_p : \beta_0, \dots, \beta_p \in \R \,\big\}.
-$$
-Wtedy błąd aproksymacji z sekcji [-@sec-aproksymacja-estymacja] jest
-zerowy, a cały błąd redukowalny pochodzi ze skończoności próby. Drugi
-sposób nie wymaga tej wiary. Niezależnie od tego, czym jest $\fopt$,
-w klasie $\mathcal{F}_{\mathrm{lin}}$ istnieje element
-$f_{\mathcal{F}}$ najbliższy $\fopt$ w sensie średniego kwadratu, i to
-on jest celem estymacji. Rachunki z sekcji [-@sec-mnk] mają sens przy
-obu odczytaniach. Wyniki z sekcji [-@sec-wlasnosci-mnk]
+Założenie ([-@eq-model-liniowy]) można czytać na dwa sposoby. Pierwsze
+odczytanie traktuje je jako twierdzenie o świecie: funkcja regresji
+naprawdę jest liniowa. Wtedy błąd aproksymacji z sekcji
+[-@sec-aproksymacja-estymacja] jest zerowy, a cały błąd redukowalny
+pochodzi ze skończoności próby. Drugie odczytanie nie wymaga tej wiary.
+Jakakolwiek jest funkcja $\fopt$, wśród funkcji liniowych cech istnieje
+taka, która przybliża ją najlepiej w sensie średniego kwadratu, i to ona
+jest celem estymacji. Metoda najmniejszych kwadratów z sekcji [-@sec-mnk]
+ma sens przy obu odczytaniach. Wyniki z sekcji [-@sec-wlasnosci-mnk]
 i [-@sec-wnioskowanie-mnk] opierają się na pierwszym.
 
 Liniowość dotyczy parametrów, a nie cech. Regresja wielomianowa
@@ -120,218 +122,24 @@ a tych cech model nie widzi.
 
 ## Metoda najmniejszych kwadratów {#sec-mnk}
 
-Mamy zbiór uczący $\mathcal{D} = \{(\x_1, y_1), \dots, (\x_n, y_n)\}$,
-gdzie $\x_i = (x_{i1}, \dots, x_{ip})$. Wygodnie jest zapisać go
-macierzowo. **Macierz projektowa** $\X$ ma wymiary $n \times (p+1)$:
-jej $i$-ty wiersz to $(1, x_{i1}, \dots, x_{ip})$, a pierwsza kolumna
-złożona z jedynek odpowiada wyrazowi wolnemu. Wyniki tworzą wektor
-$\y = (y_1, \dots, y_n)^\top$, a współczynniki -- wektor
-$\bbeta = (\beta_0, \dots, \beta_p)^\top$:
+Zacznijmy od jednej cechy, budżetu telewizyjnego. Przez chmurę punktów
+z lewego panelu rysunku [-@fig-reklama-rozrzut] można poprowadzić wiele
+prostych $\beta_0 + \beta_1 x$. Każda przewiduje dla rynku $i$ sprzedaż
+$\beta_0 + \beta_1 x_i$ i myli się o $y_i - \beta_0 - \beta_1 x_i$, czyli
+o pionową odległość punktu od prostej. Którą prostą wybrać?
+
+Kryterium znamy z sekcji [-@sec-blad-uczacy-ryzyko], gdzie tak samo
+dopasowywaliśmy wielomiany: przy stracie kwadratowej minimalizujemy błąd
+na zbiorze uczącym, czyli ryzyko empiryczne
+([-@eq-minimalizacja-ryzyka-empirycznego]). Dla prostej jest on równy
+$\mathrm{RSS}/n$, gdzie
 $$
-\X =
-\begin{pmatrix}
-1 & x_{11} & \cdots & x_{1p}\\
-1 & x_{21} & \cdots & x_{2p}\\
-\vdots & \vdots & & \vdots\\
-1 & x_{n1} & \cdots & x_{np}
-\end{pmatrix},
-\qquad
-\y =
-\begin{pmatrix} y_1\\ y_2\\ \vdots\\ y_n \end{pmatrix},
-\qquad
-\bbeta =
-\begin{pmatrix} \beta_0\\ \beta_1\\ \vdots\\ \beta_p \end{pmatrix}.
+\mathrm{RSS}(\beta_0, \beta_1) = \sum_{i=1}^n (y_i - \beta_0 - \beta_1 x_i)^2
 $$
-Predykcje modelu w punktach uczących tworzą wektor $\X\bbeta$. Można go
-czytać wierszami albo kolumnami:
-$$
-\X\bbeta =
-\begin{pmatrix}
-\beta_0 + \beta_1 x_{11} + \dots + \beta_p x_{1p}\\
-\vdots\\
-\beta_0 + \beta_1 x_{n1} + \dots + \beta_p x_{np}
-\end{pmatrix}
-= \beta_0
-\begin{pmatrix} 1\\ \vdots\\ 1 \end{pmatrix}
-+ \beta_1
-\begin{pmatrix} x_{11}\\ \vdots\\ x_{n1} \end{pmatrix}
-+ \dots
-+ \beta_p
-\begin{pmatrix} x_{1p}\\ \vdots\\ x_{np} \end{pmatrix}.
-$$ {#eq-xbeta-kolumny}
-Odczyt wierszami daje predykcję $f(\x_i)$ dla każdej obserwacji. Odczyt
-kolumnami pokazuje, że $\X\bbeta$ jest kombinacją liniową kolumny jedynek
-i kolumn cech, a współczynniki $\bbeta$ są jej wagami. Suma kwadratów
-reszt wynosi
-$$
-\mathrm{RSS}(\bbeta) = \sum_{i=1}^{n} \big(y_i - \beta_0 - \beta_1 x_{i1}
-- \dots - \beta_p x_{ip}\big)^2 = \|\y - \X\bbeta\|^2 .
-$$ {#eq-rss}
-**Metoda najmniejszych kwadratów** (ang. *ordinary least squares*, OLS)
-wybiera $\bbeta$ minimalizujące $\mathrm{RSS}$. Jest to minimalizacja
-ryzyka empirycznego
-([-@eq-minimalizacja-ryzyka-empirycznego]) przy stracie kwadratowej
-w klasie $\mathcal{F}_{\mathrm{lin}}$, bo $\mathrm{RSS}/n$ jest błędem
-na zbiorze uczącym.
-
-Rozpisując kwadrat normy,
-$$
-\mathrm{RSS}(\bbeta) = \y^\top\y - 2\bbeta^\top\X^\top\y
-+ \bbeta^\top\X^\top\X\bbeta .
-$$
-Jest to funkcja kwadratowa $\bbeta$, a jej gradient wynosi
-$-2\X^\top\y + 2\X^\top\X\bbeta$. Przyrównując go do zera, otrzymujemy
-**równania normalne**
-$$
-\X^\top\X\,\bbeta = \X^\top\y .
-$$ {#eq-rownania-normalne}
-
-::: {#thm-mnk}
-## Estymator najmniejszych kwadratów
-Jeśli kolumny macierzy $\X$ są liniowo niezależne, to macierz $\X^\top\X$
-jest odwracalna, a $\mathrm{RSS}$ ma dokładnie jedno minimum w punkcie
-$$
-\widehat{\bbeta} = (\X^\top\X)^{-1}\X^\top\y .
-$$ {#eq-estymator-mnk}
-:::
-
-::: {.proof}
-Dla dowolnego wektora $\mathbf{v}$ mamy
-$\mathbf{v}^\top\X^\top\X\mathbf{v} = \|\X\mathbf{v}\|^2$. Jeśli
-$\X^\top\X\mathbf{v} = \mathbf 0$, to $\|\X\mathbf{v}\|^2 = 0$, czyli
-$\X\mathbf{v} = \mathbf 0$, a z liniowej niezależności kolumn
-$\mathbf{v} = \mathbf 0$. Macierz $\X^\top\X$ jest więc odwracalna,
-a $\widehat{\bbeta}$ z ([-@eq-estymator-mnk]) spełnia równania normalne.
-
-Dla dowolnego $\bbeta$ zapiszmy
-$\y - \X\bbeta = (\y - \X\widehat{\bbeta}) + \X(\widehat{\bbeta} - \bbeta)$.
-Iloczyn mieszany
-$2(\widehat{\bbeta} - \bbeta)^\top\X^\top(\y - \X\widehat{\bbeta})$
-znika na mocy równań normalnych, więc
-$$
-\mathrm{RSS}(\bbeta) = \mathrm{RSS}(\widehat{\bbeta})
-+ \|\X(\widehat{\bbeta} - \bbeta)\|^2 .
-$$
-Drugi składnik jest dodatni dla $\bbeta \ne \widehat{\bbeta}$, bo kolumny
-$\X$ są liniowo niezależne.
-:::
-
-Liniowa niezależność kolumn wymaga w szczególności, by $n \ge p + 1$. Gdy
-cech jest więcej niż obserwacji, równania normalne mają nieskończenie
-wiele rozwiązań i wiele z nich daje $\mathrm{RSS} = 0$. Tak było
-z wielomianami w sekcji [-@sec-blad-uczacy-ryzyko]: gdy $d + 1$
-osiągało liczbę różnych wartości $x_i$, wielomian przechodził przez
-wszystkie punkty.
-
-Dla jednej cechy ($p = 1$) równania normalne mają postać
-$\sum_i (y_i - \beta_0 - \beta_1 x_i) = 0$ i
-$\sum_i x_i(y_i - \beta_0 - \beta_1 x_i) = 0$, skąd
-$$
-\widehat\beta_1 = \frac{\sum_{i=1}^n (x_i - \bar x)(y_i - \bar y)}
-{\sum_{i=1}^n (x_i - \bar x)^2},
-\qquad
-\widehat\beta_0 = \bar y - \widehat\beta_1 \bar x
-$$ {#eq-mnk-prosta}
-(@exr-mnk-regresja-prosta). Współczynnik kierunkowy to iloraz
-kowariancji z próby przez wariancję z próby, czyli próbkowy odpowiednik
-$\Cov(X, Y)/\Var X$ -- współczynnika kierunkowego najlepszej prostej
-$f_{\mathcal{F}}$. Druga równość mówi, że prosta regresji przechodzi
-przez punkt $(\bar x, \bar y)$.
-
-### Geometria najmniejszych kwadratów
-
-Z ([-@eq-xbeta-kolumny]) wektor predykcji $\X\bbeta$ jest kombinacją
-liniową kolumn $\X$ o współczynnikach $\beta_0, \dots, \beta_p$.
-Zbiorem wszystkich takich
-wektorów jest więc podprzestrzeń liniowa $\R^n$ rozpięta na kolumnach $\X$;
-oznaczamy ją $\mathcal{C}(\X)$. Kolumny są liniowo niezależne, więc jej
-wymiar to $p + 1$. Zatem minimalizacja
-$\|\y - \X\bbeta\|$ to szukanie punktu tej podprzestrzeni
-najbliższego $\y$, czyli **rzutu ortogonalnego** $\y$ na $\mathcal{C}(\X)$.
-Równania normalne zapisane jako
-$$
-\X^\top(\y - \X\widehat{\bbeta}) = \mathbf 0
-$$
-mówią to samo: wektor reszt $\mathbf{e} = \y - \widehat\y$, gdzie
-$\widehat\y = \X\widehat{\bbeta}$, jest prostopadły do każdej kolumny $\X$.
-Z prostopadłości do kolumny jedynek wynika, że reszty sumują się do zera,
-a z prostopadłości do pozostałych kolumn -- że w próbie są nieskorelowane
-z każdą cechą. Dopasowanie wyczerpało liniową informację o $\y$, jaką
-niosą cechy.
-
-Wektor predykcji jest liniową funkcją wyników:
-$$
-\widehat\y = \mathbf H\y,
-\qquad
-\mathbf H = \X(\X^\top\X)^{-1}\X^\top .
-$$ {#eq-macierz-daszkowa}
-Macierz $\mathbf H$ nazywa się **macierzą daszkową** (ang. *hat
-matrix*), bo „nakłada daszek” na $\y$. Jest macierzą rzutu ortogonalnego:
-symetryczną ($\mathbf H^\top = \mathbf H$) i idempotentną
-($\mathbf H^2 = \mathbf H$), bo rzut wektora, który już leży
-w podprzestrzeni, nic nie zmienia. Macierz $\mathbf I - \mathbf H$ rzutuje
-na dopełnienie ortogonalne $\mathcal{C}(\X)$ i daje reszty,
-$\mathbf e = (\mathbf I - \mathbf H)\y$. Ślad $\mathbf H$ jest równy
-wymiarowi podprzestrzeni, na którą rzutuje:
-$$
-\operatorname{tr}\mathbf H
-= \operatorname{tr}\big((\X^\top\X)^{-1}\X^\top\X\big)
-= \operatorname{tr}\mathbf I_{p+1} = p + 1 ,
-$$ {#eq-slad-h}
-gdzie skorzystaliśmy z równości $\operatorname{tr}(\mathbf{AB}) =
-\operatorname{tr}(\mathbf{BA})$. Ponieważ $\widehat\y$ i $\mathbf e$ są
-prostopadłe, zachodzi twierdzenie Pitagorasa:
-$\|\y\|^2 = \|\widehat\y\|^2 + \|\mathbf e\|^2$.
-
-::: {.callout-note}
-## Ślad jako liczba parametrów
-W sekcji [-@sec-walidacja-krzyzowa] opisaliśmy metody, dla których
-$\widehat\y = \mathbf S\y$. Metoda najmniejszych kwadratów do nich
-należy, z $\mathbf S = \mathbf H$. Dla regresji $k$-NN na przekątnej
-$\mathbf S$ stoi $1/k$, więc $\operatorname{tr}\mathbf S = n/k$ -- to
-dokładnie efektywna liczba parametrów, którą w rozdziale
-[-@sec-bias-wariancja] mierzyliśmy elastyczność tej metody. Dla OLS ślad
-$\mathbf H$ to $p + 1$, czyli liczba współczynników. Ślad macierzy
-$\mathbf S$ jest więc wspólną miarą elastyczności metod liniowych
-względem $\y$ [@esl, rozdz. 7.6]. Element przekątny $h_{ii}$ mówi, jaką
-wagę predykcja w punkcie $\x_i$ przypisuje własnemu wynikowi $y_i$;
-nazywa się go **dźwignią** obserwacji $i$ (@exr-macierz-daszkowa).
-:::
-
-::: {.callout-tip}
-## Wzór to nie algorytm
-Wzór ([-@eq-estymator-mnk]) opisuje rozwiązanie, ale nie jest dobrym
-sposobem jego obliczania. Utworzenie $\X^\top\X$ podnosi do kwadratu
-wskaźnik uwarunkowania macierzy, czyli czynnik, o jaki błędy zaokrągleń
-mogą się wzmocnić przy rozwiązywaniu układu. Biblioteki rozkładają więc
-$\X$, a nie $\X^\top\X$. W rozkładzie QR, $\X = \mathbf{Q}\mathbf{R}$
-z ortonormalnymi kolumnami $\mathbf Q$ i trójkątną $\mathbf R$, równania
-normalne sprowadzają się do układu trójkątnego
-$\mathbf R\bbeta = \mathbf Q^\top\y$. Funkcja `np.linalg.lstsq` korzysta
-z rozkładu według wartości osobliwych.
-:::
-
-Dla wielomianu stopnia $10$ na $50$ punktach z przedziału $[0, 1]$
-różnica jest dramatyczna:
-
-```{python}
-x = np.linspace(0, 1, 50)
-V = np.vander(x, 11, increasing=True)   # kolumny 1, x, ..., x^10
-print(f"uwarunkowanie X:     {np.linalg.cond(V):.1e}")
-print(f"uwarunkowanie X^T X: {np.linalg.cond(V.T @ V):.1e}")
-```
-
-Przy podwójnej precyzji, czyli około $16$ cyfrach znaczących, wskaźnik
-rzędu $10^{14}$ zostawia w rozwiązaniu najwyżej dwie wiarygodne cyfry.
-Dlatego w rozdziale [-@sec-bias-wariancja] używaliśmy funkcji
-`Polynomial.fit`, która przed dopasowaniem przeskalowuje $x$ do
-przedziału $[-1, 1]$.
-
-### Dopasowanie do danych *Advertising* {#sec-dopasowanie-advertising}
-
-Zacznijmy od regresji sprzedaży względem budżetu telewizyjnego.
-@fig-reklama-tv pokazuje prostą najmniejszych kwadratów i reszty, czyli
-pionowe odcinki, których kwadraty minimalizujemy.
+jest **sumą kwadratów reszt**. **Metoda najmniejszych kwadratów**
+(ang. *ordinary least squares*, OLS) wybiera współczynniki minimalizujące
+$\mathrm{RSS}$. @fig-reklama-tv pokazuje wybraną w ten sposób prostą
+i reszty, czyli pionowe odcinki, których kwadraty sumujemy.
 
 ```{python}
 #| label: fig-reklama-tv
@@ -357,14 +165,47 @@ plt.tight_layout()
 plt.show()
 ```
 
-Otrzymujemy $\widehat\beta_0 \approx 7{,}03$ i
-$\widehat\beta_1 \approx 0{,}0475$. Każdy dodatkowy tysiąc dolarów
-budżetu telewizyjnego wiąże się przeciętnie z $47{,}5$ sztukami
-sprzedanego produktu więcej. Wyraz wolny to przewidywana sprzedaż przy
-zerowym budżecie telewizyjnym. Tutaj ma on sens, bo w danych są rynki
-z budżetem bliskim zera.
+Przyrównując do zera pochodne $\mathrm{RSS}$ względem $\beta_0$
+i $\beta_1$, otrzymujemy dwa równania:
+$$
+\sum_{i=1}^n (y_i - \beta_0 - \beta_1 x_i) = 0,
+\qquad
+\sum_{i=1}^n x_i\,(y_i - \beta_0 - \beta_1 x_i) = 0 .
+$$
+Ich rozwiązaniem jest
+$$
+\widehat\beta_1 = \frac{\sum_{i=1}^n (x_i - \bar x)(y_i - \bar y)}
+{\sum_{i=1}^n (x_i - \bar x)^2},
+\qquad
+\widehat\beta_0 = \bar y - \widehat\beta_1 \bar x
+$$ {#eq-mnk-prosta}
+(@exr-mnk-regresja-prosta). Współczynnik kierunkowy to iloraz
+kowariancji z próby przez wariancję z próby, czyli próbkowy odpowiednik
+$\Cov(X, Y)/\Var X$. Tyle wynosi nachylenie prostej, która najlepiej
+przybliża funkcję regresji w drugim odczytaniu modelu. Wzór na
+$\widehat\beta_0$ mówi, że prosta regresji przechodzi przez punkt
+$(\bar x, \bar y)$. Z samych równań wynika, że reszty dopasowanej
+prostej, $e_i = y_i - \widehat y_i$, sumują się do zera i są w próbie
+nieskorelowane z $x_i$.
 
-Teraz dopasujmy model ([-@eq-model-reklama]) ze wszystkimi trzema
+Dla danych z rysunku [-@fig-reklama-tv] otrzymujemy
+$\widehat\beta_0 \approx 7{,}03$ i $\widehat\beta_1 \approx 0{,}0475$.
+Każdy dodatkowy tysiąc dolarów budżetu telewizyjnego wiąże się
+przeciętnie z $47{,}5$ sztukami sprzedanego produktu więcej. Wyraz wolny
+to przewidywana sprzedaż przy zerowym budżecie telewizyjnym. Tutaj ma on
+sens, bo w danych są rynki z budżetem bliskim zera.
+
+### Regresja względem trzech mediów {#sec-dopasowanie-advertising}
+
+Przy $p$ cechach kryterium jest to samo. Suma kwadratów reszt
+$$
+\mathrm{RSS}(\bbeta) = \sum_{i=1}^{n} \big(y_i - \beta_0 - \beta_1 x_{i1}
+- \dots - \beta_p x_{ip}\big)^2
+$$ {#eq-rss}
+jest funkcją wektora współczynników $\bbeta = (\beta_0, \dots, \beta_p)^\top$,
+a OLS wybiera minimalizujący ją wektor $\widehat{\bbeta}$. Wzór na
+rozwiązanie podamy w następnej podsekcji; na razie liczy je funkcja
+`dopasuj`. Dopasujmy model ([-@eq-model-reklama]) ze wszystkimi trzema
 mediami i porównajmy jego współczynniki ze współczynnikami trzech
 regresji z jedną cechą.
 
@@ -391,11 +232,136 @@ Współczynnik w regresji wielokrotnej jest równy współczynnikowi
 regresji $\y$ względem tej części cechy, której nie da się liniowo
 przewidzieć z pozostałych cech (@exr-reklama-czastkowa).
 
+### Zapis macierzowy
+
+Rachunki dla $p$ cech wygodnie prowadzić na macierzach. **Macierz
+projektowa** $\X$ ma $n$ wierszy i $p + 1$ kolumn. Jej $i$-ty wiersz to
+$\tilde\x_i^\top = (1, x_{i1}, \dots, x_{ip})$: cechy obserwacji $i$
+poprzedzone jedynką, która odpowiada wyrazowi wolnemu. Wyniki tworzą
+wektor $\y = (y_1, \dots, y_n)^\top$. Dla modelu ([-@eq-model-reklama])
+pierwsze rynki z danych *Advertising* dają
+$$
+\X =
+\begin{pmatrix}
+1 & 230{,}1 & 37{,}8 & 69{,}2\\
+1 & 44{,}5 & 39{,}3 & 45{,}1\\
+1 & 17{,}2 & 45{,}9 & 69{,}3\\
+\vdots & \vdots & \vdots & \vdots
+\end{pmatrix},
+\qquad
+\y =
+\begin{pmatrix} 22{,}1\\ 10{,}4\\ 9{,}3\\ \vdots \end{pmatrix},
+$$
+a kolumny $\X$ to kolejno jedynki, `TV`, `radio` i `newspaper`.
+Współrzędna $i$ wektora $\X\bbeta$ to $\tilde\x_i^\top\bbeta = \beta_0 +
+\beta_1 x_{i1} + \dots + \beta_p x_{ip}$, czyli predykcja dla obserwacji
+$i$. Ten sam wektor jest kombinacją liniową kolumn $\X$ o wagach
+$\beta_0, \dots, \beta_p$:
+$$
+\X\bbeta = \beta_0
+\begin{pmatrix} 1\\ \vdots\\ 1 \end{pmatrix}
++ \beta_1
+\begin{pmatrix} x_{11}\\ \vdots\\ x_{n1} \end{pmatrix}
++ \dots
++ \beta_p
+\begin{pmatrix} x_{1p}\\ \vdots\\ x_{np} \end{pmatrix}.
+$$ {#eq-xbeta-kolumny}
+Zbiór wszystkich takich kombinacji, czyli podprzestrzeń $\R^n$ rozpiętą
+na kolumnach $\X$, oznaczamy $\mathcal{C}(\X)$.
+
+Suma kwadratów reszt ([-@eq-rss]) to $\mathrm{RSS}(\bbeta) =
+\|\y - \X\bbeta\|^2$. Rozpisując kwadrat normy,
+$$
+\mathrm{RSS}(\bbeta) = \y^\top\y - 2\bbeta^\top\X^\top\y
++ \bbeta^\top\X^\top\X\bbeta .
+$$
+Jest to funkcja kwadratowa $\bbeta$, a jej gradient wynosi
+$-2\X^\top\y + 2\X^\top\X\bbeta$. Przyrównując go do zera, otrzymujemy
+**równania normalne**
+$$
+\X^\top\X\,\bbeta = \X^\top\y .
+$$ {#eq-rownania-normalne}
+Dla jednej cechy są to dwa równania z początku sekcji.
+
+::: {#thm-mnk}
+## Estymator najmniejszych kwadratów
+Jeśli kolumny macierzy $\X$ są liniowo niezależne, to macierz $\X^\top\X$
+jest odwracalna, a $\mathrm{RSS}$ ma dokładnie jedno minimum w punkcie
+$$
+\widehat{\bbeta} = (\X^\top\X)^{-1}\X^\top\y .
+$$ {#eq-estymator-mnk}
+:::
+
+Funkcja $\mathrm{RSS}$ jest wypukła, bo jest kwadratem normy funkcji
+afinicznej $\bbeta$, więc punkt zerowania gradientu jest jej minimum.
+Dowód odwracalności $\X^\top\X$ i jednoznaczności minimum podaje
+rozszerzenie [-@sec-mnk-geometria].
+
+Liniowa niezależność kolumn wymaga w szczególności, by $n \ge p + 1$. Gdy
+cech jest więcej niż obserwacji, równania normalne mają nieskończenie
+wiele rozwiązań i wiele z nich daje $\mathrm{RSS} = 0$. Tak było
+z wielomianami w sekcji [-@sec-blad-uczacy-ryzyko]: gdy $d + 1$
+osiągało liczbę różnych wartości $x_i$, wielomian przechodził przez
+wszystkie punkty.
+
+::: {.callout-tip}
+## Wzór to nie algorytm
+Wzór ([-@eq-estymator-mnk]) opisuje rozwiązanie, ale nie służy do jego
+obliczania. Funkcja `dopasuj` wywołuje `np.linalg.lstsq`, która
+rozwiązuje zadanie najmniejszych kwadratów bez tworzenia i odwracania
+macierzy $\X^\top\X$. Gdy kolumny $\X$ są bliskie liniowej zależności,
+na przykład dla kolejnych potęg $x$ w regresji wielomianowej, obliczenie
+wprost ze wzoru gubi w zaokrągleniach większość cyfr znaczących.
+W kodzie używamy więc `lstsq` albo gotowych funkcji, takich jak `OLS`
+z pakietu `statsmodels` czy `Polynomial.fit`. Przyczynę i przykład podaje rozszerzenie
+[-@sec-mnk-geometria].
+:::
+
+### Reszty i dźwignie
+
+Oznaczmy wektor predykcji $\widehat\y = \X\widehat{\bbeta}$ i wektor reszt
+$\mathbf e = \y - \widehat\y$. Równania normalne zapisane jako
+$$
+\X^\top\mathbf e = \mathbf 0
+$$ {#eq-reszty-prostopadle}
+mówią, że wektor reszt jest prostopadły do każdej kolumny $\X$. Dla
+kolumny jedynek oznacza to, że reszty sumują się do zera, a dla kolumny
+cechy -- że w próbie są nieskorelowane z tą cechą. Reszty są też
+prostopadłe do każdego wektora z $\mathcal{C}(\X)$, bo
+$(\X\mathbf v)^\top\mathbf e = \mathbf v^\top\X^\top\mathbf e = 0$,
+w szczególności do wektora predykcji $\widehat\y$. W resztach nie zostaje
+więc nic, co dałoby się liniowo przewidzieć z cech.
+
+Wektor predykcji jest liniową funkcją wyników,
+$\widehat\y = \X(\X^\top\X)^{-1}\X^\top\y$. Predykcja dla obserwacji $i$
+jest więc ważoną sumą wszystkich wyników:
+$$
+\widehat y_i = \sum_{j=1}^n h_{ij}\,y_j,
+\qquad
+h_{ij} = \tilde\x_i^\top(\X^\top\X)^{-1}\tilde\x_j .
+$$ {#eq-dzwignia}
+Wagi $h_{ij}$ tworzą macierz $\mathbf H$, nazywaną **macierzą daszkową**
+(ang. *hat matrix*), bo $\widehat\y = \mathbf H\y$ „nakłada daszek”
+na $\y$. Element przekątny $h_{ii}$ to waga, jaką predykcja
+$\widehat y_i$ przypisuje własnemu wynikowi $y_i$; nazywa się go
+**dźwignią** obserwacji $i$. Dźwignia leży między $0$ a $1$. Gdy jest
+bliska $1$, predykcja w punkcie $\x_i$ zależy głównie od samego $y_i$.
+Dużą dźwignię mają obserwacje o nietypowych cechach, położone daleko od
+środka chmury punktów uczących (@exr-macierz-daszkowa).
+Dźwignie sumują się do liczby współczynników,
+$$
+\sum_{i=1}^n h_{ii} = p + 1 ,
+$$ {#eq-suma-dzwigni}
+więc średnio wynoszą $(p+1)/n$ (dowód w rozszerzeniu
+[-@sec-mnk-geometria]). Z dźwigni skorzystamy przy wariancji predykcji
+i w diagnostyce modelu.
+
 ## Własności estymatora OLS {#sec-wlasnosci-mnk}
 
-Dopasowanie metodą najmniejszych kwadratów to rachunek na danych.
-Aby powiedzieć, jak daleko $\widehat{\bbeta}$ może leżeć od $\bbeta$,
-potrzebujemy modelu losowości. Tak jak w sekcji
+Współczynniki z sekcji [-@sec-mnk] dopasowaliśmy do jednej próby
+$200$ rynków. Inne rynki dałyby inną prostą i inne $\widehat{\bbeta}$.
+Jak daleko oszacowanie może leżeć od $\bbeta$? Do odpowiedzi potrzebny
+jest model losowości. Tak jak w sekcji
 [-@sec-rozklad-obciazenie-wariancja] przy metodzie $k$-NN, przyjmujemy
 **ustalony układ**: punkty $\x_1, \dots, \x_n$ traktujemy jako ustalone,
 a losowe są tylko wyniki. Formalnie oznacza to warunkowanie względem cech;
@@ -416,62 +382,15 @@ Założenie (Z1) to pierwsze odczytanie modelu z sekcji
 wyklucza między innymi sytuację z rysunku [-@fig-reklama-rozrzut],
 w której rozrzut wokół prostej rośnie z budżetem.
 
-::: {#thm-mnk-momenty}
-## Średnia i macierz kowariancji estymatora OLS
-Przy założeniach (Z1)--(Z2)
-$$
-\E\widehat{\bbeta} = \bbeta,
-\qquad
-\Cov\widehat{\bbeta} = \sigma^2(\X^\top\X)^{-1} .
-$$ {#eq-mnk-momenty}
-:::
-
-::: {.proof}
-Z ([-@eq-estymator-mnk]),
-$$
-\widehat{\bbeta} = (\X^\top\X)^{-1}\X^\top(\X\bbeta + \boldsymbol\varepsilon)
-= \bbeta + \mathbf A\boldsymbol\varepsilon,
-\qquad \mathbf A = (\X^\top\X)^{-1}\X^\top .
-$$
-Macierz $\mathbf A$ jest ustalona, więc
-$\E\widehat{\bbeta} = \bbeta + \mathbf A\,\E\boldsymbol\varepsilon = \bbeta$.
-Dla wektora losowego $\mathbf A\boldsymbol\varepsilon$ zachodzi
-$\Cov(\mathbf A\boldsymbol\varepsilon) =
-\mathbf A\Cov(\boldsymbol\varepsilon)\mathbf A^\top$, więc
-$$
-\Cov\widehat{\bbeta} = \sigma^2\mathbf A\mathbf A^\top
-= \sigma^2(\X^\top\X)^{-1}\X^\top\X(\X^\top\X)^{-1}
-= \sigma^2(\X^\top\X)^{-1} .
-$$
-:::
-
-Estymator OLS jest więc nieobciążony, a jego rozrzut zależy od dwóch
-rzeczy: od poziomu szumu $\sigma^2$ i od układu punktów, zapisanego
-w $\X^\top\X$. Dla jednej cechy, odwracając macierz $2 \times 2$,
-otrzymujemy
-$$
-\Var\widehat\beta_1 = \frac{\sigma^2}{\sum_{i=1}^n (x_i - \bar x)^2},
-\qquad
-\Var\widehat\beta_0 = \sigma^2\Big(\frac1n
-+ \frac{\bar x^2}{\sum_{i=1}^n (x_i - \bar x)^2}\Big)
-$$ {#eq-mnk-prosta-wariancje}
-(@exr-mnk-regresja-prosta). Przy ustalonym poziomie szumu nachylenie jest
-wyznaczone tym dokładniej, im szerzej rozrzucone są punkty $x_i$. Gdy
-wszystkie leżą blisko siebie, niewielki szum w wynikach wystarcza, by mocno
-przechylić prostą. Ponieważ
-$\sum_i (x_i - \bar x)^2 = n s_x^2$, gdzie $s_x^2$ jest wariancją
-z próby, odchylenie standardowe $\widehat\beta_1$ maleje jak
-$\sigma/(s_x\sqrt n)$.
-
-@fig-mnk-rozklad pokazuje to na symulacji. Punkty $x_i$, $n = 30$,
-wylosowaliśmy raz z rozkładu jednostajnego na $[0, 10]$ i trzymamy je
-ustalone. W każdej z $10\,000$ prób losujemy nowe wyniki
-$y_i = 1 + 0{,}5\,x_i + \varepsilon_i$, z $\varepsilon_i \sim
+@fig-mnk-rozklad pokazuje, jak dopasowanie zmienia się między próbami.
+Punkty $x_i$, $n = 30$, wylosowaliśmy raz z rozkładu jednostajnego na
+$[0, 10]$ i trzymamy je ustalone. W każdej z $10\,000$ prób losujemy nowe
+wyniki $y_i = 1 + 0{,}5\,x_i + \varepsilon_i$, z $\varepsilon_i \sim
 \Nrozk(0, 1{,}5^2)$, i dopasowujemy prostą.
 
 ```{python}
 #| label: fig-mnk-rozklad
-#| fig-cap: "Estymator OLS w $10\\,000$ próbach z modelu $y_i = 1 + 0{,}5\\,x_i + \\varepsilon_i$ przy ustalonych punktach $x_i$ ($n = 30$, $\\sigma = 1{,}5$). Po lewej: proste dopasowane do 20 prób (cienkie linie) i prawdziwa prosta (przerywana). Po prawej: histogram $\\widehat\\beta_1$ na tle gęstości rozkładu normalnego o średniej $\\beta_1$ i wariancji z ([-@eq-mnk-prosta-wariancje])."
+#| fig-cap: "Estymator OLS w $10\\,000$ próbach z modelu $y_i = 1 + 0{,}5\\,x_i + \\varepsilon_i$ przy ustalonych punktach $x_i$ ($n = 30$, $\\sigma = 1{,}5$). Po lewej: proste dopasowane do 20 prób (cienkie linie), prawdziwa prosta (przerywana) i punkty pierwszej próby. Po prawej: histogram $\\widehat\\beta_1$ na tle gęstości rozkładu normalnego o średniej $\\beta_1$ i wariancji z ([-@eq-mnk-prosta-wariancje])."
 
 from scipy import stats
 
@@ -505,11 +424,52 @@ plt.tight_layout()
 plt.show()
 ```
 
-Średnia $\widehat\beta_1$ po próbach jest równa $\beta_1 = 0{,}5$ z
-dokładnością do szumu symulacji, a histogram pokrywa się z gęstością
-o wariancji ([-@eq-mnk-prosta-wariancje]). Kształt tej gęstości jest
-normalny, bo błędy w symulacji są normalne; twierdzenie
-[-@thm-mnk-momenty] mówi tylko o średniej i wariancji.
+Proste z kolejnych prób rozchodzą się wokół prawdziwej prostej, najmocniej
+na krańcach przedziału, a nachylenia skupiają się wokół $\beta_1 = 0{,}5$.
+Średnią i rozrzut tego rozkładu podaje twierdzenie [-@thm-mnk-momenty];
+o kształcie rozkładu nie mówi ono nic. Histogram jest normalny, bo błędy
+w symulacji są normalne.
+
+::: {#thm-mnk-momenty}
+## Średnia i macierz kowariancji estymatora OLS
+Przy założeniach (Z1)--(Z2)
+$$
+\E\widehat{\bbeta} = \bbeta,
+\qquad
+\Cov\widehat{\bbeta} = \sigma^2(\X^\top\X)^{-1} .
+$$ {#eq-mnk-momenty}
+:::
+
+Nieobciążoność widać po podstawieniu modelu do wzoru
+([-@eq-estymator-mnk]):
+$$
+\widehat{\bbeta} = (\X^\top\X)^{-1}\X^\top(\X\bbeta + \boldsymbol\varepsilon)
+= \bbeta + \mathbf A\boldsymbol\varepsilon,
+\qquad \mathbf A = (\X^\top\X)^{-1}\X^\top .
+$$
+Estymator jest sumą prawdziwego wektora współczynników i kombinacji
+liniowych błędów o ustalonych wagach. Błędy mają średnią zero, więc
+$\E\widehat{\bbeta} = \bbeta$. Rachunek macierzy kowariancji podaje
+rozszerzenie [-@sec-ols-wlasnosci-wnioskowanie].
+
+Rozrzut estymatora zależy od poziomu szumu $\sigma^2$ i od układu punktów,
+zapisanego w $\X^\top\X$. Dla jednej cechy, odwracając macierz
+$2 \times 2$, otrzymujemy
+$$
+\Var\widehat\beta_1 = \frac{\sigma^2}{\sum_{i=1}^n (x_i - \bar x)^2},
+\qquad
+\Var\widehat\beta_0 = \sigma^2\Big(\frac1n
++ \frac{\bar x^2}{\sum_{i=1}^n (x_i - \bar x)^2}\Big)
+$$ {#eq-mnk-prosta-wariancje}
+(@exr-mnk-regresja-prosta). Przy ustalonym poziomie szumu nachylenie jest
+wyznaczone tym dokładniej, im szerzej rozrzucone są punkty $x_i$. Gdy
+wszystkie leżą blisko siebie, niewielki szum w wynikach wystarcza, by mocno
+przechylić prostą. Ponieważ
+$\sum_i (x_i - \bar x)^2 = n s_x^2$, gdzie $s_x^2$ jest wariancją
+z próby, odchylenie standardowe $\widehat\beta_1$ maleje jak
+$\sigma/(s_x\sqrt n)$. W symulacji średnia $\widehat\beta_1$ po próbach
+jest równa $\beta_1$ z dokładnością do szumu symulacji, a histogram
+pokrywa się z gęstością o wariancji ([-@eq-mnk-prosta-wariancje]).
 
 ### Wariancja predykcji
 
@@ -521,40 +481,36 @@ o wariancji
 $$
 \Var\widehat f(\x_0) = \sigma^2\,\tilde\x_0^\top(\X^\top\X)^{-1}\tilde\x_0 .
 $$ {#eq-wariancja-predykcji}
-W punktach uczących macierz kowariancji wektora predykcji to
-$\Cov(\mathbf H\y) = \sigma^2\mathbf H\mathbf H^\top = \sigma^2\mathbf H$,
-więc wariancja predykcji w $\x_i$ wynosi $\sigma^2 h_{ii}$. Średnio po
-punktach uczących, z ([-@eq-slad-h]),
+W punkcie uczącym $\x_i$ forma kwadratowa w tym wzorze to dźwignia
+$h_{ii}$ z ([-@eq-dzwignia]), więc wariancja predykcji wynosi
+$\sigma^2 h_{ii}$. Jest największa w punktach o dużej dźwigni, daleko od
+środka chmury punktów, stąd szerszy wachlarz prostych na krańcach
+rysunku [-@fig-mnk-rozklad]. Uśredniona po $n$ punktach uczących
+wariancja predykcji wynosi, z ([-@eq-suma-dzwigni]),
 $$
 \frac1n\sum_{i=1}^n \Var\widehat f(\x_i)
-= \frac{\sigma^2}{n}\operatorname{tr}\mathbf H
+= \frac{\sigma^2}{n}\sum_{i=1}^n h_{ii}
 = \sigma^2\,\frac{p+1}{n} .
 $$ {#eq-mnk-srednia-wariancja}
-To jest fakt, na który powoływaliśmy się w sekcji
-[-@sec-kompromis-nieusuwalny]. Jeśli model liniowy jest trafny, predyktor
-OLS nie ma obciążenia, a jego wariancja maleje jak $1/n$ ze stałą
-proporcjonalną do liczby współczynników, bez względu na wymiar cech.
-Porównajmy to z wariancją $\sigma^2/k$ regresji $k$-NN
-w ustalonym układzie ([-@eq-knn-obciazenie-wariancja]). Można ją zapisać
-jako $\sigma^2 (n/k)/n$: obie metody płacą wariancją $\sigma^2$ razy
-efektywna liczba parametrów podzielona przez $n$. Różnica leży
-w obciążeniu. Metoda $k$-NN, żeby mieć małe obciążenie, potrzebuje
-małych otoczeń, czyli wielu efektywnych parametrów. Model liniowy, jeśli
-jest trafny, ma zerowe obciążenie przy $p + 1$ parametrach.
-
-Wzór ([-@eq-mnk-srednia-wariancja]) dotyczy punktów uczących. Dla nowego
-punktu $\X_0$ z tego samego rozkładu co cechy uczące wariancja jest
-nieco większa, ale przy dużym $n$ również bliska $\sigma^2(p+1)/n$.
-Wtedy bowiem $\X^\top\X \approx n\,\E[\tilde\X_0\tilde\X_0^\top]$, więc
-średnia wartość $\tilde\X_0^\top(\X^\top\X)^{-1}\tilde\X_0$ jest bliska
-$\operatorname{tr}\mathbf I_{p+1}/n$.
+Na tę średnią powoływaliśmy się w sekcji [-@sec-kompromis-nieusuwalny].
+Jeśli model liniowy jest trafny, predyktor OLS nie ma obciążenia, a jego
+wariancja uśredniona po punktach uczących maleje jak $1/n$ ze stałą
+proporcjonalną do liczby współczynników. W nowym punkcie z tego samego
+rozkładu co cechy uczące wariancja jest nieco większa, ale przy dużym $n$
+również bliska $\sigma^2(p+1)/n$ (rozszerzenie
+[-@sec-ols-wlasnosci-wnioskowanie]). Dla porównania wariancja $\sigma^2/k$
+regresji $k$-NN ([-@eq-knn-obciazenie-wariancja]) to $\sigma^2(n/k)/n$,
+z efektywną liczbą parametrów $n/k$ w miejscu $p + 1$.
 
 ### Estymacja wariancji błędu
 
 Wzory ([-@eq-mnk-momenty]) i ([-@eq-wariancja-predykcji]) zawierają
 nieznane $\sigma^2$. Naturalnym kandydatem na jego estymator są reszty,
-ale są one systematycznie mniejsze od błędów: dopasowanie dostosowało się
-do tych samych danych.
+ale są one systematycznie mniejsze od błędów. Współczynniki
+$\widehat{\bbeta}$ dobrano tak, by suma kwadratów reszt na tych samych
+danych była najmniejsza, więc
+$\mathrm{RSS}(\widehat{\bbeta}) \le \mathrm{RSS}(\bbeta)
+= \sum_i \varepsilon_i^2$.
 
 ::: {#thm-mnk-rss}
 ## Wartość oczekiwana sumy kwadratów reszt
@@ -569,26 +525,20 @@ $$ {#eq-sigma-daszek}
 jest nieobciążonym estymatorem $\sigma^2$.
 :::
 
-::: {.proof}
-Ponieważ $(\mathbf I - \mathbf H)\X = \mathbf 0$, wektor reszt to
-$\mathbf e = (\mathbf I - \mathbf H)\y
-= (\mathbf I - \mathbf H)\boldsymbol\varepsilon$. Macierz
-$\mathbf I - \mathbf H$ jest symetryczna i idempotentna, więc
-$\mathrm{RSS} = \mathbf e^\top\mathbf e
-= \boldsymbol\varepsilon^\top(\mathbf I - \mathbf H)\boldsymbol\varepsilon$.
-Dla ustalonej macierzy $\mathbf M$ mamy
-$\E[\boldsymbol\varepsilon^\top\mathbf M\boldsymbol\varepsilon]
-= \sum_{i,j} M_{ij}\E[\varepsilon_i\varepsilon_j]
-= \sigma^2\operatorname{tr}\mathbf M$, a
-$\operatorname{tr}(\mathbf I - \mathbf H) = n - (p + 1)$ z ([-@eq-slad-h]).
-:::
-
-Dowód pokazuje, skąd bierze się mianownik $n - p - 1$. Wektor błędów ma
-$n$ współrzędnych, ale rzut na $\mathcal{C}(\X)$ „pochłania” jego
-składową w $p + 1$ kierunkach i przenosi ją do predykcji. W resztach
-zostaje składowa w pozostałych $n - p - 1$ kierunkach, które nazywa się
+Suma kwadratów błędów ma wartość oczekiwaną $n\sigma^2$, a suma kwadratów
+reszt -- o $(p + 1)\sigma^2$ mniejszą, czyli o $\sigma^2$ na każdy
+dopasowany współczynnik. Liczbę $n - p - 1$ tłumaczą równania
+([-@eq-reszty-prostopadle]). Reszty spełniają $p + 1$ równań liniowych
+$\X^\top\mathbf e = \mathbf 0$, więc nie mogą przyjmować dowolnych
+wartości: po ustaleniu odpowiednio wybranych $n - p - 1$ reszt pozostałe
+$p + 1$ wynikają z tych równań. Dla $p = 0$ jest to warunek
+$\sum_i (y_i - \bar y) = 0$: odchylenia od średniej sumują się do zera,
+więc ostatnie wynika z $n - 1$ pozostałych. Liczbę $n - p - 1$ nazywa się
 **resztowymi stopniami swobody**. Wariancja z próby z mianownikiem
-$n - 1$ jest szczególnym przypadkiem $p = 0$ (@exr-estymator-wariancji-mnk).
+$n - 1$ to estymator $\widehat\sigma^2$ dla $p = 0$
+(@exr-estymator-wariancji-mnk). Dowód twierdzenia podaje rozszerzenie
+[-@sec-ols-wlasnosci-wnioskowanie].
+
 Błąd na zbiorze uczącym, $\mathrm{RSS}/n$, ma wartość oczekiwaną
 $\sigma^2(1 - (p+1)/n)$, czyli zaniża nawet błąd nieredukowalny. To jest
 optymizm błędu uczącego z sekcji [-@sec-blad-uczacy-ryzyko], który dla
@@ -596,48 +546,16 @@ OLS można policzyć dokładnie (@exr-optymizm-mnk).
 
 ### Twierdzenie Gaussa--Markowa
 
-Estymator OLS jest nieobciążony, ale czy jest najlepszy? Odpowiedź zależy
-od tego, z czym go porównujemy. Estymator $\tilde{\bbeta}$ nazywamy
-**liniowym**, jeśli $\tilde{\bbeta} = \mathbf C\y$ dla macierzy $\mathbf C$
-zależnej tylko od $\X$. Estymator OLS jest liniowy, z
-$\mathbf C = (\X^\top\X)^{-1}\X^\top$.
-
-::: {#thm-gauss-markow}
-## Gaussa--Markowa
-Przy założeniach (Z1)--(Z2) niech $\tilde{\bbeta} = \mathbf C\y$ będzie
-dowolnym liniowym estymatorem $\bbeta$ nieobciążonym dla każdej wartości
-$\bbeta$. Wtedy macierz $\Cov\tilde{\bbeta} - \Cov\widehat{\bbeta}$ jest
-dodatnio półokreślona. W szczególności dla każdego wektora $\mathbf c$
-$$
-\Var(\mathbf c^\top\tilde{\bbeta}) \ge \Var(\mathbf c^\top\widehat{\bbeta}) .
-$$
-:::
-
-::: {.proof}
-Niech $\mathbf A = (\X^\top\X)^{-1}\X^\top$ i
-$\mathbf D = \mathbf C - \mathbf A$. Nieobciążoność oznacza
-$\E\tilde{\bbeta} = \mathbf C\X\bbeta = \bbeta$ dla każdego $\bbeta$, czyli
-$\mathbf C\X = \mathbf I$. Ponieważ $\mathbf A\X = \mathbf I$, mamy
-$\mathbf D\X = \mathbf 0$. Stąd
-$\mathbf A\mathbf D^\top = (\X^\top\X)^{-1}(\mathbf D\X)^\top = \mathbf 0$
-i
-$$
-\Cov\tilde{\bbeta} = \sigma^2\mathbf C\mathbf C^\top
-= \sigma^2(\mathbf A + \mathbf D)(\mathbf A + \mathbf D)^\top
-= \sigma^2\mathbf A\mathbf A^\top + \sigma^2\mathbf D\mathbf D^\top
-= \Cov\widehat{\bbeta} + \sigma^2\mathbf D\mathbf D^\top .
-$$
-Macierz $\mathbf D\mathbf D^\top$ jest dodatnio półokreślona, bo
-$\mathbf c^\top\mathbf D\mathbf D^\top\mathbf c = \|\mathbf D^\top\mathbf c\|^2
-\ge 0$.
-:::
-
-Estymator OLS jest więc najlepszym liniowym estymatorem nieobciążonym
-(ang. *best linear unbiased estimator*, BLUE) [@esl, rozdz. 3.2.2].
-Dotyczy to też każdej kombinacji liniowej współczynników, w tym predykcji
-$\tilde\x_0^\top\widehat{\bbeta}$ w dowolnym punkcie. Dla modelu z samym
-wyrazem wolnym twierdzenie mówi, że średnia z próby jest najlepszą
-nieobciążoną średnią ważoną obserwacji (@exr-gauss-markow-srednia).
+Estymator OLS jest **liniowy**, czyli ma postać $\mathbf C\y$ z macierzą
+$\mathbf C = (\X^\top\X)^{-1}\X^\top$ zależną tylko od $\X$. Twierdzenie
+Gaussa--Markowa mówi, że przy założeniach (Z1)--(Z2) estymator OLS ma
+najmniejszą wariancję wśród estymatorów liniowych nieobciążonych, także
+dla każdej kombinacji liniowej współczynników, w tym predykcji
+w dowolnym punkcie; jest więc **najlepszym liniowym estymatorem
+nieobciążonym** (ang. *best linear unbiased estimator*, BLUE)
+[@esl, rozdz. 3.2.2]. Twierdzenie [-@thm-gauss-markow] z dowodem podaje
+rozszerzenie [-@sec-ols-wlasnosci-wnioskowanie], a przypadek średniej
+z próby -- @exr-gauss-markow-srednia.
 
 ::: {.callout-note}
 ## Czego twierdzenie nie mówi
@@ -650,72 +568,140 @@ jest istotne: gdy błędy mają różne wariancje, lepiej ważyć obserwacje
 odwrotnościami tych wariancji, a OLS traktuje wszystkie jednakowo.
 :::
 
+## Jakość dopasowania {#sec-jakosc-dopasowania}
+
+Zanim zapytamy, czy związek cech z wynikiem można odróżnić od szumu,
+opiszmy, jak dobrze model odtwarza wyniki w próbie. Służą do tego dwie
+miary.
+
+Pierwsza to $\widehat\sigma = \sqrt{\mathrm{RSS}/(n - p - 1)}$, nazywana
+w pakietach **resztowym błędem standardowym** (ang. *residual standard
+error*, RSE). Szacuje odchylenie standardowe błędu, czyli typową odległość
+wyniku od prostej regresji, w jednostkach $Y$. W regresji sprzedaży
+względem telewizji $\widehat\sigma \approx 3{,}26$ tysiąca sztuk przy
+średniej sprzedaży $14{,}0$ tysiąca, więc predykcja myli się typowo
+o mniej więcej jedną czwartą.
+
+Druga miara jest bezwymiarowa. Model zawiera wyraz wolny, więc wektor
+$\bar y\,\mathbf 1$ leży w $\mathcal{C}(\X)$, a wraz z nim
+$\widehat\y - \bar y\,\mathbf 1$. Reszty są do $\mathcal{C}(\X)$
+prostopadłe ([-@eq-reszty-prostopadle]), zatem z twierdzenia Pitagorasa
+$$
+\underbrace{\sum_{i=1}^n (y_i - \bar y)^2}_{\mathrm{TSS}}
+= \underbrace{\sum_{i=1}^n (\widehat y_i - \bar y)^2}_{\mathrm{ESS}}
++ \underbrace{\sum_{i=1}^n (y_i - \widehat y_i)^2}_{\mathrm{RSS}} .
+$$ {#eq-rozklad-tss}
+Całkowita zmienność wyniku rozkłada się na część odtworzoną przez model
+i część resztową. **Współczynnik determinacji**
+$$
+R^2 = 1 - \frac{\mathrm{RSS}}{\mathrm{TSS}} = \frac{\mathrm{ESS}}{\mathrm{TSS}}
+$$ {#eq-r2}
+to odsetek zmienności $y$ w próbie odtworzony przez model; leży
+w przedziale $[0, 1]$. Dla jednej cechy jest równy kwadratowi
+współczynnika korelacji z próby, $R^2 = r^2$
+(@exr-mnk-regresja-prosta).
+
+```{python}
+import statsmodels.api as sm
+
+modele = {"TV": ["TV"], "TV + radio": ["TV", "radio"], "TV + radio + newspaper": media}
+wiersze = {}
+for nazwa, cechy in modele.items():
+    wynik = sm.OLS(reklama["sales"], sm.add_constant(reklama[cechy])).fit()
+    wiersze[nazwa] = {"RSS": wynik.ssr, "R^2": wynik.rsquared,
+                      "skorygowany R^2": wynik.rsquared_adj,
+                      "RSE": np.sqrt(wynik.mse_resid)}
+pd.DataFrame(wiersze).T.round(4)
+```
+
+Dodanie radia podnosi $R^2$ z $0{,}61$ do $0{,}90$ i zmniejsza
+$\widehat\sigma$ o połowę. Dodanie prasy zmienia $\mathrm{RSS}$ dopiero
+na trzecim miejscu znaczącym, a $\widehat\sigma$ nawet nieco rośnie, bo
+spadek licznika nie równoważy utraty stopnia swobody w mianowniku.
+
+Iloraz $1 - R^2 = (\mathrm{RSS}/n)/(\mathrm{TSS}/n)$ to błąd uczący
+podzielony przez wariancję $y$ z próby, która od modelu nie zależy.
+Błąd uczący nie rośnie po dodaniu cechy, bo klasy modeli są zagnieżdżone,
+a minimum po większej klasie nie jest większe
+(sekcja [-@sec-blad-uczacy-ryzyko]), więc $R^2$ nigdy nie maleje.
+$R^2$ ma zatem wszystkie wady błędu uczącego i nie nadaje się do wyboru
+modelu.
+**Skorygowany $R^2$**,
+$$
+R^2_{\mathrm{adj}} = 1 - \frac{\mathrm{RSS}/(n - p - 1)}{\mathrm{TSS}/(n - 1)},
+$$
+dzieli obie sumy kwadratów przez ich liczby stopni swobody; licznik
+jest wtedy równy $\widehat\sigma^2$. Dodanie cechy nie zwiększa
+$\mathrm{RSS}$, ale zmniejsza $n - p - 1$, więc $R^2_{\mathrm{adj}}$ może
+zmaleć, jak w ostatnim wierszu tabeli. Poprawka usuwa jednak
+tylko obciążenie $\widehat\sigma^2$ dla jednego, z góry ustalonego modelu.
+Gdy porównujemy wiele modeli i wybieramy najlepszy, pojawia się optymizm
+wyboru z sekcji [-@sec-selekcja-ocena], którego żadna poprawka
+stopni swobody nie usuwa.
+
+$R^2$ nie jest też własnością samej zależności. Dla jednej cechy
+$\E[\mathrm{ESS}]$ rośnie z rozrzutem $x_i$ przy tym samym $\beta_1$
+i tym samym $\sigma$ (@exr-mnk-regresja-prosta). Ten sam model z tym samym
+szumem da więc wysokie $R^2$ na próbie o szerokim zakresie cechy i niskie
+na próbie o wąskim. Do porównań między próbami lepiej nadaje się
+$\widehat\sigma$, wyrażone w jednostkach wyniku.
+
 ## Wnioskowanie o parametrach {#sec-wnioskowanie-mnk}
 
-Twierdzenie [-@thm-mnk-momenty] podaje średnią i wariancję
-$\widehat{\bbeta}$. Żeby z jednej próby zbudować przedział ufności albo
-policzyć $p$-wartość, potrzebujemy całego rozkładu. Dokładamy więc
-trzecie założenie:
+Proste na rysunku [-@fig-mnk-rozklad] pochodzą z tego samego modelu,
+a mają różne nachylenia. W danych *Advertising* mamy jedną próbę i jedno
+oszacowanie każdego współczynnika. Jak daleko może ono leżeć od
+prawdziwej wartości i czy da się je odróżnić od zera?
+
+Samo dopasowanie OLS nie wymaga założeń o błędach, a nieobciążoność
+i wzory na wariancję z sekcji [-@sec-wlasnosci-mnk] -- tylko
+(Z1)--(Z2). Dokładne rozkłady statystyk, z których biorą się przedziały
+ufności i $p$-wartości, wymagają trzeciego założenia:
 
 - (Z3) $\boldsymbol\varepsilon \sim \Nrozk(\mathbf 0, \sigma^2\mathbf I)$,
   czyli błędy są niezależne i mają rozkład normalny.
 
-::: {#thm-mnk-rozklady}
-## Rozkłady w modelu liniowym z normalnymi błędami
-Przy założeniach (Z1)--(Z3):
-
-a) $\widehat{\bbeta} \sim \Nrozk\big(\bbeta, \sigma^2(\X^\top\X)^{-1}\big)$;
-b) $\mathrm{RSS}/\sigma^2$ ma rozkład $\chi^2$ z $n - p - 1$ stopniami
-   swobody;
-c) $\widehat{\bbeta}$ i $\mathrm{RSS}$ są niezależne.
-:::
-
-::: {.proof}
-## szkic
-Część (a): $\widehat{\bbeta} = \bbeta + \mathbf A\boldsymbol\varepsilon$
-jest przekształceniem liniowym wektora gaussowskiego, więc ma rozkład
-normalny, a jego parametry podaje twierdzenie [-@thm-mnk-momenty].
-
-Części (b) i (c) wynikają z geometrii. Wybierzmy bazę ortonormalną
-$\R^n$, w której pierwsze $p + 1$ wektorów rozpina $\mathcal{C}(\X)$,
-a pozostałe $n - p - 1$ -- jej dopełnienie ortogonalne. Niech $\mathbf Q$
-będzie macierzą ortogonalną o tych wektorach w kolumnach, a
-$\mathbf z = \mathbf Q^\top\boldsymbol\varepsilon$ wektorem współrzędnych
-błędów w nowej bazie. Rozkład $\Nrozk(\mathbf 0, \sigma^2\mathbf I)$ jest
-sferycznie symetryczny, więc obrót go nie zmienia:
-$\mathbf z \sim \Nrozk(\mathbf 0, \sigma^2\mathbf I)$, czyli współrzędne
-$z_1, \dots, z_n$ są niezależne. Składowa $\mathbf H\boldsymbol\varepsilon$
-zależy tylko od $z_1, \dots, z_{p+1}$, a reszty
-$\mathbf e = (\mathbf I - \mathbf H)\boldsymbol\varepsilon$ -- tylko od
-$z_{p+2}, \dots, z_n$. Stąd $\mathrm{RSS} = \|\mathbf e\|^2 =
-z_{p+2}^2 + \dots + z_n^2$ jest sumą kwadratów $n - p - 1$ niezależnych
-zmiennych $\Nrozk(0, \sigma^2)$, co daje (b). Ponadto
-$\widehat{\bbeta} - \bbeta = \mathbf A\boldsymbol\varepsilon =
-\mathbf A\mathbf H\boldsymbol\varepsilon$ (bo $\X^\top\mathbf H = \X^\top$)
-zależy tylko od $z_1, \dots, z_{p+1}$, co daje (c). Szczegółowy wykład
-zawierają @seber2003 [rozdz. 2--3].
-:::
+Przy (Z3) estymator $\widehat{\bbeta} = \bbeta + \mathbf A\boldsymbol\varepsilon$,
+kombinacja liniowa błędów normalnych, ma rozkład normalny; stąd kształt
+histogramu na rysunku [-@fig-mnk-rozklad]. Gdy błędy nie są normalne,
+ale (Z1)--(Z2) zachodzą, rozkłady statystyk $t$ i $F$ podane niżej są
+przybliżeniami, zwykle dobrymi przy dużym $n$ (@exr-pokrycie-przedzialow).
 
 ### Błędy standardowe i przedziały ufności
 
-Z części (a) wariancja $\widehat\beta_j$ to $\sigma^2 v_{jj}$, gdzie
-$v_{jj}$ jest $j$-tym elementem przekątnej $(\X^\top\X)^{-1}$
-(numerując od zera). Zastępując $\sigma$ przez $\widehat\sigma$
+Z twierdzenia [-@thm-mnk-momenty] wariancja $\widehat\beta_j$ to
+$\sigma^2 v_{jj}$, gdzie $v_{jj}$ jest $j$-tym elementem przekątnej
+$(\X^\top\X)^{-1}$ (numerując od zera). Odchylenie standardowe
+$\sigma\sqrt{v_{jj}}$ to szerokość histogramu z rysunku
+[-@fig-mnk-rozklad]: mówi, o ile oszacowanie typowo zmienia się między
+próbami. Zastępując nieznane $\sigma$ przez $\widehat\sigma$
 z ([-@eq-sigma-daszek]), otrzymujemy **błąd standardowy**
 $$
 \mathrm{SE}(\widehat\beta_j) = \widehat\sigma\sqrt{v_{jj}} .
 $$
+Pakiet `statsmodels` podaje błędy standardowe razem z pozostałymi
+wielkościami omawianymi w tej sekcji. Dla modelu z trzema mediami:
+
+```{python}
+model_pelny = sm.OLS(reklama["sales"], sm.add_constant(reklama[media])).fit()
+model_pelny.summary().tables[1]
+```
+
+Współczynnik przy telewizji, $0{,}0458$, ma błąd standardowy około
+$0{,}0014$ (kolumna `std err`): o tyle typowo różniłyby się od $\beta_1$
+oszacowania z innych prób $200$ rynków o tych samych budżetach.
+
 Statystyka
 $$
 T_j = \frac{\widehat\beta_j - \beta_j}{\mathrm{SE}(\widehat\beta_j)}
-= \frac{(\widehat\beta_j - \beta_j)/(\sigma\sqrt{v_{jj}})}
-{\sqrt{\mathrm{RSS}/\big(\sigma^2(n-p-1)\big)}}
 $$ {#eq-statystyka-t}
-jest ilorazem zmiennej o rozkładzie $\Nrozk(0, 1)$ przez pierwiastek
-z niezależnej od niej zmiennej $\chi^2_{n-p-1}$ podzielonej przez liczbę
-stopni swobody. Taki iloraz ma z definicji **rozkład $t$ Studenta**
-z $n - p - 1$ stopniami swobody. Nie zależy on od nieznanych $\bbeta$
-i $\sigma$, więc
+mierzy błąd oszacowania w błędach standardowych. Gdyby w mianowniku
+stało znane $\sigma\sqrt{v_{jj}}$, przy (Z1)--(Z3) miałaby rozkład
+$\Nrozk(0, 1)$. Oszacowanie $\widehat\sigma$ też jest losowe i dokłada
+zmienności: przy (Z1)--(Z3) statystyka $T_j$ ma **rozkład $t$ Studenta**
+z $n - p - 1$ stopniami swobody (uzasadnienie w rozszerzeniu
+[-@sec-ols-wlasnosci-wnioskowanie]). Rozkład ten nie zależy od
+nieznanych $\bbeta$ i $\sigma$, więc
 $$
 \Prob\big(|T_j| \le t_{n-p-1}\big) = 1 - \alpha ,
 $$
@@ -726,9 +712,8 @@ $$
 \Big[\,\widehat\beta_j - t_{n-p-1}\,\mathrm{SE}(\widehat\beta_j),\;
 \widehat\beta_j + t_{n-p-1}\,\mathrm{SE}(\widehat\beta_j)\,\Big].
 $$ {#eq-przedzial-ufnosci}
-Zastąpienie $\sigma$ oszacowaniem kosztuje: rozkład $t$ ma grubsze ogony
-niż normalny, więc kwantyl jest większy od $1{,}96$. Przy $28$ stopniach
-swobody wynosi $2{,}05$, przy dużej ich liczbie zbliża się do $1{,}96$.
+Kwantyl jest większy od $1{,}96$, bo rozkład $t$ ma grubsze ogony niż
+normalny: przy $28$ stopniach swobody wynosi $2{,}05$, przy $196$ -- $1{,}97$.
 
 Losowy jest przedział, a nie $\beta_j$. Poziom ufności $95\%$ oznacza, że
 w $95\%$ prób procedura daje przedział zawierający $\beta_j$. O jednym
@@ -762,97 +747,58 @@ print(f"odsetek przedziałów pokrywających beta1 we wszystkich próbach: {pokr
 ```
 
 We wszystkich $10\,000$ próbach przedział pokrył $\beta_1$ w około $95\%$
-przypadków. Tak musi być, gdy założenia (Z1)--(Z3) są spełnione.
-Co się dzieje, gdy nie są, sprawdza @exr-pokrycie-przedzialow.
+przypadków, zgodnie z założeniami (Z1)--(Z3), które symulacja spełnia.
+Co się dzieje, gdy nie są spełnione, sprawdza @exr-pokrycie-przedzialow.
 
-Pakiet `statsmodels` liczy błędy standardowe, statystyki $t$
-i przedziały ufności za nas. Dla regresji sprzedaży względem budżetu
-telewizyjnego:
+Przedział $95\%$ dla telewizji w tabeli (kolumny `[0.025` i `0.975]`) to
+$[0{,}043;\, 0{,}049]$: przy tych samych budżetach radiowym i prasowym
+tysiąc dolarów więcej na telewizję wiąże się przeciętnie z $43$ do $49$
+sztukami sprzedaży więcej.
 
-```{python}
-import statsmodels.api as sm
+### Test $t$ i $p$-wartość
 
-model_tv = sm.OLS(reklama["sales"], sm.add_constant(reklama[["TV"]])).fit()
-model_tv.summary().tables[1]
-```
-
-Przedział ufności dla współczynnika przy telewizji to około
-$[0{,}042;\, 0{,}053]$. Tysiąc dolarów budżetu telewizyjnego wiąże się
-więc przeciętnie z $42$ do $53$ sztukami sprzedanego produktu więcej.
-
-#### Przedział dla średniej i przedział predykcji
-
-Pytanie „jaka jest przeciętna sprzedaż na rynkach o budżecie $\x_0$?”
-dotyczy liczby $\fopt(\x_0) = \tilde\x_0^\top\bbeta$. Jej estymator
-$\tilde\x_0^\top\widehat{\bbeta}$ ma wariancję ([-@eq-wariancja-predykcji]),
-a przedział ufności buduje się tak samo jak ([-@eq-przedzial-ufnosci]),
-z $\mathrm{SE}^2 = \widehat\sigma^2\,\tilde\x_0^\top(\X^\top\X)^{-1}\tilde\x_0$.
-Pytanie „ile sprzeda się na **jednym** nowym rynku o budżecie $\x_0$?”
-dotyczy zmiennej losowej $Y_0 = \tilde\x_0^\top\bbeta + \varepsilon_0$.
-Błąd $\varepsilon_0$ nowej obserwacji jest niezależny od próby, więc
-$$
-\Var\big(Y_0 - \tilde\x_0^\top\widehat{\bbeta}\big)
-= \sigma^2 + \sigma^2\,\tilde\x_0^\top(\X^\top\X)^{-1}\tilde\x_0 .
-$$
-Jest to rozkład z rozdziału [-@sec-predyktory-optymalne] w małej skali:
-pierwszy składnik to błąd nieredukowalny, drugi -- redukowalny, który
-dla nieobciążonego estymatora składa się z samej wariancji. **Przedział
-predykcji** ma w miejscu $\mathrm{SE}^2$ sumę obu składników, z $\sigma^2$
-zastąpionym przez $\widehat\sigma^2$. Przy rosnącym $n$ przedział ufności
-dla średniej kurczy się do punktu, a przedział predykcji nie zejdzie
-poniżej $\pm 1{,}96\,\sigma$.
-
-```{python}
-model_tv_radio = sm.OLS(reklama["sales"], sm.add_constant(reklama[["TV", "radio"]])).fit()
-model_tv_radio.get_prediction(np.array([[1, 100, 20]])).summary_frame(alpha=0.05).round(2)
-```
-
-Dla rynku z budżetem telewizyjnym $100$ i radiowym $20$ tysięcy dolarów
-model z dwiema cechami przewiduje sprzedaż $11{,}26$ tysiąca sztuk.
-Przeciętna sprzedaż na takich rynkach leży z ufnością $95\%$ między
-$10{,}99$ a $11{,}53$ tysiąca (kolumny `mean_ci`), ale sprzedaż na
-konkretnym rynku -- między $7{,}93$ a $14{,}58$ tysiąca (kolumny
-`obs_ci`).
-
-### Test istnienia relacji
-
-Wróćmy do pierwszego pytania ze wstępu. Hipoteza $H_0\colon \beta_j = 0$
-mówi, że cecha $X_j$ nie wiąże się ze średnim wynikiem, gdy pozostałe
-cechy są ustalone. Przy tej hipotezie statystyka
-$t = \widehat\beta_j/\mathrm{SE}(\widehat\beta_j)$ ma rozkład $t$
-z $n - p - 1$ stopniami swobody. Jej wartość mówi, o ile błędów
-standardowych oszacowanie odbiega od zera. **$p$-wartość**
+Drugie pytanie ze wstępu dotyczy tego, które media przyczyniają się do
+sprzedaży. Dla medium $j$ sprawdzamy hipotezę $H_0\colon \beta_j = 0$:
+przy ustalonych pozostałych budżetach budżet na to medium nie wiąże się
+ze średnią sprzedażą. Przy $H_0$ statystyka ([-@eq-statystyka-t]) ma
+postać $t = \widehat\beta_j/\mathrm{SE}(\widehat\beta_j)$ i rozkład $t$
+z $n - p - 1$ stopniami swobody. **$p$-wartość**
 $$
 p = \Prob_{H_0}\big(|T| \ge |t_{\mathrm{obs}}|\big)
 $$
 to prawdopodobieństwo, że przy prawdziwej $H_0$ statystyka wypadłaby co
 najmniej tak daleko od zera jak w naszej próbie. Mała $p$-wartość oznacza,
-że dane byłyby przy $H_0$ zaskakujące, i jest podstawą do jej odrzucenia.
-Nie jest prawdopodobieństwem, że $H_0$ jest prawdziwa. Hipotezę odrzucamy
-na poziomie $\alpha$ wtedy i tylko wtedy, gdy przedział ufności
-([-@eq-przedzial-ufnosci]) nie zawiera zera.
+że tak odległe od zera oszacowanie byłoby przy $H_0$ rzadkie, i jest
+podstawą do odrzucenia $H_0$. Nie jest prawdopodobieństwem, że $H_0$ jest
+prawdziwa, i nie mierzy siły związku: przy dużym $n$ nawet mały
+niezerowy współczynnik daje zwykle małą $p$-wartość. Duża $p$-wartość
+nie dowodzi, że $\beta_j = 0$, a tylko, że dane są z tą wartością zgodne. Test na
+poziomie $\alpha$ odrzuca $H_0$ wtedy i tylko wtedy, gdy przedział
+ufności ([-@eq-przedzial-ufnosci]) na poziomie $1 - \alpha$ nie zawiera
+zera.
 
-```{python}
-model_pelny = sm.OLS(reklama["sales"], sm.add_constant(reklama[media])).fit()
-model_pelny.summary().tables[1]
-```
+W tabeli powyżej telewizja i radio mają statystyki $t \approx 33$
+i $22$, a $p$-wartości tak małe, że tabela zaokrągla je do zera. Prasa ma
+$t \approx -0{,}18$ i $p \approx 0{,}86$. Przy ustalonych pozostałych
+budżetach sprzedaż wiąże się więc z reklamą w telewizji i w radiu,
+a w danych nie ma śladu związku z reklamą w prasie. Przedział dla prasy,
+$[-0{,}013;\, 0{,}011]$, zawiera zero, ale też wartości około jednej
+czwartej współczynnika przy telewizji, więc słabego związku nie wyklucza.
 
-W modelu z trzema mediami współczynniki przy telewizji i radiu mają
-statystyki $t$ rzędu $30$ i $20$, a współczynnik przy prasie --
-$t \approx -0{,}18$ i $p \approx 0{,}86$. W regresji z samą prasą ten sam
-współczynnik ma $t \approx 3{,}3$ i $p \approx 0{,}001$. Nie ma tu
-sprzeczności, bo hipotezy są różne. Pierwsza mówi, że prasa nie wnosi
-nic, gdy znamy budżety telewizyjny i radiowy. Druga -- że sprzedaż nie
-zależy od budżetu prasowego w ogóle.
+W regresji z samą prasą ten sam współczynnik ma $t \approx 3{,}3$
+i $p \approx 0{,}001$. Nie ma tu sprzeczności, bo hipotezy są różne.
+Pierwsza mówi, że prasa nie wnosi nic, gdy znamy budżety telewizyjny
+i radiowy. Druga -- że sprzedaż nie zależy od budżetu prasowego w ogóle.
 
-#### Test $F$
+### Test $F$
 
-Gdy cech jest wiele, chcemy zapytać, czy **którakolwiek** z nich wiąże
-się z wynikiem: $H_0\colon \beta_1 = \dots = \beta_p = 0$. Nie możemy
-odpowiedzieć na to pytanie, wykonując $p$ testów $t$. Każdy z nich na
-poziomie $5\%$ myli się przy prawdziwej $H_0$ z prawdopodobieństwem
-$0{,}05$, więc przy $100$ cechach niemal na pewno któryś odrzuci hipotezę.
-Symulacja ze $100$ cechami niezależnymi od wyniku pokazuje to wprost:
+Pierwsze pytanie ze wstępu, czy wydatki na reklamę w ogóle wiążą się ze
+sprzedażą, dotyczy wszystkich cech naraz:
+$H_0\colon \beta_1 = \dots = \beta_p = 0$. Nie możemy na nie
+odpowiedzieć, wykonując $p$ testów $t$. Każdy z nich na poziomie $5\%$
+myli się przy prawdziwej $H_0$ z prawdopodobieństwem $0{,}05$, więc przy
+$100$ cechach niemal na pewno któryś odrzuci hipotezę. Symulacja ze $100$
+cechami niezależnymi od wyniku pokazuje to wprost:
 
 ```{python}
 rng = np.random.default_rng(4)
@@ -871,50 +817,54 @@ print(f"odsetek prób, w których test F odrzuca: {np.mean(f_odrzuca):.3f}")
 ```
 
 Przeciętnie około pięć cech wychodzi „istotnych”, a prawie w każdej
-próbie co najmniej jedna. Test $F$, który zaraz wyprowadzimy, odrzuca
-prawdziwą hipotezę w około $5\%$ prób, tak jak powinien.
+próbie co najmniej jedna. Jeden test hipotezy o wszystkich
+współczynnikach, opisany niżej, odrzuca ją w około $5\%$ prób, tak jak
+powinien.
 
-Wyprowadzimy go od razu w ogólniejszej postaci. Niech model $M_0$
-powstaje z modelu $M$ przez usunięcie $q$ cech, czyli przez hipotezę,
-że ich współczynniki są zerowe. Podprzestrzeń $\mathcal{C}(\X_0)$
-rozpięta na kolumnach macierzy $\X_0$ modelu $M_0$ jest zawarta
-w $\mathcal{C}(\X)$, więc
-$\mathrm{RSS}_0 \ge \mathrm{RSS}$. Pytamy, czy spadek
+Przy $H_0$ najlepszym modelem jest sama średnia $\bar y$ o sumie
+kwadratów reszt $\mathrm{TSS}$. Różnica $\mathrm{TSS} - \mathrm{RSS}$
+to z rozkładu zmienności ([-@eq-rozklad-tss]) suma $\mathrm{ESS}$,
+a statystyka testu
+$$
+F = \frac{\mathrm{ESS}/p}{\mathrm{RSS}/(n - p - 1)}
+= \frac{R^2/p}{(1 - R^2)/(n - p - 1)}
+$$
+porównuje **zmienność odtworzoną przez model na jeden stopień
+swobody** ze **zmiennością resztową na jeden stopień swobody**.
+Mianownik to $\widehat\sigma^2$. Przy $H_0$ oba modele, z samą średnią
+i z cechami, są trafne, więc z twierdzenia [-@thm-mnk-rss]
+$\E\,\mathrm{TSS} = \sigma^2(n - 1)$ i
+$\E\,\mathrm{RSS} = \sigma^2(n - p - 1)$. Licznik $\mathrm{ESS}/p$ ma
+wtedy, tak jak mianownik, średnią $\sigma^2$, a $F$ przyjmuje wartości
+bliskie $1$. Gdy $H_0$ jest fałszywa, do licznika dochodzi sygnał, więc
+duże wartości świadczą przeciw $H_0$. Przy (Z1)--(Z3) statystyka $F$ ma
+**rozkład $F$** z $p$ i $n - p - 1$ stopniami swobody, z którego liczy
+się $p$-wartość.
+
+$R^2$ mówi, jaką część zmienności w próbie odtworzył model. Test $F$
+sprawdza, czy poprawa względem przewidywania samą średnią jest większa,
+niż można oczekiwać od szumu przy założeniach (Z1)--(Z3). Przy ustalonym
+$R^2$ statystyka $F$ rośnie proporcjonalnie do $n - p - 1$, więc w dużej
+próbie nawet małe $R^2$ daje bardzo małą $p$-wartość.
+
+Dla modelu z trzema mediami $F \approx 570$, a $p$-wartość jest rzędu
+$10^{-96}$. Wydatki na reklamę wiążą się ze sprzedażą.
+
+Ten sam rachunek działa dla grupy $q$ cech, na przykład zmiennych
+kodujących jedną cechę jakościową (sekcja [-@sec-cechy-jakosciowe]).
+Model $M_0$ bez tych cech ma $\mathrm{RSS}_0 \ge \mathrm{RSS}$, bo klasy
+modeli są zagnieżdżone. Pytamy, czy spadek
 $\mathrm{RSS}_0 - \mathrm{RSS}$ jest większy, niż dałby sam szum.
-Wektor $\y - \widehat\y_0$ rozkłada się na
-$(\y - \widehat\y) + (\widehat\y - \widehat\y_0)$, przy czym pierwszy
-składnik jest prostopadły do $\mathcal{C}(\X)$, a drugi w niej leży.
-Z twierdzenia Pitagorasa
-$$
-\mathrm{RSS}_0 = \mathrm{RSS} + \|\widehat\y - \widehat\y_0\|^2 .
-$$
-Jeśli $H_0$ jest prawdziwa, to $\X\bbeta \in \mathcal{C}(\X_0)$, więc
-$\widehat\y - \widehat\y_0$ jest rzutem samego szumu
-$\boldsymbol\varepsilon$ na $q$-wymiarową podprzestrzeń: część
-$\mathcal{C}(\X)$ prostopadłą do $\mathcal{C}(\X_0)$. Rozumowanie ze
-szkicu dowodu twierdzenia [-@thm-mnk-rozklady], z bazą dopasowaną do
-trzech wzajemnie prostopadłych podprzestrzeni, daje
-$\|\widehat\y - \widehat\y_0\|^2/\sigma^2 \sim \chi^2_q$, niezależne od
-$\mathrm{RSS}$. Statystyka
+Statystyka
 $$
 F = \frac{(\mathrm{RSS}_0 - \mathrm{RSS})/q}{\mathrm{RSS}/(n - p - 1)}
 $$ {#eq-statystyka-f}
-jest więc przy $H_0$ ilorazem dwóch niezależnych zmiennych $\chi^2$
-podzielonych przez swoje stopnie swobody, czyli ma **rozkład $F$** z $q$
-i $n - p - 1$ stopniami swobody [@seber2003, rozdz. 4]. Licznik i mianownik
-mają czytelny sens. Mianownik to $\widehat\sigma^2$, nieobciążony
-estymator $\sigma^2$ niezależnie od $H_0$. Licznik przy $H_0$ również
-ma średnią $\sigma^2$, bo każdy z $q$ kierunków wnosi przeciętnie $\sigma^2$.
-Gdy $H_0$ jest fałszywa, licznik zawiera też składową sygnału. Przy $H_0$
-statystyka $F$ oscyluje więc wokół $1$, a duże wartości świadczą przeciw
-$H_0$.
-
-Hipoteza, że wszystkie współczynniki poza wyrazem wolnym są zerowe,
-odpowiada modelowi $M_0$ z samym wyrazem wolnym. Dopasowaniem jest wtedy
-średnia $\bar y$, więc $\mathrm{RSS}_0 = \mathrm{TSS} =
-\sum_i (y_i - \bar y)^2$, a $q = p$. Dla modelu z trzema mediami
-$F \approx 570$, a $p$-wartość jest rzędu $10^{-96}$. Wydatki na reklamę
-wiążą się ze sprzedażą.
+ma przy hipotezie, że ich współczynniki są zerowe, licznik o średniej
+$\sigma^2$, bo $\E\,\mathrm{RSS}_0 - \E\,\mathrm{RSS} = \sigma^2 q$.
+Przy (Z1)--(Z3) ma rozkład $F$ z $q$ i $n - p - 1$ stopniami swobody
+[@seber2003, rozdz. 4]; wyprowadzenie podaje rozszerzenie
+[-@sec-ols-wlasnosci-wnioskowanie]. Test wszystkich cech to przypadek
+$M_0$ z samym wyrazem wolnym, $\mathrm{RSS}_0 = \mathrm{TSS}$ i $q = p$.
 
 Dla $q = 1$ test $F$ i test $t$ sprawdzają tę samą hipotezę i są
 równoważne: $F = t^2$ (@exr-reklama-czastkowa). Sprawdźmy to dla prasy:
@@ -926,77 +876,43 @@ print(f"F = {F:.4f},  t^2 = {model_pelny.tvalues['newspaper'] ** 2:.4f},  "
       f"p = {stats.f.sf(F, 1, model_pelny.df_resid):.3f}")
 ```
 
-## Jakość dopasowania {#sec-jakosc-dopasowania}
+### Przedział dla średniej i przedział predykcji
 
-Test $F$ mówi, czy cechy niosą jakąkolwiek informację o wyniku, ale nie
-mówi, ile jej niosą. Dwie miary opisują to bezpośrednio.
-
-Pierwsza to $\widehat\sigma = \sqrt{\mathrm{RSS}/(n - p - 1)}$, nazywana
-w pakietach **resztowym błędem standardowym** (ang. *residual standard
-error*, RSE). Szacuje odchylenie standardowe błędu, czyli typową odległość
-wyniku od prostej regresji, w jednostkach $Y$. W regresji sprzedaży
-względem telewizji $\widehat\sigma \approx 3{,}26$ tysiąca sztuk przy
-średniej sprzedaży $14{,}0$ tysiąca, więc predykcja myli się typowo
-o mniej więcej jedną czwartą.
-
-Druga miara jest bezwymiarowa. Model zawiera wyraz wolny, więc wektor
-$\bar y\,\mathbf 1$ leży w $\mathcal{C}(\X)$, a wraz z nim
-$\widehat\y - \bar y\,\mathbf 1$. Reszty są do $\mathcal{C}(\X)$
-prostopadłe, zatem z twierdzenia Pitagorasa
+Trzecie pytanie ze wstępu, jak dokładnie przewidujemy sprzedaż przy
+zadanym budżecie, ma dwa znaczenia. Pytanie „jaka jest przeciętna
+sprzedaż na rynkach o budżecie $\x_0$?” dotyczy liczby
+$\fopt(\x_0) = \tilde\x_0^\top\bbeta$. Jej estymator
+$\tilde\x_0^\top\widehat{\bbeta}$ ma wariancję ([-@eq-wariancja-predykcji]),
+a przedział ufności buduje się tak samo jak ([-@eq-przedzial-ufnosci]),
+z $\mathrm{SE}^2 = \widehat\sigma^2\,\tilde\x_0^\top(\X^\top\X)^{-1}\tilde\x_0$.
+Pytanie „ile sprzeda się na **jednym** nowym rynku o budżecie $\x_0$?”
+dotyczy zmiennej losowej $Y_0 = \tilde\x_0^\top\bbeta + \varepsilon_0$.
+Błąd $\varepsilon_0$ nowej obserwacji jest niezależny od próby, więc
 $$
-\underbrace{\sum_{i=1}^n (y_i - \bar y)^2}_{\mathrm{TSS}}
-= \underbrace{\sum_{i=1}^n (\widehat y_i - \bar y)^2}_{\mathrm{ESS}}
-+ \underbrace{\sum_{i=1}^n (y_i - \widehat y_i)^2}_{\mathrm{RSS}} .
-$$ {#eq-rozklad-tss}
-Całkowita zmienność wyniku rozkłada się na część odtworzoną przez model
-i część resztową. **Współczynnik determinacji**
+\Var\big(Y_0 - \tilde\x_0^\top\widehat{\bbeta}\big)
+= \sigma^2 + \sigma^2\,\tilde\x_0^\top(\X^\top\X)^{-1}\tilde\x_0 .
 $$
-R^2 = 1 - \frac{\mathrm{RSS}}{\mathrm{TSS}} = \frac{\mathrm{ESS}}{\mathrm{TSS}}
-$$ {#eq-r2}
-to odsetek zmienności $y$ w próbie odtworzony przez model; leży
-w przedziale $[0, 1]$. Dla jednej cechy jest równy kwadratowi
-współczynnika korelacji z próby, $R^2 = r^2$
-(@exr-mnk-regresja-prosta).
+Jest to rozkład z rozdziału [-@sec-predyktory-optymalne] w małej skali:
+pierwszy składnik to błąd nieredukowalny, drugi -- redukowalny, który
+dla nieobciążonego estymatora składa się z samej wariancji. **Przedział
+predykcji** ma w miejscu $\mathrm{SE}^2$ sumę obu składników, z $\sigma^2$
+zastąpionym przez $\widehat\sigma^2$. Przy rosnącym $n$ przedział ufności
+dla średniej kurczy się do punktu, a przedział predykcji nie zejdzie
+poniżej $\pm 1{,}96\,\sigma$. Zależy on od rozkładu samego
+$\varepsilon_0$, więc przy błędach nienormalnych duże $n$ go nie naprawia.
 
 ```{python}
-modele = {"TV": ["TV"], "TV + radio": ["TV", "radio"], "TV + radio + newspaper": media}
-wiersze = {}
-for nazwa, cechy in modele.items():
-    wynik = sm.OLS(reklama["sales"], sm.add_constant(reklama[cechy])).fit()
-    wiersze[nazwa] = {"RSS": wynik.ssr, "R^2": wynik.rsquared,
-                      "skorygowany R^2": wynik.rsquared_adj,
-                      "RSE": np.sqrt(wynik.mse_resid)}
-pd.DataFrame(wiersze).T.round(4)
+model_bez_prasy.get_prediction(np.array([[1, 100, 20]])).summary_frame(alpha=0.05).round(2)
 ```
 
-Dodanie radia podnosi $R^2$ z $0{,}61$ do $0{,}90$ i zmniejsza
-$\widehat\sigma$ o połowę. Dodanie prasy zmienia $\mathrm{RSS}$ dopiero
-na trzecim miejscu znaczącym, a $\widehat\sigma$ nawet nieco rośnie, bo
-spadek licznika nie równoważy utraty stopnia swobody w mianowniku.
-
-$R^2$ nigdy nie maleje po dodaniu cechy. Z tego samego powodu co błąd
-uczący w sekcji [-@sec-blad-uczacy-ryzyko]: klasy modeli są zagnieżdżone,
-a minimum po większej klasie nie jest większe. Nie jest to przypadek,
-bo $1 - R^2 = (\mathrm{RSS}/n)/(\mathrm{TSS}/n)$ jest po prostu błędem
-uczącym podzielonym przez wariancję $y$ z próby. $R^2$ ma więc wszystkie
-wady błędu uczącego i nie nadaje się do wyboru modelu.
-**Skorygowany $R^2$**,
-$$
-R^2_{\mathrm{adj}} = 1 - \frac{\mathrm{RSS}/(n - p - 1)}{\mathrm{TSS}/(n - 1)},
-$$
-zastępuje oba ilorazy estymatorami nieobciążonymi i może zmaleć po
-dodaniu cechy, jak w ostatnim wierszu tabeli. Poprawka usuwa jednak
-tylko obciążenie $\widehat\sigma^2$ dla jednego, z góry ustalonego modelu.
-Gdy porównujemy wiele modeli i wybieramy najlepszy, pojawia się optymizm
-wyboru z sekcji [-@sec-selekcja-ocena], którego żadna poprawka
-stopni swobody nie usuwa.
-
-$R^2$ nie jest też własnością samej zależności. Dla jednej cechy
-$\E[\mathrm{ESS}]$ rośnie z rozrzutem $x_i$ przy tym samym $\beta_1$
-i tym samym $\sigma$ (@exr-mnk-regresja-prosta). Ten sam model z tym samym
-szumem da więc wysokie $R^2$ na próbie o szerokim zakresie cechy i niskie
-na próbie o wąskim. Do porównań między próbami lepiej nadaje się
-$\widehat\sigma$, wyrażone w jednostkach wyniku.
+Dla rynku z budżetem telewizyjnym $100$ i radiowym $20$ tysięcy dolarów
+model z dwiema cechami przewiduje sprzedaż $11{,}26$ tysiąca sztuk.
+Przeciętna sprzedaż na takich rynkach leży z ufnością $95\%$ między
+$10{,}99$ a $11{,}53$ tysiąca (kolumny `mean_ci`), ale sprzedaż na
+konkretnym rynku -- między $7{,}93$ a $14{,}58$ tysiąca (kolumny
+`obs_ci`). Średnią sprzedaż znamy więc z dokładnością około
+$\pm 0{,}3$ tysiąca sztuk, a sprzedaż na jednym rynku -- tylko około
+$\pm 3{,}3$ tysiąca.
 
 ## Cechy jakościowe {#sec-cechy-jakosciowe}
 
@@ -1037,12 +953,14 @@ normalne miałyby nieskończenie wiele rozwiązań
 wolnego do wszystkich zmiennych zero-jedynkowych naraz.
 
 Wybór poziomu odniesienia, a ogólniej sposób kodowania, zmienia
-współczynniki, ale nie zmienia dopasowania. Każde poprawne kodowanie daje
-kolumny, które razem z kolumną jedynek rozpinają tę samą przestrzeń:
-wektory stałe w obrębie grup. Ta sama przestrzeń $\mathcal{C}(\X)$
-oznacza tę samą macierz daszkową, te same predykcje, to samo
-$\mathrm{RSS}$ i to samo $R^2$. Zmieniają się tylko współrzędne
-$\widehat\y$ w bazie kolumn, czyli współczynniki.
+współczynniki, ale nie zmienia dopasowania. Przy każdym poprawnym
+kodowaniu model może nadać każdemu poziomowi cechy dowolną własną
+stałą, więc wszystkie kodowania opisują ten sam zbiór funkcji. Metoda
+najmniejszych kwadratów wybiera z niego tę samą funkcję o najmniejszym
+$\mathrm{RSS}$; w modelu z samą cechą jakościową jest to średnia wyniku
+w każdej grupie. Predykcje, $\mathrm{RSS}$ i $R^2$ są więc takie same,
+a różnią się tylko współczynniki, którymi tę funkcję zapisujemy
+(@exr-kodowanie-cech).
 
 ```{python}
 regiony = pd.get_dummies(kredyt["Region"], drop_first=True, dtype=float)  # odniesienie: East
@@ -1076,8 +994,8 @@ Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1 X_2 + \varepsilon
 $$ {#eq-interakcja}
 Nachylenie względem $X_1$ wynosi teraz $\beta_1 + \beta_3 X_2$ i zmienia
 się z $X_2$. Model pozostaje liniowy w parametrach, więc cała teoria
-z poprzednich sekcji stosuje się bez zmian; iloczyn $X_1 X_2$ jest po
-prostu jeszcze jedną kolumną $\X$.
+z poprzednich sekcji stosuje się bez zmian; iloczyn $X_1 X_2$ jest
+jeszcze jedną kolumną $\X$.
 
 ```{python}
 reklama_int = reklama.assign(TV_radio=reklama["TV"] * reklama["radio"])
@@ -1091,7 +1009,7 @@ w modelu addytywnym do $0{,}968$; $\widehat\sigma$ spada z $1{,}68$ do
 $0{,}94$. Tysiąc dolarów budżetu telewizyjnego wiąże się teraz
 z $19{,}1 + 1{,}09\cdot\mathtt{radio}$ sztukami więcej: przy zerowym
 budżecie radiowym z $19$ sztukami, przy budżecie radiowym $40$ tysięcy
-dolarów -- z $62$.
+dolarów -- z $63$.
 
 Przy interakcji zostawiamy w modelu oba efekty główne, nawet gdy ich
 testy $t$ nie są istotne. Bez $\beta_1 X_1$ model wymusza zerowe
@@ -1184,36 +1102,32 @@ logarytmy, interakcje -- jest jednak wyborem klasy modeli i podlega
 kompromisowi z rozdziału [-@sec-bias-wariancja]: każda dodana kolumna
 zmniejsza $\mathrm{RSS}$ na próbie i zwiększa wariancję. O tym, ile
 złożoności się opłaca, rozstrzyga walidacja z rozdziału
-[-@sec-ocena-modeli], a nie $R^2$.
+[-@sec-ocena-modeli].
 
 ## Diagnostyka modelu {#sec-diagnostyka}
 
 Wnioskowanie z sekcji [-@sec-wnioskowanie-mnk] opiera się na założeniach
 (Z1)--(Z3). Nie obserwujemy błędów $\varepsilon_i$, więc założenia
-sprawdzamy na resztach. Reszty nie są jednak kopiami błędów. Z dowodu
-twierdzenia [-@thm-mnk-rss] $\mathbf e = (\mathbf I - \mathbf H)
-\boldsymbol\varepsilon$, więc przy (Z1)--(Z2)
-$$
-\Cov\mathbf e = \sigma^2(\mathbf I - \mathbf H),
-\qquad
-\Var e_i = \sigma^2(1 - h_{ii}) .
-$$ {#eq-kowariancja-reszt}
-Reszty są skorelowane i mają różne wariancje, nawet gdy błędy są
-niezależne i jednakowe. Najmniejsze są reszty obserwacji o dużej
-dźwigni $h_{ii}$, bo dopasowanie przyciąga się do nich najmocniej.
-**Reszta standaryzowana** $r_i = e_i / (\widehat\sigma\sqrt{1 - h_{ii}})$
-usuwa tę nierówność. Gdy $n$ jest duże w porównaniu z $p$, dźwignie są
-małe, średnio $(p+1)/n$, i reszty zachowują się prawie jak błędy.
+sprawdzamy na resztach. Reszty nie są jednak kopiami błędów. Predykcja
+$\widehat y_i$ zawiera własny wynik $y_i$ z wagą $h_{ii}$
+([-@eq-dzwignia]) i przejmuje część błędu $\varepsilon_i$, więc przy
+(Z1)--(Z2) $\Var e_i = \sigma^2(1 - h_{ii})$ (rachunek w rozszerzeniu
+[-@sec-rachunek-diagnostyki]). Najmniejszą wariancję mają więc reszty
+obserwacji o dużej dźwigni. **Reszta
+standaryzowana** $r_i = e_i / (\widehat\sigma\sqrt{1 - h_{ii}})$ to
+reszta podzielona przez oszacowanie swojego odchylenia standardowego,
+więc reszty wszystkich obserwacji mają w niej tę samą skalę. Gdy $n$ jest
+duże w porównaniu z $p$, dźwignie są małe, średnio $(p+1)/n$
+([-@eq-suma-dzwigni]), i same reszty zachowują się prawie jak błędy.
 
 ### Brak liniowości
 
-Reszty są w próbie prostopadłe do $\mathcal{C}(\X)$, a więc
-nieskorelowane z predykcjami $\widehat y_i$. Jeśli model jest trafny,
-wykres reszt względem predykcji powinien być bezkształtnym pasem wokół
-zera. Struktura -- łuk, lejek -- świadczy, że średnia reszt zależy od
-$\widehat y$, czyli że $\E[\varepsilon \mid \X] \ne 0$ i założenie (Z1)
-nie jest spełnione. Rysujemy reszty względem predykcji, a nie względem
-każdej cechy, bo działa to dla dowolnej liczby cech.
+Reszty każdego modelu sumują się do zera i są w próbie nieskorelowane
+z predykcjami $\widehat y_i$ ([-@eq-reszty-prostopadle]). Na wykresie
+reszt względem predykcji szukamy więc kształtu, nie trendu: przy trafnym
+modelu punkty tworzą bezkształtny pas stałej szerokości wokół zera.
+Wykres względem predykcji, a nie względem każdej cechy, działa dla
+dowolnej liczby cech.
 
 ```{python}
 #| label: fig-auto-reszty
@@ -1236,99 +1150,103 @@ plt.show()
 
 W modelu liniowym reszty układają się w wyraźny łuk: dla małych
 i dużych predykcji są przeważnie dodatnie, dla średnich -- ujemne.
-Model systematycznie zawyża zasięg samochodów o średniej mocy i zaniża
-go na krańcach. Po dodaniu kwadratu mocy łuk prawie znika. Widać
-natomiast, że rozrzut reszt rośnie z predykcją, czym zajmiemy się przy
-heteroskedastyczności.
+Łuk oznacza, że średnia reszt zależy od $\widehat y$: funkcja regresji
+nie jest liniowa w użytych cechach, więc założenie (Z1) nie jest
+spełnione. Skutkiem są systematyczne błędy predykcji. Model zawyża
+zasięg samochodów o średniej mocy i zaniża go na krańcach, a jedno
+nachylenie uśrednia zależność, która przy małej mocy jest stroma, a przy
+dużej łagodna. Pomagają przekształcenia cech lub interakcje z sekcji
+[-@sec-interakcje-nieliniowosc]: po dodaniu kwadratu mocy łuk prawie
+znika.
+
+Na prawym wykresie widać inną strukturę, lejek: wygładzenie leży blisko
+zera, więc postać średniej jest trafna, ale rozrzut reszt rośnie
+z predykcją. Lejek świadczy, że wariancja błędów nie jest stała, czyli
+podważa założenie (Z2). Jego skutki omawia podsekcja
+o heteroskedastyczności.
 
 ### Skorelowane błędy
 
-Założenie (Z2) wymaga, by błędy były nieskorelowane. Typowo nie są, gdy
-obserwacje są uporządkowane w czasie -- błąd w jednym miesiącu jest
+Założenie (Z2) wymaga też, by błędy były nieskorelowane. Typowo nie są,
+gdy obserwacje są uporządkowane w czasie -- błąd w jednym miesiącu jest
 podobny do błędu w poprzednim -- albo zgrupowane, jak pomiary tego
-samego pacjenta czy uczniowie tej samej klasy. Dodatnio skorelowane
-obserwacje częściowo powtarzają tę samą informację, więc próba jest
-efektywnie mniejsza, niż wskazuje $n$.
-
-Dowód nieobciążoności w twierdzeniu [-@thm-mnk-momenty] korzystał tylko
-z (Z1), więc $\widehat{\bbeta}$ pozostaje nieobciążony. Ten sam rachunek
-daje jednak w ogólności
-$$
-\Cov\widehat{\bbeta} = \mathbf A\boldsymbol\Sigma\mathbf A^\top
-= (\X^\top\X)^{-1}\X^\top\boldsymbol\Sigma\X(\X^\top\X)^{-1},
-\qquad \boldsymbol\Sigma = \Cov\boldsymbol\varepsilon ,
-$$ {#eq-kanapka}
-i tylko przy $\boldsymbol\Sigma = \sigma^2\mathbf I$ upraszcza się do
-$\sigma^2(\X^\top\X)^{-1}$. Klasyczne błędy standardowe szacują
-niewłaściwą wielkość. Sprawdźmy to na symulacji: $n = 100$ kolejnych
-pomiarów w czasie $t_i = i/n$, prosta $y_i = 1 + 2t_i + \varepsilon_i$
-i błędy autoregresyjne $\varepsilon_i = 0{,}8\,\varepsilon_{i-1} + z_i$,
-gdzie $z_i$ są niezależne i standardowe normalne.
+samego pacjenta czy uczniowie tej samej klasy. Wykres reszt względem
+predykcji tego nie pokazuje; reszty trzeba narysować w kolejności czasu
+albo w podziale na grupy, jak na rysunku [-@fig-reszty-czas].
 
 ```{python}
-rng = np.random.default_rng(6)
-n_ar, rho, powt_ar = 100, 0.8, 4000
-t_ar = np.arange(n_ar) / n_ar
-X_ar = sm.add_constant(t_ar)
-bledy = np.empty((powt_ar, n_ar))
-bledy[:, 0] = rng.normal(size=powt_ar) / np.sqrt(1 - rho ** 2)  # rozkład stacjonarny
-for i in range(1, n_ar):
-    bledy[:, i] = rho * bledy[:, i - 1] + rng.normal(size=powt_ar)
-Y_ar = 1 + 2 * t_ar + bledy
+#| label: fig-reszty-czas
+#| fig-cap: "Reszty regresji prostej $y_i = 1 + 2t_i + \\varepsilon_i$ dla $n = 100$ pomiarów w chwilach $t_i = i/n$, w kolejności czasu. Po lewej: błędy niezależne; po prawej: błędy autoregresyjne $\\varepsilon_i = 0{,}8\\,\\varepsilon_{i-1} + z_i$ z niezależnymi, standardowymi normalnymi $z_i$, o tej samej wariancji co po lewej."
 
-B_ar = np.linalg.lstsq(X_ar, Y_ar.T, rcond=None)[0].T
-reszty_ar = Y_ar - B_ar @ X_ar.T
-s2_ar = (reszty_ar ** 2).sum(axis=1) / (n_ar - 2)
-se_ar = np.sqrt(s2_ar * np.linalg.inv(X_ar.T @ X_ar)[1, 1])
-pokrycie_ar = np.abs(B_ar[:, 1] - 2) <= stats.t.ppf(0.975, n_ar - 2) * se_ar
+rng = np.random.default_rng(8)
+n_czas, rho_czas = 100, 0.8
+t_czas = np.arange(n_czas) / n_czas
+sd_czas = 1 / np.sqrt(1 - rho_czas ** 2)  # wariancja stacjonarna błędów AR
+bledy_ar = np.empty(n_czas)
+bledy_ar[0] = rng.normal(0, sd_czas)
+for i in range(1, n_czas):
+    bledy_ar[i] = rho_czas * bledy_ar[i - 1] + rng.normal()
+bledy_niez = rng.normal(0, sd_czas, n_czas)
 
-print(f"średnia nachylenia:              {B_ar[:, 1].mean():.3f}")
-print(f"odchylenie std. nachylenia:      {B_ar[:, 1].std():.3f}")
-print(f"średni klasyczny błąd std.:      {se_ar.mean():.3f}")
-print(f"pokrycie przedziału 95%:         {pokrycie_ar.mean():.3f}")
+fig, osie = plt.subplots(1, 2, figsize=(11, 3.4), sharey=True)
+for ax, bledy, tytul in zip(osie, [bledy_niez, bledy_ar],
+                            ["błędy niezależne", r"błędy autoregresyjne, $\rho = 0{,}8$"]):
+    y_czas = 1 + 2 * t_czas + bledy
+    reszty = sm.OLS(y_czas, sm.add_constant(t_czas)).fit().resid
+    ax.plot(t_czas, reszty, color="#1B6CA8", lw=0.8, marker="o", ms=3)
+    ax.axhline(0, color="black", lw=0.8)
+    ax.set_title(tytul)
+    ax.set_xlabel("czas $t$")
+osie[0].set_ylabel("reszta $e$")
+plt.tight_layout()
+plt.show()
 ```
 
-Nachylenie jest szacowane bez obciążenia, ale jego rzeczywiste odchylenie
-standardowe jest około trzy razy większe od błędu standardowego podawanego
-przez klasyczny wzór, a przedział „$95\%$” pokrywa prawdziwą wartość
-w mniej niż połowie prób. Rachunek dla średniej z próby
-(@exr-skorelowane-bledy) wyjaśnia ten czynnik: przy $\rho = 0{,}8$ sto
-obserwacji niesie tyle informacji co około jedenaście niezależnych.
-Skorelowanie widać na wykresie reszt w kolejności czasu, gdzie sąsiednie
-reszty mają podobne wartości. Rozwiązaniem jest modelowanie zależności
-albo błędy standardowe szacowane ze wzoru ([-@eq-kanapka]) z estymatorem
-$\boldsymbol\Sigma$ dopuszczającym korelację sąsiednich obserwacji
-w czasie lub obserwacji w tej samej grupie.
+Przy dodatnio skorelowanych błędach sąsiednie reszty mają podobne
+wartości i tworzą długie serie powyżej i poniżej zera.
+
+Estymator $\widehat{\bbeta}$ pozostaje nieobciążony, bo nieobciążoność
+wymaga tylko (Z1). Wzór $\sigma^2(\X^\top\X)^{-1}$ na jego macierz
+kowariancji wymaga jednak (Z2).
+Dodatnio skorelowane obserwacje częściowo powtarzają tę samą informację,
+więc klasyczne błędy standardowe, liczone jak dla obserwacji
+niezależnych, są za małe, przedziały ufności za wąskie, a $p$-wartości
+za małe. Skalę pokazuje rachunek dla średniej z próby
+(@exr-skorelowane-bledy): gdy korelacja sąsiednich błędów wynosi
+$\rho = 0{,}8$, jak na rysunku [-@fig-reszty-czas], sto obserwacji
+niesie tyle informacji co około jedenaście niezależnych, a klasyczny
+błąd standardowy jest około trzy razy za mały. Dla nachylenia prostej
+symulacja w rozszerzeniu [-@sec-rachunek-diagnostyki] daje ten sam
+czynnik.
+
+Zależność można opisać w modelu (szeregi czasowe, efekty grup) albo
+zostać przy OLS i użyć błędów standardowych dopuszczających korelację
+w czasie lub w obrębie grupy, w `statsmodels` przez `cov_type="HAC"`
+lub `cov_type="cluster"` w metodzie `fit`.
 
 ### Heteroskedastyczność
 
 Założenie (Z2) wymaga też jednakowej wariancji błędów
-(**homoskedastyczności**). W danych *Advertising* wariancja rośnie
-z budżetem telewizyjnym (rysunek [-@fig-reklama-tv]), a w danych *Auto* --
-z predykcją (rysunek [-@fig-auto-reszty]). Taką sytuację nazywamy
-**heteroskedastycznością**. Skutki są te same co przy skorelowanych
-błędach: $\widehat{\bbeta}$ jest nieobciążony, ale klasyczne błędy
-standardowe są niepoprawne, a OLS przestaje być najlepszym liniowym
-estymatorem nieobciążonym.
+(**homoskedastyczności**). Jej brak, widoczny jako lejek na wykresie
+reszt, nazywamy **heteroskedastycznością**. W danych *Advertising* wariancja rośnie
+z budżetem telewizyjnym (rysunek [-@fig-reklama-tv]), a w danych
+*Auto* -- z predykcją (rysunek [-@fig-auto-reszty]). Skutki są takie
+jak przy skorelowanych błędach: $\widehat{\bbeta}$ pozostaje
+nieobciążony, klasyczne błędy standardowe są niepoprawne, a OLS
+przestaje być najlepszym liniowym estymatorem nieobciążonym.
 
-Przy niezależnych błędach o wariancjach $\sigma_i^2$ macierz
-$\boldsymbol\Sigma$ jest diagonalna, a środek wzoru ([-@eq-kanapka]) ma
-postać $\sum_i \sigma_i^2\, \tilde\x_i\tilde\x_i^\top$. Nie znamy
-$\sigma_i^2$, ale nie musimy ich znać osobno. Środkowa macierz jest sumą
-$n$ składników wymiaru $(p+1) \times (p+1)$, a sumy uśredniają.
-@white1980 pokazał, że zastąpienie $\sigma_i^2$ przez $e_i^2$ daje
-zgodny estymator $\Cov\widehat{\bbeta}$, choć każde $e_i^2$ osobno jest
-bardzo złym oszacowaniem $\sigma_i^2$. Tak powstają **odporne błędy
-standardowe** (ang. *heteroskedasticity-consistent*, HC), nazywane od
-kształtu wzoru ([-@eq-kanapka]) estymatorem kanapkowym. Reszty są
-systematycznie mniejsze od błędów, zwłaszcza przy dużej dźwigni
-([-@eq-kowariancja-reszt]), więc w małych próbach lepiej działa wariant
-HC3, w którym $e_i^2$ zastępuje się przez $e_i^2/(1 - h_{ii})^2$, czyli
-kwadrat reszty „pozostaw jeden” z zadania [-@exr-loocv-mnk]
-[@mackinnon1985]. W `statsmodels` wystarczy wywołać
-`fit(cov_type="HC3")`.
+Najprościej zostać przy OLS i zmienić błędy standardowe. **Odporne błędy
+standardowe** (ang. *heteroskedasticity-consistent*, HC) [@white1980]
+zastępują wspólne $\widehat\sigma^2$ kwadratami reszt poszczególnych
+obserwacji. Pojedyncze $e_i^2$ źle szacuje wariancję $i$-tego błędu,
+ale wariancja $\widehat\beta_j$ zależy od sumy $n$ takich składników,
+w której ich przypadkowe odchylenia się uśredniają. Wariant HC3
+[@mackinnon1985], lepszy w małych próbach, powiększa kwadraty reszt
+obserwacji o dużej dźwigni, bo ich reszty mają najmniejszą wariancję.
+W `statsmodels` wystarczy wywołać `fit(cov_type="HC3")`; wzory podaje
+rozszerzenie [-@sec-rachunek-diagnostyki].
 
-Symulacja pokazuje, kiedy różnica jest istotna. Niech cecha ma rozkład
+Sprawdźmy oba rodzaje przedziałów na symulacji. Niech cecha ma rozkład
 jednostajny na $[-5, 5]$, $y_i = 1 + 0{,}5\,x_i + \varepsilon_i$,
 a odchylenie standardowe błędu wynosi $0{,}2\,x_i^2$, czyli rośnie ku
 krańcom przedziału.
@@ -1350,75 +1268,69 @@ for n_het in [30, 100, 1000]:
           f"  HC3 {pokrycie['HC3'] / powt_het:.3f}")
 ```
 
-Klasyczny przedział pokrywa nachylenie w około $80\%$ prób i nie poprawia
-się z rosnącym $n$, bo jego błąd nie jest losowy, lecz systematyczny.
-Przedział z błędem HC3 trzyma poziom bliski $95\%$. Klasyczny wzór
-zawodzi tu szczególnie, bo wariancja jest największa tam, gdzie dźwignia:
-nachylenie wyznaczają głównie punkty skrajne, a te są najbardziej
-zaszumione. Gdyby wariancja zmieniała się niezależnie od położenia
-punktów, klasyczne błędy standardowe byłyby prawie poprawne.
+Klasyczny przedział pokrywa nachylenie w około $80\%$ prób i nie
+zbliża się do $95\%$ przy rosnącym $n$, bo klasyczny wzór szacuje inną
+wielkość niż rzeczywista wariancja nachylenia. Przedział z błędem HC3
+trzyma poziom bliski $95\%$. Różnica jest tu duża, bo wariancja błędu
+jest największa w punktach skrajnych, które najmocniej wyznaczają
+nachylenie.
 
-W danych *Advertising* odporne błędy standardowe nie zmieniają wniosków,
-ale zmieniają szerokość przedziałów. W modelu z telewizją i radiem błąd
-standardowy współczynnika przy telewizji rośnie z $0{,}00139$ do
-$0{,}00195$, a przy radiu z $0{,}0080$ do $0{,}0102$.
+Porównajmy oba rodzaje błędów standardowych w modelu z telewizją i radiem
+dla danych *Advertising*.
 
-Gdy wariancje $\sigma_i^2$ są znane z dokładnością do stałej, można
-zrobić więcej: minimalizować ważoną sumę kwadratów
-$\sum_i (y_i - \tilde\x_i^\top\bbeta)^2/\sigma_i^2$. Jest to OLS dla
-danych podzielonych przez $\sigma_i$, które spełniają (Z2), więc z
-twierdzenia Gaussa--Markowa **ważona metoda najmniejszych kwadratów**
-(ang. *weighted least squares*, WLS) jest najlepszym liniowym estymatorem
-nieobciążonym. W praktyce wag zwykle nie znamy. Gdy rozrzut
-rośnie proporcjonalnie do poziomu wyniku, często pomaga modelowanie
-$\log Y$ zamiast $Y$ (@exr-logarytm-wyniku).
+```{python}
+model_hc3 = sm.OLS(reklama["sales"], sm.add_constant(reklama[["TV", "radio"]])).fit(cov_type="HC3")
+pd.DataFrame({"klasyczny": model_bez_prasy.bse, "HC3": model_hc3.bse}).round(5)
+```
+
+Odporny błąd standardowy przy telewizji wynosi $0{,}00195$ zamiast
+$0{,}00139$, a przy radiu $0{,}0102$ zamiast $0{,}0080$. Przedziały są
+szersze, ale wnioski o obu mediach się nie zmieniają.
+
+Zamiast poprawiać błędy standardowe, można zmienić model. Gdy rozrzut
+rośnie z poziomem wyniku, jak w danych *Auto*, często pomaga
+modelowanie $\log Y$ zamiast $Y$ (@exr-logarytm-wyniku). Gdy wariancje
+błędów są znane z dokładnością do stałej, obserwacje można ważyć.
+
+::: {.callout-note collapse="true"}
+## Ważona metoda najmniejszych kwadratów
+Wymagane jest twierdzenie Gaussa--Markowa w postaci podanej w sekcji
+[-@sec-wlasnosci-mnk].
+
+Niech wariancje błędów wynoszą $\sigma_i^2 = \sigma^2 w_i$ ze znanymi
+liczbami $w_i > 0$. Po podzieleniu $y_i$ i całego wiersza
+$\tilde\x_i^\top$ przez $\sqrt{w_i}$ błędy $\varepsilon_i/\sqrt{w_i}$
+mają jednakową wariancję $\sigma^2$, więc nowe dane spełniają (Z2).
+OLS dla nich minimalizuje ważoną sumę kwadratów
+$$
+\sum_{i=1}^n \frac{(y_i - \tilde\x_i^\top\bbeta)^2}{w_i}
+$$
+i z twierdzenia Gaussa--Markowa jest najlepszym liniowym estymatorem
+nieobciążonym. Tę metodę nazywamy **ważoną metodą najmniejszych
+kwadratów** (ang. *weighted least squares*, WLS). Obserwacje o dużej
+wariancji dostają w niej małą wagę; przypadek średniej z próby
+rozważa punkt d) zadania [-@exr-gauss-markow-srednia]. W praktyce wagi
+trzeba zwykle oszacować, na przykład z zależności kwadratów reszt od
+predykcji. W `statsmodels` służy do tego klasa `WLS` z argumentem
+`weights` równym $1/w_i$.
+:::
 
 ### Obserwacje odstające i wpływowe
 
 Pojedyncza obserwacja może być nietypowa na dwa sposoby. **Obserwacja
 odstająca** ma nietypowy wynik: leży daleko od dopasowania, czyli ma dużą
 resztę. **Obserwacja o dużej dźwigni** ma nietypowe cechy: leży daleko od
-pozostałych w przestrzeni cech. Dźwignie sumują się do $p + 1$, więc
-średnio wynoszą $(p+1)/n$. Dla jednej cechy
+pozostałych w przestrzeni cech. Dla jednej cechy
 $h_{ii} = 1/n + (x_i - \bar x)^2/\sum_k (x_k - \bar x)^2$
-(@exr-macierz-daszkowa) rośnie z odległością od średniej. Za dużą zwykle
-uznaje się dźwignię przekraczającą dwukrotność średniej [@belsley1980].
-
-Do wykrywania obserwacji odstających reszta standaryzowana ma wadę:
-odstająca obserwacja zawyża $\widehat\sigma$ i tym samym zaniża własną
-resztę standaryzowaną. **Reszta studentyzowana**
-$$
-t_i = \frac{e_i}{\widehat\sigma_{(-i)}\sqrt{1 - h_{ii}}}
-$$ {#eq-reszta-studentyzowana}
-używa oszacowania $\widehat\sigma_{(-i)}$ z dopasowania bez obserwacji
-$i$. Jest to reszta „pozostaw jeden” podzielona przez oszacowanie
-jej odchylenia standardowego (@exr-reszty-studentyzowane), a przy
-(Z1)--(Z3) ma rozkład $t$ z $n - p - 2$ stopniami swobody. Wartości
-$|t_i| > 3$ są podejrzane. Przy wielu obserwacjach kilka wartości
-powyżej $2$ jest jednak normalne, z tego samego powodu co kilka
-„istotnych” cech-szumów w sekcji [-@sec-wnioskowanie-mnk].
-
-Obserwacja jest **wpływowa**, jeśli jej usunięcie wyraźnie zmienia
-dopasowanie. Mierzy to **odległość Cooka** [@cook1977]
-$$
-D_i = \frac{\|\X(\widehat{\bbeta} - \widehat{\bbeta}^{(-i)})\|^2}
-{(p+1)\,\widehat\sigma^2}
-= \frac{e_i^2}{(p+1)\,\widehat\sigma^2}\cdot\frac{h_{ii}}{(1 - h_{ii})^2} .
-$$ {#eq-odleglosc-cooka}
-Licznik to zmiana wektora predykcji po usunięciu obserwacji $i$. Druga
-postać wynika ze wzoru na $\widehat{\bbeta} - \widehat{\bbeta}^{(-i)}$
-z zadania [-@exr-loocv-mnk], bo
-$\|\X(\X^\top\X)^{-1}\tilde\x_i\|^2 = \tilde\x_i^\top(\X^\top\X)^{-1}\tilde\x_i
-= h_{ii}$ (@exr-odleglosc-cooka). Wpływ jest więc iloczynem dwóch
-czynników: wielkości reszty i dźwigni. Obserwacja odstająca o małej
-dźwigni przesuwa prostą niewiele. Obserwacja o dużej dźwigni leżąca na
-prostej też nie, a nawet zmniejsza błędy standardowe, bo poszerza zakres
-cechy. Groźna jest obserwacja, która ma dużą dźwignię i nie pasuje do
-pozostałych.
+(@exr-macierz-daszkowa), więc dźwignia rośnie z odległością od średniej.
+Średnia dźwignia wynosi $(p+1)/n$ ([-@eq-suma-dzwigni]); według częstej
+reguły kciuka za dużą uznaje się dźwignię przekraczającą dwukrotność
+średniej [@belsley1980]. Obserwacja jest **wpływowa**, jeśli jej usunięcie
+wyraźnie zmienia dopasowanie (rysunek [-@fig-wplywowe]).
 
 ```{python}
 #| label: fig-wplywowe
-#| fig-cap: "Trzy rodzaje nietypowych obserwacji, dodanych (czerwony punkt) do 30 obserwacji z modelu $y = 1 + 0{,}5\\,x + \\varepsilon$. Linia ciągła: prosta OLS ze wszystkimi obserwacjami; przerywana: bez czerwonego punktu. W tytułach: dźwignia $h$, reszta studentyzowana $t$ i odległość Cooka $D$ dodanego punktu."
+#| fig-cap: "Trzy rodzaje nietypowych obserwacji, dodanych (czerwony punkt) do 30 obserwacji z modelu $y = 1 + 0{,}5\\,x + \\varepsilon$. Linia ciągła: prosta OLS ze wszystkimi obserwacjami; przerywana: bez czerwonego punktu. W tytułach: dźwignia $h$, reszta standaryzowana $r$, reszta studentyzowana $t$ i odległość Cooka $D$ dodanego punktu."
 
 rng = np.random.default_rng(7)
 x_baza = rng.uniform(0, 10, 30)
@@ -1434,6 +1346,7 @@ for ax, (opis, x_nowy, y_nowy) in zip(osie, przypadki):
     wynik = sm.OLS(y_all, sm.add_constant(x_all)).fit()
     wplyw = wynik.get_influence()
     h = wplyw.hat_matrix_diag[-1]
+    r_std = wplyw.resid_studentized_internal[-1]
     t_stud = wplyw.resid_studentized_external[-1]
     d_cook = wplyw.cooks_distance[0][-1]
     b_bez = np.polyfit(x_baza, y_baza, 1)
@@ -1441,51 +1354,56 @@ for ax, (opis, x_nowy, y_nowy) in zip(osie, przypadki):
     ax.scatter([x_nowy], [y_nowy], s=40, color="#D7263D", zorder=3)
     ax.plot(siatka, wynik.params[0] + wynik.params[1] * siatka, color="#D7263D", lw=2)
     ax.plot(siatka, np.polyval(b_bez, siatka), color="0.3", ls="--", lw=1.5)
-    ax.set_title(f"{opis}\n$h = {h:.2f}$, $t = {t_stud:.1f}$, $D = {d_cook:.2f}$",
-                 fontsize=10)
+    ax.set_title(f"{opis}\n$h = {h:.2f}$, $r = {r_std:.1f}$, $t = {t_stud:.1f}$,"
+                 f" $D = {d_cook:.2f}$", fontsize=10)
     ax.set_xlabel("$x$")
 osie[0].set_ylabel("$y$")
 plt.tight_layout()
 plt.show()
 ```
 
-Rysunek [-@fig-wplywowe] pokazuje trzy przypadki. W pierwszym punkt ma
-dużą resztę studentyzowaną, ale leży blisko średniej $x$, więc prosta
-przesuwa się tylko nieznacznie w górę. W drugim punkt ma dużą dźwignię,
-ale zgadza się z resztą danych i prawie nic nie zmienia. W trzecim duża
-dźwignia i niedopasowanie razem przechylają prostą, a odległość Cooka
-jest wielokrotnie większa niż w dwóch pozostałych przypadkach.
+W pierwszym panelu punkt leży daleko nad prostą, ale blisko średniej $x$,
+więc podnosi prostą tylko nieznacznie. W drugim punkt ma dużą dźwignię,
+ale zgadza się z pozostałymi danymi i prawie nic nie zmienia.
+W trzecim duża dźwignia i niedopasowanie razem przechylają prostą, więc
+jedna z $31$ obserwacji zmienia nachylenie, a z nim predykcje i wnioski
+o zależności.
 
-Wykrytej obserwacji nie należy automatycznie usuwać. Najpierw trzeba
-ustalić, skąd się wzięła. Błąd zapisu poprawiamy lub usuwamy.
-Prawdziwa, ale nietypowa obserwacja może świadczyć, że model nie
-obowiązuje w całym zakresie cech, na przykład że zależność zakrzywia
-się na krańcach. Wtedy uczciwie jest pokazać wyniki z tą obserwacją
-i bez niej albo zawęzić zakres, dla którego formułujemy wnioski.
+Obserwacje odstające rozpoznajemy po dużych resztach standaryzowanych.
+Odstająca obserwacja zawyża jednak $\widehat\sigma$, a tym samym zaniża
+własną resztę standaryzowaną. **Reszta studentyzowana** $t_i$ różni się
+od standaryzowanej tylko tym, że $\sigma$ szacuje się w niej
+z dopasowania bez obserwacji $i$; w pierwszym panelu reszta standaryzowana wynosi $4{,}4$,
+a studentyzowana $7{,}6$. Przy (Z1)--(Z3) $t_i$ ma rozkład $t$
+z $n - p - 2$ stopniami swobody (rozszerzenie
+[-@sec-rachunek-diagnostyki]), więc wartości $|t_i| > 3$ są podejrzane.
+Przy wielu obserwacjach kilka wartości powyżej $2$ jest jednak normalne,
+jak kilka „istotnych” cech-szumów w sekcji [-@sec-wnioskowanie-mnk].
+
+Wpływ obserwacji mierzy **odległość Cooka** $D_i$ [@cook1977]: suma
+kwadratów zmian predykcji $\widehat y_1, \dots, \widehat y_n$ po
+usunięciu obserwacji $i$, podzielona przez $(p+1)\,\widehat\sigma^2$.
+Nie trzeba jej liczyć z $n$ dopasowań, bo
+$$
+D_i = \frac{r_i^2}{p+1}\cdot\frac{h_{ii}}{1 - h_{ii}}
+$$
+(wyprowadzenie w rozszerzeniu [-@sec-rachunek-diagnostyki]). Pierwszy
+czynnik rośnie z resztą, drugi z dźwignią, więc duży wpływ wymaga obu
+naraz. Na rysunku [-@fig-wplywowe] sama duża reszta albo sama duża
+dźwignia dają $D$ około $0{,}3$ i $0{,}2$, a ich połączenie -- $D \approx 9$.
+Według reguły kciuka uwagi wymagają obserwacje z $D_i$ bliskim $1$ lub
+większym oraz te, których $D_i$ wyraźnie odstaje od pozostałych.
+
+Wykrytej obserwacji nie należy automatycznie usuwać, tylko ustalić,
+skąd się wzięła. Błąd zapisu poprawiamy lub usuwamy. Prawdziwa, ale
+nietypowa obserwacja może świadczyć, że model nie obowiązuje w całym
+zakresie cech, na przykład że zależność zakrzywia się na krańcach. Wtedy
+pokazujemy wyniki z tą obserwacją i bez niej albo zawężamy zakres
+wniosków.
 
 ### Współliniowość
 
-W zadaniu [-@exr-reklama-czastkowa] wyprowadzamy wzór
-$\Var\widehat\beta_j = \sigma^2/\|\mathbf r_j\|^2$, gdzie $\mathbf r_j$ to
-reszty z regresji cechy $j$ względem pozostałych cech. Jeśli $R_j^2$
-oznacza współczynnik determinacji tej regresji, to z rozkładu
-([-@eq-rozklad-tss]) $\|\mathbf r_j\|^2 = (1 - R_j^2)
-\sum_i (x_{ij} - \bar x_j)^2$, a więc
-$$
-\Var\widehat\beta_j
-= \frac{\sigma^2}{\sum_{i=1}^n (x_{ij} - \bar x_j)^2}
-\cdot \frac{1}{1 - R_j^2} .
-$$ {#eq-vif}
-Pierwszy czynnik to wariancja, jaką $\widehat\beta_j$ miałby w regresji
-prostej, czyli gdyby pozostałe cechy były nieskorelowane z cechą $j$.
-Drugi, $\mathrm{VIF}_j = 1/(1 - R_j^2)$, nazywa się **czynnikiem inflacji
-wariancji** (ang. *variance inflation factor*). Mówi, ile razy wariancja
-rośnie dlatego, że cechę $j$ da się przewidzieć z pozostałych. Do
-oszacowania $\beta_j$ służy tylko ta część cechy, której pozostałe cechy
-nie wyjaśniają. Gdy $R_j^2$ zbliża się do $1$, tej części prawie nie ma,
-a $\mathrm{VIF}_j$ rośnie nieograniczenie. Silną zależność liniową między
-cechami nazywamy **współliniowością**.
-
+Silną zależność liniową między cechami nazywamy **współliniowością**.
 W danych *Credit* limit kredytowy i ocena kredytowa mają korelację
 $0{,}997$: ocena jest w praktyce liniową funkcją limitu. Porównajmy dwa
 modele salda: z limitem i wiekiem oraz z limitem i oceną.
@@ -1537,23 +1455,36 @@ plt.tight_layout()
 plt.show()
 ```
 
-Przy limicie i wieku poziomice są małymi elipsami: każda zmiana
-któregokolwiek współczynnika szybko zwiększa $\mathrm{RSS}$, więc oba są
-dobrze wyznaczone. Przy limicie i ocenie poziomice tworzą długą, wąską
-dolinę. Wzdłuż niej zwiększenie współczynnika przy limicie
-i odpowiednie zmniejszenie współczynnika przy ocenie prawie nie zmienia
-predykcji, bo obie cechy są niemal proporcjonalne. Dane wyznaczają
-dokładnie pewną kombinację obu współczynników, ale nie każdy z nich
-z osobna.
+Przy limicie i wieku poziomice są małymi elipsami, więc oba
+współczynniki są dobrze wyznaczone. Przy limicie i ocenie tworzą długą,
+wąską dolinę: zwiększenie współczynnika przy limicie i odpowiednie
+zmniejszenie współczynnika przy ocenie prawie nie zmienia predykcji, bo
+obie cechy są niemal proporcjonalne. Dane wyznaczają dokładnie pewną
+kombinację obu współczynników, ale nie każdy z nich z osobna.
 
-Współliniowość szkodzi więc interpretacji współczynników, a nie
-predykcji: w obu modelach predykcje dla klientów podobnych do tych
+Współliniowość utrudnia więc interpretację współczynników, ale nie
+psuje predykcji: w obu modelach predykcje dla klientów podobnych do tych
 z próby są prawie takie same. To sytuacja z sekcji
 [-@sec-predykcja-wnioskowanie], w której metraż i liczba pokoi
 pozwalają dobrze przewidywać cenę, ale nie pozwalają rozdzielić ich
-wpływu. Współliniowość kilku cech nie musi przy tym być widoczna
-w korelacjach par (@exr-vif). Czynnik VIF ją wykrywa, bo $R_j^2$
-mierzy zależność cechy $j$ od wszystkich pozostałych naraz.
+wpływu.
+
+Skalę problemu mierzy **czynnik inflacji wariancji** (ang. *variance
+inflation factor*)
+$$
+\mathrm{VIF}_j = \frac{1}{1 - R_j^2},
+$$
+gdzie $R_j^2$ jest współczynnikiem determinacji regresji cechy $j$
+względem pozostałych cech. Do oszacowania $\beta_j$ służy tylko ta część
+cechy $j$, której pozostałe cechy nie przewidują liniowo
+(@exr-reklama-czastkowa), a jej zmienność stanowi ułamek $1 - R_j^2$
+zmienności całej cechy. Dlatego wariancja $\widehat\beta_j$ jest
+$\mathrm{VIF}_j$ razy większa niż wtedy, gdy cecha $j$ jest w próbie
+nieskorelowana z pozostałymi, a błąd standardowy -- $\sqrt{\mathrm{VIF}_j}$
+razy (rachunek w rozszerzeniu [-@sec-rachunek-diagnostyki]). VIF
+wykrywa też współliniowość kilku cech niewidoczną w korelacjach par
+(@exr-vif), bo $R_j^2$ mierzy zależność od wszystkich pozostałych cech
+naraz.
 
 ```{python}
 from statsmodels.stats.outliers_influence import variance_inflation_factor
@@ -1565,11 +1496,532 @@ pd.Series([variance_inflation_factor(X_vif, j) for j in range(1, 4)],
 
 Wartości VIF rzędu $160$ dla limitu i oceny oznaczają, że wariancje ich
 współczynników są około $160$ razy większe niż przy cechach
-nieskorelowanych, a błędy standardowe -- około $13$ razy większe.
-Wiek, prawie niezależny od obu, ma VIF bliski $1$. Typowe rozwiązania to
+nieskorelowanych, a błędy standardowe -- około $13$ razy większe, jak
+w porównaniu obu modeli. Wiek, prawie niezależny od obu, ma VIF bliski
+$1$. Według reguły kciuka VIF powyżej $5$ lub $10$ sygnalizuje
+kłopotliwą współliniowość [@islp, rozdz. 3.3.3]. Typowe rozwiązania to
 usunięcie jednej z cech, zastąpienie ich wspólną cechą albo ściąganie
 współczynników, jak w przypadku estymatora $c\bar Y$ z sekcji
 [-@sec-obciazenie-wariancja-estymatora].
+
+## Rozszerzenie: geometria i obliczanie MNK {#sec-mnk-geometria}
+
+::: {.callout-note appearance="simple" icon="false"}
+## Materiał nieobowiązkowy
+Wymagane są podprzestrzenie liniowe, rzut ortogonalny i ślad macierzy.
+Tekst główny i zadania podstawowe z tej sekcji nie korzystają.
+:::
+
+W sekcji [-@sec-mnk] estymator OLS wyznaczyliśmy z równań normalnych
+$\X^\top\X\bbeta = \X^\top\y$, a predykcje w punktach uczących zapisaliśmy
+jako $\widehat\y = \mathbf H\y$, z dźwigniami $h_{ii}$ na przekątnej
+macierzy $\mathbf H$. Tu pokazujemy geometryczny sens tych rachunków,
+dowodzimy twierdzenia [-@thm-mnk] i równości ([-@eq-suma-dzwigni]) oraz
+wyjaśniamy, dlaczego OLS oblicza się inaczej, niż podaje wzór
+([-@eq-estymator-mnk]).
+
+### Rzut ortogonalny
+
+Z ([-@eq-xbeta-kolumny]) wektor $\X\bbeta$ jest kombinacją liniową kolumn
+$\X$, więc gdy $\bbeta$ przebiega $\R^{p+1}$, wektor $\X\bbeta$ przebiega
+podprzestrzeń $\mathcal{C}(\X)$. Przy liniowo niezależnych kolumnach jej
+wymiar to $p + 1$. Minimalizacja $\|\y - \X\bbeta\|$ jest więc szukaniem
+punktu tej podprzestrzeni najbliższego $\y$, czyli **rzutu
+ortogonalnego** $\y$ na $\mathcal{C}(\X)$. Warunek
+$\X^\top\mathbf e = \mathbf 0$ z ([-@eq-reszty-prostopadle]) jest
+warunkiem rzutu: wektor $\mathbf e = \y - \widehat\y$, który łączy $\y$
+z jego rzutem, jest prostopadły do podprzestrzeni. Ponieważ $\widehat\y$
+i $\mathbf e$ są prostopadłe, zachodzi twierdzenie Pitagorasa:
+$\|\y\|^2 = \|\widehat\y\|^2 + \|\mathbf e\|^2$. Na tym samym twierdzeniu
+opiera się dowód twierdzenia [-@thm-mnk].
+
+::: {.proof}
+Dla dowolnego wektora $\mathbf{v}$ mamy
+$\mathbf{v}^\top\X^\top\X\mathbf{v} = \|\X\mathbf{v}\|^2$. Jeśli
+$\X^\top\X\mathbf{v} = \mathbf 0$, to $\|\X\mathbf{v}\|^2 = 0$, czyli
+$\X\mathbf{v} = \mathbf 0$, a z liniowej niezależności kolumn
+$\mathbf{v} = \mathbf 0$. Macierz $\X^\top\X$ jest więc odwracalna,
+a $\widehat{\bbeta}$ z ([-@eq-estymator-mnk]) spełnia równania normalne.
+
+Dla dowolnego $\bbeta$ zapiszmy
+$\y - \X\bbeta = (\y - \X\widehat{\bbeta}) + \X(\widehat{\bbeta} - \bbeta)$.
+Pierwszy składnik to wektor reszt, prostopadły do $\mathcal{C}(\X)$,
+a drugi leży w $\mathcal{C}(\X)$. Z twierdzenia Pitagorasa
+$$
+\mathrm{RSS}(\bbeta) = \mathrm{RSS}(\widehat{\bbeta})
++ \|\X(\widehat{\bbeta} - \bbeta)\|^2 .
+$$
+Drugi składnik jest dodatni dla $\bbeta \ne \widehat{\bbeta}$, bo kolumny
+$\X$ są liniowo niezależne.
+:::
+
+### Macierz daszkowa
+
+Macierz $\mathbf H$ o elementach $h_{ij}$ z ([-@eq-dzwignia]) to
+$$
+\mathbf H = \X(\X^\top\X)^{-1}\X^\top ,
+\qquad
+\widehat\y = \mathbf H\y .
+$$ {#eq-macierz-daszkowa}
+Jest macierzą rzutu ortogonalnego na $\mathcal{C}(\X)$: symetryczną
+($\mathbf H^\top = \mathbf H$) i idempotentną ($\mathbf H^2 = \mathbf H$),
+bo rzut wektora, który już leży w podprzestrzeni, nic nie zmienia.
+Macierz $\mathbf I - \mathbf H$ rzutuje na dopełnienie ortogonalne
+$\mathcal{C}(\X)$ i daje reszty, $\mathbf e = (\mathbf I - \mathbf H)\y$.
+Ślad $\mathbf H$ jest równy wymiarowi podprzestrzeni, na którą rzutuje:
+$$
+\operatorname{tr}\mathbf H
+= \operatorname{tr}\big((\X^\top\X)^{-1}\X^\top\X\big)
+= \operatorname{tr}\mathbf I_{p+1} = p + 1 ,
+$$ {#eq-slad-h}
+gdzie skorzystaliśmy z równości $\operatorname{tr}(\mathbf{AB}) =
+\operatorname{tr}(\mathbf{BA})$. Ślad to suma elementów przekątnych,
+czyli dźwigni, co dowodzi równości ([-@eq-suma-dzwigni]). Pozostałe
+własności $\mathbf H$, w tym $0 \le h_{ii} \le 1$, wyprowadza
+@exr-macierz-daszkowa.
+
+Ślad ma ogólniejszy sens. Gdy predykcje są liniowymi kombinacjami
+wyników, możemy zapisać $\widehat\y = \mathbf S\y$: element $S_{ij}$ jest
+wagą wyniku $y_j$ w predykcji dla obserwacji $i$. W metodzie najmniejszych
+kwadratów $\mathbf S = \mathbf H$. Związek tego zapisu z LOOCV omawia
+rozszerzenie [-@sec-loocv-wygladzanie]. Dla regresji $k$-NN na
+przekątnej $\mathbf S$ stoi $1/k$, więc $\operatorname{tr}\mathbf S = n/k$
+-- to dokładnie efektywna liczba parametrów, którą w rozdziale
+[-@sec-bias-wariancja] mierzyliśmy elastyczność tej metody. Dla OLS ślad
+to $p + 1$, czyli liczba współczynników. Ślad macierzy $\mathbf S$ jest
+więc wspólną miarą elastyczności metod liniowych względem $\y$
+[@esl, rozdz. 7.6].
+
+### Obliczanie estymatora
+
+Utworzenie macierzy $\X^\top\X$ podnosi do kwadratu jej wskaźnik
+uwarunkowania, czyli czynnik, o jaki błędy zaokrągleń mogą się wzmocnić
+przy rozwiązywaniu układu równań. Biblioteki rozkładają więc $\X$, a nie
+$\X^\top\X$. W rozkładzie QR, $\X = \mathbf{Q}\mathbf{R}$ z ortonormalnymi
+kolumnami $\mathbf Q$ i górnotrójkątną macierzą $\mathbf R$, mamy
+$\X^\top\X = \mathbf R^\top\mathbf R$ i $\X^\top\y =
+\mathbf R^\top\mathbf Q^\top\y$, więc równania normalne sprowadzają się
+do układu trójkątnego $\mathbf R\bbeta = \mathbf Q^\top\y$. Funkcja
+`np.linalg.lstsq` korzysta z rozkładu według wartości osobliwych (SVD).
+
+Dla wielomianu stopnia $10$ na $50$ punktach z przedziału $[0, 1]$
+różnica jest duża:
+
+```{python}
+x = np.linspace(0, 1, 50)
+V = np.vander(x, 11, increasing=True)   # kolumny 1, x, ..., x^10
+print(f"uwarunkowanie X:     {np.linalg.cond(V):.1e}")
+print(f"uwarunkowanie X^T X: {np.linalg.cond(V.T @ V):.1e}")
+```
+
+Przy podwójnej precyzji, czyli około $16$ cyfrach znaczących, wskaźnik
+rzędu $10^{14}$ zostawia w rozwiązaniu najwyżej dwie wiarygodne cyfry.
+Dlatego w rozdziale [-@sec-bias-wariancja] używaliśmy funkcji
+`Polynomial.fit`, która przed dopasowaniem przeskalowuje $x$ do
+przedziału $[-1, 1]$.
+
+## Rozszerzenie: własności OLS i podstawy wnioskowania {#sec-ols-wlasnosci-wnioskowanie}
+
+::: {.callout-note appearance="simple" icon="false"}
+## Materiał nieobowiązkowy
+Wymagane są macierz kowariancji wektora losowego, ślad macierzy
+i macierz daszkowa z rozszerzenia [-@sec-mnk-geometria], a w dwóch
+ostatnich podsekcjach wielowymiarowy rozkład normalny i rozkłady
+$\chi^2$, $t$ i $F$.
+Tekst główny i zadania podstawowe z tej sekcji nie korzystają.
+:::
+
+W sekcji [-@sec-wlasnosci-mnk] podaliśmy własności estymatora OLS
+w modelu $\y = \X\bbeta + \boldsymbol\varepsilon$ z ustaloną macierzą
+$\X$ o liniowo niezależnych kolumnach, przy założeniach
+(Z1) $\E\boldsymbol\varepsilon = \mathbf 0$ i
+(Z2) $\Cov\boldsymbol\varepsilon = \sigma^2\mathbf I$. Tu je dowodzimy.
+Rachunki wychodzą od dwóch zapisów. Pierwszy to
+$$
+\widehat{\bbeta} = \bbeta + \mathbf A\boldsymbol\varepsilon,
+\qquad \mathbf A = (\X^\top\X)^{-1}\X^\top ,
+$$
+z ustaloną macierzą $\mathbf A$. Drugi to wektor reszt
+$\mathbf e = (\mathbf I - \mathbf H)\y$, gdzie $\mathbf H$ jest macierzą
+daszkową ([-@eq-macierz-daszkowa]).
+
+### Macierz kowariancji estymatora
+
+Dla ustalonej macierzy $\mathbf A$ i wektora losowego
+$\boldsymbol\varepsilon$ o średniej zero
+$$
+\Cov(\mathbf A\boldsymbol\varepsilon)
+= \E[\mathbf A\boldsymbol\varepsilon\boldsymbol\varepsilon^\top\mathbf A^\top]
+= \mathbf A\Cov(\boldsymbol\varepsilon)\mathbf A^\top .
+$$
+Stąd druga część twierdzenia [-@thm-mnk-momenty].
+
+::: {.proof}
+Przy (Z2)
+$$
+\Cov\widehat{\bbeta} = \Cov(\mathbf A\boldsymbol\varepsilon)
+= \sigma^2\mathbf A\mathbf A^\top
+= \sigma^2(\X^\top\X)^{-1}\X^\top\X(\X^\top\X)^{-1}
+= \sigma^2(\X^\top\X)^{-1} .
+$$
+:::
+
+Wariancja predykcji w nowym punkcie wynika z tego samego wzoru. Niech
+$\tilde\X_0$ będzie losowym wektorem cech uzupełnionym o jedynkę,
+niezależnym od próby, i niech $\boldsymbol\Sigma_0 =
+\E[\tilde\X_0\tilde\X_0^\top]$. Liczba jest równa swojemu śladowi,
+a $\operatorname{tr}(\mathbf{AB}) = \operatorname{tr}(\mathbf{BA})$, więc
+$$
+\E\big[\tilde\X_0^\top(\X^\top\X)^{-1}\tilde\X_0\big]
+= \operatorname{tr}\big((\X^\top\X)^{-1}\boldsymbol\Sigma_0\big).
+$$
+Gdy cechy uczące pochodzą z tego samego rozkładu co $\X_0$, przy dużym
+$n$ mamy $\X^\top\X = \sum_i \tilde\x_i\tilde\x_i^\top \approx
+n\boldsymbol\Sigma_0$, więc średnia wariancja predykcji w nowym punkcie
+jest bliska $\sigma^2\operatorname{tr}\mathbf I_{p+1}/n = \sigma^2(p+1)/n$.
+
+### Suma kwadratów reszt
+
+Dowód twierdzenia [-@thm-mnk-rss] korzysta z własności macierzy
+$\mathbf H$ z rozszerzenia [-@sec-mnk-geometria].
+
+::: {.proof}
+Ponieważ $(\mathbf I - \mathbf H)\X = \mathbf 0$, wektor reszt to
+$\mathbf e = (\mathbf I - \mathbf H)\y
+= (\mathbf I - \mathbf H)\boldsymbol\varepsilon$. Macierz
+$\mathbf I - \mathbf H$ jest symetryczna i idempotentna, więc
+$\mathrm{RSS} = \mathbf e^\top\mathbf e
+= \boldsymbol\varepsilon^\top(\mathbf I - \mathbf H)\boldsymbol\varepsilon$.
+Dla ustalonej macierzy $\mathbf M$ mamy
+$\E[\boldsymbol\varepsilon^\top\mathbf M\boldsymbol\varepsilon]
+= \sum_{i,j} M_{ij}\E[\varepsilon_i\varepsilon_j]
+= \sigma^2\operatorname{tr}\mathbf M$, a
+$\operatorname{tr}(\mathbf I - \mathbf H) = n - (p + 1)$ z ([-@eq-slad-h]).
+:::
+
+Dowód ma prosty obraz geometryczny. Wektor błędów ma $n$ współrzędnych,
+a w każdym z $n$ wzajemnie prostopadłych kierunków jego składowa ma
+przeciętnie kwadrat $\sigma^2$. Składowa $\mathbf H\boldsymbol\varepsilon$
+w $(p + 1)$-wymiarowej podprzestrzeni $\mathcal{C}(\X)$ przechodzi do
+predykcji, a w resztach zostaje składowa w dopełnieniu ortogonalnym,
+które ma wymiar $n - p - 1$. Z tego samego zapisu wynika macierz
+kowariancji reszt: $\Cov\mathbf e = (\mathbf I - \mathbf H)\,
+\sigma^2\mathbf I\,(\mathbf I - \mathbf H)^\top = \sigma^2(\mathbf I - \mathbf H)$.
+
+### Optymalność wśród estymatorów liniowych
+
+Estymator $\tilde{\bbeta}$ nazywamy **liniowym**, jeśli
+$\tilde{\bbeta} = \mathbf C\y$ dla macierzy $\mathbf C$ zależnej tylko
+od $\X$. Estymator OLS jest liniowy, z $\mathbf C = \mathbf A$.
+
+::: {#thm-gauss-markow}
+## Gaussa--Markowa
+Przy założeniach (Z1)--(Z2) niech $\tilde{\bbeta} = \mathbf C\y$ będzie
+dowolnym liniowym estymatorem $\bbeta$ nieobciążonym dla każdej wartości
+$\bbeta$. Wtedy macierz $\Cov\tilde{\bbeta} - \Cov\widehat{\bbeta}$ jest
+dodatnio półokreślona. W szczególności dla każdego wektora $\mathbf c$
+$$
+\Var(\mathbf c^\top\tilde{\bbeta}) \ge \Var(\mathbf c^\top\widehat{\bbeta}) .
+$$
+:::
+
+::: {.proof}
+Niech $\mathbf D = \mathbf C - \mathbf A$. Nieobciążoność oznacza
+$\E\tilde{\bbeta} = \mathbf C\X\bbeta = \bbeta$ dla każdego $\bbeta$, czyli
+$\mathbf C\X = \mathbf I$. Ponieważ $\mathbf A\X = \mathbf I$, mamy
+$\mathbf D\X = \mathbf 0$. Stąd
+$\mathbf A\mathbf D^\top = (\X^\top\X)^{-1}(\mathbf D\X)^\top = \mathbf 0$
+i
+$$
+\Cov\tilde{\bbeta} = \sigma^2\mathbf C\mathbf C^\top
+= \sigma^2(\mathbf A + \mathbf D)(\mathbf A + \mathbf D)^\top
+= \sigma^2\mathbf A\mathbf A^\top + \sigma^2\mathbf D\mathbf D^\top
+= \Cov\widehat{\bbeta} + \sigma^2\mathbf D\mathbf D^\top .
+$$
+Macierz $\mathbf D\mathbf D^\top$ jest dodatnio półokreślona, bo
+$\mathbf c^\top\mathbf D\mathbf D^\top\mathbf c = \|\mathbf D^\top\mathbf c\|^2
+\ge 0$.
+:::
+
+Dla $\mathbf c = \tilde\x_0$ nierówność dotyczy predykcji
+$\tilde\x_0^\top\widehat{\bbeta}$ w dowolnym punkcie $\x_0$. Dla modelu
+z samym wyrazem wolnym twierdzenie mówi, że średnia z próby jest
+najlepszą nieobciążoną średnią ważoną obserwacji
+(@exr-gauss-markow-srednia). Dowód korzysta z (Z2) w równości
+$\Cov\tilde{\bbeta} = \sigma^2\mathbf C\mathbf C^\top$. Gdy błędy mają
+różne wariancje, znane z dokładnością do stałej, najlepszym estymatorem
+liniowym nieobciążonym jest ważona metoda najmniejszych kwadratów
+z sekcji [-@sec-diagnostyka].
+
+### Rozkłady przy normalnych błędach
+
+W sekcji [-@sec-wnioskowanie-mnk] korzystaliśmy z tego, że przy
+założeniach (Z1)--(Z3) statystyka $t$ ma rozkład $t$, a statystyka $F$ --
+rozkład $F$. Pierwszy fakt wynika wprost z następującego twierdzenia,
+drugi -- z tego samego rozumowania co jego dowód.
+
+::: {#thm-mnk-rozklady}
+## Rozkłady w modelu liniowym z normalnymi błędami
+Przy założeniach (Z1)--(Z3):
+
+a) $\widehat{\bbeta} \sim \Nrozk\big(\bbeta, \sigma^2(\X^\top\X)^{-1}\big)$;
+b) $\mathrm{RSS}/\sigma^2$ ma rozkład $\chi^2$ z $n - p - 1$ stopniami
+   swobody;
+c) $\widehat{\bbeta}$ i $\mathrm{RSS}$ są niezależne.
+:::
+
+::: {.proof}
+## szkic
+Część (a): $\widehat{\bbeta} = \bbeta + \mathbf A\boldsymbol\varepsilon$
+jest przekształceniem liniowym wektora gaussowskiego, więc ma rozkład
+normalny, a jego parametry podaje twierdzenie [-@thm-mnk-momenty].
+
+Części (b) i (c) wynikają z geometrii. Wybierzmy bazę ortonormalną
+$\R^n$, w której pierwsze $p + 1$ wektorów rozpina $\mathcal{C}(\X)$,
+a pozostałe $n - p - 1$ -- jej dopełnienie ortogonalne. Niech $\mathbf Q$
+będzie macierzą ortogonalną o tych wektorach w kolumnach, a
+$\mathbf z = \mathbf Q^\top\boldsymbol\varepsilon$ wektorem współrzędnych
+błędów w nowej bazie. Rozkład $\Nrozk(\mathbf 0, \sigma^2\mathbf I)$ jest
+sferycznie symetryczny, więc obrót go nie zmienia:
+$\mathbf z \sim \Nrozk(\mathbf 0, \sigma^2\mathbf I)$, czyli współrzędne
+$z_1, \dots, z_n$ są niezależne. Składowa $\mathbf H\boldsymbol\varepsilon$
+zależy tylko od $z_1, \dots, z_{p+1}$, a reszty
+$\mathbf e = (\mathbf I - \mathbf H)\boldsymbol\varepsilon$ -- tylko od
+$z_{p+2}, \dots, z_n$. Stąd $\mathrm{RSS} = \|\mathbf e\|^2 =
+z_{p+2}^2 + \dots + z_n^2$ jest sumą kwadratów $n - p - 1$ niezależnych
+zmiennych $\Nrozk(0, \sigma^2)$, co daje (b). Ponadto
+$\widehat{\bbeta} - \bbeta = \mathbf A\boldsymbol\varepsilon =
+\mathbf A\mathbf H\boldsymbol\varepsilon$ (bo $\X^\top\mathbf H = \X^\top$)
+zależy tylko od $z_1, \dots, z_{p+1}$, co daje (c). Szczegółowy wykład
+zawierają @seber2003 [rozdz. 2--3].
+:::
+
+Statystykę ([-@eq-statystyka-t]) można zapisać jako
+$$
+T_j = \frac{(\widehat\beta_j - \beta_j)/(\sigma\sqrt{v_{jj}})}
+{\sqrt{\mathrm{RSS}/\big(\sigma^2(n-p-1)\big)}} .
+$$
+Z części (a) licznik ma rozkład $\Nrozk(0, 1)$, z części (b) mianownik
+jest pierwiastkiem ze zmiennej $\chi^2_{n-p-1}$ podzielonej przez liczbę
+stopni swobody, a z części (c) licznik i mianownik są niezależne. Taki
+iloraz ma z definicji rozkład $t$ Studenta z $n - p - 1$ stopniami
+swobody.
+
+### Rozkład statystyki $F$
+
+Niech model $M_0$ o macierzy $\X_0$ powstaje z modelu $M$ przez usunięcie
+$q$ cech. Podprzestrzeń $\mathcal{C}(\X_0)$ jest zawarta
+w $\mathcal{C}(\X)$. Wektor $\y - \widehat\y_0$ rozkłada się na
+$(\y - \widehat\y) + (\widehat\y - \widehat\y_0)$, przy czym pierwszy
+składnik jest prostopadły do $\mathcal{C}(\X)$, a drugi w niej leży.
+Z twierdzenia Pitagorasa
+$$
+\mathrm{RSS}_0 = \mathrm{RSS} + \|\widehat\y - \widehat\y_0\|^2 .
+$$
+Jeśli $H_0$ jest prawdziwa, to $\X\bbeta \in \mathcal{C}(\X_0)$, więc
+$\widehat\y - \widehat\y_0$ jest rzutem samego szumu
+$\boldsymbol\varepsilon$ na $q$-wymiarową podprzestrzeń: część
+$\mathcal{C}(\X)$ prostopadłą do $\mathcal{C}(\X_0)$. Rozumowanie ze
+szkicu dowodu twierdzenia [-@thm-mnk-rozklady], z bazą dopasowaną do
+trzech wzajemnie prostopadłych podprzestrzeni, daje
+$\|\widehat\y - \widehat\y_0\|^2/\sigma^2 \sim \chi^2_q$, niezależne od
+$\mathrm{RSS}$. Statystyka ([-@eq-statystyka-f]) jest więc przy $H_0$
+ilorazem dwóch niezależnych zmiennych $\chi^2$ podzielonych przez swoje
+stopnie swobody, czyli ma rozkład $F$ z $q$ i $n - p - 1$ stopniami
+swobody. Ten sam rozkład wektora $\boldsymbol\varepsilon$ na składowe
+w trzech podprzestrzeniach pokazuje, dlaczego przy $H_0$ licznik ma
+średnią $\sigma^2$: każdy z $q$ kierunków wnosi przeciętnie $\sigma^2$.
+
+## Rozszerzenie: rachunek diagnostyki {#sec-rachunek-diagnostyki}
+
+::: {.callout-note appearance="simple" icon="false"}
+## Materiał nieobowiązkowy
+Wymagane są macierz kowariancji wektora losowego, macierz daszkowa
+z rozszerzenia [-@sec-mnk-geometria], reszta „pozostaw jeden” z zadania
+[-@exr-loocv-mnk], a w części o reszcie studentyzowanej i odległości
+Cooka -- rozkłady $t$ i $F$ oraz twierdzenie [-@thm-mnk-rozklady].
+Tekst główny i zadania podstawowe z tej sekcji nie korzystają.
+:::
+
+Sekcja podaje rachunki do diagnostyki z sekcji [-@sec-diagnostyka]:
+najpierw wzory dla reszt, odległości Cooka i czynnika VIF, potem macierz
+kowariancji estymatora przy błędach skorelowanych lub o różnych
+wariancjach. Model ma postać $\y = \X\bbeta + \boldsymbol\varepsilon$ z ustaloną
+macierzą $\X$ o liniowo niezależnych kolumnach, a estymator OLS --
+postać
+$$
+\widehat{\bbeta} = \bbeta + \mathbf A\boldsymbol\varepsilon,
+\qquad \mathbf A = (\X^\top\X)^{-1}\X^\top .
+$$
+Klasyczne wzory zakładają (Z1) $\E\boldsymbol\varepsilon = \mathbf 0$
+i (Z2) $\Cov\boldsymbol\varepsilon = \sigma^2\mathbf I$.
+
+### Reszty, odległość Cooka i VIF
+
+Predykcje w punktach uczących to $\widehat\y = \mathbf H\y$, gdzie
+$\mathbf H = \X(\X^\top\X)^{-1}\X^\top$ jest macierzą daszkową
+([-@eq-macierz-daszkowa]) o elementach $h_{ij}$ z ([-@eq-dzwignia]).
+Ponieważ $\mathbf H\X = \X$, wektor reszt to
+$\mathbf e = (\mathbf I - \mathbf H)\y
+= (\mathbf I - \mathbf H)\boldsymbol\varepsilon$. Macierz kowariancji
+reszt wyprowadziliśmy po dowodzie twierdzenia [-@thm-mnk-rss]
+w rozszerzeniu [-@sec-ols-wlasnosci-wnioskowanie]; przy (Z1)--(Z2)
+$$
+\Cov\mathbf e = \sigma^2(\mathbf I - \mathbf H),
+\qquad
+\Var e_i = \sigma^2(1 - h_{ii}) .
+$$ {#eq-kowariancja-reszt}
+Reszty są więc skorelowane i mają różne wariancje, nawet gdy błędy są
+niezależne i jednakowe. Mechanizm widać we współrzędnej $i$:
+$e_i = (1 - h_{ii})\varepsilon_i - \sum_{j \ne i} h_{ij}\varepsilon_j$,
+czyli ułamek $h_{ii}$ własnego błędu przechodzi do predykcji
+$\widehat y_i$.
+
+Reszta standaryzowana $r_i = e_i/(\widehat\sigma\sqrt{1 - h_{ii}})$
+dzieli $e_i$ przez oszacowanie jego odchylenia standardowego. Odstająca
+obserwacja $i$ sama zawyża jednak $\widehat\sigma$. Reszta
+studentyzowana
+$$
+t_i = \frac{e_i}{\widehat\sigma_{(-i)}\sqrt{1 - h_{ii}}}
+$$ {#eq-reszta-studentyzowana}
+używa oszacowania $\widehat\sigma_{(-i)}$ z dopasowania bez obserwacji
+$i$. Z zadania [-@exr-loocv-mnk] reszta „pozostaw jeden” wynosi
+$y_i - \tilde\x_i^\top\widehat{\bbeta}^{(-i)} = e_i/(1 - h_{ii})$, a jej
+wariancja to $\sigma^2/(1 - h_{ii})$ (@exr-reszty-studentyzowane).
+Zatem $t_i$ jest błędem predykcji $y_i$ z modelu dopasowanego bez
+obserwacji $i$, podzielonym przez oszacowanie jego odchylenia
+standardowego z tego samego dopasowania. Z tego zapisu wynika rozkład
+$t_i$ przy (Z1)--(Z3). Licznik $y_i - \tilde\x_i^\top\widehat{\bbeta}^{(-i)}$ jest
+liniową funkcją błędów, więc ma rozkład normalny o średniej zero.
+Zależy tylko od $\varepsilon_i$ i $\widehat{\bbeta}^{(-i)}$, a
+$\widehat\sigma_{(-i)}$ liczymy z pozostałych $n - 1$ obserwacji, więc
+jest niezależne od $\varepsilon_i$, a od $\widehat{\bbeta}^{(-i)}$ -- na
+mocy twierdzenia [-@thm-mnk-rozklady] zastosowanego do tych obserwacji.
+Tak jak statystyka ([-@eq-statystyka-t]), iloraz ma więc rozkład $t$
+z $(n - 1) - (p + 1) = n - p - 2$ stopniami swobody.
+
+Odległość Cooka definiujemy przez zmianę wektora predykcji w punktach
+uczących po usunięciu obserwacji $i$:
+$$
+D_i = \frac{\|\X(\widehat{\bbeta} - \widehat{\bbeta}^{(-i)})\|^2}
+{(p+1)\,\widehat\sigma^2}
+= \frac{e_i^2}{(p+1)\,\widehat\sigma^2}\cdot\frac{h_{ii}}{(1 - h_{ii})^2}
+= \frac{r_i^2}{p+1}\cdot\frac{h_{ii}}{1 - h_{ii}} .
+$$ {#eq-odleglosc-cooka}
+Druga postać wynika ze wzoru na $\widehat{\bbeta} - \widehat{\bbeta}^{(-i)}$
+z zadania [-@exr-loocv-mnk], bo
+$\|\X(\X^\top\X)^{-1}\tilde\x_i\|^2 = \tilde\x_i^\top(\X^\top\X)^{-1}\tilde\x_i
+= h_{ii}$, a trzecia -- z definicji $r_i$ (@exr-odleglosc-cooka).
+Dzielnik pochodzi z obszaru ufności dla $\bbeta$. Przy (Z1)--(Z3)
+statystyka $(\widehat{\bbeta} - \bbeta)^\top\X^\top\X(\widehat{\bbeta}
+- \bbeta)/\big((p+1)\widehat\sigma^2\big)$ ma rozkład $F$ z $p + 1$
+i $n - p - 1$ stopniami swobody, co wynika z twierdzenia
+[-@thm-mnk-rozklady] tak jak rozkład statystyki $F$. Licznik $D_i$ ma
+tę samą postać, z $\widehat{\bbeta}^{(-i)}$ w miejscu $\bbeta$.
+@cook1977 zaproponował więc porównywać $D_i$ z kwantylami tego rozkładu.
+Wartość $D_i$ równa jego medianie, około $0{,}7$ dla $p = 1$ i bliżej
+$1$ przy większej liczbie cech, oznacza, że usunięcie obserwacji
+przesuwa estymator na brzeg $50$-procentowego obszaru ufności. Stąd
+reguła kciuka $D_i \gtrsim 1$.
+
+Wzór na VIF wynika z zadania [-@exr-reklama-czastkowa], w którym
+wyprowadzamy $\Var\widehat\beta_j = \sigma^2/\|\mathbf r_j\|^2$, gdzie
+$\mathbf r_j$ to reszty z regresji cechy $j$ względem pozostałych cech
+z wyrazem wolnym. W tej regresji
+$\mathrm{TSS} = \sum_i (x_{ij} - \bar x_j)^2$ i
+$\mathrm{RSS} = \|\mathbf r_j\|^2$, więc z ([-@eq-r2])
+$\|\mathbf r_j\|^2 = (1 - R_j^2)\sum_i (x_{ij} - \bar x_j)^2$ i
+$$
+\Var\widehat\beta_j
+= \frac{\sigma^2}{\sum_{i=1}^n (x_{ij} - \bar x_j)^2}
+\cdot \frac{1}{1 - R_j^2} .
+$$ {#eq-vif}
+Pierwszy czynnik to wariancja, jaką $\widehat\beta_j$ miałby, gdyby
+cecha $j$ była w próbie nieskorelowana z pozostałymi (wtedy
+$R_j^2 = 0$), na przykład w regresji prostej. Drugi czynnik to
+$\mathrm{VIF}_j$.
+
+### Błędy skorelowane i estymator kanapkowy
+
+Nieobciążoność wymaga tylko (Z1), bo
+$\E\widehat{\bbeta} = \bbeta + \mathbf A\,\E\boldsymbol\varepsilon = \bbeta$.
+Niech teraz $\Cov\boldsymbol\varepsilon = \boldsymbol\Sigma$ będzie
+dowolną macierzą kowariancji. Dla ustalonej macierzy $\mathbf A$ mamy
+$\Cov(\mathbf A\boldsymbol\varepsilon) = \mathbf A\boldsymbol\Sigma\mathbf A^\top$,
+więc
+$$
+\Cov\widehat{\bbeta} = \mathbf A\boldsymbol\Sigma\mathbf A^\top
+= (\X^\top\X)^{-1}\X^\top\boldsymbol\Sigma\X(\X^\top\X)^{-1} .
+$$ {#eq-kanapka}
+Wzór nazywa się **kanapkowym**: macierz $\X^\top\boldsymbol\Sigma\X$
+leży w nim między dwoma czynnikami $(\X^\top\X)^{-1}$. Tylko przy
+$\boldsymbol\Sigma = \sigma^2\mathbf I$ upraszcza się do
+$\sigma^2(\X^\top\X)^{-1}$, więc w ogólności klasyczne błędy standardowe
+szacują niewłaściwą wielkość.
+
+Sprawdźmy skalę błędu na układzie z rysunku [-@fig-reszty-czas]:
+$n = 100$ pomiarów w chwilach $t_i = i/n$, prosta
+$y_i = 1 + 2t_i + \varepsilon_i$ i błędy autoregresyjne
+$\varepsilon_i = 0{,}8\,\varepsilon_{i-1} + z_i$, gdzie $z_i$ są
+niezależne i standardowe normalne. Dla takich błędów
+$\Cov(\varepsilon_s, \varepsilon_t)$ jest proporcjonalna do
+$0{,}8^{|s - t|}$, więc $\boldsymbol\Sigma$ nie jest diagonalna.
+
+```{python}
+rng = np.random.default_rng(6)
+n_ar, rho, powt_ar = 100, 0.8, 4000
+t_ar = np.arange(n_ar) / n_ar
+X_ar = sm.add_constant(t_ar)
+bledy = np.empty((powt_ar, n_ar))
+bledy[:, 0] = rng.normal(size=powt_ar) / np.sqrt(1 - rho ** 2)  # rozkład stacjonarny
+for i in range(1, n_ar):
+    bledy[:, i] = rho * bledy[:, i - 1] + rng.normal(size=powt_ar)
+Y_ar = 1 + 2 * t_ar + bledy
+
+B_ar = np.linalg.lstsq(X_ar, Y_ar.T, rcond=None)[0].T
+reszty_ar = Y_ar - B_ar @ X_ar.T
+s2_ar = (reszty_ar ** 2).sum(axis=1) / (n_ar - 2)
+se_ar = np.sqrt(s2_ar * np.linalg.inv(X_ar.T @ X_ar)[1, 1])
+pokrycie_ar = np.abs(B_ar[:, 1] - 2) <= stats.t.ppf(0.975, n_ar - 2) * se_ar
+
+print(f"średnia nachylenia:              {B_ar[:, 1].mean():.3f}")
+print(f"odchylenie std. nachylenia:      {B_ar[:, 1].std():.3f}")
+print(f"średni klasyczny błąd std.:      {se_ar.mean():.3f}")
+print(f"pokrycie przedziału 95%:         {pokrycie_ar.mean():.3f}")
+```
+
+Nachylenie jest szacowane bez obciążenia, ale jego odchylenie
+standardowe w próbach, około $1{,}63$, jest około trzy razy większe od
+średniego klasycznego błędu standardowego, około $0{,}53$. Przedział
+„$95\%$” pokrywa prawdziwą wartość w mniej niż połowie prób. Czynnik
+zgadza się z rachunkiem dla średniej z próby w zadaniu
+[-@exr-skorelowane-bledy]: przy $\rho = 0{,}8$ wariancja średniej jest
+w przybliżeniu $(1 + \rho)/(1 - \rho) = 9$ razy większa niż dla
+niezależnych obserwacji, a odchylenie standardowe -- trzy razy.
+
+Przy niezależnych błędach o różnych wariancjach $\sigma_i^2$ macierz
+$\boldsymbol\Sigma$ jest diagonalna, a środek wzoru ([-@eq-kanapka]) ma
+postać $\X^\top\boldsymbol\Sigma\X = \sum_i \sigma_i^2\,
+\tilde\x_i\tilde\x_i^\top$. @white1980 pokazał, że zastąpienie
+$\sigma_i^2$ przez $e_i^2$ daje zgodny estymator $\Cov\widehat{\bbeta}$:
+$$
+(\X^\top\X)^{-1}\Big(\sum_{i=1}^n e_i^2\,\tilde\x_i\tilde\x_i^\top\Big)
+(\X^\top\X)^{-1} .
+$$
+Każde $e_i^2$ osobno bardzo źle szacuje $\sigma_i^2$, ale środkowa
+macierz jest sumą $n$ składników wymiaru $(p+1) \times (p+1)$, w której
+te błędy się uśredniają. Reszty są jednak systematycznie mniejsze od
+błędów: przy stałej wariancji $\Var e_i = \sigma^2(1 - h_{ii})$
+([-@eq-kowariancja-reszt]), najmniej dla obserwacji o dużej dźwigni.
+Wariant HC3 zastępuje więc $e_i^2$ przez $e_i^2/(1 - h_{ii})^2$, czyli
+kwadrat reszty „pozostaw jeden” z zadania [-@exr-loocv-mnk]. Poprawka
+jest duża dla obserwacji o dużej dźwigni i mała, gdy wszystkie dźwignie
+są bliskie średniej $(p+1)/n$.
+
+Ten sam wzór ([-@eq-kanapka]) z estymatorem $\boldsymbol\Sigma$, który
+dopuszcza korelację sąsiednich obserwacji w czasie albo obserwacji
+z tej samej grupy, daje błędy standardowe odporne na skorelowanie
+błędów (`cov_type="HAC"` i `cov_type="cluster"` w `statsmodels`).
 
 ## Uwagi bibliograficzne {.unnumbered}
 
@@ -1585,7 +2037,8 @@ normalnych błędach.
 Ślad macierzy wygładzającej jako efektywną liczbę parametrów omawiają
 @esl [rozdz. 7.6].
 
-Pełne dowody faktów, które tu tylko naszkicowaliśmy -- rozkładów
+Pełne dowody faktów, które w rozszerzeniu
+[-@sec-ols-wlasnosci-wnioskowanie] tylko naszkicowaliśmy -- rozkładów
 $\widehat{\bbeta}$ i $\mathrm{RSS}$, ich niezależności, testu $F$ dla
 dowolnych hipotez liniowych -- zawierają @seber2003. Rozkład normalny
 wielowymiarowy i formy kwadratowe wykładają w rozdz. 2, estymację
@@ -1625,22 +2078,30 @@ f) Przy założeniach (Z1)--(Z2) wykaż, że
 :::
 
 ::: {#exr-macierz-daszkowa}
-Niech $\mathbf H$ będzie macierzą daszkową ([-@eq-macierz-daszkowa]).
+Niech $\mathbf H$ będzie macierzą daszkową o elementach $h_{ij}$
+z ([-@eq-dzwignia]).
 
-a) Wykaż, że $\mathbf H^\top = \mathbf H$, $\mathbf H^2 = \mathbf H$
+a) **Rozszerzenie: macierz rzutu.** Wymagany jest zapis
+   ([-@eq-macierz-daszkowa]) z rozszerzenia [-@sec-mnk-geometria].
+   Wykaż, że $\mathbf H^\top = \mathbf H$, $\mathbf H^2 = \mathbf H$
    i $\mathbf H\X = \X$. Wywnioskuj, że $\mathbf H\mathbf 1 = \mathbf 1$,
    czyli że każda predykcja $\widehat y_i$ jest kombinacją wyników
    $y_1, \dots, y_n$ o wagach sumujących się do jedynki. Czy wagi te
    muszą być nieujemne?
-b) Wykaż, że $0 \le h_{ii} \le 1$. (Wskazówka: z $\mathbf H =
+b) **Rozszerzenie: zakres dźwigni.** Wymagane są własności $\mathbf H$
+   z punktu a). Wykaż, że $0 \le h_{ii} \le 1$. (Wskazówka: z $\mathbf H =
    \mathbf H^2 = \mathbf H^\top\mathbf H$ wynika
    $h_{ii} = \sum_j h_{ij}^2$.)
 c) Dla jednej cechy wykaż, że
    $h_{ii} = \frac1n + \frac{(x_i - \bar x)^2}{\sum_k (x_k - \bar x)^2}$.
    Które obserwacje mają największy wpływ na własne dopasowanie?
-d) Porównaj własności z punktów (a)--(b) z macierzą $\mathbf S$
-   regresji $k$-NN z sekcji [-@sec-walidacja-krzyzowa]. Czym różnią się
-   wagi w obu metodach?
+d) **Rozszerzenie: macierz wygładzająca.** Wymagane są punkty a)--b)
+   i zapis $\widehat\y = \mathbf S\y$ z rozszerzenia
+   [-@sec-mnk-geometria]. Porównaj własności z punktów a)--b) z macierzą
+   $\mathbf S$ regresji $k$-NN: $S_{ij}=1/k$, gdy punkt $j$ należy do $k$
+   najbliższych sąsiadów punktu $i$ (włącznie z nim samym), a poza tym
+   $S_{ij}=0$. Czym różnią się wagi w obu metodach? Zapis ten omawia
+   też rozszerzenie [-@sec-loocv-wygladzanie].
 :::
 
 ::: {#exr-loocv-mnk}
@@ -1659,7 +2120,7 @@ b) Wywnioskuj, że reszta „pozostaw jeden” wynosi
    $y_i - \tilde\x_i^\top\widehat{\bbeta}^{(-i)} = e_i/(1 - h_{ii})$,
    i zapisz błąd LOOCV metody najmniejszych kwadratów przez reszty
    i dźwignie jednego dopasowania. Jest to wzór, na który powołaliśmy się
-   w sekcji [-@sec-walidacja-krzyzowa].
+   w rozszerzeniu [-@sec-loocv-wygladzanie].
 c) Sprawdź wynik numerycznie dla regresji sprzedaży względem `TV`
    i `radio`, porównując go z $n$ jawnymi dopasowaniami.
 d) Które obserwacje mają resztę „pozostaw jeden” najbardziej różną od
@@ -1688,7 +2149,10 @@ d) Ile cech można dodać do modelu przy $n = 100$, żeby błąd uczący
 :::
 
 ::: {#exr-estymator-wariancji-mnk}
-a) Niech $\boldsymbol\varepsilon$ ma średnią $\mathbf 0$ i macierz
+a) **Rozszerzenie: forma kwadratowa błędów.** Wymagany jest ślad macierzy;
+   rachunek jest krokiem dowodu twierdzenia [-@thm-mnk-rss] w rozszerzeniu
+   [-@sec-ols-wlasnosci-wnioskowanie].
+   Niech $\boldsymbol\varepsilon$ ma średnią $\mathbf 0$ i macierz
    kowariancji $\sigma^2\mathbf I$, a $\mathbf M$ będzie ustaloną macierzą.
    Wykaż, że $\E[\boldsymbol\varepsilon^\top\mathbf M\boldsymbol\varepsilon]
    = \sigma^2\operatorname{tr}\mathbf M$. Czy potrzebna jest normalność?
@@ -1793,25 +2257,30 @@ c) Dopasuj model z interakcją dla danych *Advertising* z wyśrodkowanymi
 :::
 
 ::: {#exr-reszty-studentyzowane}
-a) Wyprowadź ([-@eq-kowariancja-reszt]). Dlaczego reszta obserwacji
+a) **Rozszerzenie: kowariancja reszt.** Wymagana jest macierz daszkowa
+   z rozszerzenia [-@sec-mnk-geometria].
+   Wyprowadź ([-@eq-kowariancja-reszt]). Dlaczego reszta obserwacji
    o dźwigni bliskiej $1$ jest bliska zera bez względu na jej wynik?
 b) Korzystając z zadania [-@exr-loocv-mnk], wykaż, że wariancja reszty
    „pozostaw jeden” $y_i - \tilde\x_i^\top\widehat{\bbeta}^{(-i)}$ wynosi
    $\sigma^2/(1 - h_{ii})$. Wywnioskuj, że reszta „pozostaw jeden”
    podzielona przez swoje odchylenie standardowe to
    $e_i/(\sigma\sqrt{1 - h_{ii}})$.
-c) Dlaczego w ([-@eq-reszta-studentyzowana]) używamy
-   $\widehat\sigma_{(-i)}$, a nie $\widehat\sigma$? Rozważ próbę z jedną
-   bardzo odległą obserwacją odstającą.
+c) Dlaczego reszta studentyzowana używa $\widehat\sigma_{(-i)}$, a nie
+   $\widehat\sigma$? Rozważ próbę z jedną bardzo odległą obserwacją
+   odstającą.
 d) Wylosuj $n = 50$ obserwacji z modelu spełniającego (Z1)--(Z3)
    i policz reszty studentyzowane. Ile z nich przekracza co do modułu $2$,
    a ile powinno przekraczać przeciętnie?
 :::
 
 ::: {#exr-odleglosc-cooka}
-a) Wyprowadź drugą równość w ([-@eq-odleglosc-cooka]) ze wzoru
+a) **Rozszerzenie: wzór na odległość Cooka.** Wymagana jest definicja
+   ([-@eq-odleglosc-cooka]) z rozszerzenia [-@sec-rachunek-diagnostyki].
+   Wyprowadź drugą równość w ([-@eq-odleglosc-cooka]) ze wzoru
    z zadania [-@exr-loocv-mnk].
-b) Wykaż, że $D_i = \frac{r_i^2}{p + 1}\cdot\frac{h_{ii}}{1 - h_{ii}}$,
+b) **Rozszerzenie: odległość Cooka a reszta standaryzowana.** Wymagany
+   jest punkt a). Wykaż, że $D_i = \frac{r_i^2}{p + 1}\cdot\frac{h_{ii}}{1 - h_{ii}}$,
    gdzie $r_i$ jest resztą standaryzowaną.
 c) Dla regresji salda względem dochodu, limitu i statusu studenta
    w danych *Credit* policz odległości Cooka ze wzoru i porównaj
@@ -1820,7 +2289,9 @@ c) Dla regresji salda względem dochodu, limitu i statusu studenta
 :::
 
 ::: {#exr-vif}
-a) Wykaż, że $\|\mathbf r_j\|^2 = (1 - R_j^2)\sum_i (x_{ij} - \bar x_j)^2$,
+a) **Rozszerzenie: wyprowadzenie VIF.** Wymagany jest wzór
+   ([-@eq-vif]) z rozszerzenia [-@sec-rachunek-diagnostyki].
+   Wykaż, że $\|\mathbf r_j\|^2 = (1 - R_j^2)\sum_i (x_{ij} - \bar x_j)^2$,
    i wyprowadź ([-@eq-vif]) z zadania [-@exr-reklama-czastkowa].
 b) Wykaż, że dla dwóch cech $\mathrm{VIF} = 1/(1 - r^2)$, gdzie $r$ jest
    ich korelacją z próby. Przy jakiej korelacji VIF przekracza $10$?
@@ -1848,7 +2319,8 @@ b) **Efektywną licznością próby** nazwijmy liczbę niezależnych
 c) Przyjmij bez dowodu, że dla dużego $n$ wariancja z próby $s^2$ jest
    bliska $\sigma^2$. Ile razy klasyczny błąd standardowy $s/\sqrt n$
    zaniża odchylenie standardowe $\bar Y$ przy $\rho = 0{,}8$? Porównaj
-   z symulacją z sekcji [-@sec-diagnostyka].
+   z czynnikiem dla nachylenia prostej podanym w sekcji
+   [-@sec-diagnostyka].
 :::
 
 ::: {#exr-logarytm-wyniku}

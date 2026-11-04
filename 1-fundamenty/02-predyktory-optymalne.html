@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>2&nbsp; Predyktory optymalne i błąd nieredukowalny – Modele analizy danych</title>
+<title>2&nbsp; Ryzyko i predyktory optymalne – Modele analizy danych</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -166,7 +166,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Przełącz pasek boczny" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../1-fundamenty/01-czym-jest-model.html">Fundamenty</a></li><li class="breadcrumb-item"><a href="../1-fundamenty/02-predyktory-optymalne.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Predyktory optymalne i błąd nieredukowalny</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../1-fundamenty/01-czym-jest-model.html">Fundamenty</a></li><li class="breadcrumb-item"><a href="../1-fundamenty/02-predyktory-optymalne.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Ryzyko i predyktory optymalne</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Przełącz pasek boczny" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Szukaj" onclick="window.quartoOpenSearch();">
@@ -215,7 +215,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../1-fundamenty/02-predyktory-optymalne.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Predyktory optymalne i błąd nieredukowalny</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Ryzyko i predyktory optymalne</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -358,22 +358,30 @@ window.Quarto = {
     <h2 id="toc-title">Spis treści</h2>
    
   <ul>
-  <li><a href="#sformułowanie-problemu" id="toc-sformułowanie-problemu" class="nav-link active" data-scroll-target="#sformułowanie-problemu"><span class="header-section-number">2.1</span> Sformułowanie problemu</a></li>
-  <li><a href="#redukcja-do-problemu-punktowego" id="toc-redukcja-do-problemu-punktowego" class="nav-link" data-scroll-target="#redukcja-do-problemu-punktowego"><span class="header-section-number">2.2</span> Redukcja do problemu punktowego</a></li>
-  <li><a href="#regresja-strata-kwadratowa-i-strata-absolutna" id="toc-regresja-strata-kwadratowa-i-strata-absolutna" class="nav-link" data-scroll-target="#regresja-strata-kwadratowa-i-strata-absolutna"><span class="header-section-number">2.3</span> Regresja: strata kwadratowa i strata absolutna</a>
+  <li><a href="#ile-kosztuje-reguła-przewidywania" id="toc-ile-kosztuje-reguła-przewidywania" class="nav-link active" data-scroll-target="#ile-kosztuje-reguła-przewidywania"><span class="header-section-number">2.1</span> Ile kosztuje reguła przewidywania?</a></li>
+  <li><a href="#ryzyko-liczone-w-dwóch-krokach" id="toc-ryzyko-liczone-w-dwóch-krokach" class="nav-link" data-scroll-target="#ryzyko-liczone-w-dwóch-krokach"><span class="header-section-number">2.2</span> Ryzyko liczone w dwóch krokach</a></li>
+  <li><a href="#minimalizacja-punktowa" id="toc-minimalizacja-punktowa" class="nav-link" data-scroll-target="#minimalizacja-punktowa"><span class="header-section-number">2.3</span> Minimalizacja punktowa</a></li>
+  <li><a href="#regresja-najlepsza-prognoza-liczbowa" id="toc-regresja-najlepsza-prognoza-liczbowa" class="nav-link" data-scroll-target="#regresja-najlepsza-prognoza-liczbowa"><span class="header-section-number">2.4</span> Regresja: najlepsza prognoza liczbowa</a>
   <ul class="collapse">
-  <li><a href="#funkcja-regresji" id="toc-funkcja-regresji" class="nav-link" data-scroll-target="#funkcja-regresji"><span class="header-section-number">2.3.1</span> Funkcja regresji</a></li>
-  <li><a href="#strata-absolutna" id="toc-strata-absolutna" class="nav-link" data-scroll-target="#strata-absolutna"><span class="header-section-number">2.3.2</span> Strata absolutna</a></li>
-  <li><a href="#sec-blad-nieredukowalny" id="toc-sec-blad-nieredukowalny" class="nav-link" data-scroll-target="#sec-blad-nieredukowalny"><span class="header-section-number">2.3.3</span> Rozkład ryzyka przy stracie kwadratowej</a></li>
+  <li><a href="#dlaczego-średnia" id="toc-dlaczego-średnia" class="nav-link" data-scroll-target="#dlaczego-średnia"><span class="header-section-number">2.4.1</span> Dlaczego średnia?</a></li>
   </ul></li>
-  <li><a href="#klasyfikacja-strata-01-i-klasyfikator-bayesowski" id="toc-klasyfikacja-strata-01-i-klasyfikator-bayesowski" class="nav-link" data-scroll-target="#klasyfikacja-strata-01-i-klasyfikator-bayesowski"><span class="header-section-number">2.4</span> Klasyfikacja: strata 0–1 i klasyfikator bayesowski</a></li>
-  <li><a href="#sec-od-prawdopodobienstw-do-decyzji" id="toc-sec-od-prawdopodobienstw-do-decyzji" class="nav-link" data-scroll-target="#sec-od-prawdopodobienstw-do-decyzji"><span class="header-section-number">2.5</span> Od prawdopodobieństw do decyzji</a>
+  <li><a href="#klasyfikacja-najlepsza-odpowiedź-tak-lub-nie" id="toc-klasyfikacja-najlepsza-odpowiedź-tak-lub-nie" class="nav-link" data-scroll-target="#klasyfikacja-najlepsza-odpowiedź-tak-lub-nie"><span class="header-section-number">2.5</span> Klasyfikacja: najlepsza odpowiedź tak lub nie</a>
   <ul class="collapse">
-  <li><a href="#predykcja-probabilistyczna" id="toc-predykcja-probabilistyczna" class="nav-link" data-scroll-target="#predykcja-probabilistyczna"><span class="header-section-number">2.5.1</span> Predykcja probabilistyczna</a></li>
-  <li><a href="#straty-niesymetryczne-i-próg-decyzyjny" id="toc-straty-niesymetryczne-i-próg-decyzyjny" class="nav-link" data-scroll-target="#straty-niesymetryczne-i-próg-decyzyjny"><span class="header-section-number">2.5.2</span> Straty niesymetryczne i próg decyzyjny</a></li>
-  <li><a href="#opcja-odmowy" id="toc-opcja-odmowy" class="nav-link" data-scroll-target="#opcja-odmowy"><span class="header-section-number">2.5.3</span> Opcja odmowy</a></li>
+  <li><a href="#najbardziej-prawdopodobna-klasa" id="toc-najbardziej-prawdopodobna-klasa" class="nav-link" data-scroll-target="#najbardziej-prawdopodobna-klasa"><span class="header-section-number">2.5.1</span> Najbardziej prawdopodobna klasa</a></li>
+  <li><a href="#jeden-schemat-dwa-zastosowania" id="toc-jeden-schemat-dwa-zastosowania" class="nav-link" data-scroll-target="#jeden-schemat-dwa-zastosowania"><span class="header-section-number">2.5.2</span> Jeden schemat, dwa zastosowania</a></li>
   </ul></li>
-  <li><a href="#nieosiągalność-optimum" id="toc-nieosiągalność-optimum" class="nav-link" data-scroll-target="#nieosiągalność-optimum"><span class="header-section-number">2.6</span> Nieosiągalność optimum</a></li>
+  <li><a href="#sec-blad-nieredukowalny" id="toc-sec-blad-nieredukowalny" class="nav-link" data-scroll-target="#sec-blad-nieredukowalny"><span class="header-section-number">2.6</span> Dlaczego optimum ma dodatnie ryzyko?</a></li>
+  <li><a href="#inna-strata-inna-najlepsza-prognoza" id="toc-inna-strata-inna-najlepsza-prognoza" class="nav-link" data-scroll-target="#inna-strata-inna-najlepsza-prognoza"><span class="header-section-number">2.7</span> Inna strata, inna najlepsza prognoza</a>
+  <ul class="collapse">
+  <li><a href="#strata-absolutna-i-mediana" id="toc-strata-absolutna-i-mediana" class="nav-link" data-scroll-target="#strata-absolutna-i-mediana"><span class="header-section-number">2.7.1</span> Strata absolutna i mediana</a></li>
+  <li><a href="#którą-stratę-wybrać" id="toc-którą-stratę-wybrać" class="nav-link" data-scroll-target="#którą-stratę-wybrać"><span class="header-section-number">2.7.2</span> Którą stratę wybrać?</a></li>
+  </ul></li>
+  <li><a href="#sec-od-prawdopodobienstw-do-decyzji" id="toc-sec-od-prawdopodobienstw-do-decyzji" class="nav-link" data-scroll-target="#sec-od-prawdopodobienstw-do-decyzji"><span class="header-section-number">2.8</span> Od prawdopodobieństw do decyzji</a>
+  <ul class="collapse">
+  <li><a href="#próg-decyzyjny" id="toc-próg-decyzyjny" class="nav-link" data-scroll-target="#próg-decyzyjny"><span class="header-section-number">2.8.1</span> Próg decyzyjny</a></li>
+  </ul></li>
+  <li><a href="#od-znanego-rozkładu-do-uczenia-z-danych" id="toc-od-znanego-rozkładu-do-uczenia-z-danych" class="nav-link" data-scroll-target="#od-znanego-rozkładu-do-uczenia-z-danych"><span class="header-section-number">2.9</span> Od znanego rozkładu do uczenia z danych</a></li>
+  <li><a href="#sec-rozszerzenia-predykcji" id="toc-sec-rozszerzenia-predykcji" class="nav-link" data-scroll-target="#sec-rozszerzenia-predykcji"><span class="header-section-number">2.10</span> Rozszerzenia: inne decyzje i ciągłe cechy</a></li>
   <li><a href="#uwagi-bibliograficzne" id="toc-uwagi-bibliograficzne" class="nav-link" data-scroll-target="#uwagi-bibliograficzne">Uwagi bibliograficzne</a></li>
   <li><a href="#zadania" id="toc-zadania" class="nav-link" data-scroll-target="#zadania">Zadania</a></li>
   </ul>
@@ -411,9 +419,9 @@ window.Quarto = {
 \)
 </div>
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../1-fundamenty/01-czym-jest-model.html">Fundamenty</a></li><li class="breadcrumb-item"><a href="../1-fundamenty/02-predyktory-optymalne.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Predyktory optymalne i błąd nieredukowalny</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../1-fundamenty/01-czym-jest-model.html">Fundamenty</a></li><li class="breadcrumb-item"><a href="../1-fundamenty/02-predyktory-optymalne.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Ryzyko i predyktory optymalne</span></a></li></ol></nav>
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span id="sec-predyktory-optymalne" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Predyktory optymalne i błąd nieredukowalny</span></span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Kod</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Pokaż cały kod</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Ukryj cały kod</a></li></ul></div></div>
+<div class="quarto-title-block"><div><h1 class="title"><span id="sec-predyktory-optymalne" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Ryzyko i predyktory optymalne</span></span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Kod</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Pokaż cały kod</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Ukryj cały kod</a></li></ul></div></div>
 </div>
 
 
@@ -430,300 +438,629 @@ window.Quarto = {
 </header>
 
 
-<p>W sekcji <a href="01-czym-jest-model.html#sec-predykcja-wnioskowanie" class="quarto-xref"><span>1.7</span></a> wyróżniliśmy dwa cele modelowania: predykcję i wnioskowanie. Ten rozdział dotyczy pierwszego z nich. W regresji predykcja polega na podaniu na podstawie wektora cech <span class="math inline">\(\x\)</span> wartości <span class="math inline">\(\widehat y\)</span>, która ma być bliska nieznanemu <span class="math inline">\(y\)</span>, w klasyfikacji – na wskazaniu klasy. Jak wycenić taką predykcję, ustaliliśmy w sekcji <a href="01-czym-jest-model.html#sec-strata-ryzyko" class="quarto-xref"><span>1.6</span></a>: funkcją straty, której wartość oczekiwana to ryzyko. Lepsza jest reguła o mniejszym ryzyku, a najlepsza – ta, której ryzyko jest najmniejsze. Tam też postawiliśmy pytanie, na które ten rozdział odpowiada: <strong>która funkcja <span class="math inline">\(f\)</span> minimalizuje <span class="math inline">\(\Risk(f)\)</span>?</strong></p>
-<p>Gdy funkcja straty jest ustalona, optymalną regułę można <strong>wyprowadzić</strong>: wystarczy w każdym punkcie <span class="math inline">\(\x\)</span> zminimalizować oczekiwaną stratę. O tym, czego szukamy, decyduje więc strata, nie algorytm. Na przykład w regresji strata kwadratowa prowadzi do średniej warunkowej <span class="math inline">\(Y\)</span> przy danym <span class="math inline">\(\X\)</span>, a strata absolutna – do mediany warunkowej. Dla tego samego rozkładu są to na ogół różne funkcje.</p>
-<p>Wszystkie wyniki tego rozdziału zakładają, że rozkład łączny <span class="math inline">\((\X, Y)\)</span> jest znany. Wskazują więc, czego szukamy, ale nie mówią, jak to znaleźć: oszacowanie potrzebnych wielkości z danych to osobne zadanie. Jego ogólny schemat opisaliśmy w sekcji <a href="01-czym-jest-model.html#sec-trening-modelu" class="quarto-xref"><span>1.8</span></a>, a konkretnym metodom poświęcona jest dalsza część książki. W literaturze ten materiał nosi nazwę statystycznej teorii decyzji <span class="citation" data-cites="esl">(<a href="../references.html#ref-esl" role="doc-biblioref">Hastie i in. 2009, rozdz. 2.4</a>)</span>. My słowa „decyzja” używamy w węższym znaczeniu z sekcji <a href="01-czym-jest-model.html#sec-regresja-klasyfikacja" class="quarto-xref"><span>1.4</span></a>: jako wyboru działania na podstawie prawdopodobieństw klas, na przykład ustalenia progu albo odmowy odpowiedzi. Tym zajmujemy się w sekcji <a href="#sec-od-prawdopodobienstw-do-decyzji" class="quarto-xref"><span>2.5</span></a>.</p>
-<p>Rozdział buduje ten aparat od podstaw. Wynikiem będą fakty, do których wracamy przez całą książkę: funkcja regresji jako optymalny predyktor przy stracie kwadratowej i klasyfikator bayesowski przy stracie 0–1, a dla obu tych strat – konkretna postać rozkładu ryzyka na błąd redukowalny i nieredukowalny, wprowadzonego ogólnie w sekcji <a href="01-czym-jest-model.html#sec-strata-ryzyko" class="quarto-xref"><span>1.6</span></a>.</p>
-<section id="sformułowanie-problemu" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="sformułowanie-problemu"><span class="header-section-number">2.1</span> Sformułowanie problemu</h2>
-<p>Przyjmujemy opis probabilistyczny z sekcji <a href="01-czym-jest-model.html#sec-zaleznosc-i-szum" class="quarto-xref"><span>1.5</span></a>: para <span class="math inline">\((\X, Y)\)</span> ma nieznany rozkład łączny <span class="math inline">\(P\)</span>, a jej wartości leżą w <span class="math inline">\(\mathcal{X} \times \mathcal{Y}\)</span>. W regresji <span class="math inline">\(\mathcal{Y} = \R\)</span>, w klasyfikacji <span class="math inline">\(\mathcal{Y} = \{1, \dots, K\}\)</span>. Predyktor to dowolna (mierzalna) funkcja <span class="math inline">\(f : \mathcal{X} \to \mathcal{Y}\)</span>, a strata <span class="math inline">\(\Loss(y, \widehat y)\)</span> i ryzyko są takie jak w <a href="01-czym-jest-model.html#def-ryzyko-podstawowe" class="quarto-xref">Definicja&nbsp;<span>1.1</span></a>: <span id="eq-ryzyko"><span class="math display">\[
-\Risk(f) = \E\big[\Loss(Y, f(\X))\big].
-\tag{2.1}\]</span></span> Ryzyko jest wielkością teoretyczną: liczymy je względem nieznanego rozkładu <span class="math inline">\(P\)</span>, a nie na zbiorze uczącym.</p>
-<p>Symbol <span class="math inline">\(\E\)</span> będzie w tym rozdziale oznaczał średnie po różnych rozkładach, dlatego ustalmy konwencję. Zapis <span class="math inline">\(\E[\cdots]\)</span> bez warunku to średnia względem rozkładu wszystkich zmiennych losowych występujących w nawiasie: we wzorze (<a href="#eq-ryzyko" class="quarto-xref"><span>2.1</span></a>) – pary <span class="math inline">\((\X, Y)\)</span>, a gdy wyrażenie zależy tylko od <span class="math inline">\(\X\)</span> – rozkładu cech. Zapis <span class="math inline">\(\E[\cdots \mid \X = \x]\)</span> to średnia względem rozkładu warunkowego <span class="math inline">\(Y \mid \X = \x\)</span>, przy ustalonym <span class="math inline">\(\x\)</span>.</p>
-</section>
-<section id="redukcja-do-problemu-punktowego" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="redukcja-do-problemu-punktowego"><span class="header-section-number">2.2</span> Redukcja do problemu punktowego</h2>
-<p>Wzór (<a href="#eq-ryzyko" class="quarto-xref"><span>2.1</span></a>) wygląda na trudny do minimalizacji: szukamy funkcji, a nie liczby, i to w przestrzeni wszystkich funkcji mierzalnych. Poniższa obserwacja sprowadza go do zadania, które rozwiązujemy osobno w każdym punkcie <span class="math inline">\(\x\)</span> – i to ona jest właściwym silnikiem tego rozdziału.</p>
-<p>Skorzystajmy z prawa iterowanej wartości oczekiwanej (<a href="01-czym-jest-model.html#sec-zaleznosc-i-szum" class="quarto-xref"><span>Sekcja 1.5</span></a>): średnią po parze <span class="math inline">\((\X, Y)\)</span> można policzyć w dwóch krokach, najpierw uśredniając przy ustalonych cechach, potem po cechach. Dla ryzyka daje to <span id="eq-ryzyko-warunkowe"><span class="math display">\[
-\Risk(f) =
-\underbrace{\E\Big[\,
-\underbrace{\E\big[\Loss(Y, f(\X)) \,\big|\, \X \big]}_{\text{średnia po } Y \text{ przy ustalonym } \X}
-\,\Big]}_{\text{średnia po } \X}.
-\tag{2.2}\]</span></span> Wewnętrzna średnia to przeciętna strata wśród obiektów o tych samych cechach. Zależy ona od cech, więc jest zmienną losową – funkcją <span class="math inline">\(\X\)</span>, tak jak <span class="math inline">\(\E[Y \mid \X]\)</span> w sekcji <a href="01-czym-jest-model.html#sec-zaleznosc-i-szum" class="quarto-xref"><span>1.5</span></a>. Zewnętrzna średnia uśrednia ją po rozkładzie cech.</p>
-<p>Wprowadźmy <strong>ryzyko warunkowe</strong> w punkcie <span class="math inline">\(\x\)</span> dla wartości <span class="math inline">\(a\)</span>, którą rozważamy jako predykcję w tym punkcie: <span id="eq-ryzyko-punktowe"><span class="math display">\[
-r(a \mid \x) = \E\big[\Loss(Y, a) \,\big|\, \X = \x\big].
-\tag{2.3}\]</span></span> Punkt <span class="math inline">\(\x\)</span> i wartość <span class="math inline">\(a\)</span> są tu ustalone, losowe jest tylko <span class="math inline">\(Y\)</span>, a średnią liczymy względem rozkładu warunkowego <span class="math inline">\(Y \mid \X = \x\)</span>: <span class="math display">\[
-r(a \mid \x) = \sum_{y} \Loss(y, a)\, p(y \mid \x)
-\qquad\text{albo}\qquad
-r(a \mid \x) = \int \Loss(y, a)\, p(y \mid \x)\, dy .
-\]</span> Ryzyko warunkowe jest więc <strong>liczbą</strong>: mówi, ile przeciętnie kosztuje predykcja <span class="math inline">\(a\)</span> dla obiektów o cechach <span class="math inline">\(\x\)</span>. Wewnętrzna średnia w (<a href="#eq-ryzyko-warunkowe" class="quarto-xref"><span>2.2</span></a>) to ta sama wielkość z <span class="math inline">\(a = f(\x)\)</span>, obliczona w wylosowanym punkcie: <span class="math inline">\(\E\big[\Loss(Y, f(\X)) \mid \X\big] = r(f(\X) \mid \X)\)</span>.</p>
-<div id="thm-minimalizacja-punktowa" class="theorem">
-<p><span class="theorem-title"><strong>Twierdzenie 2.1 (Zasada minimalizacji punktowej)</strong></span> Jeżeli dla każdego <span class="math inline">\(\x\)</span> istnieje wartość <span class="math inline">\(\fopt(\x)\)</span> minimalizująca <span class="math inline">\(r(\cdot \mid \x)\)</span>, to funkcja <span class="math inline">\(\fopt\)</span> minimalizuje ryzyko <span class="math inline">\(\Risk\)</span> w klasie <strong>wszystkich</strong> predyktorów.</p>
+<p>Model przypisuje obserwowanym cechom pewną odpowiedź. Skąd jednak wiadomo, która odpowiedź jest dobra? W poprzednim rozdziale wprowadziliśmy funkcję straty i ryzyko. Teraz wykorzystamy je do porównywania reguł przewidywania oraz do znalezienia najlepszej z nich.</p>
+<p>Zaczniemy od małego przykładu, w którym wszystkie możliwości można wypisać w tabeli. Policzymy ryzyko kilku reguł, a następnie zobaczymy, jak wybierać odpowiedzi, aby je zminimalizować. Ten sam sposób rozumowania posłuży do przewidywania wartości liczbowej i do wskazywania klasy. Regresja i klasyfikacja będą dwoma zastosowaniami jednej zasady.</p>
+<p>Przez większą część rozdziału będziemy zakładać, że znamy rozkład danych. To założenie pozwoli nam dokładnie wskazać cel uczenia: regułę, której szukalibyśmy, mając pełną wiedzę o rozkładzie. Na końcu wrócimy do sytuacji, w której zamiast rozkładu mamy jedynie próbę.</p>
+<section id="ile-kosztuje-reguła-przewidywania" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="ile-kosztuje-reguła-przewidywania"><span class="header-section-number">2.1</span> Ile kosztuje reguła przewidywania?</h2>
+<p>Sklep chce przewidywać dzienny popyt na pewien produkt. Dla uproszczenia przyjmijmy, że popyt <span class="math inline">\(Y\)</span> może wynosić <span class="math inline">\(0\)</span>, <span class="math inline">\(2\)</span> albo <span class="math inline">\(4\)</span> sztuki. Znamy też rodzaj dnia <span class="math inline">\(X\)</span>: <span class="math inline">\(A\)</span> oznacza zwykły dzień, a <span class="math inline">\(B\)</span> – dzień lokalnego wydarzenia, które przyciąga dodatkowych klientów. Rodzaj dnia znamy przed sporządzeniem prognozy.</p>
+<p>Przyjmujemy następujący model probabilistyczny:</p>
+<div id="tbl-popyt-rozklad" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-popyt-rozklad-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;2.1: Rozkład popytu w przykładzie sklepu.
+</figcaption>
+<div aria-describedby="tbl-popyt-rozklad-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Rodzaj dnia <span class="math inline">\(x\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(\Prob(X=x)\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(\Prob(Y=0\mid X=x)\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(\Prob(Y=2\mid X=x)\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(\Prob(Y=4\mid X=x)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(A\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}75\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}6\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}3\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}1\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(B\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}25\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}1\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}3\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}6\)</span></td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="proof">
-<p><span class="proof-title"><em>Dowód</em>. </span>Niech <span class="math inline">\(f\)</span> będzie dowolnym predyktorem. Z definicji <span class="math inline">\(\fopt(\x)\)</span> jako minimalizatora zachodzi <span class="math inline">\(r(\fopt(\x) \mid \x) \le r(f(\x) \mid \x)\)</span> dla każdego <span class="math inline">\(\x\)</span>. Podstawiając <span class="math inline">\(\X\)</span> w miejsce <span class="math inline">\(\x\)</span>, otrzymujemy nierówność między zmiennymi losowymi <span class="math inline">\(r(\fopt(\X) \mid \X)\)</span> i <span class="math inline">\(r(f(\X) \mid \X)\)</span>. Nierówność ta zachowuje się przy uśrednianiu po rozkładzie <span class="math inline">\(\X\)</span>, więc na mocy (<a href="#eq-ryzyko-warunkowe" class="quarto-xref"><span>2.2</span></a>) <span class="math display">\[
-\Risk(\fopt) = \E\big[r(\fopt(\X) \mid \X)\big]
-\;\le\; \E\big[r(f(\X) \mid \X)\big] = \Risk(f). \qquad\square
+</figure>
+</div>
+<p>Tabela opisuje <strong>założony rozkład</strong>, nie wyniki zebrane w sześciu dniach. Mówi na przykład, że zwykłe dni stanowią <span class="math inline">\(75\%\)</span> rozważanej populacji dni, a wśród nich zerowy popyt występuje z prawdopodobieństwem <span class="math inline">\(0{,}6\)</span>. Prawdopodobieństwo pary obliczamy ze wzoru <span class="math display">\[
+\Prob(X=A,Y=y)=\Prob(X=A)\,\Prob(Y=y\mid X=A).
+\]</span> Dla <span class="math inline">\(y=0\)</span> otrzymujemy zatem <span class="math inline">\(0{,}75\cdot 0{,}6=0{,}45\)</span>.</p>
+<p>Predyktor <span class="math inline">\(f\)</span> przypisuje każdemu rodzajowi dnia prognozę liczbową. Zacznijmy od najprostszej reguły: <strong>zawsze przewiduj <span class="math inline">\(2\)</span> sztuki</strong>, czyli <span class="math inline">\(f(A)=f(B)=2\)</span>. Oceńmy ją stratą kwadratową <span class="math inline">\(\Loss(y,a)=(y-a)^2\)</span>, gdzie <span class="math inline">\(a\)</span> jest prognozą, a <span class="math inline">\(y\)</span> rzeczywistym popytem. Gdy popyt wyniesie <span class="math inline">\(2\)</span>, strata będzie zerowa. Gdy wyniesie <span class="math inline">\(0\)</span> lub <span class="math inline">\(4\)</span>, strata będzie równa <span class="math inline">\(4\)</span>.</p>
+<p>Strata <span class="math inline">\((Y-f(X))^2=(Y-2)^2\)</span> jest więc zmienną losową, której rozkład wynika z rozkładu pary <span class="math inline">\((X,Y)\)</span>. Poniższa tabela pokazuje, jaką wartość straty otrzymujemy dla każdej pary i z jakim prawdopodobieństwem:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><span class="math inline">\(X\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(Y\)</span></th>
+<th style="text-align: right;">Prawdopodobieństwo pary</th>
+<th style="text-align: right;">Strata <span class="math inline">\((Y-2)^2\)</span></th>
+<th style="text-align: right;">Wkład do średniej straty</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(A\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}450\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(4\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1{,}800\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(A\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}225\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(A\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(4\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}075\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(4\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}300\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(B\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}025\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(4\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}100\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(B\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}075\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(B\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(4\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}150\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(4\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}600\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Razem</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"><span class="math inline">\(2{,}800\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Sumując prawdopodobieństwa par prowadzących do tej samej straty, otrzymujemy jej rozkład: <span class="math display">\[
+\Prob\big((Y-2)^2=0\big)=0{,}3,\qquad
+\Prob\big((Y-2)^2=4\big)=0{,}7.
+\]</span> Jej wartość oczekiwana wynosi zatem <span class="math inline">\(0\cdot 0{,}3+4\cdot 0{,}7=2{,}8\)</span> – ten sam wynik daje suma ostatniej kolumny tabeli. Otrzymana średnia strata, <span class="math inline">\(2{,}8\)</span>, to <strong>ryzyko</strong> reguły <span class="math inline">\(f\)</span>. W pojedynczym dniu strata wynosi tu <span class="math inline">\(0\)</span> albo <span class="math inline">\(4\)</span>. Ryzyko opisuje przeciętny wynik stosowania tej reguły w populacji dni określonej przez nasz model.</p>
+<p>W notacji z poprzedniego rozdziału zapisujemy to jako <span id="eq-ryzyko"><span class="math display">\[
+\Risk(f)=\E\big[\Loss(Y,f(X))\big].
+\tag{2.1}\]</span></span> Strata <span class="math inline">\(\Loss(Y,f(X))\)</span> jest funkcją losowej pary <span class="math inline">\((X,Y)\)</span>, a więc sama jest zmienną losową. Ryzyko jest jej wartością oczekiwaną.</p>
+<p>Ryzyko zależy więc od trzech rzeczy: rozkładu danych, funkcji straty oraz predyktora. Aby porównanie dwóch predyktorów miało sens, oceniamy je przy tym samym rozkładzie i tej samej stracie.</p>
+<p>Wartość <span class="math inline">\(2{,}8\)</span> nie oznacza ani <span class="math inline">\(2{,}8\%\)</span> pomyłek, ani przeciętnej pomyłki o <span class="math inline">\(2{,}8\)</span> sztuki. Jest to średni <strong>kwadrat</strong> pomyłki, mierzony w kwadratach jednostki popytu. Interpretacja ryzyka zależy od straty. Dopiero przy stracie <span class="math inline">\(0\)</span>–<span class="math inline">\(1\)</span> ryzyko będzie prawdopodobieństwem błędu.</p>
+</section>
+<section id="ryzyko-liczone-w-dwóch-krokach" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="ryzyko-liczone-w-dwóch-krokach"><span class="header-section-number">2.2</span> Ryzyko liczone w dwóch krokach</h2>
+<p>Spróbujmy innej reguły stałej: <span class="math inline">\(f(A)=f(B)=1{,}5\)</span>. Dlaczego właśnie <span class="math inline">\(1{,}5\)</span>? Tyle wynosi średni popyt w całej populacji. Zsumowanie prawdopodobieństw par z poprzedniej tabeli daje <span class="math display">\[
+\Prob(Y=0)=0{,}475,\qquad
+\Prob(Y=2)=0{,}300,\qquad
+\Prob(Y=4)=0{,}225,
+\]</span> a zatem <span class="math inline">\(\E[Y]=0\cdot0{,}475+2\cdot0{,}300+4\cdot0{,}225=1{,}5\)</span>. Ryzyko tej prognozy wynosi <span class="math display">\[
+\Risk(f)=0{,}475\cdot(0-1{,}5)^2
++0{,}300\cdot(2-1{,}5)^2
++0{,}225\cdot(4-1{,}5)^2=2{,}55.
+\]</span> Jest mniejsze niż ryzyko prognozy <span class="math inline">\(2\)</span>.</p>
+<p>Przyjrzyjmy się teraz stracie prognozy <span class="math inline">\(1{,}5\)</span> <strong>przy ustalonym rodzaju dnia</strong>. Zaczniemy od zwykłych dni, czyli warunku <span class="math inline">\(X=A\)</span>. Korzystamy wtedy z rozkładu warunkowego <span class="math inline">\(Y\mid X=A\)</span>: wartości popytu mają prawdopodobieństwa podane w wierszu <span class="math inline">\(A\)</span> tabeli modelu. Każdej wartości popytu odpowiada określona strata:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: right;">Popyt <span class="math inline">\(y\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(\Prob(Y=y\mid X=A)\)</span></th>
+<th style="text-align: right;">Strata <span class="math inline">\((y-1{,}5)^2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;"><span class="math inline">\(0\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}6\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(2{,}25\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}3\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}25\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><span class="math inline">\(4\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}1\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(6{,}25\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Wszystkie trzy wartości straty są różne, więc ostatnia kolumna wraz z prawdopodobieństwami opisuje rozkład straty pod warunkiem <span class="math inline">\(X=A\)</span>. Jej warunkowa wartość oczekiwana wynosi <span class="math display">\[
+\E\big[(Y-1{,}5)^2\mid X=A\big]
+=0{,}6\cdot2{,}25+0{,}3\cdot0{,}25+0{,}1\cdot6{,}25
+=2{,}05.
 \]</span></p>
-</div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Wskazówka</span>Znaczenie minimalizacji punktowej
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Zasada mówi, co estymować – średnią warunkową, medianę albo <span class="math inline">\(\eta(\x)\)</span> – ale nie mówi, jak to zrobić. Wygląda na prostą, bo w każdym punkcie <span class="math inline">\(\x\)</span> wystarczy znać rozkład warunkowy <span class="math inline">\(Y \mid \X = \x\)</span> i nie trzeba patrzeć na inne punkty. Tego rozkładu jednak nie znamy, a przy cechach ciągłych <span class="math inline">\(\Prob(\X = \x) = 0\)</span>, więc w próbie prawie na pewno nie ma ani jednej obserwacji o cechach dokładnie <span class="math inline">\(\x\)</span>. Informację trzeba pożyczać z innych punktów: z otoczenia <span class="math inline">\(\x\)</span>, jak w metodzie <span class="math inline">\(k\)</span> najbliższych sąsiadów z rozdziału <a href="03-knn.html" class="quarto-xref"><span>3</span></a>, albo z całej próby naraz, jak w modelu parametrycznym, którego wszystkie parametry wyznaczamy jednocześnie.</p>
-<p>Pożyczanie sprzęga predykcje w różnych punktach i stąd biorą się kompromisy. Prosta dopasowana do zakrzywionej funkcji regresji, jak na rysunku <a href="01-czym-jest-model.html#fig-parametryczne-nieparametryczne" class="quarto-xref"><span>1.2</span></a>, poprawia się w jednej części przestrzeni cech kosztem innej. Przy uśrednianiu lokalnym trzeba z kolei wybrać wielkość otoczenia: małe zawiera mało obserwacji, duże miesza punkty o różnych rozkładach warunkowych. Inaczej jest, gdy cechy przyjmują niewiele wartości i każdą z nich obserwujemy wiele razy – wtedy optymalną predykcję można szacować w każdym punkcie osobno, na przykład średnią wyników w tym punkcie.</p>
-<p>Widać tu też rolę obu czynników rozkładu łącznego (<a href="01-czym-jest-model.html#eq-rozklad-laczny" class="quarto-xref"><span>1.1</span></a>). Ryzyko warunkowe <span class="math inline">\(r(a \mid \x)\)</span> zależy wyłącznie od rozkładu warunkowego <span class="math inline">\(Y \mid \X = \x\)</span>, więc optymalna predykcja w punkcie <span class="math inline">\(\x\)</span> nie zależy od rozkładu brzegowego cech <span class="math inline">\(p(\x)\)</span>. Ten pojawia się dopiero w zewnętrznej wartości oczekiwanej we wzorze (<a href="#eq-ryzyko-warunkowe" class="quarto-xref"><span>2.2</span></a>): waży punkty, decydując, ile wnosi do ryzyka błąd popełniony w danym obszarze przestrzeni cech – tak jak zapowiedzieliśmy w sekcji <a href="01-czym-jest-model.html#sec-zaleznosc-i-szum" class="quarto-xref"><span>1.5</span></a>.</p>
-</div>
-</div>
-<p>Od tej chwili wystarczy więc odpowiadać na pytanie: <em>dla danej straty <span class="math inline">\(\Loss\)</span> i danego rozkładu warunkowego <span class="math inline">\(Y \mid \X = \x\)</span>, która wartość <span class="math inline">\(a\)</span> minimalizuje (<a href="#eq-ryzyko-punktowe" class="quarto-xref"><span>2.3</span></a>)?</em> Strata wyznacza, jaką charakterystykę rozkładu warunkowego zwraca optymalny predyktor, na przykład średnią, medianę albo najbardziej prawdopodobną klasę. Wybór straty jest więc częścią modelowania.</p>
+<p>Dla dni wydarzenia wartości straty pozostają takie same, ale zmieniają się ich prawdopodobieństwa. Korzystając z wiersza <span class="math inline">\(B\)</span> tabeli modelu, otrzymujemy <span class="math display">\[
+\E\big[(Y-1{,}5)^2\mid X=B\big]
+=0{,}1\cdot2{,}25+0{,}3\cdot0{,}25+0{,}6\cdot6{,}25
+=4{,}05.
+\]</span></p>
+<p>Te dwie warunkowe wartości oczekiwane nazywamy <strong>ryzykami warunkowymi</strong>: opisują przeciętną stratę prognozy osobno dla każdego rodzaju dnia.</p>
+<p>Co otrzymamy, gdy uśrednimy je po rozkładzie <span class="math inline">\(X\)</span>? Zwykłe dni mają prawdopodobieństwo <span class="math inline">\(0{,}75\)</span>, a dni wydarzenia <span class="math inline">\(0{,}25\)</span>, zatem <span class="math display">\[
+0{,}75\cdot2{,}05+0{,}25\cdot4{,}05=2{,}55.
+\]</span> Otrzymaliśmy ryzyko obliczone wcześniej bezpośrednio. Ta zgodność wynika ze <strong>wzoru na iterowaną wartość oczekiwaną</strong>: <span class="math display">\[
+\E\big[(Y-1{,}5)^2\big]
+=\E\Big[\E\big[(Y-1{,}5)^2\mid X\big]\Big].
+\]</span> Najpierw obliczamy wartość oczekiwaną straty przy ustalonym rodzaju dnia, a następnie uśredniamy otrzymane wartości po rozkładzie rodzajów dni.</p>
+<p>Wprowadźmy zapis, który pozwoli powtórzyć ten rachunek dla dowolnej prognozy <span class="math inline">\(a\)</span> i dowolnych cech <span class="math inline">\(\x\)</span>: <span id="eq-ryzyko-punktowe"><span class="math display">\[
+r(a\mid\x)=\E\big[\Loss(Y,a)\mid\X=\x\big].
+\tag{2.2}\]</span></span> W tym wyrażeniu <span class="math inline">\(\x\)</span> i <span class="math inline">\(a\)</span> są ustalone. Uśredniamy po możliwych wynikach <span class="math inline">\(Y\)</span> wśród obiektów o cechach <span class="math inline">\(\x\)</span>. Przy skończenie wielu wynikach jest to po prostu suma <span class="math display">\[
+r(a\mid\x)=\sum_y\Loss(y,a)\Prob(Y=y\mid\X=\x).
+\]</span> W przykładzie pojedynczą cechą jest rodzaj dnia, więc piszemy <span class="math inline">\(r(a\mid A)\)</span> i <span class="math inline">\(r(a\mid B)\)</span>.</p>
+<p>Dla dowolnej reguły <span class="math inline">\(f\)</span> otrzymujemy <span class="math display">\[
+\Risk(f)=0{,}75\,r(f(A)\mid A)+0{,}25\,r(f(B)\mid B).
+\]</span> Ogólny zapis tej samej zasady to <span id="eq-ryzyko-warunkowe"><span class="math display">\[
+\Risk(f)=\E\big[r(f(\X)\mid\X)\big]
+=\E\Big[\E\big[\Loss(Y,f(\X))\mid\X\big]\Big].
+\tag{2.3}\]</span></span> Jest to zastosowanie wzoru na iterowaną wartość oczekiwaną z rozdziału <a href="01-czym-jest-model.html" class="quarto-xref"><span>1</span></a>.</p>
+<p>Gdy cechy i odpowiedź przyjmują skończenie wiele wartości, przejście to można zobaczyć bezpośrednio w sumach: <span class="math display">\[
+\begin{aligned}
+\Risk(f)
+&amp;=\sum_{\x}\sum_y \Loss(y,f(\x))\Prob(\X=\x,Y=y)\\
+&amp;=\sum_{\x}\sum_y \Loss(y,f(\x))
+  \Prob(\X=\x)\Prob(Y=y\mid\X=\x)\\
+&amp;=\sum_{\x}\Prob(\X=\x)
+  \underbrace{\sum_y\Loss(y,f(\x))\Prob(Y=y\mid\X=\x)}_{r(f(\x)\mid\x)}.
+\end{aligned}
+\]</span> Sumujemy tu po wartościach <span class="math inline">\(\x\)</span> o dodatnim prawdopodobieństwie. W drugim wierszu rozpisaliśmy prawdopodobieństwo łączne jako iloczyn prawdopodobieństwa cech i prawdopodobieństwa warunkowego odpowiedzi. W trzecim wyłączyliśmy przed wewnętrzną sumę czynnik <span class="math inline">\(\Prob(\X=\x)\)</span>, który nie zależy od <span class="math inline">\(y\)</span>. Wewnętrzna suma jest ryzykiem warunkowym, a zewnętrzna uśrednia je po rozkładzie cech.</p>
 </section>
-<section id="regresja-strata-kwadratowa-i-strata-absolutna" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="regresja-strata-kwadratowa-i-strata-absolutna"><span class="header-section-number">2.3</span> Regresja: strata kwadratowa i strata absolutna</h2>
-<section id="funkcja-regresji" class="level3" data-number="2.3.1">
-<h3 data-number="2.3.1" class="anchored" data-anchor-id="funkcja-regresji"><span class="header-section-number">2.3.1</span> Funkcja regresji</h3>
-<div id="thm-funkcja-regresji" class="theorem">
-<p><span class="theorem-title"><strong>Twierdzenie 2.2 (Optymalność funkcji regresji)</strong></span> Niech <span class="math inline">\(\mathcal{Y} = \R\)</span>, <span class="math inline">\(\Loss(y, a) = (y - a)^2\)</span> i niech <span class="math inline">\(\E[Y^2] &lt; \infty\)</span>. Wtedy ryzyko (<a href="#eq-ryzyko" class="quarto-xref"><span>2.1</span></a>) jest minimalizowane przez <strong>funkcję regresji</strong> <span id="eq-funkcja-regresji"><span class="math display">\[
-\fopt(\x) = \E[Y \mid \X = \x].
-\tag{2.4}\]</span></span></p>
+<section id="minimalizacja-punktowa" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="minimalizacja-punktowa"><span class="header-section-number">2.3</span> Minimalizacja punktowa</h2>
+<p>Dotąd ocenialiśmy gotowe reguły. Teraz chcemy regułę wybrać. W przykładzie sklepu oznacza to wybór dwóch liczb: prognozy <span class="math inline">\(a_A\)</span> na zwykły dzień i prognozy <span class="math inline">\(a_B\)</span> na dzień wydarzenia. Ich ryzyko wynosi <span class="math display">\[
+0{,}75\,r(a_A\mid A)+0{,}25\,r(a_B\mid B).
+\]</span> Ryzyko warunkowe <span class="math inline">\(r(a_A\mid A)\)</span> jest średnią straty prognozy <span class="math inline">\(a_A\)</span> liczoną według rozkładu popytu w zwykłe dni. Ten rozkład nie zależy od naszych prognoz, więc pierwszy składnik zależy wyłącznie od <span class="math inline">\(a_A\)</span>, a drugi z tego samego powodu wyłącznie od <span class="math inline">\(a_B\)</span>. Wagi <span class="math inline">\(0{,}75\)</span> i <span class="math inline">\(0{,}25\)</span> też są ustalone. Możemy więc wybrać najlepszą odpowiedź w każdej grupie osobno. Zmniejszenie straty w grupie <span class="math inline">\(A\)</span> nie wymaga pogorszenia prognozy w grupie <span class="math inline">\(B\)</span>.</p>
+<p>To rozumowanie nie zależy od straty kwadratowej ani od liczby grup. Prowadzi do wspólnej zasady dla regresji i klasyfikacji.</p>
+<div id="thm-minimalizacja-punktowa" class="theorem">
+<p><span class="theorem-title"><strong>Twierdzenie 2.1 (Zasada minimalizacji punktowej)</strong></span> Jeżeli dla każdej rozważanej wartości cech <span class="math inline">\(\x\)</span> wybierzemy odpowiedź <span class="math inline">\(\fopt(\x)\)</span> minimalizującą ryzyko warunkowe <span class="math inline">\(r(a\mid\x)\)</span> i wybory te wyznaczają dopuszczalny predyktor, to <span class="math inline">\(\fopt\)</span> minimalizuje ryzyko <span class="math inline">\(\Risk(f)\)</span> wśród wszystkich predyktorów.</p>
 </div>
 <div class="proof">
-<p><span class="proof-title"><em>Dowód</em>. </span>Na mocy <a href="#thm-minimalizacja-punktowa" class="quarto-xref">Twierdzenie&nbsp;<span>2.1</span></a> wystarczy dla ustalonego <span class="math inline">\(\x\)</span> zminimalizować <span class="math inline">\(r(a \mid \x) = \E[(Y - a)^2 \mid \X = \x]\)</span> względem <span class="math inline">\(a \in \R\)</span>. Oznaczmy <span class="math inline">\(m = \E[Y \mid \X = \x]\)</span> i rozłóżmy różnicę <span class="math inline">\(Y - a = (Y - m) + (m - a)\)</span>: <span class="math display">\[
-\E\big[(Y-a)^2 \mid \X = \x\big]
-= \E\big[(Y-m)^2 \mid \X=\x\big] + 2(m-a)\,\E\big[Y-m \mid \X=\x\big] + (m-a)^2 .
-\]</span> Środkowy składnik znika, ponieważ <span class="math inline">\(\E[Y - m \mid \X = \x] = m - m = 0\)</span>. Zostaje <span id="eq-rozklad-ryzyka-punktowego"><span class="math display">\[
-r(a \mid \x) = \Var(Y \mid \X = \x) + (m - a)^2 .
-\tag{2.5}\]</span></span> Pierwszy składnik nie zależy od <span class="math inline">\(a\)</span>, drugi jest nieujemny i zeruje się dokładnie dla <span class="math inline">\(a = m\)</span>. Zatem <span class="math inline">\(\fopt(\x) = m = \E[Y \mid \X = \x]\)</span>. <span class="math inline">\(\qquad\square\)</span></p>
+<p><span class="proof-title"><em>Dowód</em>. </span>Niech <span class="math inline">\(f\)</span> będzie dowolnym innym predyktorem. Dla każdej wartości cech mamy <span class="math inline">\(r(\fopt(\x)\mid\x)\le r(f(\x)\mid\x)\)</span>. Uśrednienie tej nierówności po rozkładzie cech daje <span class="math display">\[
+\Risk(\fopt)=\E\big[r(\fopt(\X)\mid\X)\big]
+\le\E\big[r(f(\X)\mid\X)\big]=\Risk(f).
+\]</span> <span class="math inline">\(\square\)</span></p>
 </div>
-<p>Z równania (<a href="#eq-rozklad-ryzyka-punktowego" class="quarto-xref"><span>2.5</span></a>) dla <span class="math inline">\(a = m\)</span> wynika też, że ryzyko warunkowe optymalnego predyktora w punkcie <span class="math inline">\(\x\)</span> wynosi <span class="math inline">\(\Var(Y \mid \X = \x)\)</span>. <strong>Optymalny predyktor ma więc dodatnie ryzyko</strong>, o ile <span class="math inline">\(Y\)</span> nie jest wyznaczone przez <span class="math inline">\(\X\)</span>. Wrócimy do tego w sekcji <a href="#sec-blad-nieredukowalny" class="quarto-xref"><span>2.3.3</span></a>.</p>
-</section>
-<section id="strata-absolutna" class="level3" data-number="2.3.2">
-<h3 data-number="2.3.2" class="anchored" data-anchor-id="strata-absolutna"><span class="header-section-number">2.3.2</span> Strata absolutna</h3>
-<p>Zmieńmy jedno założenie – stratę – i zobaczmy, jak zmienia się odpowiedź.</p>
-<div id="thm-mediana-warunkowa" class="theorem">
-<p><span class="theorem-title"><strong>Twierdzenie 2.3 (Optymalność mediany warunkowej)</strong></span> Przy stracie <span class="math inline">\(\Loss(y, a) = |y - a|\)</span> ryzyko (<a href="#eq-ryzyko" class="quarto-xref"><span>2.1</span></a>) jest minimalizowane przez <strong>medianę warunkową</strong> <span id="eq-mediana-warunkowa"><span class="math display">\[
-\fopt(\x) = \med(Y \mid \X = \x).
-\tag{2.6}\]</span></span></p>
-</div>
+<p>Słowo <em>punktowa</em> oznacza, że wybieramy odpowiedź osobno dla każdej wartości cech. Zamiast od razu szukać całej funkcji, rozwiązujemy prostszy problem: <strong>przy tych cechach, którą odpowiedź opłaca się podać?</strong> Jest to podstawowa zasada statystycznej teorii decyzji <span class="citation" data-cites="esl">(<a href="../references.html#ref-esl" role="doc-biblioref">Hastie i in. 2009, rozdz. 2.4</a>)</span>.</p>
+<p>Istotny jest zakres swobody. Jeśli wymagamy, aby prognoza była stała, to <span class="math inline">\(a_A=a_B\)</span> i nie możemy już wybierać tych liczb niezależnie. Podobnie, wymagając, aby prognozy leżały na jednej prostej, wiążemy odpowiedzi w różnych punktach. Najlepszy predyktor w ograniczonej klasie może zatem mieć większe ryzyko niż optimum punktowe.</p>
+<p>Warto też rozdzielić role prawdopodobieństw. O najlepszej odpowiedzi w grupie decyduje rozkład wyniku <strong>w tej grupie</strong>. Częstość grupy określa natomiast jej udział w całkowitym ryzyku. Przy niezmienionych rozkładach warunkowych zmiana proporcji grup nie zmienia ich punktowych optimów, ale może zmienić ryzyko oraz najlepszą regułę stałą.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Adnotacja</span>Dowód (dla zainteresowanych)
+<span class="screen-reader-only">Adnotacja</span>Uwaga o zakresie twierdzenia
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Ustalmy <span class="math inline">\(\x\)</span> i oznaczmy przez <span class="math inline">\(F\)</span> dystrybuantę rozkładu <span class="math inline">\(Y \mid \X = \x\)</span>. Dla prostoty zakładamy, że <span class="math inline">\(F\)</span> jest ciągła. Rozbijając wartość oczekiwaną według znaku <span class="math inline">\(Y - a\)</span>, mamy <span class="math display">\[
-r(a \mid \x) = \int_{-\infty}^{a} (a - y)\,dF(y) + \int_{a}^{\infty} (y - a)\,dF(y).
-\]</span> Różniczkując po <span class="math inline">\(a\)</span> (składniki brzegowe znoszą się, bo podcałkowa funkcja zeruje się w <span class="math inline">\(y = a\)</span>): <span class="math display">\[
-\frac{\partial r}{\partial a}(a \mid \x) = F(a) - \big(1 - F(a)\big) = 2F(a) - 1 .
-\]</span> Pochodna jest ujemna dla <span class="math inline">\(F(a) &lt; \tfrac12\)</span> i dodatnia dla <span class="math inline">\(F(a) &gt; \tfrac12\)</span>, a funkcja <span class="math inline">\(r(\cdot \mid \x)\)</span> jest wypukła jako suma funkcji wypukłych. Minimum przypada więc tam, gdzie <span class="math inline">\(F(a) = \tfrac12\)</span>, czyli w medianie rozkładu warunkowego. <span class="math inline">\(\qquad\square\)</span></p>
-<p>Bez założenia ciągłości rozumowanie przenosi się na pochodne jednostronne: minimum osiąga każda mediana, czyli każde <span class="math inline">\(a\)</span> spełniające <span class="math inline">\(F(a^-) \le \tfrac12 \le F(a)\)</span> – w ogólności nie jest ona jednoznaczna.</p>
+<p>Dla cech dyskretnych wystarczy rozpatrywać wartości o dodatnim prawdopodobieństwie. W ogólnym przypadku rozkłady warunkowe i predyktory optymalne określamy z dokładnością do zbiorów cech o prawdopodobieństwie zero. Zakładamy też mierzalność wybranego predyktora, aby jego ryzyko było określone. Wystarczy więc, aby punktowa nierówność zachodziła prawie wszędzie względem rozkładu cech. W przykładach skończonych te zastrzeżenia nie wymagają dodatkowych rachunków.</p>
 </div>
 </div>
 </div>
-<p>Symbol <span class="math inline">\(\fopt\)</span> oznacza więc predyktor optymalny <strong>przy danej stracie</strong> – zmiana straty zmienia to, co się pod nim kryje. Gdy strata nie jest wskazana, <span class="math inline">\(\fopt\)</span> oznacza, tak jak w sekcji <a href="01-czym-jest-model.html#sec-zaleznosc-i-szum" class="quarto-xref"><span>1.5</span></a>, funkcję regresji.</p>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Ważne</span>Wybór straty jest wyborem merytorycznym
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Twierdzenia <a href="#thm-funkcja-regresji" class="quarto-xref">Twierdzenie&nbsp;<span>2.2</span></a> i <a href="#thm-mediana-warunkowa" class="quarto-xref">Twierdzenie&nbsp;<span>2.3</span></a> dają <strong>różne</strong> odpowiedzi na to samo pytanie o ten sam rozkład. Gdy rozkład warunkowy jest skośny, średnia i mediana potrafią leżeć daleko od siebie – i wtedy pytanie „jaka jest najlepsza predykcja?” nie ma sensu, dopóki nie powiemy, co uznajemy za stratę.</p>
-<p>Strata kwadratowa karze duże błędy proporcjonalnie do kwadratu, więc jeden gruby błąd waży tyle co wiele drobnych: predyktor jest przyciągany w stronę ogona rozkładu. Strata absolutna waży wszystkie błędy liniowo i dlatego prowadzi do estymatora odpornego na obserwacje odstające.</p>
-<p>To nie jest wybór między „dokładniejszym” a „mniej dokładnym” narzędziem. Przy stracie kwadratowej jeden błąd o wartości 10 kosztuje tyle, co sto błędów o wartości 1 (por. <a href="01-czym-jest-model.html#sec-strata-ryzyko" class="quarto-xref"><span>Sekcja 1.6</span></a>), przy absolutnej – tyle, co dziesięć. Wybór straty to rozstrzygnięcie, która z tych wycen lepiej oddaje koszty w Twoim zastosowaniu.</p>
-</div>
-</div>
-<p>Zilustrujmy to na konkretnym rozkładzie. Ustalmy punkt <span class="math inline">\(\x\)</span> i przyjmijmy, że rozkład warunkowy <span class="math inline">\(Y \mid \X = \x\)</span> jest mieszaniną dwóch rozkładów normalnych: z prawdopodobieństwem <span class="math inline">\(0{,}85\)</span> wynik pochodzi z rozkładu <span class="math inline">\(\Nrozk(2,\, 0{,}6^2)\)</span>, a z prawdopodobieństwem <span class="math inline">\(0{,}15\)</span> – z rozkładu <span class="math inline">\(\Nrozk(9,\, 2^2)\)</span>. Większość masy skupia się więc wokół <span class="math inline">\(2\)</span>, a niewielka jej część tworzy długi prawy ogon.</p>
-<p>Średnia mieszaniny jest średnią średnich składników ważoną ich prawdopodobieństwami: <span class="math inline">\(0{,}85 \cdot 2 + 0{,}15 \cdot 9 = 3{,}05\)</span>. Mediana nie ma prostego wzoru – wyznacza się ją numerycznie, rozwiązując równanie <span class="math inline">\(F(a) = \tfrac12\)</span>, gdzie <span class="math inline">\(F\)</span> jest dystrybuantą mieszaniny (w kodzie poniżej robi to funkcja <code>brentq</code>). Wychodzi około <span class="math inline">\(2{,}13\)</span>, blisko środka składnika głównego, który ma <span class="math inline">\(85\%\)</span> masy. Oba ryzyka warunkowe da się dla mieszaniny rozkładów normalnych policzyć dokładnie, bez symulacji.</p>
-<div id="cell-fig-strata-optima" class="cell" data-execution_count="2">
+</section>
+<section id="regresja-najlepsza-prognoza-liczbowa" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="regresja-najlepsza-prognoza-liczbowa"><span class="header-section-number">2.4</span> Regresja: najlepsza prognoza liczbowa</h2>
+<p>Wróćmy do straty kwadratowej. W zwykłym dniu średni popyt wynosi <span class="math display">\[
+m_A=0\cdot0{,}6+2\cdot0{,}3+4\cdot0{,}1=1,
+\]</span> a w dniu wydarzenia <span class="math display">\[
+m_B=0\cdot0{,}1+2\cdot0{,}3+4\cdot0{,}6=3.
+\]</span> Sprawdźmy, dlaczego właśnie te liczby są najlepszymi prognozami. Dla zwykłego dnia ryzyko warunkowe odpowiedzi <span class="math inline">\(a\)</span> jest równe <span class="math display">\[
+\begin{aligned}
+r(a\mid A)&amp;=0{,}6a^2+0{,}3(2-a)^2+0{,}1(4-a)^2\\
+&amp;=a^2-2a+2{,}8=1{,}8+(a-1)^2.
+\end{aligned}
+\]</span> Najmniejszą wartością jest <span class="math inline">\(1{,}8\)</span>, osiąganą dla <span class="math inline">\(a=1\)</span>. Analogicznie <span class="math inline">\(r(a\mid B)=1{,}8+(a-3)^2\)</span>, z minimum przy <span class="math inline">\(a=3\)</span>.</p>
+<div id="cell-fig-ryzyko-popyt" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> brentq</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Rozkład Y | X = x: mieszanina dwóch rozkładów normalnych.</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Składnik j ma wagę w[j], średnią mu[j] i odchylenie standardowe sd[j].</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> np.array([<span class="fl">0.85</span>, <span class="fl">0.15</span>])</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> np.array([<span class="fl">2.0</span>, <span class="fl">9.0</span>])</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>sd <span class="op">=</span> np.array([<span class="fl">0.6</span>, <span class="fl">2.0</span>])</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gestosc(y):</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (w <span class="op">*</span> norm.pdf(y[:, <span class="va">None</span>], mu, sd)).<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> dystrybuanta(y):</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (w <span class="op">*</span> norm.cdf(y, mu, sd)).<span class="bu">sum</span>()</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>srednia <span class="op">=</span> (w <span class="op">*</span> mu).<span class="bu">sum</span>()</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>wariancja <span class="op">=</span> (w <span class="op">*</span> (sd<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> mu<span class="op">**</span><span class="dv">2</span>)).<span class="bu">sum</span>() <span class="op">-</span> srednia<span class="op">**</span><span class="dv">2</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Mediana: miejsce, w którym dystrybuanta przechodzi przez 1/2.</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>mediana <span class="op">=</span> brentq(<span class="kw">lambda</span> a: dystrybuanta(a) <span class="op">-</span> <span class="fl">0.5</span>, mu.<span class="bu">min</span>(), mu.<span class="bu">max</span>())</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>siatka <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">12</span>, <span class="dv">500</span>)</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Strata kwadratowa: E[(Y - a)^2] = Var(Y) + (E[Y] - a)^2.</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>ryzyko_kw <span class="op">=</span> wariancja <span class="op">+</span> (siatka <span class="op">-</span> srednia) <span class="op">**</span> <span class="dv">2</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Strata absolutna: dla Z ~ N(m, s^2) i z = (a - m)/s</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co"># E|Z - a| = s * (2*phi(z) + z*(2*Phi(z) - 1)); mieszaninę uśredniamy z wagami w.</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> (siatka[:, <span class="va">None</span>] <span class="op">-</span> mu) <span class="op">/</span> sd</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>ryzyko_abs <span class="op">=</span> (w <span class="op">*</span> sd <span class="op">*</span> (<span class="dv">2</span> <span class="op">*</span> norm.pdf(z) <span class="op">+</span> z <span class="op">*</span> (<span class="dv">2</span> <span class="op">*</span> norm.cdf(z) <span class="op">-</span> <span class="dv">1</span>))).<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>fig, osie <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="fl">3.4</span>), sharex<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].fill_between(siatka, gestosc(siatka), color<span class="op">=</span><span class="st">"#BBBBBB"</span>)</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].axvline(srednia, color<span class="op">=</span><span class="st">"#D7263D"</span>, ls<span class="op">=</span><span class="st">"--"</span>, lw<span class="op">=</span><span class="fl">1.5</span>,</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>                label<span class="op">=</span><span class="ss">f"średnia = </span><span class="sc">{</span>srednia<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].axvline(mediana, color<span class="op">=</span><span class="st">"#2E8B57"</span>, ls<span class="op">=</span><span class="st">":"</span>, lw<span class="op">=</span><span class="fl">1.8</span>,</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>                label<span class="op">=</span><span class="ss">f"mediana = </span><span class="sc">{</span>mediana<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].set_title(<span class="vs">r"gęstość </span><span class="dv">$</span><span class="vs">Y </span><span class="dv">\m</span><span class="vs">id X = x</span><span class="dv">$</span><span class="vs">"</span>)</span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].set_xlabel(<span class="st">"$y$"</span>)</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].legend(loc<span class="op">=</span><span class="st">"upper right"</span>, frameon<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, ryzyko, opt, kolor, styl, etykieta, tytul <span class="kw">in</span> [</span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    (osie[<span class="dv">1</span>], ryzyko_kw, srednia, <span class="st">"#D7263D"</span>, <span class="st">"--"</span>, <span class="st">"średnia warunkowa"</span>,</span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>     <span class="vs">r"strata kwadratowa </span><span class="dv">$</span><span class="kw">(</span><span class="vs">y-a</span><span class="kw">)</span><span class="dv">^</span><span class="vs">2</span><span class="dv">$</span><span class="vs">"</span>),</span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>    (osie[<span class="dv">2</span>], ryzyko_abs, mediana, <span class="st">"#2E8B57"</span>, <span class="st">":"</span>, <span class="st">"mediana warunkowa"</span>,</span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>     <span class="vs">r"strata absolutna </span><span class="dv">$</span><span class="cf">|</span><span class="vs">y-a</span><span class="cf">|</span><span class="dv">$</span><span class="vs">"</span>),</span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>]:</span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>    ax.plot(siatka, ryzyko, color<span class="op">=</span><span class="st">"#1B6CA8"</span>, lw<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>    ax.axvline(opt, color<span class="op">=</span>kolor, ls<span class="op">=</span>styl, lw<span class="op">=</span><span class="fl">1.5</span>, label<span class="op">=</span>etykieta)</span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"predykcja $a$"</span>)</span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>    ax.set_title(tytul)</span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>    ax.legend(loc<span class="op">=</span><span class="st">"upper center"</span>, frameon<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">1</span>].set_ylabel(<span class="vs">r"ryzyko warunkowe </span><span class="dv">$</span><span class="vs">r</span><span class="kw">(</span><span class="vs">a </span><span class="dv">\m</span><span class="vs">id x</span><span class="kw">)</span><span class="dv">$</span><span class="vs">"</span>)</span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.linspace(<span class="op">-</span><span class="fl">0.5</span>, <span class="fl">4.5</span>, <span class="dv">301</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="fl">3.8</span>))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>ax.plot(a, <span class="fl">1.8</span> <span class="op">+</span> (a <span class="op">-</span> <span class="dv">1</span>)<span class="op">**</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">"zwykły dzień A"</span>, color<span class="op">=</span><span class="st">"#1B6CA8"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>ax.plot(a, <span class="fl">1.8</span> <span class="op">+</span> (a <span class="op">-</span> <span class="dv">3</span>)<span class="op">**</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">"dzień wydarzenia B"</span>, color<span class="op">=</span><span class="st">"#D7263D"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>ax.scatter([<span class="dv">1</span>, <span class="dv">3</span>], [<span class="fl">1.8</span>, <span class="fl">1.8</span>], color<span class="op">=</span>[<span class="st">"#1B6CA8"</span>, <span class="st">"#D7263D"</span>], zorder<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">"prognoza a"</span>, ylabel<span class="op">=</span><span class="st">"oczekiwana strata kwadratowa"</span>, ylim<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">15</span>))</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>ax.legend(frameon<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
-<div id="fig-strata-optima" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-ryzyko-popyt" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-strata-optima-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="02-predyktory-optymalne_files/figure-html/fig-strata-optima-output-1.png" width="1036" height="316" class="figure-img">
+<div aria-describedby="fig-ryzyko-popyt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-predyktory-optymalne_files/figure-html/fig-ryzyko-popyt-output-1.png" width="615" height="355" class="figure-img">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-strata-optima-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Rysunek&nbsp;2.1: Rozkład warunkowy <span class="math inline">\(Y \mid \X = \x\)</span> i ryzyko warunkowe <span class="math inline">\(r(a \mid \x)\)</span> jako funkcja predykcji <span class="math inline">\(a\)</span>. Po lewej: gęstość mieszaniny <span class="math inline">\(0{,}85\,\Nrozk(2,\, 0{,}6^2) + 0{,}15\,\Nrozk(9,\, 2^2)\)</span> z zaznaczoną średnią i medianą. W środku: ryzyko przy stracie kwadratowej, minimalizowane przez średnią warunkową. Po prawej: ryzyko przy stracie absolutnej, minimalizowane przez medianę warunkową. Oba ryzyka policzono dokładnie ze wzorów dla rozkładu normalnego.
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ryzyko-popyt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Rysunek&nbsp;2.1: Ryzyko warunkowe prognozy popytu przy stracie kwadratowej. W każdej grupie wybieramy minimum odpowiedniej krzywej. Oba minima są dodatnie.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Minima obu krzywych leżą w innych miejscach, choć rozkład warunkowy jest ten sam. Przy stracie kwadratowej długi prawy ogon przeciąga optymalną predykcję w prawo; przy stracie absolutnej ogon jest bez znaczenia, bo liczy się tylko to, po której stronie predykcji leży masa prawdopodobieństwa.</p>
+<section id="dlaczego-średnia" class="level3" data-number="2.4.1">
+<h3 data-number="2.4.1" class="anchored" data-anchor-id="dlaczego-średnia"><span class="header-section-number">2.4.1</span> Dlaczego średnia?</h3>
+<p>Rachunek z przykładu można przeprowadzić dla dowolnego rozkładu wyniku. Ustalmy cechy <span class="math inline">\(\x\)</span> i oznaczmy średnią warunkową przez <span class="math inline">\(m=\E[Y\mid\X=\x]\)</span>. Różnicę między wynikiem a prognozą rozpisujemy jako <span class="math display">\[
+Y-a=(Y-m)+(m-a).
+\]</span> Po podniesieniu do kwadratu i uśrednieniu otrzymujemy <span class="math display">\[
+\begin{aligned}
+\E[(Y-a)^2\mid\X=\x]
+&amp;=\E[(Y-m)^2\mid\X=\x]\\
+&amp;\quad+2(m-a)\E[Y-m\mid\X=\x]+(m-a)^2.
+\end{aligned}
+\]</span> Środkowy składnik znika, bo średnie odchylenie od średniej wynosi zero. Pierwszy składnik to wariancja warunkowa. Zatem <span id="eq-rozklad-ryzyka-punktowego"><span class="math display">\[
+r(a\mid\x)=\Var(Y\mid\X=\x)+(m-a)^2.
+\tag{2.4}\]</span></span> Wariancja nie zależy od naszej prognozy. Drugi składnik jest nieujemny i zeruje się dokładnie dla <span class="math inline">\(a=m\)</span>. W każdej grupie najlepszą odpowiedzią jest więc jej średnia. Minimalizacja punktowa daje wynik dla całego predyktora.</p>
+<div id="thm-funkcja-regresji" class="theorem">
+<p><span class="theorem-title"><strong>Twierdzenie 2.2 (Optymalność funkcji regresji)</strong></span> Jeżeli <span class="math inline">\(\E[Y^2]&lt;\infty\)</span>, to przy stracie kwadratowej <span class="math inline">\(\Loss(y,a)=(y-a)^2\)</span> ryzyko minimalizuje <strong>funkcja regresji</strong> <span id="eq-funkcja-regresji"><span class="math display">\[
+\fopt(\x)=\E[Y\mid\X=\x].
+\tag{2.5}\]</span></span></p>
+</div>
+<p>W naszym przykładzie jest to reguła <span class="math inline">\(\fopt(A)=1\)</span>, <span class="math inline">\(\fopt(B)=3\)</span>. Jej ryzyko wynosi <span class="math inline">\(0{,}75\cdot1{,}8+0{,}25\cdot1{,}8=1{,}8\)</span>. Możemy ją teraz porównać z innymi regułami:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Reguła</th>
+<th style="text-align: right;"><span class="math inline">\(f(A)\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(f(B)\)</span></th>
+<th style="text-align: right;">Ryzyko w <span class="math inline">\(A\)</span></th>
+<th style="text-align: right;">Ryzyko w <span class="math inline">\(B\)</span></th>
+<th style="text-align: right;">Ryzyko całkowite</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Stała prognoza <span class="math inline">\(2\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(2{,}8\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(2{,}8\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(2{,}8\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Najlepsza stała</td>
+<td style="text-align: right;"><span class="math inline">\(1{,}5\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1{,}5\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(2{,}05\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(4{,}05\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(2{,}55\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Prognozy skrajne</td>
+<td style="text-align: right;"><span class="math inline">\(0\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(4\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(2{,}8\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(2{,}8\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(2{,}8\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Predyktor optymalny</td>
+<td style="text-align: right;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(3\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1{,}8\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1{,}8\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1{,}8\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Najlepszą prognozą stałą jest średnia całej populacji, <span class="math inline">\(\E[Y]=1{,}5\)</span>. Dowód jest taki sam jak powyżej, tylko bez warunkowania. Znajomość rodzaju dnia pozwala zastąpić jedną średnią dwiema średnimi warunkowymi i obniżyć ryzyko z <span class="math inline">\(2{,}55\)</span> do <span class="math inline">\(1{,}8\)</span>.</p>
+<p>Samo korzystanie z cechy nie gwarantuje poprawy: reguła <span class="math inline">\((0,4)\)</span> jest gorsza od najlepszej stałej. Natomiast <strong>najlepsza</strong> reguła wykorzystująca cechę nie może być gorsza od najlepszej stałej, ponieważ zawsze może tę cechę zignorować.</p>
+<p>Popyt przyjmuje tu tylko trzy wartości, ale nadal mamy do czynienia z regresją: przewidujemy wielkość liczbową, a różnica między wynikiem i prognozą ma znaczenie. Prognoza średniej nie musi być możliwą realizacją popytu. Jeśli chcielibyśmy na jej podstawie ustalić całkowitą liczbę sztuk do zamówienia, potrzebowalibyśmy dodatkowo opisu kosztów niedoboru i nadmiaru zapasu.</p>
 </section>
-<section id="sec-blad-nieredukowalny" class="level3" data-number="2.3.3">
-<h3 data-number="2.3.3" class="anchored" data-anchor-id="sec-blad-nieredukowalny"><span class="header-section-number">2.3.3</span> Rozkład ryzyka przy stracie kwadratowej</h3>
-<p>W sekcji <a href="01-czym-jest-model.html#sec-strata-ryzyko" class="quarto-xref"><span>1.6</span></a> rozdzieliliśmy ryzyko na błąd redukowalny i nieredukowalny, nie podając ich postaci. Wróćmy do straty kwadratowej: dla niej możemy je teraz wyznaczyć. Zapytajmy, ile traci predyktor <span class="math inline">\(f\)</span>, który nie jest optymalny. Uśredniając (<a href="#eq-rozklad-ryzyka-punktowego" class="quarto-xref"><span>2.5</span></a>) po rozkładzie <span class="math inline">\(\X\)</span>, dostajemy</p>
-<p><span id="eq-rozklad-bledu"><span class="math display">\[
-\underbrace{\E\big[(Y - f(\X))^2\big]}_{\text{ryzyko } f}
-=
-\underbrace{\E\Big[\big(\fopt(\X) - f(\X)\big)^2\Big]}_{\text{błąd redukowalny}}
-+
-\underbrace{\E\big[\Var(Y \mid \X)\big]}_{\text{błąd nieredukowalny}} .
-\tag{2.7}\]</span></span> Średnie po obu stronach liczymy po różnych rozkładach. Po lewej stronie występują <span class="math inline">\(\X\)</span> i <span class="math inline">\(Y\)</span>, więc uśredniamy po parze <span class="math inline">\((\X, Y)\)</span>. Po prawej stronie <span class="math inline">\(Y\)</span> już nie ma: zniknęło przy uśrednianiu przy ustalonym <span class="math inline">\(\X\)</span> w (<a href="#eq-rozklad-ryzyka-punktowego" class="quarto-xref"><span>2.5</span></a>). Oba składniki są funkcjami samego <span class="math inline">\(\X\)</span> i uśredniamy je po rozkładzie cech.</p>
-<p>Błąd redukowalny okazuje się średnim kwadratem odległości predyktora od funkcji regresji, a nieredukowalny – średnią wariancją warunkową wyniku, czyli średnią wariancją szumu <span class="math inline">\(\varepsilon\)</span> z (<a href="01-czym-jest-model.html#eq-rozklad-addytywny" class="quarto-xref"><span>1.4</span></a>). Ten drugi zależy od rozkładu warunkowego <span class="math inline">\(Y \mid \X\)</span>, a więc – jak zauważyliśmy w sekcji <a href="01-czym-jest-model.html#sec-strata-ryzyko" class="quarto-xref"><span>1.6</span></a> – od zestawu cech, a nie od modelu.</p>
-<p>Rozkład (<a href="#eq-rozklad-bledu" class="quarto-xref"><span>2.7</span></a>) jest zalążkiem kompromisu obciążenie–wariancja. W rozdziale <a href="04-bias-wariancja.html" class="quarto-xref"><span>4</span></a> rozbijemy człon redukowalny dalej – na część wynikającą ze zbyt ubogiej klasy modeli i część wynikającą ze skończoności próby.</p>
 </section>
-</section>
-<section id="klasyfikacja-strata-01-i-klasyfikator-bayesowski" class="level2" data-number="2.4">
-<h2 data-number="2.4" class="anchored" data-anchor-id="klasyfikacja-strata-01-i-klasyfikator-bayesowski"><span class="header-section-number">2.4</span> Klasyfikacja: strata 0–1 i klasyfikator bayesowski</h2>
-<p>Przejdźmy do <span class="math inline">\(\mathcal{Y} = \{1, \dots, K\}\)</span> i straty 0–1 (<a href="01-czym-jest-model.html#eq-strata-01-wstep" class="quarto-xref"><span>1.7</span></a>), która karze każdą pomyłkę tak samo. Jak zauważyliśmy w sekcji <a href="01-czym-jest-model.html#sec-strata-ryzyko" class="quarto-xref"><span>1.6</span></a>, ryzyko jest przy niej prawdopodobieństwem błędnej klasyfikacji. Klasyfikatory, czyli predyktory o wartościach w zbiorze klas, oznaczamy literą <span class="math inline">\(g\)</span>. Prawdopodobieństwa klas zapisujemy, jak w sekcji <a href="01-czym-jest-model.html#sec-zaleznosc-i-szum" class="quarto-xref"><span>1.5</span></a>, jako <span class="math inline">\(\eta_k(\x) = \Prob(Y = k \mid \X = \x)\)</span>.</p>
+<section id="klasyfikacja-najlepsza-odpowiedź-tak-lub-nie" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="klasyfikacja-najlepsza-odpowiedź-tak-lub-nie"><span class="header-section-number">2.5</span> Klasyfikacja: najlepsza odpowiedź tak lub nie</h2>
+<p>Sklep może postawić inne pytanie: <strong>czy popyt wyniesie co najmniej <span class="math inline">\(2\)</span> sztuki?</strong> Zachowujemy ten sam rozkład danych, lecz przewidujemy teraz klasę <span class="math display">\[
+Z=\ind(Y\ge2).
+\]</span> Litera <span class="math inline">\(Y\)</span> nadal oznacza wielkość popytu, a <span class="math inline">\(Z\)</span> – odpowiedź na nowe pytanie. Klasyfikator <span class="math inline">\(g\)</span> ma zwracać <span class="math inline">\(0\)</span> albo <span class="math inline">\(1\)</span>. Każdą pomyłkę oceniamy stratą <span class="math inline">\(1\)</span>, trafną odpowiedź stratą <span class="math inline">\(0\)</span>.</p>
+<p>Z <a href="#tbl-popyt-rozklad" class="quarto-xref">Tabela&nbsp;<span>2.1</span></a> odczytujemy <span class="math display">\[
+\Prob(Z=1\mid X=A)=0{,}3+0{,}1=0{,}4,\qquad
+\Prob(Z=1\mid X=B)=0{,}3+0{,}6=0{,}9.
+\]</span> Porównajmy obie odpowiedzi w każdej grupie:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Rodzaj dnia</th>
+<th style="text-align: right;">Ryzyko odpowiedzi <span class="math inline">\(0\)</span></th>
+<th style="text-align: right;">Ryzyko odpowiedzi <span class="math inline">\(1\)</span></th>
+<th style="text-align: right;">Najlepsza odpowiedź</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(A\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}4\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}6\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(B\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}9\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}1\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Na przykład w grupie <span class="math inline">\(A\)</span> odpowiedź <span class="math inline">\(0\)</span> jest błędna wtedy, gdy <span class="math inline">\(Z=1\)</span>, a więc z prawdopodobieństwem <span class="math inline">\(0{,}4\)</span>. Odpowiedź <span class="math inline">\(1\)</span> jest błędna z prawdopodobieństwem <span class="math inline">\(0{,}6\)</span>. Wybieramy pierwszą z nich.</p>
+<p><strong>Wykonaliśmy te same kroki co w regresji:</strong> ustaliliśmy cechy, policzyliśmy oczekiwaną stratę możliwych odpowiedzi i wybraliśmy najlepszą. Minimalizacja punktowa mówi, że złożenie tych odpowiedzi w regułę <span class="math inline">\(g(A)=0\)</span>, <span class="math inline">\(g(B)=1\)</span> daje minimum ryzyka całkowitego: <span class="math display">\[
+\Risk(g)=0{,}75\cdot0{,}4+0{,}25\cdot0{,}1=0{,}325.
+\]</span> Tym razem liczba ma interpretację prawdopodobieństwa: reguła myli się w <span class="math inline">\(32{,}5\%\)</span> przypadków według założonego rozkładu.</p>
+<section id="najbardziej-prawdopodobna-klasa" class="level3" data-number="2.5.1">
+<h3 data-number="2.5.1" class="anchored" data-anchor-id="najbardziej-prawdopodobna-klasa"><span class="header-section-number">2.5.1</span> Najbardziej prawdopodobna klasa</h3>
+<p>Uogólnijmy rachunek. W ogólnym problemie klasyfikacji wracamy do standardowego oznaczenia odpowiedzi przez <span class="math inline">\(Y\in\{1,\ldots,K\}\)</span>. Niech <span class="math inline">\(\eta_k(\x)=\Prob(Y=k\mid\X=\x)\)</span>. Ryzyko warunkowe wskazania klasy <span class="math inline">\(a\)</span> przy stracie <span class="math inline">\(0\)</span>–<span class="math inline">\(1\)</span> wynosi <span class="math display">\[
+r(a\mid\x)=\Prob(Y\ne a\mid\X=\x)=1-\eta_a(\x).
+\]</span> Najmniejsze ryzyko daje zatem klasa o największym prawdopodobieństwie. Ponownie stosujemy zasadę minimalizacji punktowej.</p>
 <div id="thm-bayes-optymalny" class="theorem">
-<p><span class="theorem-title"><strong>Twierdzenie 2.4 (Optymalność reguły Bayesa)</strong></span> Spośród wszystkich klasyfikatorów <span class="math inline">\(g : \mathcal{X} \to \{1, \dots, K\}\)</span> prawdopodobieństwo błędu <span class="math inline">\(\Prob\big(g(\X) \neq Y\big)\)</span> minimalizuje <strong>klasyfikator bayesowski</strong> <span id="eq-klasyfikator-bayesa"><span class="math display">\[
-\Bayes(\x) = \argmax_{k} \; \eta_k(\x).
-\tag{2.8}\]</span></span></p>
+<p><span class="theorem-title"><strong>Twierdzenie 2.3 (Optymalność reguły Bayesa)</strong></span> Przy stracie <span class="math inline">\(0\)</span>–<span class="math inline">\(1\)</span> ryzyko minimalizuje <strong>klasyfikator bayesowski</strong> <span id="eq-klasyfikator-bayesa"><span class="math display">\[
+\Bayes(\x)=\argmax_k\eta_k(\x).
+\tag{2.6}\]</span></span> Jeśli kilka klas ma takie samo największe prawdopodobieństwo, można wybrać dowolną z nich.</p>
 </div>
-<div class="proof">
-<p><span class="proof-title"><em>Dowód</em>. </span>Zastosujmy <a href="#thm-minimalizacja-punktowa" class="quarto-xref">Twierdzenie&nbsp;<span>2.1</span></a>. Ryzyko warunkowe wskazania klasy <span class="math inline">\(a\)</span> w punkcie <span class="math inline">\(\x\)</span> wynosi <span class="math display">\[
-r(a \mid \x) = \E\big[\ind(Y \neq a) \mid \X = \x\big]
-= \Prob(Y \neq a \mid \X = \x)
-= 1 - \eta_a(\x).
-\]</span> Minimalizacja <span class="math inline">\(r(\cdot \mid \x)\)</span> jest więc równoważna maksymalizacji <span class="math inline">\(\eta_a(\x)\)</span> po <span class="math inline">\(a\)</span>, co daje dokładnie (<a href="#eq-klasyfikator-bayesa" class="quarto-xref"><span>2.8</span></a>). Ponieważ zachodzi to punktowo dla każdego <span class="math inline">\(\x\)</span>, minimalizowane jest również ryzyko uśrednione po rozkładzie <span class="math inline">\(\X\)</span>. <span class="math inline">\(\qquad\square\)</span></p>
-</div>
-<p>Ryzyko klasyfikatora bayesowskiego nazywamy <strong>błędem bayesowskim</strong>: <span id="eq-blad-bayesa"><span class="math display">\[
-\Risk^{*} = \Prob\big(\Bayes(\X) \neq Y\big)
-= \E\Big[1 - \max_{k} \eta_k(\X)\Big].
-\tag{2.9}\]</span></span> Ostatnie wyrażenie zależy już tylko od <span class="math inline">\(\X\)</span>, więc średnią liczymy po rozkładzie cech: w każdym punkcie <span class="math inline">\(\x\)</span> pomyłka zdarza się z prawdopodobieństwem <span class="math inline">\(1 - \max_k \eta_k(\x)\)</span>, a <span class="math inline">\(\E\)</span> uśrednia te prawdopodobieństwa po <span class="math inline">\(\x\)</span>.</p>
-<p>Błąd bayesowski jest więc błędem nieredukowalnym z sekcji <a href="01-czym-jest-model.html#sec-strata-ryzyko" class="quarto-xref"><span>1.6</span></a>, wyznaczonym dla straty 0–1. Tak jak dla straty kwadratowej, możemy wyznaczyć również część redukowalną. Ryzyko warunkowe wskazania klasy <span class="math inline">\(a\)</span> rozkłada się na <span class="math display">\[
-r(a \mid \x) = 1 - \eta_a(\x)
-= \big(1 - \max_k \eta_k(\x)\big) + \big(\max_k \eta_k(\x) - \eta_a(\x)\big).
-\]</span> Pierwszy składnik to ryzyko warunkowe klasyfikatora bayesowskiego. Drugi jest nieujemny i zeruje się dokładnie wtedy, gdy <span class="math inline">\(a\)</span> jest klasą o największym prawdopodobieństwie. Uśredniając po rozkładzie <span class="math inline">\(\X\)</span>, dostajemy odpowiednik (<a href="#eq-rozklad-bledu" class="quarto-xref"><span>2.7</span></a>): <span id="eq-rozklad-bledu-01"><span class="math display">\[
-\underbrace{\Prob\big(g(\X) \neq Y\big)}_{\text{ryzyko } g}
-=
-\underbrace{\E\Big[\max_k \eta_k(\X) - \eta_{g(\X)}(\X)\Big]}_{\text{błąd redukowalny}}
-+
-\underbrace{\Risk^{*}}_{\text{błąd nieredukowalny}} .
-\tag{2.10}\]</span></span></p>
-<p>Dla dwóch klas różnica <span class="math inline">\(\max_k \eta_k(\x) - \eta_{g(\x)}(\x)\)</span> wynosi <span class="math inline">\(0\)</span>, gdy <span class="math inline">\(g(\x) = \Bayes(\x)\)</span>, a w przeciwnym razie <span class="math inline">\(|\eta_1(\x) - \eta_2(\x)| = |2\eta_1(\x) - 1|\)</span>. Błąd redukowalny jest więc równy <span class="math display">\[
-\E\Big[\,|2\eta_1(\X) - 1| \cdot \ind\big(g(\X) \neq \Bayes(\X)\big)\Big].
-\]</span> Nie liczy on po prostu, jak często <span class="math inline">\(g\)</span> nie zgadza się z regułą Bayesa, lecz waży każdą niezgodność tym, jak wyraźnie jedna klasa przeważa w danym punkcie. Niezgodność blisko granicy decyzyjnej, gdzie <span class="math inline">\(\eta_1(\x) \approx \tfrac12\)</span>, prawie nic nie kosztuje. W obszarze, gdzie <span class="math inline">\(\eta_1(\x)\)</span> jest bliskie <span class="math inline">\(0\)</span> lub <span class="math inline">\(1\)</span>, kosztuje niemal całą pomyłkę. Ten wzór na nadwyżkę ryzyka nad błędem bayesowskim jest punktem wyjścia teorii klasyfikacji w monografii <span class="citation" data-cites="devroye1996">Devroye i in. (<a href="../references.html#ref-devroye1996" role="doc-biblioref">1996, rozdz. 2</a>)</span>.</p>
-<p>Oba rozkłady, (<a href="#eq-rozklad-bledu" class="quarto-xref"><span>2.7</span></a>) i (<a href="#eq-rozklad-bledu-01" class="quarto-xref"><span>2.10</span></a>), mają tę samą budowę: ryzyko dowolnego predyktora to ryzyko predyktora optymalnego plus nieujemna nadwyżka, mierząca odległość od optimum. Przy stracie kwadratowej jest nią średni kwadrat odległości od funkcji regresji, przy stracie 0–1 – średnie prawdopodobieństwo trafienia utracone przez wybór gorszej klasy.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Adnotacja</span>Błąd bayesowski to nie jest wada modelu
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><span class="math inline">\(\Risk^{*}\)</span> jest zwykle dodatni i przy ustalonych cechach nie da się go zmniejszyć <strong>żadnym</strong> modelem, żadną ilością danych ani żadną mocą obliczeniową. Jest dodatni zawsze, gdy istnieje obszar przestrzeni cech o dodatnim prawdopodobieństwie, w którym <span class="math inline">\(\eta_k(\x)\)</span> nie koncentruje się na jednej klasie – czyli gdy te same cechy występują u obiektów o różnych etykietach.</p>
-<p>Praktyczna konsekwencja: gdyby błąd bayesowski problemu wynosił 7%, to klasyfikator z błędem 7,2% mógłby zyskać na dalszym strojeniu co najwyżej 0,2 punktu procentowego. Większej poprawy trzeba by szukać nie w modelu, lecz w cechach – w informacji, której obecne cechy nie zawierają. Wartości <span class="math inline">\(\Risk^{*}\)</span> zwykle nie znamy, ale już sama świadomość, że taki próg istnieje, chroni przed oczekiwaniem, że dość dobry model osiągnie błąd bliski zera.</p>
-</div>
-</div>
+<p>Nazwa nie oznacza, że przyjęliśmy rozkład na parametrach modelu. Opisuje regułę wybierającą najbardziej prawdopodobną klasę przy danych cechach. Jej ryzyko nazywamy <strong>błędem bayesowskim</strong>: <span id="eq-blad-bayesa"><span class="math display">\[
+\Risk^*=\E\Big[1-\max_k\eta_k(\X)\Big].
+\tag{2.7}\]</span></span> W każdym punkcie wybieramy najlepszą klasę, a następnie uśredniamy jej prawdopodobieństwo pomyłki po rozkładzie cech.</p>
+<p>W przykładzie sklepu <span class="math inline">\(\Prob(Z=1)=0{,}525\)</span>, więc najlepszy klasyfikator stały zawsze wskazuje <span class="math inline">\(1\)</span>. Jego błąd to <span class="math inline">\(0{,}475\)</span>. Dla porównania możemy wypisać wszystkie cztery reguły:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: right;"><span class="math inline">\(g(A)\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(g(B)\)</span></th>
+<th style="text-align: right;">Ryzyko</th>
+<th style="text-align: left;">Interpretacja</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;"><span class="math inline">\(0\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}525\)</span></td>
+<td style="text-align: left;">zawsze przewidujemy niski popyt</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}475\)</span></td>
+<td style="text-align: left;">najlepsza reguła stała</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><span class="math inline">\(0\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}325\)</span></td>
+<td style="text-align: left;">reguła Bayesa</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}675\)</span></td>
+<td style="text-align: left;">reguła odwrotna</td>
+</tr>
+</tbody>
+</table>
+<p>Informacja o rodzaju dnia obniża najmniejsze możliwe prawdopodobieństwo błędu o <span class="math inline">\(0{,}15\)</span>, czyli o <span class="math inline">\(15\)</span> punktów procentowych.</p>
 </section>
-<section id="sec-od-prawdopodobienstw-do-decyzji" class="level2" data-number="2.5">
-<h2 data-number="2.5" class="anchored" data-anchor-id="sec-od-prawdopodobienstw-do-decyzji"><span class="header-section-number">2.5</span> Od prawdopodobieństw do decyzji</h2>
-<p>W sekcji <a href="01-czym-jest-model.html#sec-regresja-klasyfikacja" class="quarto-xref"><span>1.4</span></a> rozdzieliliśmy w klasyfikacji dwa etapy: oszacowanie prawdopodobieństw klas <span class="math inline">\(\eta_k(\x)\)</span> i wybór klasy za pomocą reguły decyzyjnej. Klasyfikator bayesowski jest jedną z takich reguł – optymalną przy stracie 0–1. Ta sekcja odpowiada na dwa pytania: dlaczego model powinien zwracać właśnie <span class="math inline">\(\eta_k(\x)\)</span> i jak wybrać regułę decyzyjną, gdy strata 0–1 nie opisuje dobrze kosztów zastosowania. Oba pytania rozstrzyga ta sama zasada minimalizacji punktowej.</p>
-<section id="predykcja-probabilistyczna" class="level3" data-number="2.5.1">
-<h3 data-number="2.5.1" class="anchored" data-anchor-id="predykcja-probabilistyczna"><span class="header-section-number">2.5.1</span> Predykcja probabilistyczna</h3>
-<p>Niech <span class="math inline">\(\mathcal{Y} = \{0, 1\}\)</span> i <span class="math inline">\(\eta(\x) = \Prob(Y = 1 \mid \X = \x)\)</span>. Model zamiast etykiety zwraca liczbę <span class="math inline">\(p \in [0, 1]\)</span>, która ma być prawdopodobieństwem klasy <span class="math inline">\(1\)</span>. Taka predykcja ma inną postać niż <span class="math inline">\(y\)</span> i nie da się jej „trafić”: <span class="math inline">\(Y\)</span> przyjmuje tylko wartości <span class="math inline">\(0\)</span> i <span class="math inline">\(1\)</span>, więc strata <span class="math inline">\(\Loss(y, p)\)</span> musi nagradzać coś innego niż zgodność <span class="math inline">\(p\)</span> z <span class="math inline">\(y\)</span>.</p>
-<p>Pierwszy pomysł to traktować <span class="math inline">\(p\)</span> jak zwykłą predykcję liczbową i karać kwadrat odchylenia od zaobserwowanej wartości. Tak powstaje <strong>strata Briera</strong> <span class="citation" data-cites="brier1950">(<a href="../references.html#ref-brier1950" role="doc-biblioref">Brier 1950</a>)</span> <span class="math display">\[
-\Loss_{\mathrm{B}}(y, p) = (y - p)^2 .
-\]</span> Drugi pomysł to patrzeć, jakie prawdopodobieństwo model przypisał temu, co faktycznie zaszło. Gdy <span class="math inline">\(y = 1\)</span>, model przypisał mu <span class="math inline">\(p\)</span>, gdy <span class="math inline">\(y = 0\)</span> – prawdopodobieństwo <span class="math inline">\(1 - p\)</span>. Im mniejsze to prawdopodobieństwo, tym model bardziej się pomylił, więc za stratę bierzemy jego ujemny logarytm. Tak powstaje <strong>strata logarytmiczna</strong> <span class="math display">\[
-\Loss_{\log}(y, p) =
-\begin{cases}
--\ln p, &amp; y = 1,\\
--\ln(1 - p), &amp; y = 0,
-\end{cases}
-\qquad\text{czyli}\qquad
-\Loss_{\log}(y, p) = -y \ln p - (1 - y) \ln(1 - p),
-\]</span> bo dla <span class="math inline">\(y \in \{0, 1\}\)</span> jeden z dwóch składników zawsze się zeruje. Strata ta wynosi <span class="math inline">\(0\)</span>, gdy model przypisał zaobserwowanej klasie prawdopodobieństwo <span class="math inline">\(1\)</span>, i rośnie do nieskończoności, gdy przypisał jej prawdopodobieństwo bliskie <span class="math inline">\(0\)</span>. Strata Briera nie przekracza natomiast <span class="math inline">\(1\)</span>, więc pewne siebie pomyłki karze znacznie łagodniej. Stratę logarytmiczną minimalizowaliśmy w sekcji <a href="01-czym-jest-model.html#sec-trening-modelu" class="quarto-xref"><span>1.8</span></a>, dopasowując model prawdopodobieństw klas.</p>
-<p>Ta minimalizacja ma interpretację probabilistyczną. Model zwracający <span class="math inline">\(p(\x)\)</span> zakłada, że <span class="math inline">\(Y \mid \X = \x\)</span> ma rozkład Bernoulliego z parametrem <span class="math inline">\(p(\x)\)</span>, a prawdopodobieństwo, jakie przypisuje obserwacji <span class="math inline">\(y\)</span>, to <span class="math inline">\(p(\x)^{y}\big(1 - p(\x)\big)^{1 - y}\)</span>. Dla niezależnych obserwacji <span class="math inline">\((\x_1, y_1), \dots, (\x_n, y_n)\)</span> prawdopodobieństwo całej próby jest iloczynem takich czynników – jest to <strong>funkcja wiarygodności</strong> modelu. Jej ujemny logarytm to suma strat logarytmicznych, <span class="math display">\[
--\ln \Bigg( \prod_{i=1}^{n} p(\x_i)^{y_i}\big(1 - p(\x_i)\big)^{1 - y_i} \Bigg)
-= \sum_{i=1}^{n} \Loss_{\log}\big(y_i, p(\x_i)\big),
-\]</span> więc minimalizacja średniej straty logarytmicznej na próbie to to samo co <strong>metoda największej wiarygodności</strong>.</p>
-<p>Dla straty Briera nie trzeba nic liczyć. <span class="math inline">\(Y\)</span> jest zmienną liczbową o wartościach <span class="math inline">\(0\)</span> i <span class="math inline">\(1\)</span>, więc <span class="math inline">\(\E[Y \mid \X = \x] = \eta(\x)\)</span> i <a href="#thm-funkcja-regresji" class="quarto-xref">Twierdzenie&nbsp;<span>2.2</span></a> daje od razu <span class="math inline">\(\fopt(\x) = \eta(\x)\)</span>. Dla straty logarytmicznej ryzyko warunkowe wynosi <span class="math display">\[
-r(p \mid \x) = -\eta(\x) \ln p - \big(1 - \eta(\x)\big) \ln(1 - p).
-\]</span> Jest to funkcja wypukła zmiennej <span class="math inline">\(p\)</span>, a jej pochodna <span class="math inline">\(-\eta(\x)/p + \big(1 - \eta(\x)\big)/(1 - p)\)</span> zeruje się dokładnie dla <span class="math inline">\(p = \eta(\x)\)</span>. Obie straty prowadzą więc do tego samego optimum: <strong>najlepiej jest podać prawdziwe prawdopodobieństwo warunkowe</strong>. Straty o tej własności nazywamy <strong>właściwymi</strong> (ang. <em>proper scoring rules</em>) <span class="citation" data-cites="gneiting2007">(<a href="../references.html#ref-gneiting2007" role="doc-biblioref">Gneiting i Raftery 2007</a>)</span>.</p>
-<p>Nie każda strata ją ma. Dla straty absolutnej <span class="math inline">\(|y - p|\)</span> ryzyko warunkowe <span class="math display">\[
-r(p \mid \x) = \eta(\x)\,(1 - p) + \big(1 - \eta(\x)\big)\, p
-\]</span> jest liniowe w <span class="math inline">\(p\)</span>, więc minimum leży na końcu przedziału: <span class="math inline">\(p = 1\)</span>, gdy <span class="math inline">\(\eta(\x) &gt; \tfrac12\)</span>, i <span class="math inline">\(p = 0\)</span> w przeciwnym razie. Model oceniany tą stratą zwraca zatem etykietę klasyfikatora bayesowskiego zamiast prawdopodobieństwa i traci informację o tym, jak pewna jest ta etykieta. Tymczasem właśnie tej informacji potrzebują obie reguły decyzyjne omówione poniżej.</p>
+<section id="jeden-schemat-dwa-zastosowania" class="level3" data-number="2.5.2">
+<h3 data-number="2.5.2" class="anchored" data-anchor-id="jeden-schemat-dwa-zastosowania"><span class="header-section-number">2.5.2</span> Jeden schemat, dwa zastosowania</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Krok</th>
+<th style="text-align: left;">Regresja ze stratą kwadratową</th>
+<th style="text-align: left;">Klasyfikacja ze stratą <span class="math inline">\(0\)</span>–<span class="math inline">\(1\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Ustalamy cechy</td>
+<td style="text-align: left;"><span class="math inline">\(\X=\x\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(\X=\x\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Rozważamy odpowiedź</td>
+<td style="text-align: left;">liczba <span class="math inline">\(a\)</span></td>
+<td style="text-align: left;">klasa <span class="math inline">\(a\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Liczymy przeciętną stratę</td>
+<td style="text-align: left;"><span class="math inline">\(\E[(Y-a)^2\mid\X=\x]\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(1-\eta_a(\x)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Wybieramy minimum</td>
+<td style="text-align: left;">średnia warunkowa</td>
+<td style="text-align: left;">najbardziej prawdopodobna klasa</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Liczymy ryzyko optimum</td>
+<td style="text-align: left;">uśredniamy wariancje warunkowe</td>
+<td style="text-align: left;">uśredniamy najmniejsze prawdopodobieństwa pomyłki</td>
+</tr>
+</tbody>
+</table>
+<p>W obu zadaniach potrzebujemy opisu rozkładu odpowiedzi przy danych cechach. Różnią się możliwe odpowiedzi i sposób mierzenia pomyłek. Z tego powodu wartości <span class="math inline">\(1{,}8\)</span> i <span class="math inline">\(0{,}325\)</span> nie służą do porównania, które z tych dwóch zadań rozwiązaliśmy „lepiej”: mają inne znaczenie oraz inną jednostkę.</p>
 </section>
-<section id="straty-niesymetryczne-i-próg-decyzyjny" class="level3" data-number="2.5.2">
-<h3 data-number="2.5.2" class="anchored" data-anchor-id="straty-niesymetryczne-i-próg-decyzyjny"><span class="header-section-number">2.5.2</span> Straty niesymetryczne i próg decyzyjny</h3>
-<p>Strata 0–1 zakłada, że wszystkie pomyłki kosztują tyle samo. W diagnostyce medycznej, wykrywaniu oszustw czy filtrowaniu spamu założenie to jest fałszywe i zwykle kosztowne. Ogólniej, dla macierzy kosztów <span class="math inline">\(\Loss(y, a) = c_{y a}\)</span> ryzyko warunkowe wynosi <span class="math display">\[
-r(a \mid \x) = \sum_{k=1}^{K} c_{k a} \,\eta_k(\x),
-\]</span> a <a href="#thm-minimalizacja-punktowa" class="quarto-xref">Twierdzenie&nbsp;<span>2.1</span></a> daje regułę optymalną <span id="eq-regula-kosztowa"><span class="math display">\[
-\fopt(\x) = \argmin_{a} \sum_{k=1}^{K} c_{k a} \,\eta_k(\x).
-\tag{2.11}\]</span></span></p>
-<p>W przypadku dwuklasowym z kosztami <span class="math inline">\(c_{10}\)</span> (fałszywie ujemny) i <span class="math inline">\(c_{01}\)</span> (fałszywie dodatni), przy zerowym koszcie trafnych decyzji (<span class="math inline">\(c_{00} = c_{11} = 0\)</span>), reguła (<a href="#eq-regula-kosztowa" class="quarto-xref"><span>2.11</span></a>) redukuje się do progowania prawdopodobieństwa warunkowego na poziomie <span class="math inline">\(c_{01}/(c_{01} + c_{10})\)</span> zamiast na <span class="math inline">\(\tfrac12\)</span> <span class="citation" data-cites="elkan2001">(<a href="../references.html#ref-elkan2001" role="doc-biblioref">Elkan 2001</a>)</span>.</p>
+</section>
+<section id="sec-blad-nieredukowalny" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="sec-blad-nieredukowalny"><span class="header-section-number">2.6</span> Dlaczego optimum ma dodatnie ryzyko?</h2>
+<p>Najlepsza prognoza popytu w zwykłym dniu wynosi <span class="math inline">\(1\)</span>, choć rzeczywisty popyt przyjmuje wartości <span class="math inline">\(0\)</span>, <span class="math inline">\(2\)</span> i <span class="math inline">\(4\)</span>. Żadna pojedyncza liczba nie może jednocześnie trafić we wszystkie te wyniki. Podobnie najlepsza klasyfikacja zwykłego dnia to „popyt poniżej <span class="math inline">\(2\)</span>”, ale w <span class="math inline">\(40\%\)</span> takich dni popyt wynosi co najmniej <span class="math inline">\(2\)</span>.</p>
+<p>Pozostaje więc niepewność, której nie usunie zmiana reguły opartej wyłącznie na rodzaju dnia. W sekcji <a href="01-czym-jest-model.html#sec-strata-ryzyko" class="quarto-xref"><span>1.6</span></a> nazwaliśmy najmniejsze ryzyko osiągalne przy danych cechach i danej stracie <strong>błędem nieredukowalnym</strong>, a nadwyżkę ryzyka predyktora ponad to minimum – <strong>błędem redukowalnym</strong>. Teraz możemy oba składniki obliczyć.</p>
+<p>Dla straty kwadratowej podstawiamy <span class="math inline">\(a=f(\x)\)</span> do (<a href="#eq-rozklad-ryzyka-punktowego" class="quarto-xref"><span>2.4</span></a>) i uśredniając po cechach, otrzymujemy <span id="eq-rozklad-bledu"><span class="math display">\[
+\Risk(f)=
+\underbrace{\E\big[(f(\X)-\fopt(\X))^2\big]}_{\text{błąd redukowalny}}
++\underbrace{\E\big[\Var(Y\mid\X)\big]}_{\text{błąd nieredukowalny}}.
+\tag{2.8}\]</span></span> Drugi składnik jest ryzykiem funkcji regresji. Pierwszy mierzy, jak daleko nasza reguła odbiega od niej w średnim kwadracie.</p>
+<p>W przykładzie sklepu dla dowolnych prognoz <span class="math inline">\(a_A,a_B\)</span>: <span class="math display">\[
+\Risk(f)=1{,}8+0{,}75(a_A-1)^2+0{,}25(a_B-3)^2.
+\]</span> Stała prognoza <span class="math inline">\(1{,}5\)</span> ma nadwyżkę ryzyka <span class="math inline">\(0{,}75\cdot0{,}5^2+0{,}25\cdot(-1{,}5)^2=0{,}75\)</span>. Jej ryzyko <span class="math inline">\(2{,}55\)</span> składa się więc z <span class="math inline">\(1{,}8\)</span> nieusuwalnej zmienności oraz <span class="math inline">\(0{,}75\)</span>, które tracimy przez nieuwzględnienie rodzaju dnia.</p>
+<p>W klasyfikacji rolę dolnej granicy pełni błąd bayesowski. W naszym przykładzie wynosi <span class="math inline">\(0{,}325\)</span>. Żadna reguła korzystająca wyłącznie z <span class="math inline">\(X\)</span> nie obniży go, ponieważ w każdej grupie już wybraliśmy najmniejsze prawdopodobieństwo pomyłki. Odpowiednik rozkładu (<a href="#eq-rozklad-bledu" class="quarto-xref"><span>2.8</span></a>) dla straty 0–1 podajemy w sekcji <a href="#sec-rozszerzenia-predykcji" class="quarto-xref"><span>2.10</span></a>.</p>
+<p>Jak zaznaczyliśmy w rozdziale <a href="01-czym-jest-model.html" class="quarto-xref"><span>1</span></a>, przymiotnik „nieredukowalny” odnosi się do ustalonego zestawu cech. W przykładzie sklepu dodatkowa cecha, na przykład liczba wcześniejszych rezerwacji produktu, mogłaby rozróżnić dni, które dotąd traktowaliśmy jednakowo, i obniżyć optimum. Większa liczba dni w próbie uczącej pomaga natomiast dokładniej oszacować rozkład przy obecnych cechach; sama nie usuwa jego zmienności.</p>
+<p>W rzeczywistym zastosowaniu nie znamy na ogół ani predyktora optymalnego, ani jego ryzyka. Samo wypłaszczenie poprawy wyników nie wystarcza więc do stwierdzenia, że osiągnęliśmy granicę możliwości. Może też świadczyć o ograniczeniach wybranej metody.</p>
+</section>
+<section id="inna-strata-inna-najlepsza-prognoza" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="inna-strata-inna-najlepsza-prognoza"><span class="header-section-number">2.7</span> Inna strata, inna najlepsza prognoza</h2>
+<p>Dotąd w regresji używaliśmy straty kwadratowej, a w klasyfikacji straty <span class="math inline">\(0\)</span>–<span class="math inline">\(1\)</span>. Wybór straty jest częścią sformułowania zadania: określa, jakie pomyłki uznajemy za szczególnie dotkliwe. Sprawdźmy, co się stanie po jego zmianie.</p>
+<section id="strata-absolutna-i-mediana" class="level3" data-number="2.7.1">
+<h3 data-number="2.7.1" class="anchored" data-anchor-id="strata-absolutna-i-mediana"><span class="header-section-number">2.7.1</span> Strata absolutna i mediana</h3>
+<p>Strata absolutna <span class="math inline">\(\Loss(y,a)=|y-a|\)</span> mierzy wielkość pomyłki w jednostce wyniku. Pomyłka o <span class="math inline">\(4\)</span> sztuki jest przy niej dwa razy kosztowniejsza niż pomyłka o <span class="math inline">\(2\)</span>; przy stracie kwadratowej była cztery razy kosztowniejsza. Przy stracie kwadratowej jedna pomyłka o <span class="math inline">\(10\)</span> sztuk kosztuje tyle co sto pomyłek o jedną sztukę, a przy stracie absolutnej – tyle co dziesięć.</p>
+<p>W zwykłym dniu prognoza <span class="math inline">\(0\)</span> ma przeciętną stratę absolutną <span class="math display">\[
+0{,}6\cdot0+0{,}3\cdot2+0{,}1\cdot4=1.
+\]</span> Prognoza równa średniej, czyli <span class="math inline">\(1\)</span>, daje natomiast <span class="math display">\[
+0{,}6\cdot1+0{,}3\cdot1+0{,}1\cdot3=1{,}2.
+\]</span> Średnia przestała być najlepszą odpowiedzią. W grupie <span class="math inline">\(A\)</span> najlepsza jest mediana <span class="math inline">\(0\)</span>, a w grupie <span class="math inline">\(B\)</span> mediana <span class="math inline">\(4\)</span>.</p>
+<p>Przypomnijmy: mediana to liczba <span class="math inline">\(m\)</span>, dla której co najmniej połowa prawdopodobieństwa leży na lewo od <span class="math inline">\(m\)</span> lub w <span class="math inline">\(m\)</span> i co najmniej połowa na prawo od <span class="math inline">\(m\)</span> lub w <span class="math inline">\(m\)</span>. Mediana nie musi być jedyna. Jej związek ze stratą absolutną można zrozumieć przez przesuwanie prognozy. Gdy przesuwamy ją w prawo, oddalamy się od wyników po lewej stronie, a zbliżamy do wyników po prawej. Przy stracie absolutnej liczy się ich prawdopodobieństwo, a nie to, jak daleko już się znajdują. Dopóki po prawej jest więcej niż połowa prawdopodobieństwa, przesunięcie w tę stronę zmniejsza przeciętną stratę. Minimum osiągamy w medianie.</p>
+<div id="thm-mediana-warunkowa" class="theorem">
+<p><span class="theorem-title"><strong>Twierdzenie 2.4 (Optymalność mediany warunkowej)</strong></span> Jeżeli <span class="math inline">\(\E[|Y|]&lt;\infty\)</span>, to przy stracie absolutnej <span class="math inline">\(\Loss(y,a)=|y-a|\)</span> ryzyko minimalizuje predyktor wybierający medianę rozkładu warunkowego: <span id="eq-mediana-warunkowa"><span class="math display">\[
+\fopt(\x)=\med(Y\mid\X=\x).
+\tag{2.9}\]</span></span></p>
+</div>
+<p>W przykładzie sklepu porównanie wygląda następująco:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Reguła</th>
+<th style="text-align: left;">Prognozy dla <span class="math inline">\((A,B)\)</span></th>
+<th style="text-align: right;">Ryzyko kwadratowe</th>
+<th style="text-align: right;">Ryzyko absolutne</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Średnie warunkowe</td>
+<td style="text-align: left;"><span class="math inline">\((1,3)\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1{,}8\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1{,}2\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mediany warunkowe</td>
+<td style="text-align: left;"><span class="math inline">\((0,4)\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(2{,}8\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1{,}0\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>W każdej kolumnie inna reguła jest lepsza. Porównujemy reguły <strong>w obrębie jednej kolumny</strong>, ponieważ każda kolumna odpowiada innemu kryterium. Symbol <span class="math inline">\(\fopt\)</span> zawsze oznacza optimum przy określonej stracie. Gdy w dalszych rozdziałach mówimy o funkcji regresji, mamy na myśli średnią warunkową, niezależnie od tego, jaką inną stratę można rozważać.</p>
+</section>
+<section id="którą-stratę-wybrać" class="level3" data-number="2.7.2">
+<h3 data-number="2.7.2" class="anchored" data-anchor-id="którą-stratę-wybrać"><span class="header-section-number">2.7.2</span> Którą stratę wybrać?</h3>
+<p>Średnia i mediana różnią się najbardziej wtedy, gdy rozkład wyniku ma długi ogon. Zmieńmy w zwykłym dniu jedną wartość: zamiast popytu <span class="math inline">\(4\)</span> z prawdopodobieństwem <span class="math inline">\(0{,}1\)</span> niech zdarza się duże zamówienie na <span class="math inline">\(20\)</span> sztuk. Średnia warunkowa rośnie wtedy z <span class="math inline">\(1\)</span> do <span class="math display">\[
+0\cdot0{,}6+2\cdot0{,}3+20\cdot0{,}1=2{,}6,
+\]</span> choć w <span class="math inline">\(90\%\)</span> zwykłych dni popyt nadal wynosi <span class="math inline">\(0\)</span> albo <span class="math inline">\(2\)</span>. Mediana pozostaje równa <span class="math inline">\(0\)</span>. Optimum przy stracie absolutnej zależy od tego, ile prawdopodobieństwa leży po każdej stronie prognozy, a nie od tego, jak daleko leżą wyniki. Przy stracie kwadratowej rzadkie zamówienie waży bardzo dużo: pomyłka o <span class="math inline">\(18\)</span> sztuk kosztuje <span class="math inline">\(324\)</span>.</p>
+<p>Ta sama różnica dotyczy oszacowań z próby. Kilka nietypowych obserwacji potrafi mocno przesunąć średnią, a medianę – niewiele. Mediana jest <strong>odporna</strong> na obserwacje odstające.</p>
+<p>Żadna z tych strat nie jest „dokładniejsza”. Wybór zależy od tego, ile kosztują pomyłki w zastosowaniu. Wróćmy do kosztów niedoboru i nadmiaru zapasu. Jeśli każda brakująca i każda nadmiarowa sztuka kosztuje tyle samo, koszt pomyłki rośnie liniowo z jej wielkością i dobrze opisuje go strata absolutna. Jeśli duże pomyłki są nieproporcjonalnie dotkliwe, bo na przykład niedobór kilkunastu sztuk oznacza utratę stałego klienta, bliższa jest strata kwadratowa. Gdy niedobór kosztuje inaczej niż nadmiar, optimum przesuwa się od mediany do innego kwantyla rozkładu warunkowego (<a href="#exr-strata-pinball" class="quarto-xref">Zadanie&nbsp;<span>2.10</span></a>).</p>
+</section>
+</section>
+<section id="sec-od-prawdopodobienstw-do-decyzji" class="level2" data-number="2.8">
+<h2 data-number="2.8" class="anchored" data-anchor-id="sec-od-prawdopodobienstw-do-decyzji"><span class="header-section-number">2.8</span> Od prawdopodobieństw do decyzji</h2>
+<p>W klasyfikacji zmiana straty może być potrzebna, gdy dwa rodzaje pomyłek mają różne konsekwencje. W przykładzie sklepu nadal <span class="math inline">\(Z=1\)</span> oznacza popyt co najmniej <span class="math inline">\(2\)</span> sztuk. Załóżmy, że przeoczenie takiego dnia kosztuje <span class="math inline">\(3\)</span> jednostki, a fałszywy alarm kosztuje <span class="math inline">\(1\)</span>. Trafne decyzje mają koszt zerowy.</p>
+<p>Dla grupy, w której prawdopodobieństwo <span class="math inline">\(Z=1\)</span> wynosi <span class="math inline">\(p\)</span>, koszt oczekiwany odpowiedzi <span class="math inline">\(0\)</span> jest równy <span class="math inline">\(3p\)</span>, a odpowiedzi <span class="math inline">\(1\)</span> – <span class="math inline">\(1-p\)</span>. Dostajemy więc:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Rodzaj dnia</th>
+<th style="text-align: right;"><span class="math inline">\(p\)</span></th>
+<th style="text-align: right;">Koszt odpowiedzi <span class="math inline">\(0\)</span></th>
+<th style="text-align: right;">Koszt odpowiedzi <span class="math inline">\(1\)</span></th>
+<th style="text-align: right;">Najlepsza odpowiedź</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(A\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}4\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1{,}2\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}6\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(B\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}9\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(2{,}7\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}1\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Teraz w obu grupach wybieramy <span class="math inline">\(1\)</span>. W zwykłym dniu wysoki popyt jest mniej prawdopodobny niż niski, ale koszt jego przeoczenia przeważa nad częstszym, mniej kosztownym fałszywym alarmem.</p>
+<p>Ryzyko nowej reguły wynosi <span class="math inline">\(0{,}75\cdot0{,}6+0{,}25\cdot0{,}1=0{,}475\)</span>. Poprzednia reguła <span class="math inline">\((0,1)\)</span> ma przy tych kosztach ryzyko <span class="math inline">\(0{,}75\cdot1{,}2+0{,}25\cdot0{,}1=0{,}925\)</span>. Zmiana zwiększa prawdopodobieństwo błędu z <span class="math inline">\(32{,}5\%\)</span> do <span class="math inline">\(47{,}5\%\)</span>, a jednocześnie zmniejsza oczekiwany koszt z <span class="math inline">\(0{,}925\)</span> do <span class="math inline">\(0{,}475\)</span>. To dwie różne miary jakości tej samej decyzji.</p>
+<section id="próg-decyzyjny" class="level3" data-number="2.8.1">
+<h3 data-number="2.8.1" class="anchored" data-anchor-id="próg-decyzyjny"><span class="header-section-number">2.8.1</span> Próg decyzyjny</h3>
+<p>Odpowiedź <span class="math inline">\(1\)</span> opłaca się, gdy <span class="math inline">\(1-p\le3p\)</span>, czyli gdy <span class="math inline">\(p\ge1/4\)</span>. Zmiana kosztów przesunęła próg z <span class="math inline">\(1/2\)</span> do <span class="math inline">\(1/4\)</span>. Ogólniej, jeśli koszt fałszywie ujemnej decyzji to <span class="math inline">\(c_{10}&gt;0\)</span>, a koszt fałszywie dodatniej to <span class="math inline">\(c_{01}&gt;0\)</span>, przy zerowych kosztach trafnych decyzji wybieramy klasę <span class="math inline">\(1\)</span>, gdy <span class="math display">\[
+p\ge\frac{c_{01}}{c_{01}+c_{10}}.
+\]</span> Jest to próg minimalizujący oczekiwany koszt <span class="citation" data-cites="elkan2001">(<a href="../references.html#ref-elkan2001" role="doc-biblioref">Elkan 2001</a>)</span>. Przy równości obie decyzje kosztują przeciętnie tyle samo.</p>
+<p>Dla wielu klas ten sam rachunek można zapisać za pomocą tabeli kosztów <span class="math inline">\(c_{ka}\)</span>: kosztu odpowiedzi <span class="math inline">\(a\)</span>, gdy prawdziwa klasa to <span class="math inline">\(k\)</span>. Ryzyko warunkowe odpowiedzi <span class="math inline">\(a\)</span> wynosi <span class="math inline">\(\sum_k c_{ka}\eta_k(\x)\)</span>. Zasada minimalizacji punktowej daje więc <span id="eq-regula-kosztowa"><span class="math display">\[
+\fopt(\x)=\argmin_a\sum_k c_{ka}\eta_k(\x).
+\tag{2.10}\]</span></span> To ta sama zasada, którą stosowaliśmy wcześniej; zmienił się sposób wyceniania odpowiedzi.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -734,30 +1071,114 @@ r(a \mid \x) = \sum_{k=1}^{K} c_{k a} \,\eta_k(\x),
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>W regule (<a href="#eq-regula-kosztowa" class="quarto-xref"><span>2.11</span></a>) spotykają się dwa niezależne składniki: prawdopodobieństwa <span class="math inline">\(\eta_k(\x)\)</span> zależą wyłącznie od zjawiska, koszty <span class="math inline">\(c_{ya}\)</span> – wyłącznie od zastosowania. Dlatego model powinien estymować prawdopodobieństwa, a próg decyzyjny dobiera się osobno, na etapie wdrożenia.</p>
-<p>Model zwracający twardą etykietę zamiast prawdopodobieństwa zamyka tę drogę: przy zmianie kosztów trzeba go uczyć od nowa.</p>
+<p>Prawdopodobieństwa wynikają z rozkładu danych, a koszty z zastosowania. W naszym przykładzie prawdopodobieństwa <span class="math inline">\(0{,}4\)</span> i <span class="math inline">\(0{,}9\)</span> nie zmieniły się po zmianie kosztów. Zmieniły się decyzje podejmowane na ich podstawie. Dlatego warto rozdzielać oszacowanie prawdopodobieństwa od wyboru progu. Sama etykieta klasy nie zawiera informacji wystarczającej do ponownego wyboru decyzji przy innych kosztach.</p>
 </div>
 </div>
-<p>Predykcja probabilistyczna i reguła kosztowa składają się na dwa etapy z sekcji <a href="01-czym-jest-model.html#sec-regresja-klasyfikacja" class="quarto-xref"><span>1.4</span></a>. Pierwszy etap oceniamy stratą właściwą, a jego optimum <span class="math inline">\(\eta(\x)\)</span> nie zależy od kosztów zastosowania. W drugim podstawiamy to oszacowanie do reguły (<a href="#eq-regula-kosztowa" class="quarto-xref"><span>2.11</span></a>).</p>
 </section>
-<section id="opcja-odmowy" class="level3" data-number="2.5.3">
-<h3 data-number="2.5.3" class="anchored" data-anchor-id="opcja-odmowy"><span class="header-section-number">2.5.3</span> Opcja odmowy</h3>
-<p>Wróćmy do <span class="math inline">\(K\)</span> klas i dopuśćmy dodatkową decyzję: model może odmówić odpowiedzi i przekazać przypadek człowiekowi. Decyzji jest wtedy więcej niż etykiet: do klas <span class="math inline">\(1, \dots, K\)</span> dochodzi odmowa. Stratę rozszerzamy na nową decyzję tak, że wskazanie klasy oceniamy jak w stracie 0–1, a odmowa kosztuje stałą kwotę <span class="math inline">\(d \in (0, 1)\)</span>, niezależnie od prawdziwej klasy: <span class="math display">\[
-\Loss(y, k) = \ind(y \neq k), \qquad \Loss(y, \text{odmowa}) = d.
-\]</span> Ryzyko warunkowe wskazania klasy <span class="math inline">\(k\)</span> znamy z dowodu <a href="#thm-bayes-optymalny" class="quarto-xref">Twierdzenie&nbsp;<span>2.4</span></a>: <span class="math inline">\(r(k \mid \x) = 1 - \eta_k(\x)\)</span>. Ryzyko warunkowe odmowy wynosi po prostu <span class="math inline">\(d\)</span>. Najlepszą klasą jest <span class="math inline">\(\Bayes(\x)\)</span>, a jej ryzyko warunkowe to <span class="math inline">\(1 - \max_k \eta_k(\x)\)</span>. Reguła optymalna ma więc postać <span id="eq-regula-chowa"><span class="math display">\[
-\fopt(\x) =
+</section>
+<section id="od-znanego-rozkładu-do-uczenia-z-danych" class="level2" data-number="2.9">
+<h2 data-number="2.9" class="anchored" data-anchor-id="od-znanego-rozkładu-do-uczenia-z-danych"><span class="header-section-number">2.9</span> Od znanego rozkładu do uczenia z danych</h2>
+<p>W przykładzie sklepu potrafiliśmy wyznaczyć optymalne prognozy, ponieważ podaliśmy cały rozkład w tabeli. W zastosowaniu rzeczywistym mamy obserwacje <span class="math inline">\((x_i,y_i)\)</span>, a prawdopodobieństwa i średnie są nieznane. Wyprowadzone reguły mówią jednak, <strong>czego szukać w danych</strong>.</p>
+<p>Jeżeli każda grupa występuje wielokrotnie, średni popyt możemy oszacować średnią zaobserwowanych wyników w tej grupie. Prawdopodobieństwo wysokiego popytu oszacujemy odsetkiem dni, w których wystąpił. Otrzymamy predyktor <span class="math inline">\(\widehat f\)</span> lub klasyfikator <span class="math inline">\(\widehat g\)</span>. Daszek przypomina, że zależą od konkretnej próby. Inna próba może dać inne oszacowania.</p>
+<p>Przy cechach ciągłych, takich jak temperatura, powierzchnia mieszkania czy dochód, dokładne powtórzenia całego zestawu cech zwykle nie występują. Nie możemy po prostu utworzyć licznej grupy dla każdej wartości <span class="math inline">\(\x\)</span>. Musimy korzystać z innych obserwacji: na przykład z podobnych obiektów albo z zależności opisanej wspólnym wzorem. Pierwszą możliwość rozwiniemy w rozdziale <a href="03-knn.html" class="quarto-xref"><span>3</span></a>.</p>
+<p>Także ryzyka nie obliczymy zazwyczaj dokładnie, bo nie znamy rozkładu. Dla ustalonej reguły <span class="math inline">\(f\)</span> możemy je oszacować na niezależnych nowych przypadkach, obliczając średnią strat <span class="math display">\[
+\frac1N\sum_{i=1}^N\Loss(y_i,f(\x_i)).
+\]</span> Ta liczba zmienia się między próbami. Nawet dla optymalnej reguły zaobserwowany odsetek błędów może być niższy lub wyższy od błędu bayesowskiego. Nie przeczy to optymalności: dolna granica dotyczy ryzyka, a nie każdego wyniku skończonego eksperymentu.</p>
+<p>Jeśli do oceny używamy danych, na których regułę dobrano, powstaje jeszcze inny problem: reguła mogła dopasować się do przypadkowych własności tych danych. Dlatego trzeba odróżniać ryzyko, jego ocenę na nowych przypadkach i błąd treningowy. Wrócimy do tego w rozdziałach <a href="04-bias-wariancja.html" class="quarto-xref"><span>4</span></a> i <a href="05-ocena-modeli.html" class="quarto-xref"><span>5</span></a>.</p>
+<p>Wspólny cel pozostaje prosty: przy danych cechach wybierać odpowiedź o najmniejszej oczekiwanej stracie. Poznane metody będą różnić się przede wszystkim sposobem, w jaki odtwarzają potrzebne informacje z ograniczonej próby.</p>
+</section>
+<section id="sec-rozszerzenia-predykcji" class="level2" data-number="2.10">
+<h2 data-number="2.10" class="anchored" data-anchor-id="sec-rozszerzenia-predykcji"><span class="header-section-number">2.10</span> Rozszerzenia: inne decyzje i ciągłe cechy</h2>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Materiał nieobowiązkowy
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Poniższe ramki nie są wymagane w tekście głównym ani w zadaniach podstawowych. Narzędzia potrzebne w każdej z nich podano na jej początku.</p>
+</div>
+</div>
+<p>Uzupełnienia rozwijają wspólny schemat w kilku kierunkach.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Ocena prawdopodobieństw
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Model może zwracać prawdopodobieństwo klasy, zamiast od razu wybierać etykietę. Dla klas <span class="math inline">\(Y\in\{0,1\}\)</span> prognozę <span class="math inline">\(p\in[0,1]\)</span> można oceniać <strong>stratą Briera</strong> <span class="math inline">\(\Loss_{\mathrm B}(y,p)=(y-p)^2\)</span> <span class="citation" data-cites="brier1950">(<a href="../references.html#ref-brier1950" role="doc-biblioref">Brier 1950</a>)</span>. Ponieważ <span class="math inline">\(\E[Y\mid\X=\x]=\eta(\x)\)</span>, optymalność średniej daje od razu najlepszą prognozę <span class="math inline">\(p=\eta(\x)\)</span>.</p>
+<p>Innym kryterium jest strata logarytmiczna: <span class="math display">\[
+\Loss_{\log}(y,p)=
+\begin{cases}-\ln p,&amp;y=1,\\-\ln(1-p),&amp;y=0.\end{cases}
+\]</span> Jej ryzyko warunkowe dla <span class="math inline">\(0&lt;p&lt;1\)</span> wynosi <span class="math inline">\(-\eta\ln p-(1-\eta)\ln(1-p)\)</span>. Jeśli <span class="math inline">\(0&lt;\eta&lt;1\)</span>, pochodna jest równa <span class="math inline">\((p-\eta)/(p(1-p))\)</span>, więc minimum przypada przy <span class="math inline">\(p=\eta\)</span>. Dla <span class="math inline">\(\eta=0\)</span> lub <span class="math inline">\(1\)</span> minimum osiągamy na odpowiednim końcu przedziału, przyjmując zerową stratę dla pewnej, trafnej prognozy. Pewna błędna prognoza daje stratę nieskończoną.</p>
+<p>Obie straty nagradzają podanie prawdziwego prawdopodobieństwa. Są przykładami <strong>strat właściwych</strong> <span class="citation" data-cites="gneiting2007">(<a href="../references.html#ref-gneiting2007" role="doc-biblioref">Gneiting i Raftery 2007</a>)</span>. Ocena prawdopodobieństw i ocena decyzji przy określonych kosztach to dwa różne zadania. Dobre oszacowanie prawdopodobieństwa można następnie wykorzystać przy różnych progach.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Odmowa odpowiedzi
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Możemy dopuścić dodatkowe działanie: odmowę, na przykład przekazanie przypadku do dodatkowej oceny. Niech trafna klasyfikacja kosztuje <span class="math inline">\(0\)</span>, pomyłka <span class="math inline">\(1\)</span>, a odmowa stałą kwotę <span class="math inline">\(d\in(0,1)\)</span>.</p>
+<p>Najlepsza klasa ma ryzyko warunkowe <span class="math inline">\(1-\max_k\eta_k(\x)\)</span>, odmowa ma ryzyko <span class="math inline">\(d\)</span>. Wystarczy porównać te dwie liczby: <span id="eq-regula-chowa"><span class="math display">\[
+\fopt(\x)=
 \begin{cases}
-\Bayes(\x), &amp; \text{gdy } 1 - \max_k \eta_k(\x) \le d, \\
-\text{odmowa}, &amp; \text{w przeciwnym razie}.
+\Bayes(\x),&amp;1-\max_k\eta_k(\x)\le d,\\
+\text{odmowa},&amp;1-\max_k\eta_k(\x)&gt;d.
 \end{cases}
-\tag{2.12}\]</span></span> Jest to <strong>reguła Chowa</strong> <span class="citation" data-cites="chow1970">(<a href="../references.html#ref-chow1970" role="doc-biblioref">Chow 1970</a>)</span>: odmawiamy, gdy nawet najbardziej prawdopodobna klasa daje szansę pomyłki większą niż koszt odmowy. Przypadki skrajne potwierdzają intuicję. Ponieważ <span class="math inline">\(\max_k \eta_k(\x) \ge 1/K\)</span>, przy <span class="math inline">\(d \ge (K-1)/K\)</span> odmowa nigdy się nie opłaca i wracamy do klasyfikatora bayesowskiego. Przy <span class="math inline">\(d\)</span> bliskim zeru model odpowiada tylko tam, gdzie jest niemal pewny.</p>
-<p>Minimalne ryzyko wynosi teraz <span class="math inline">\(\E\big[\min\big(1 - \max_k \eta_k(\X),\, d\big)\big]\)</span>, ze średnią po rozkładzie cech, i nie przekracza błędu bayesowskiego (<a href="#eq-blad-bayesa" class="quarto-xref"><span>2.9</span></a>). Opcja odmowy nie usuwa niepewności. Pozwala jedynie wymienić pomyłki w najtrudniejszych obszarach przestrzeni cech na stały, znany z góry koszt. Podobnie jak reguła kosztowa, reguła Chowa wymaga prawdopodobieństw <span class="math inline">\(\eta_k(\x)\)</span>, a nie samej etykiety.</p>
-</section>
-</section>
-<section id="nieosiągalność-optimum" class="level2" data-number="2.6">
-<h2 data-number="2.6" class="anchored" data-anchor-id="nieosiągalność-optimum"><span class="header-section-number">2.6</span> Nieosiągalność optimum</h2>
-<p>Wszystkie twierdzenia tego rozdziału mają tę samą wadę: ich teza odwołuje się do rozkładu <span class="math inline">\(P\)</span>, którego nie znamy. <span class="math inline">\(\E[Y \mid \X = \x]\)</span> i <span class="math inline">\(\eta_k(\x)\)</span> to wielkości teoretyczne. Reguła bayesowska nie jest algorytmem, który można uruchomić – jest <strong>wzorcem, do którego algorytmy się zbliżają</strong>.</p>
-<p>Wartość tego wzorca jest jednak praktyczna: pozwala oceniać algorytmy przez pytanie, jak dobrze estymują <span class="math inline">\(\eta_k(\x)\)</span>, i pozwala wiedzieć, kiedy przestać. Poniższy eksperyment pokazuje jedno i drugie na przykładzie, w którym błąd bayesowski znamy dokładnie.</p>
+\tag{2.11}\]</span></span> Jest to <strong>reguła Chowa</strong> <span class="citation" data-cites="chow1970">(<a href="../references.html#ref-chow1970" role="doc-biblioref">Chow 1970</a>)</span>. W przykładzie sklepu przy <span class="math inline">\(d=0{,}2\)</span> odmawiamy w zwykłe dni, a w dni wydarzenia odpowiadamy <span class="math inline">\(1\)</span>. Ryzyko wynosi <span class="math inline">\(0{,}75\cdot0{,}2+0{,}25\cdot0{,}1=0{,}175\)</span>. Nie jest to odsetek pomyłek: uwzględnia też koszt odmowy w <span class="math inline">\(75\%\)</span> dni. Zmiana zbioru działań i straty zmieniła problem optymalizacji.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Nadwyżka ryzyka w klasyfikacji
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Dla dowolnego klasyfikatora <span class="math inline">\(g\)</span> przy stracie <span class="math inline">\(0\)</span>–<span class="math inline">\(1\)</span>: <span id="eq-rozklad-bledu-01"><span class="math display">\[
+\Risk(g)=\Risk^*+
+\E\Big[\max_k\eta_k(\X)-\eta_{g(\X)}(\X)\Big].
+\tag{2.12}\]</span></span> Wynika to z dodania i odjęcia <span class="math inline">\(\max_k\eta_k(\x)\)</span> w wyrażeniu <span class="math inline">\(1-\eta_{g(\x)}(\x)\)</span>, a następnie uśrednienia po cechach. Nadwyżka mierzy prawdopodobieństwo trafienia utracone wskutek wyboru klasy innej niż najbardziej prawdopodobna. Jest nieujemna. Dla dwóch klas wynosi <span class="math inline">\(\E[|2\eta(\X)-1|\ind(g(\X)\ne\Bayes(\X))]\)</span>: wybór gorszej klasy jest mniej kosztowny tam, gdzie obie klasy są prawie równie prawdopodobne.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Przykład z ciągłą cechą: dwie klasy normalne
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Wymagane są gęstość i dystrybuanta rozkładu normalnego. Eksperyment z metodą najbliższych sąsiadów można przeczytać po rozdziale <a href="03-knn.html" class="quarto-xref"><span>3</span></a>. Zachowujemy go jako punkt odniesienia dla analizy tej metody i zaawansowanych zadań.</p>
 <p>Rozważmy dwie równoliczne klasy, <span class="math inline">\(\pi_0 = \pi_1 = \tfrac12\)</span>, i jedną cechę <span class="math inline">\(X\)</span>, która w klasie <span class="math inline">\(0\)</span> ma rozkład <span class="math inline">\(\Nrozk(-\mu, 1)\)</span>, a w klasie <span class="math inline">\(1\)</span> rozkład <span class="math inline">\(\Nrozk(\mu, 1)\)</span>, <span class="math inline">\(\mu &gt; 0\)</span>. Oznaczając przez <span class="math inline">\(\varphi\)</span> gęstość, a przez <span class="math inline">\(\Phi\)</span> dystrybuantę rozkładu normalnego standardowego, mamy <span class="math inline">\(p(x \mid Y=0) = \varphi(x + \mu)\)</span> i <span class="math inline">\(p(x \mid Y=1) = \varphi(x - \mu)\)</span>. Cecha jest ciągła, a klasa dyskretna, więc <span class="math inline">\(\eta(x) = \Prob(Y=1 \mid X=x)\)</span> wyznaczamy ze wzoru Bayesa (<a href="01-czym-jest-model.html#eq-bayes-klasy" class="quarto-xref"><span>1.2</span></a>): <span class="math display">\[
 \eta(x) = \frac{\varphi(x - \mu)}{\varphi(x - \mu) + \varphi(x + \mu)}
 = \frac{1}{1 + e^{-2\mu x}} .
@@ -782,20 +1203,20 @@ r(a \mid \x) = \sum_{k=1}^{K} c_{k a} \,\eta_k(\x),
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> rng.normal(np.where(y <span class="op">==</span> <span class="dv">1</span>, mu, <span class="op">-</span>mu), <span class="fl">1.0</span>)</span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>), y</span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Ryzyko liczymy DOKŁADNIE, a nie na zbiorze testowym. Rozkład jest nam znany,</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Ryzyko przybliżamy całkowaniem numerycznym, a nie na zbiorze testowym. Rozkład jest nam znany,</span></span>
 <span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co"># więc zamiast losować dane testowe całkujemy definicję ryzyka:</span></span>
 <span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">#   R(g) = 0.5 * P(g(X)=0, klasa 1) + 0.5 * P(g(X)=1, klasa 0)</span></span>
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co">#        = 0.5 * \int phi(x-mu) 1{g(x)=0} dx  +  0.5 * \int phi(x+mu) 1{g(x)=1} dx</span></span>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Zaleta jest zasadnicza: wynik nie ma szumu Monte Carlo, więc krzywa nie</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co"># przecina błędu bayesowskiego przypadkiem. Uboczna: jest szybciej.</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Zaleta jest zasadnicza: wynik nie ma szumu Monte Carlo ze zbioru testowego.</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Pozostaje błąd numeryczny całkowania na skończonej siatce.</span></span>
 <span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>siatka <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">7</span>, <span class="dv">7</span>, <span class="dv">4001</span>)</span>
 <span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>gestosc_klasy1 <span class="op">=</span> norm.pdf(siatka <span class="op">-</span> mu)</span>
 <span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>gestosc_klasy0 <span class="op">=</span> norm.pdf(siatka <span class="op">+</span> mu)</span>
 <span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ryzyko_dokladne(klasyfikator):</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Prawdopodobieństwo błędu klasyfikatora, liczone całkowaniem."""</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ryzyko_calkowaniem(klasyfikator):</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Przybliżenie prawdopodobieństwa błędu przez całkowanie na siatce."""</span></span>
 <span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    etykiety <span class="op">=</span> klasyfikator.predict(siatka.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>))</span>
 <span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    calka <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> np.trapezoid(np.where(etykiety <span class="op">==</span> <span class="dv">0</span>, gestosc_klasy1, <span class="fl">0.0</span>), siatka) <span class="op">\</span></span>
 <span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>          <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> np.trapezoid(np.where(etykiety <span class="op">==</span> <span class="dv">1</span>, gestosc_klasy0, <span class="fl">0.0</span>), siatka)</span>
@@ -812,7 +1233,7 @@ r(a \mid \x) = \sum_{k=1}^{K} c_{k a} \,\eta_k(\x),
 <span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>        <span class="co"># (k -&gt; oo oraz k/n -&gt; 0); szczegóły w rozdziale [-@sec-knn].</span></span>
 <span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>        k <span class="op">=</span> <span class="bu">max</span>(<span class="dv">1</span>, <span class="bu">int</span>(<span class="bu">round</span>(np.sqrt(n))))</span>
 <span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>        klf <span class="op">=</span> KNeighborsClassifier(n_neighbors<span class="op">=</span>k).fit(X_tr, y_tr)</span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>        bledy[i, j] <span class="op">=</span> ryzyko_dokladne(klf)</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>        bledy[i, j] <span class="op">=</span> ryzyko_calkowaniem(klf)</span>
 <span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>srednie <span class="op">=</span> bledy.mean(axis<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="co"># Rozkład ryzyka po próbach uczących jest skośny i ograniczony z dołu przez</span></span>
@@ -840,78 +1261,123 @@ r(a \mid \x) = \sum_{k=1}^{K} c_{k a} \,\eta_k(\x),
 <img src="02-predyktory-optymalne_files/figure-html/fig-blad-bayesa-output-1.png" width="616" height="374" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-blad-bayesa-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Rysunek&nbsp;2.2: Ryzyko klasyfikatora <span class="math inline">\(k\)</span>-NN w zależności od liczności próby uczącej; cecha ma w klasach rozkłady <span class="math inline">\(\Nrozk(-1, 1)\)</span> i <span class="math inline">\(\Nrozk(1, 1)\)</span>. Punkty to średnie z 25 niezależnych prób uczących, wąsy – kwantyle rzędu <span class="math inline">\(0{,}1\)</span> i <span class="math inline">\(0{,}9\)</span>. Błąd bayesowski <span class="math inline">\(\Phi(-1) \approx 0{,}1587\)</span> wyznacza poziom, poniżej którego nie schodzi żaden klasyfikator, niezależnie od liczby obserwacji.
+Rysunek&nbsp;2.2: Ryzyko klasyfikatora <span class="math inline">\(k\)</span>-NN przybliżone całkowaniem numerycznym, w zależności od liczności próby uczącej; cecha ma w klasach rozkłady <span class="math inline">\(\Nrozk(-1, 1)\)</span> i <span class="math inline">\(\Nrozk(1, 1)\)</span>. Punkty to średnie z 25 niezależnych prób uczących, wąsy – kwantyle rzędu <span class="math inline">\(0{,}1\)</span> i <span class="math inline">\(0{,}9\)</span>. Błąd bayesowski <span class="math inline">\(\Phi(-1) \approx 0{,}1587\)</span> wyznacza poziom, poniżej którego nie schodzi żaden klasyfikator, niezależnie od liczby obserwacji.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Krzywa opada i wypłaszcza się tuż nad czerwoną linią, nigdy jej nie przecinając – nie może, bo <a href="#thm-bayes-optymalny" class="quarto-xref">Twierdzenie&nbsp;<span>2.4</span></a> tego zabrania, a ryzyko policzyliśmy dokładnie, bez szumu losowania. Zachowanie jest typowe: zwiększanie próby przybliża nas do optimum coraz wolniej, a ostatnie punkty procentowe błędu są po prostu niedostępne.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<p>Wykres porównuje ryzyko reguł wyuczonych z różnych prób ze znanym błędem bayesowskim. Uśrednienie dotyczy tutaj także losowości próby uczącej. Ryzyko każdej dopasowanej reguły przybliżamy całkowaniem numerycznym; unikamy szumu zbioru testowego, ale pozostaje błąd numeryczny. Teoretyczna dolna granica dotyczy dokładnego ryzyka. W przykładzie wzrost liczności próby przybliża wyniki do optimum. Tempo tej poprawy zależy od rozkładu i metody.</p>
 </div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Adnotacja</span>Dlaczego całkujemy zamiast losować zbiór testowy
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Gdybyśmy oszacowali ryzyko na losowym zbiorze testowym, oszacowanie miałoby własny błąd standardowy. Gdybyśmy użyli np. 20 tys. obserwacji testowych, wynosiłby on około <span class="math inline">\(0{,}0026\)</span> – czyli <strong>więcej niż cała różnica</strong>, którą chcemy pokazać w prawej części wykresu. Krzywa co jakiś czas schodziłaby przypadkiem pod czerwoną linię, sugerując coś, co jest niemożliwe.</p>
-<p>Ponieważ w tym sztucznym przykładzie rozkład <span class="math inline">\(P\)</span> znamy, ryzyko liczymy wprost z definicji (<a href="#eq-ryzyko" class="quarto-xref"><span>2.1</span></a>) – całkując. W realnym problemie tej możliwości nie ma i pozostaje zbiór testowy wraz z jego niepewnością; jak sobie z nią radzić, mówi <a href="05-ocena-modeli.html" class="quarto-xref"><span>Rozdział 5</span></a>.</p>
-</div>
-</div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Wskazówka</span>Jak czytać taki wykres w praktyce
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>W realnym problemie czerwonej linii nie znamy – i to jest główna trudność diagnostyczna w uczeniu maszynowym. Widzimy tylko krzywą niebieską i musimy zgadnąć, czy jej wypłaszczenie oznacza „dotarliśmy do granicy zjawiska”, czy „model jest za słaby”.</p>
-<p>Rozróżnienie tych dwóch sytuacji wymaga narzędzi z rozdziałów <a href="04-bias-wariancja.html" class="quarto-xref"><span>4</span></a> i <a href="05-ocena-modeli.html" class="quarto-xref"><span>5</span></a>. Sygnał ostrzegawczy jest jednak prosty: jeśli podwojenie liczby danych nie poprawia wyniku, problemem prawie na pewno nie jest liczba danych. Może to oznaczać, że ryzyko jest już bliskie błędowi nieredukowalnemu, ale równie dobrze – że ogranicza nas wybrana metoda lub sposób jej dopasowania. Rozstrzygnięcie wymaga porównania różnych modeli.</p>
 </div>
 </div>
 </section>
 <section id="uwagi-bibliograficzne" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="uwagi-bibliograficzne">Uwagi bibliograficzne</h2>
-<p>Statystyczną teorię decyzji w ujęciu bliskim temu rozdziałowi przedstawiają <span class="citation" data-cites="esl">Hastie i in. (<a href="../references.html#ref-esl" role="doc-biblioref">2009, rozdz. 2.4</a>)</span>, a łagodniej, z przykładami, <span class="citation" data-cites="islp">James i in. (<a href="../references.html#ref-islp" role="doc-biblioref">2023, rozdz. 2</a>)</span>. <span class="citation" data-cites="bishop2006">Bishop (<a href="../references.html#ref-bishop2006" role="doc-biblioref">2006, rozdz. 1.5</a>)</span> omawia te same zagadnienia od strony probabilistycznej: minimalizację oczekiwanej straty, opcję odmowy i rozdzielenie wnioskowania od decyzji. Rozważa tam też stratę <span class="math inline">\(|y - a|^q\)</span>, która dla <span class="math inline">\(q = 1\)</span> prowadzi do mediany warunkowej. Nowsze ujęcie, obejmujące również straty dla predykcji probabilistycznej, zawiera <span class="citation" data-cites="murphy2022">Murphy (<a href="../references.html#ref-murphy2022" role="doc-biblioref">2022, rozdz. 5</a>)</span>.</p>
-<p>Ścisłą teorię klasyfikacji, zbudowaną wokół błędu bayesowskiego i nadwyżki ryzyka nad nim, wykładają <span class="citation" data-cites="devroye1996">Devroye i in. (<a href="../references.html#ref-devroye1996" role="doc-biblioref">1996</a>)</span>, a analogiczną teorię regresji, z funkcją regresji jako optimum przy stracie kwadratowej, <span class="citation" data-cites="gyorfi2002">Györfi i in. (<a href="../references.html#ref-gyorfi2002" role="doc-biblioref">2002, rozdz. 1</a>)</span>.</p>
-<p>Straty właściwe i ich związek z estymacją prawdopodobieństw omawiają w pracy przeglądowej <span class="citation" data-cites="gneiting2007">Gneiting i Raftery (<a href="../references.html#ref-gneiting2007" role="doc-biblioref">2007</a>)</span>. <span class="citation" data-cites="elkan2001">Elkan (<a href="../references.html#ref-elkan2001" role="doc-biblioref">2001</a>)</span> wyprowadza próg dla niesymetrycznych kosztów i pokazuje, że zamiast przesuwać próg, można zmienić proporcje klas w zbiorze uczącym. <span class="citation" data-cites="chow1970">Chow (<a href="../references.html#ref-chow1970" role="doc-biblioref">1970</a>)</span> bada, jak przy zmianie kosztu odmowy <span class="math inline">\(d\)</span> zmieniają się jednocześnie częstość błędów i częstość odmów.</p>
+<p>Przystępne wprowadzenie do predykcji, funkcji regresji i błędu bayesowskiego przedstawiają <span class="citation" data-cites="islp">James i in. (<a href="../references.html#ref-islp" role="doc-biblioref">2023</a>)</span>. Szersze ujęcie wspólnego schematu minimalizacji oczekiwanej straty zawiera podręcznik <span class="citation" data-cites="esl">Hastie i in. (<a href="../references.html#ref-esl" role="doc-biblioref">2009</a>)</span>. Statystyczną teorię decyzji, z rozróżnieniem przewidywania wyniku oraz wyboru działania, rozwijają także <span class="citation" data-cites="bishop2006">Bishop (<a href="../references.html#ref-bishop2006" role="doc-biblioref">2006</a>)</span> i <span class="citation" data-cites="murphy2022">Murphy (<a href="../references.html#ref-murphy2022" role="doc-biblioref">2022</a>)</span>.</p>
+<p>Czytelnik zainteresowany ścisłą teorią klasyfikacji znajdzie ją w monografii <span class="citation" data-cites="devroye1996">Devroye i in. (<a href="../references.html#ref-devroye1996" role="doc-biblioref">1996</a>)</span>, a teorię regresji nieparametrycznej w książce <span class="citation" data-cites="gyorfi2002">Györfi i in. (<a href="../references.html#ref-gyorfi2002" role="doc-biblioref">2002</a>)</span>. Są to lektury wymagające większego przygotowania probabilistycznego niż główny tekst tego rozdziału.</p>
+<p>Koszty niesymetryczne i ich wpływ na próg klasyfikacji omawia <span class="citation" data-cites="elkan2001">Elkan (<a href="../references.html#ref-elkan2001" role="doc-biblioref">2001</a>)</span>. Straty do oceny prognoz probabilistycznych systematycznie przedstawiają <span class="citation" data-cites="gneiting2007">Gneiting i Raftery (<a href="../references.html#ref-gneiting2007" role="doc-biblioref">2007</a>)</span>; źródłową pracą dotyczącą straty kwadratowej dla prawdopodobieństw jest <span class="citation" data-cites="brier1950">Brier (<a href="../references.html#ref-brier1950" role="doc-biblioref">1950</a>)</span>. Regułę klasyfikacji z możliwością odmowy bada <span class="citation" data-cites="chow1970">Chow (<a href="../references.html#ref-chow1970" role="doc-biblioref">1970</a>)</span>.</p>
 </section>
 <section id="zadania" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="zadania">Zadania</h2>
-<div id="exr-ryzyko-wazone" class="theorem exercise">
-<p><span class="theorem-title"><strong>Zadanie 2.1</strong></span> Rozważ ryzyko ważone <span class="math inline">\(\E\big[w(\X)\,(Y - f(\X))^2\big]\)</span> dla pewnej wagi <span class="math inline">\(w(\x) &gt; 0\)</span> zależnej od punktu. Wykaż, że optymalny predyktor nadal jest równy <span class="math inline">\(\E[Y \mid \X = \x]\)</span>. Wyjaśnij, dlaczego ważenie nie zmienia rozwiązania, choć zmienia wartość ryzyka. Porównaj tę sytuację ze zmianą rozkładu brzegowego cech <span class="math inline">\(p(\x)\)</span> przy niezmienionym rozkładzie warunkowym (<a href="01-czym-jest-model.html#sec-zaleznosc-i-szum" class="quarto-xref"><span>Sekcja 1.5</span></a>).</p>
+<p>Pierwsze zadania prowadzą od obliczenia ryzyka do samodzielnego wyboru reguły. Następnie pojawiają się zmiana kosztów, wnioskowanie z informacji pośredniej i własności ogólne. Zadania oznaczone <strong>Rozszerzenie</strong> można pominąć przy pierwszej lekturze; wskazujemy w nich dodatkowe potrzebne narzędzia.</p>
+<div id="exr-ryzyko-tabela" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 2.1</strong></span> <strong>Od straty do ryzyka.</strong> Zespół wsparcia technicznego przewiduje liczbę zgłoszeń podczas wieczornego dyżuru. Przed rozpoczęciem dyżuru wiadomo, czy będzie to zwykły wieczór (<span class="math inline">\(X=A\)</span>), czy wieczór po wdrożeniu nowej wersji systemu (<span class="math inline">\(X=B\)</span>). W uproszczonym modelu liczba zgłoszeń <span class="math inline">\(Y\)</span> przyjmuje tylko wartości <span class="math inline">\(0\)</span>, <span class="math inline">\(1\)</span> i <span class="math inline">\(3\)</span>. Rozkład opisuje poniższa tabela.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><span class="math inline">\(x\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(\Prob(X=x)\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(\Prob(Y=0\mid X=x)\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(\Prob(Y=1\mid X=x)\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(\Prob(Y=3\mid X=x)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(A\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}6\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}5\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}4\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}1\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(B\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}4\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}1\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}2\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0{,}7\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>W kolejnych zadaniach będziemy wracać do tego rozkładu.</p>
+<ol type="a">
+<li>Wypisz sześć prawdopodobieństw łącznych <span class="math inline">\(\Prob(X=x,Y=y)\)</span>. Sprawdź, że sumują się do <span class="math inline">\(1\)</span>.</li>
+<li>Pierwsza reguła przewiduje zawsze jedno zgłoszenie: <span class="math inline">\(f(A)=f(B)=1\)</span>. Wypisz stratę kwadratową przy każdej parze <span class="math inline">\((x,y)\)</span> i oblicz ryzyko.</li>
+<li>Druga reguła przewiduje zero zgłoszeń w zwykły wieczór, a trzy po wdrożeniu: <span class="math inline">\(h(A)=0\)</span>, <span class="math inline">\(h(B)=3\)</span>. Powtórz dla niej rachunek. Która reguła ma mniejsze ryzyko kwadratowe?</li>
+<li>Wyjaśnij różnicę między stratą w pojedynczym wieczorze a ryzykiem. Co ryzyko mówi o błędach prognoz w wielu takich wieczorach? W jakiej jednostce wyrażone są obie wielkości?</li>
+</ol>
 </div>
-<div id="exr-strata-pinball" class="theorem exercise">
-<p><span class="theorem-title"><strong>Zadanie 2.2</strong></span> Rozważ <strong>stratę pinball</strong> (kwantylową) o parametrze <span class="math inline">\(\tau \in (0,1)\)</span>: <span class="math display">\[
-\Loss_\tau(y, a) = \begin{cases}
-  \tau (y - a), &amp; y \ge a, \\
-  (1-\tau)(a - y), &amp; y &lt; a.
-\end{cases}
-\]</span> Powtarzając rozumowanie z dowodu <a href="#thm-mediana-warunkowa" class="quarto-xref">Twierdzenie&nbsp;<span>2.3</span></a> wykaż, że optymalny predyktor to kwantyl rzędu <span class="math inline">\(\tau\)</span> rozkładu warunkowego. Sprawdź, że dla <span class="math inline">\(\tau = \tfrac12\)</span> odzyskujesz <a href="#thm-mediana-warunkowa" class="quarto-xref">Twierdzenie&nbsp;<span>2.3</span></a>.</p>
+<div id="exr-ryzyko-grupami" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 2.2</strong></span> <strong>Dwa etapy uśredniania.</strong> Dla obu reguł z <a href="#exr-ryzyko-tabela" class="quarto-xref">Zadanie&nbsp;<span>2.1</span></a>:</p>
+<ol type="a">
+<li>Oblicz ryzyko warunkowe osobno w grupach <span class="math inline">\(A\)</span> i <span class="math inline">\(B\)</span>.</li>
+<li>Odzyskaj ryzyko całkowite jako średnią ważoną. Dlaczego zwykła średnia arytmetyczna ryzyk grup byłaby tu niewłaściwa?</li>
+<li>Zmień proporcje grup na <span class="math inline">\(\Prob(X=A)=0{,}2\)</span>, <span class="math inline">\(\Prob(X=B)=0{,}8\)</span>, pozostawiając rozkłady warunkowe bez zmian. Oblicz nowe ryzyka.</li>
+<li>Wskaż, które elementy rachunku zmieniły się w punkcie c), a które pozostały takie same. Czy ranking reguł się zmienił?</li>
+</ol>
 </div>
-<div id="exr-blad-bayesa-gaussy" class="theorem exercise">
-<p><span class="theorem-title"><strong>Zadanie 2.3</strong></span> Dla dwóch klas o rozkładach <span class="math inline">\(\Nrozk(-\mu, \sigma^2)\)</span> i <span class="math inline">\(\Nrozk(\mu, \sigma^2)\)</span> z równymi prawdopodobieństwami a priori wyprowadź wzór na błąd bayesowski w zależności od <span class="math inline">\(\mu\)</span> i <span class="math inline">\(\sigma\)</span>. Dla jakiej wartości <span class="math inline">\(\mu/\sigma\)</span> błąd bayesowski spada poniżej 1%?</p>
+<div id="exr-optimum-tabela" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 2.3</strong></span> <strong>Najlepsza prognoza liczbowa.</strong> Korzystaj z rozkładu z <a href="#exr-ryzyko-tabela" class="quarto-xref">Zadanie&nbsp;<span>2.1</span></a> z pierwotnymi proporcjami grup.</p>
+<ol type="a">
+<li>Oblicz średnią i wariancję warunkową w każdej grupie.</li>
+<li>Podaj predyktor optymalny przy stracie kwadratowej i jego ryzyko.</li>
+<li>Znajdź najlepszą regułę stałą i oblicz jej ryzyko. Ile zyskujemy dzięki informacji o rodzaju dyżuru?</li>
+<li>Zapisz ryzyko dowolnej reguły <span class="math inline">\((a_A,a_B)\)</span> jako sumę ryzyka optymalnego i dwóch nieujemnych składników. Wykorzystaj ten zapis do sprawdzenia wyników <a href="#exr-ryzyko-tabela" class="quarto-xref">Zadanie&nbsp;<span>2.1</span></a>.</li>
+</ol>
 </div>
-<div id="exr-niezrownowazone-klasy" class="theorem exercise">
-<p><span class="theorem-title"><strong>Zadanie 2.4</strong></span> Zmodyfikuj eksperyment z <a href="#fig-blad-bayesa" class="quarto-xref">Rysunek&nbsp;<span>2.2</span></a> tak, aby klasy miały prawdopodobieństwa a priori <span class="math inline">\(\pi_0 = 0{,}9\)</span> i <span class="math inline">\(\pi_1 = 0{,}1\)</span> (klasa <span class="math inline">\(0\)</span> to ta, w której <span class="math inline">\(X \sim \Nrozk(-\mu, 1)\)</span>). Wyznacz nowy błąd bayesowski i porównaj go z błędem klasyfikatora trywialnego, który zawsze wskazuje klasę częstszą. Kiedy <span class="math inline">\(k\)</span>-NN zaczyna być od niego lepszy?</p>
+<div id="exr-klasyfikacja-tabela" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 2.4</strong></span> <strong>To samo zjawisko, inne pytanie.</strong> W rozkładzie z <a href="#exr-ryzyko-tabela" class="quarto-xref">Zadanie&nbsp;<span>2.1</span></a> niech <span class="math inline">\(Z=\ind(Y\ge1)\)</span>.</p>
+<ol type="a">
+<li>Oblicz prawdopodobieństwo klasy <span class="math inline">\(1\)</span> w obu grupach.</li>
+<li>W każdej grupie porównaj ryzyka odpowiedzi <span class="math inline">\(0\)</span> i <span class="math inline">\(1\)</span> przy stracie <span class="math inline">\(0\)</span>–<span class="math inline">\(1\)</span>. Czy optimum jest w obu grupach jednoznaczne?</li>
+<li>Znajdź najmniejsze ryzyko całkowite i porównaj je z ryzykiem najlepszego klasyfikatora stałego.</li>
+<li>Czy informacja o <span class="math inline">\(X\)</span> zmienia prawdopodobieństwa klas? Czy musi dzięki temu poprawiać najlepszą decyzję przy stracie <span class="math inline">\(0\)</span>–<span class="math inline">\(1\)</span>? Porównaj z jej rolą w regresji w <a href="#exr-optimum-tabela" class="quarto-xref">Zadanie&nbsp;<span>2.3</span></a>.</li>
+</ol>
+</div>
+<div id="exr-mediana-tabela" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 2.5</strong></span> <strong>Zmiana kryterium.</strong> Korzystaj z rozkładu z <a href="#exr-ryzyko-tabela" class="quarto-xref">Zadanie&nbsp;<span>2.1</span></a>.</p>
+<ol type="a">
+<li>Znajdź wszystkie mediany warunkowe. W grupie <span class="math inline">\(A\)</span> sprawdź również liczby między <span class="math inline">\(0\)</span> a <span class="math inline">\(1\)</span>.</li>
+<li>Wybierz po jednej medianie w każdej grupie i oblicz ryzyko absolutne otrzymanej reguły.</li>
+<li>Oblicz ryzyko absolutne reguły średnich warunkowych.</li>
+<li>Wybierz mediany <span class="math inline">\(0\)</span> i <span class="math inline">\(3\)</span>, oblicz też ich ryzyko kwadratowe i zestaw obie reguły pod obiema stratami. Czy jedna z nich jest najlepsza niezależnie od sposobu oceny?</li>
+</ol>
+</div>
+<div id="exr-symulacja-ryzyka" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 2.6</strong></span> <strong>Symulacja: od ryzyka do wyniku eksperymentu.</strong> Wykorzystaj rozkład i optymalny predyktor kwadratowy z <a href="#exr-optimum-tabela" class="quarto-xref">Zadanie&nbsp;<span>2.3</span></a>.</p>
+<ol type="a">
+<li>Wylosuj <span class="math inline">\(N=100\)</span> niezależnych przypadków: najpierw rodzaj dyżuru, potem liczbę zgłoszeń z właściwego rozkładu warunkowego. Ustal ziarno generatora, aby wynik dało się odtworzyć.</li>
+<li>Oblicz średnią strat ustalonego predyktora i porównaj z jego dokładnym ryzykiem. Nie ucz predyktora na wylosowanych danych.</li>
+<li>Powtórz eksperyment <span class="math inline">\(200\)</span> razy, a następnie wykonaj go dla <span class="math inline">\(N=1000\)</span>. Porównaj rozrzut otrzymanych średnich strat.</li>
+<li>Czy średnia strata na próbie może spaść poniżej ryzyka optimum? Wyjaśnij, dlaczego nie narusza to zasady minimalizacji punktowej.</li>
+</ol>
 </div>
 <div id="exr-prog-kosztowy" class="theorem exercise">
-<p><span class="theorem-title"><strong>Zadanie 2.5</strong></span> Wykorzystując (<a href="#eq-regula-kosztowa" class="quarto-xref"><span>2.11</span></a>) wyznacz próg decyzyjny dla problemu dwuklasowego, w którym pominięcie przypadku pozytywnego kosztuje dziesięciokrotnie więcej niż fałszywy alarm. Zilustruj numerycznie, jak przesunięcie progu zmienia liczbę błędów obu typów.</p>
-</div>
-<div id="exr-korekta-apriori" class="theorem exercise">
-<p><span class="theorem-title"><strong>Zadanie 2.6</strong></span> <strong>Korekta prawdopodobieństw a priori.</strong> Model klasyfikacyjny uczono na próbie, w której klasy występowały z częstościami <span class="math inline">\(\pi'_k\)</span>, na przykład na próbie zbalansowanej. Model zwraca więc oszacowania <span class="math inline">\(\eta'_k(\x) = \Prob'(Y = k \mid \X = \x)\)</span>. W populacji, w której model będzie stosowany, klasy występują z częstościami <span class="math inline">\(\pi_k\)</span>, a rozkłady cech w obrębie klas <span class="math inline">\(p(\x \mid Y = k)\)</span> są takie same jak w próbie. Korzystając ze wzoru Bayesa, wykaż, że <span class="math display">\[
-\eta_k(\x) = \frac{\eta'_k(\x)\, \pi_k / \pi'_k}
-{\sum_{j=1}^{K} \eta'_j(\x)\, \pi_j / \pi'_j} .
-\]</span> Pokaż, że w przypadku dwuklasowym korekta sprowadza się do pomnożenia szans <span class="math inline">\(\eta(\x) / (1 - \eta(\x))\)</span> przez stałą, i wyznacz tę stałą. Model wykrywania oszustw uczono na próbie zbalansowanej, a w populacji oszustwa stanowią 1% transakcji. Dla pewnej transakcji model zwrócił <span class="math inline">\(0{,}8\)</span>. Jakie jest prawdopodobieństwo oszustwa po korekcie? Wyjaśnij, dlaczego tej korekty nie da się przeprowadzić dla modelu zwracającego wyłącznie etykiety (por. ramka „Dobry model, zły próg”).</p>
-</div>
-<div id="exr-srednia-mediana" class="theorem exercise">
-<p><span class="theorem-title"><strong>Zadanie 2.7</strong></span> Wykaż, że dla dowolnego rozkładu o skończonej wariancji średnia <span class="math inline">\(\mu\)</span> i mediana <span class="math inline">\(m\)</span> spełniają <span class="math inline">\(|\mu - m| \le \sigma\)</span>. (Wskazówka: skorzystaj z <a href="#thm-mediana-warunkowa" class="quarto-xref">Twierdzenie&nbsp;<span>2.3</span></a> i nierówności Jensena.) Podaj rozkład, dla którego ta różnica jest bliska <span class="math inline">\(\sigma\)</span>. Następnie pokaż, że przy ustalonym rozstępie międzykwartylowym różnica <span class="math inline">\(|\mu - m|\)</span> może być dowolnie duża. Co to mówi o odporności obu predyktorów?</p>
+<p><span class="theorem-title"><strong>Zadanie 2.7</strong></span> <strong>Koszt a częstość pomyłek.</strong> W przykładzie sklepu pominięcie wysokiego popytu kosztuje dziesięć razy więcej niż fałszywy alarm. Trafne decyzje mają koszt zerowy, fałszywy alarm kosztuje <span class="math inline">\(1\)</span>.</p>
+<ol type="a">
+<li>Oblicz oczekiwany koszt obu odpowiedzi w każdej grupie.</li>
+<li>Wyznacz próg decyzyjny i optymalną regułę.</li>
+<li>Porównaj tę regułę z regułą Bayesa dla straty <span class="math inline">\(0\)</span>–<span class="math inline">\(1\)</span>: podaj prawdopodobieństwa obu typów błędu i całkowite ryzyko kosztowe.</li>
+<li>Zilustruj wyniki symulacją na niezależnych dniach. Co tracimy, oceniając obie reguły wyłącznie odsetkiem pomyłek?</li>
+</ol>
 </div>
 <div id="exr-taksowki" class="theorem exercise">
 <p><span class="theorem-title"><strong>Zadanie 2.8</strong></span> Oto klasyczny problem taksówek Kahnemana i Tversky’ego <span class="citation" data-cites="kahneman2011">(<a href="../references.html#ref-kahneman2011" role="doc-biblioref">Kahneman 2011, rozdz. 16</a>)</span>. W mieście jeżdżą taksówki dwóch przedsiębiorstw: <span class="math inline">\(85\%\)</span> z nich należy do spółki Zielony, <span class="math inline">\(15\%\)</span> do spółki Niebieski. Jedna z taksówek spowodowała wypadek i odjechała. Świadek zeznaje, że była niebieska. Test wiarygodności wykazał, że w warunkach takich jak w chwili wypadku świadek myli kolor w <span class="math inline">\(20\%\)</span> przypadków, niezależnie od tego, jaki kolor widzi. Potraktujmy zeznanie świadka jako cechę <span class="math inline">\(X\)</span>, a przedsiębiorstwo – jako klasę <span class="math inline">\(Y\)</span>, z klasą pozytywną Niebieski.</p>
@@ -919,8 +1385,43 @@ Rysunek&nbsp;2.2: Ryzyko klasyfikatora <span class="math inline">\(k\)</span>-NN
 <li>Wyznacz <span class="math inline">\(\eta(x)=\Prob(Y=\text{Niebieski}\mid X=x)\)</span> dla obu możliwych zeznań i porównaj obie wartości z prawdopodobieństwem a priori <span class="math inline">\(\Prob(Y=\text{Niebieski})=0{,}15\)</span>. W którą stronę i jak mocno każde z zeznań przesuwa ocenę, że wypadek spowodowała taksówka niebieska?</li>
 <li>Wyznacz klasyfikator bayesowski przy stracie 0–1 i jego błąd. Porównaj go z błędem reguły „wierz świadkowi” oraz klasyfikatora stałego. Jak pogodzić wynik z odpowiedzią z punktu a)?</li>
 <li>Przy jakim prawdopodobieństwie pomyłki świadka jego zeznanie zaczyna zmieniać decyzję klasyfikatora bayesowskiego przy stracie 0–1?</li>
-<li>Załóżmy, że niesłuszne oczyszczenie spółki Niebieski kosztuje <span class="math inline">\(c\)</span> razy więcej niż niesłuszne obwinienie. Korzystając z (<a href="#eq-regula-kosztowa" class="quarto-xref"><span>2.11</span></a>), wyznacz najmniejsze <span class="math inline">\(c\)</span>, przy którym zeznanie „niebieska” prowadzi do decyzji Niebieski. Odnieś wynik do ramki „Dobry model, zły próg”.</li>
+<li>Załóżmy, że niesłuszne oczyszczenie spółki Niebieski kosztuje <span class="math inline">\(c\)</span> razy więcej niż niesłuszne obwinienie. Korzystając z (<a href="#eq-regula-kosztowa" class="quarto-xref"><span>2.10</span></a>), wyznacz najmniejsze <span class="math inline">\(c\)</span>, przy którym zeznanie „niebieska” prowadzi do decyzji Niebieski. Odnieś wynik do ramki „Dobry model, zły próg”.</li>
 </ol>
+</div>
+<div id="exr-ryzyko-wazone" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 2.9</strong></span> <strong>Zmiana wag.</strong> W przykładzie sklepu zachowaj rozkłady warunkowe, ale zastąp proporcje dni przez <span class="math inline">\(\Prob(X=A)=q\)</span>, <span class="math inline">\(\Prob(X=B)=1-q\)</span>, gdzie <span class="math inline">\(0&lt;q&lt;1\)</span>.</p>
+<ol type="a">
+<li>Znajdź optymalny predyktor kwadratowy, jego ryzyko oraz najlepszą prognozę stałą w zależności od <span class="math inline">\(q\)</span>.</li>
+<li>Powtórz analizę dla klasyfikacji wysokiego popytu przy stracie <span class="math inline">\(0\)</span>–<span class="math inline">\(1\)</span>. Które wielkości zależą od proporcji dni?</li>
+<li><strong>Rozszerzenie.</strong> Wykaż, że przy ryzyku ważonym <span class="math inline">\(\E[w(\X)(Y-f(\X))^2]\)</span>, gdzie <span class="math inline">\(w(\x)&gt;0\)</span> i <span class="math inline">\(\E[w(\X)Y^2]&lt;\infty\)</span>, średnia warunkowa nadal jest optymalna (zakładamy też <span class="math inline">\(\E[|Y|]&lt;\infty\)</span>). Skorzystaj z minimalizacji punktowej. Wyjaśnij, dlaczego wagi mogą zmieniać wartość ryzyka, nie zmieniając optimum punktowego.</li>
+</ol>
+</div>
+<div id="exr-strata-pinball" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 2.10</strong></span> <strong>Rozszerzenie: kwantyle.</strong> Potrzebna jest znajomość dystrybuanty i pochodnych. Rozważ <strong>stratę pinball</strong> (kwantylową) o parametrze <span class="math inline">\(\tau \in (0,1)\)</span>: <span class="math display">\[
+\Loss_\tau(y, a) = \begin{cases}
+  \tau (y - a), &amp; y \ge a, \\
+  (1-\tau)(a - y), &amp; y &lt; a.
+\end{cases}
+\]</span> Załóż, że przy ustalonych cechach rozkład wyniku ma ciągłą dystrybuantę <span class="math inline">\(F\)</span> i skończony pierwszy moment. Wykaż, że pochodna ryzyka warunkowego względem <span class="math inline">\(a\)</span> wynosi <span class="math inline">\(F(a)-\tau\)</span>. Wywnioskuj, że minimum osiąga kwantyl rzędu <span class="math inline">\(\tau\)</span>. Wskazówka: rozpatrz osobno wyniki mniejsze i większe od <span class="math inline">\(a\)</span>. Dla <span class="math inline">\(\tau=1/2\)</span> strata pinball jest połową straty absolutnej; sprawdź zgodność optimum z <a href="#thm-mediana-warunkowa" class="quarto-xref">Twierdzenie&nbsp;<span>2.4</span></a>.</p>
+</div>
+<div id="exr-blad-bayesa-gaussy" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 2.11</strong></span> <strong>Rozszerzenie: rozkłady normalne. Wymagane są gęstość, dystrybuanta i wzór Bayesa.</strong></p>
+<p>Dla dwóch klas o rozkładach <span class="math inline">\(\Nrozk(-\mu, \sigma^2)\)</span> i <span class="math inline">\(\Nrozk(\mu, \sigma^2)\)</span> z równymi prawdopodobieństwami a priori wyprowadź wzór na błąd bayesowski w zależności od <span class="math inline">\(\mu\)</span> i <span class="math inline">\(\sigma\)</span>. Dla jakiej wartości <span class="math inline">\(\mu/\sigma\)</span> błąd bayesowski spada poniżej 1%?</p>
+</div>
+<div id="exr-niezrownowazone-klasy" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 2.12</strong></span> <strong>Rozszerzenie: klasy niezrównoważone. Wymagane są rozkłady normalne oraz metoda k-NN z rozdziału <a href="03-knn.html" class="quarto-xref"><span>3</span></a>.</strong></p>
+<p>Zmodyfikuj eksperyment z <a href="#fig-blad-bayesa" class="quarto-xref">Rysunek&nbsp;<span>2.2</span></a> tak, aby klasy miały prawdopodobieństwa a priori <span class="math inline">\(\pi_0 = 0{,}9\)</span> i <span class="math inline">\(\pi_1 = 0{,}1\)</span> (klasa <span class="math inline">\(0\)</span> to ta, w której <span class="math inline">\(X \sim \Nrozk(-\mu, 1)\)</span>). Wyznacz nowy błąd bayesowski i porównaj go z błędem klasyfikatora trywialnego, który zawsze wskazuje klasę częstszą. Kiedy <span class="math inline">\(k\)</span>-NN zaczyna być od niego lepszy?</p>
+</div>
+<div id="exr-korekta-apriori" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 2.13</strong></span> <strong>Rozszerzenie: zmiana populacji. Wymagane są wzór Bayesa i rachunek na szansach.</strong></p>
+<p><strong>Korekta prawdopodobieństw a priori.</strong> Model klasyfikacyjny uczono na próbie, w której klasy występowały z częstościami <span class="math inline">\(\pi'_k\)</span>, na przykład na próbie zbalansowanej. Model zwraca więc oszacowania <span class="math inline">\(\eta'_k(\x) = \Prob'(Y = k \mid \X = \x)\)</span>. W populacji, w której model będzie stosowany, klasy występują z częstościami <span class="math inline">\(\pi_k\)</span>, a rozkłady cech w obrębie klas <span class="math inline">\(p(\x \mid Y = k)\)</span> są takie same jak w próbie. Korzystając ze wzoru Bayesa, wykaż, że <span class="math display">\[
+\eta_k(\x) = \frac{\eta'_k(\x)\, \pi_k / \pi'_k}
+{\sum_{j=1}^{K} \eta'_j(\x)\, \pi_j / \pi'_j} .
+\]</span> Pokaż, że w przypadku dwuklasowym korekta sprowadza się do pomnożenia szans <span class="math inline">\(\eta(\x) / (1 - \eta(\x))\)</span> przez stałą, i wyznacz tę stałą. Model wykrywania oszustw uczono na próbie zbalansowanej, a w populacji oszustwa stanowią 1% transakcji. Dla pewnej transakcji model zwrócił <span class="math inline">\(0{,}8\)</span>. Jakie jest prawdopodobieństwo oszustwa po korekcie? Wyjaśnij, dlaczego tej korekty nie da się przeprowadzić dla modelu zwracającego wyłącznie etykiety (por. ramka „Dobry model, zły próg”).</p>
+</div>
+<div id="exr-srednia-mediana" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 2.14</strong></span> <strong>Rozszerzenie: własności średniej i mediany. Wymagane są nierówność Jensena i pojęcie rozstępu międzykwartylowego.</strong></p>
+<p>Wykaż, że dla dowolnego rozkładu o skończonej wariancji średnia <span class="math inline">\(\mu\)</span> i mediana <span class="math inline">\(m\)</span> spełniają <span class="math inline">\(|\mu - m| \le \sigma\)</span>. (Wskazówka: skorzystaj z <a href="#thm-mediana-warunkowa" class="quarto-xref">Twierdzenie&nbsp;<span>2.4</span></a> i nierówności Jensena.) Podaj rozkład, dla którego ta różnica jest bliska <span class="math inline">\(\sigma\)</span>. Następnie pokaż, że przy ustalonym rozstępie międzykwartylowym różnica <span class="math inline">\(|\mu - m|\)</span> może być dowolnie duża. Co to mówi o odporności obu predyktorów?</p>
 </div>
 
 

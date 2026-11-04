@@ -1,46 +1,31 @@
 # Kompromis obciążenie--wariancja {#sec-bias-wariancja}
 
-W rozdziale [-@sec-knn] zobaczyliśmy krzywą w kształcie litery U
-(@fig-knn-blad-k). Gdy zmniejszaliśmy liczbę sąsiadów $k$, błąd na
-zbiorze uczącym malał aż do zera, a ryzyko najpierw malało, potem rosło.
-Wyjaśniliśmy to wtedy słownie: przy dużym $k$ predyktor jest zbyt
-sztywny, by odtworzyć kształt funkcji regresji, a przy małym odtwarza
-głównie szum. Ten rozdział nadaje temu wyjaśnieniu postać wzoru.
+Dlaczego model, który bardzo dobrze dopasował się do danych, może źle
+przewidywać nowe wyniki? W rozdziale [-@sec-knn] widzieliśmy to dla metody
+$k$-NN: mała liczba sąsiadów pozwala odtworzyć szczegóły próby, ale część
+tych szczegółów jest przypadkowa. Gdybyśmy zebrali inne dane, otrzymalibyśmy
+inną regułę przewidywania.
 
-Punktem wyjścia jest rozkład ryzyka ([-@eq-rozklad-bledu])
-z rozdziału [-@sec-predyktory-optymalne]. Przy stracie kwadratowej ryzyko
-predyktora $f$ jest sumą błędu redukowalnego, czyli średniego kwadratu
-odległości $f$ od funkcji regresji $\fopt$, i błędu nieredukowalnego.
-Tamten rozkład dotyczył jednak ustalonej funkcji $f$. Predyktor, którego
-używamy w praktyce, ustalony nie jest: wyznaczamy go ze zbioru uczącego,
-a ten jest losowy. Inny zbiór uczący dałby inny predyktor. Uwzględnienie
-tej losowości rozbija błąd redukowalny na dwie części. **Obciążenie**
-mówi, jak daleko od $\fopt$ leży predyktor przeciętny, uśredniony po
-możliwych zbiorach uczących. **Wariancja** mówi, jak bardzo predyktor
-zmienia się od jednego zbioru uczącego do drugiego. Są to dwa źródła
-błędu, które opisaliśmy przy rysunku [-@fig-knn-idea]: szerokość otoczenia
-i szum w wynikach sąsiadów.
+W tym rozdziale rozdzielimy dwa źródła błędu uczenia. **Obciążenie**
+opisuje systematyczne odchylenie przeciętnej predykcji od funkcji regresji.
+**Wariancja** opisuje zmienność predykcji między zbiorami uczącymi.
+Zaczniemy od porównania dopasowań do różnych prób, a następnie pokażemy,
+jak oba składniki łączą się z błędem nieredukowalnym z rozdziału
+[-@sec-predyktory-optymalne].
 
-Pokażemy, że kompromis między tymi składnikami nie jest własnością
-metody $k$-NN. Tak samo zachowuje się regresja wielomianowa, w której
-elastyczność reguluje stopień wielomianu. Rozkład wyjaśnia też, dlaczego
-najlepsza elastyczność zależy od liczności próby i dlaczego w wielu
-wymiarach tak trudno opanować obciążenie, nie płacąc wariancją.
-Wypełnimy przy tym zapowiedź z rozdziału [-@sec-predyktory-optymalne]:
-rozłożymy błąd redukowalny na część wynikającą ze zbyt ubogiej klasy
-modeli i część wynikającą ze skończoności próby, a potem porównamy ten
-rozkład z rozkładem na obciążenie i wariancję.
-
-Prawie cały rozdział dotyczy regresji ze stratą kwadratową. Tylko dla
-niej rozkład na obciążenie i wariancję ma prostą postać sumy. Co zostaje
-z niego w klasyfikacji, omówimy w sekcji [-@sec-bw-klasyfikacja].
+Przykładami będą znana już metoda $k$-NN i regresja wielomianowa.
+Zobaczymy, kiedy pomaga prostszy model, kiedy więcej danych, a kiedy
+trzeba zmienić klasę modeli. Główny rachunek dotyczy regresji ze stratą
+kwadratową. Na końcu wyjaśnimy, dlaczego w klasyfikacji te same pojęcia
+nie dają równie prostego rozkładu błędu. Szczegółowe porównanie z błędem
+aproksymacji i rachunek tempa zbieżności znajdą się w rozszerzeniach.
 
 ## Błąd uczący a ryzyko {#sec-blad-uczacy-ryzyko}
 
 W sekcji [-@sec-trening-modelu] zauważyliśmy, że dostatecznie bogata
 klasa modeli pozwala niemal zapamiętać zbiór uczący, łącznie
 z przypadkowymi odchyleniami wyników. Aby zbadać to zjawisko, potrzebujemy
-metod, których elastyczność można płynnie regulować. Jedną już znamy:
+metod, których elastyczność można regulować. Jedną już znamy:
 w metodzie $k$-NN elastyczność rośnie, gdy $k$ maleje, a miarą tej
 elastyczności jest efektywna liczba parametrów $n/k$.
 
@@ -59,25 +44,26 @@ parametryczna z $d + 1$ współczynnikami, a stopień $d$ pełni rolę
 hiperparametru, podobnie jak $k$ w metodzie $k$-NN.
 
 Klasy wielomianów są zagnieżdżone: $\mathcal{F}_0 \subset \mathcal{F}_1
-\subset \mathcal{F}_2 \subset \cdots$, bo wielomian stopnia $d$ jest też
-wielomianem stopnia $d + 1$ ze współczynnikiem $\beta_{d+1} = 0$.
+\subset \mathcal{F}_2 \subset \cdots$, bo każdy wielomian stopnia co najwyżej $d$ należy też do klasy
+wielomianów stopnia co najwyżej $d + 1$.
 Minimum ryzyka empirycznego po większym zbiorze nie może być większe niż
 po mniejszym, więc **błąd na zbiorze uczącym nie rośnie wraz z $d$** --
-dla każdej próby, a nie tylko przeciętnie. Gdy $d + 1$ osiąga liczbę
-różnych wartości $x_i$ w próbie, istnieje wielomian przechodzący przez
-wszystkie punkty i błąd uczący spada do zera.
+dla każdej próby, a nie tylko przeciętnie. Jeśli wszystkie $x_i$ są różne, to dla $d = n-1$ istnieje wielomian
+przechodzący przez wszystkie punkty i błąd uczący spada do zera.
+Powtarzające się wartości $x_i$ z różnymi wynikami $y_i$ uniemożliwiają
+takie dokładne dopasowanie.
 
 @fig-wielomiany-blad pokazuje błąd uczący i ryzyko dla wielomianów stopni
 od $0$ do $12$, dopasowanych do $n = 50$ obserwacji. Dane pochodzą z tego
 samego rozkładu co w rozdziale [-@sec-knn]: $X$ ma rozkład jednostajny
 na $[0, 1]$, $Y = \fopt(X) + \varepsilon$, gdzie
 $\fopt(x) = \sin(2\pi x) + x/2$, a szum ma odchylenie standardowe
-$\sigma = 0{,}3$. Ryzyko liczymy dokładnie, całkując po znanym rozkładzie,
+$\sigma = 0{,}3$. Ryzyko przybliżamy numerycznie, całkując po znanym rozkładzie,
 tak jak na rysunku [-@fig-knn-blad-k].
 
 ```{python}
 #| label: fig-wielomiany-blad
-#| fig-cap: "Błąd na zbiorze uczącym i ryzyko regresji wielomianowej w zależności od stopnia wielomianu $d$ ($n = 50$). Ryzyko policzono dokładnie, całkując po znanym rozkładzie; punkty to średnie z 1000 niezależnych prób uczących. Oś pionowa w skali logarytmicznej. Przerywana linia to błąd nieredukowalny $\\sigma^2$."
+#| fig-cap: "Błąd na zbiorze uczącym i ryzyko regresji wielomianowej w zależności od stopnia wielomianu $d$ ($n = 50$). Ryzyko przybliżono przez całkowanie numeryczne po znanym rozkładzie; punkty to średnie z 1000 niezależnych prób uczących. Oś pionowa w skali logarytmicznej. Przerywana linia to błąd nieredukowalny $\\sigma^2$."
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -224,7 +210,27 @@ rozdzielić, potrzebujemy dwóch pojęć z teorii estymacji.
 
 ## Obciążenie i wariancja estymatora {#sec-obciazenie-wariancja-estymatora}
 
-Zacznijmy od sytuacji prostszej niż predykcja: od szacowania jednej liczby.
+Zacznijmy od małego przykładu. Przy ustalonej temperaturze prawdziwy
+średni popyt wynosi $10$ sztuk. Dwie metody, zależnie od wylosowanego
+zbioru uczącego, dają następujące prognozy. Dla uproszczenia każda z trzech
+możliwości ma prawdopodobieństwo $1/3$.
+
+| Metoda | Możliwe prognozy | Średnia prognoza | Obciążenie | Wariancja | Średni kwadrat odległości od $10$ |
+|:--|:--|--:|--:|--:|--:|
+| A | $7, 8, 9$ | $8$ | $-2$ | $2/3$ | $14/3$ |
+| B | $7, 10, 13$ | $10$ | $0$ | $6$ | $6$ |
+
+Metoda A przeciętnie zaniża popyt o dwie sztuki. Jej prognozy są jednak
+skupione blisko swojej średniej: ich wariancja to
+$[(-1)^2+0^2+1^2]/3=2/3$. Średni kwadrat odległości od prawdziwej
+wartości $10$ wynosi $[(-3)^2+(-2)^2+(-1)^2]/3=14/3$.
+Metoda B trafia przeciętnie dokładnie w $10$, ale jej prognozy mają
+większy rozrzut. Przy ocenie średnim kwadratem błędu wygrywa metoda A:
+$14/3<6$. Sam brak obciążenia nie wystarcza do dobrej predykcji.
+
+Na razie porównujemy prognozę ze średnim popytem, a nie z wynikiem
+nowego dnia. Zmienność tego wyniku uwzględnimy w następnej sekcji.
+Teraz zapiszmy rachunek w ogólnej postaci.
 
 ::: {#def-obciazenie-wariancja}
 ## Obciążenie i błąd średniokwadratowy
@@ -254,32 +260,38 @@ $\widehat\theta - \theta = (\widehat\theta - \E[\widehat\theta])
 + (\E[\widehat\theta] - \theta)$ i zauważyć, że iloczyn mieszany ma średnią
 zero.
 
-Wzór ([-@eq-mse-obciazenie-wariancja]) ma konsekwencję, która w pierwszej
-chwili zaskakuje: **estymator obciążony może być lepszy od
-nieobciążonego**, jeśli niewielkie obciążenie kupuje dużą redukcję
-wariancji. Rozważmy próbę $Y_1, \dots, Y_n$ z rozkładu o średniej $\mu$
-i wariancji $\sigma^2$. Średnia z próby $\bar Y$ jest nieobciążonym
-estymatorem $\mu$ o wariancji $\sigma^2/n$. Porównajmy ją z rodziną
-estymatorów **ściągających** $\widehat\mu_c = c\bar Y$, gdzie
-$c \in [0, 1]$. Ściąganie do zera wprowadza obciążenie
-$(c - 1)\mu$ i zmniejsza wariancję do $c^2\sigma^2/n$, więc
-$$
-\operatorname{MSE}(c\bar Y) = (1 - c)^2 \mu^2 + c^2\, \frac{\sigma^2}{n} .
-$$
-Minimum tej funkcji kwadratowej leży w punkcie
-$c^* = \mu^2 / (\mu^2 + \sigma^2/n)$, który jest zawsze mniejszy od $1$
-(@exr-estymator-sciagajacy). Dla $\mu = 1$, $\sigma = 3$ i $n = 10$ mamy
-$c^* \approx 0{,}53$, a błąd średniokwadratowy spada z $0{,}9$ dla $\bar Y$
-do około $0{,}47$. Obciążony estymator jest prawie dwa razy dokładniejszy.
+W przykładzie metoda A ma obciążenie $-2$, więc jej błąd wynosi
+$(-2)^2+2/3=14/3$. Metoda B ma obciążenie zero i błąd równy wariancji,
+czyli $6$. Wzór wyjaśnia, dlaczego **estymator obciążony może być lepszy
+od nieobciążonego**: wzrost kwadratu obciążenia może być mniejszy niż
+spadek wariancji.
 
-Przykład ma oczywistą słabość: $c^*$ zależy od nieznanego $\mu$. Pokazuje
-jednak zasadę, która wróci wielokrotnie. Regresja grzbietowa
-w rozdziale [-@sec-selekcja-regularyzacja] ściąga współczynniki modelu
-liniowego do zera właśnie po to, by zmniejszyć wariancję kosztem
-obciążenia, a w rozdziale [-@sec-paradygmat-bayesowski] zobaczymy, że
-takie ściąganie wynika naturalnie z rozkładu a priori. Ile ściągać,
-trzeba wtedy ustalić na podstawie danych, czym zajmuje się
-rozdział [-@sec-ocena-modeli].
+Tę zasadę wykorzystuje **ściąganie** oszacowań do zera. Niech niezależne
+$Y_1,\dots,Y_n$ mają średnią $\mu$ i wariancję $\sigma^2$. Średnia
+$\bar Y$ jest nieobciążona i ma wariancję $\sigma^2/n$. Pomnóżmy ją
+przez $c = 1 - h$, gdzie $0 < h \le 1$. Estymator $c\bar Y$ ma
+obciążenie $-h\mu$ i wariancję $(1-h)^2\sigma^2/n$, więc
+$$
+\operatorname{MSE}(c\bar Y)
+= h^2\mu^2 + (1-h)^2\frac{\sigma^2}{n}
+= \frac{\sigma^2}{n}
+- h\Big[\,2\frac{\sigma^2}{n} - h\Big(\mu^2 + \frac{\sigma^2}{n}\Big)\Big] .
+$$
+Dla dostatecznie małego $h$ wyrażenie w nawiasie kwadratowym jest dodatnie,
+więc $c\bar Y$ ma mniejszy błąd niż $\bar Y$ -- przy każdym $\mu$,
+$\sigma$ i $n$. Niewielkie ściągnięcie zawsze się opłaca: kwadrat
+obciążenia rośnie jak $h^2$, a wariancja maleje w przybliżeniu
+proporcjonalnie do $h$.
+
+Nie wynika stąd gotowy przepis. Zakres opłacalnych $h$ i najlepsze $h$
+zależą od nieznanego $\mu$ (@exr-estymator-sciagajacy), a zbyt mocne
+ściąganie szkodzi: przy $c = 0$ błąd wynosi $\mu^2$. Siłę ściągania
+trzeba więc dobierać na podstawie danych, czym zajmuje się rozdział
+[-@sec-ocena-modeli]. Na tej samej zasadzie działa regresja grzbietowa
+z rozdziału [-@sec-selekcja-regularyzacja]: ściąga współczynniki modelu
+liniowego do zera, zmniejszając wariancję kosztem obciążenia.
+W rozdziale [-@sec-paradygmat-bayesowski] zobaczymy, że takie ściąganie
+wynika z rozkładu a priori.
 
 Wróćmy do predykcji. Ustalmy punkt $\x_0$ i potraktujmy predykcję
 $\fD(\x_0)$ jako estymator liczby
@@ -289,8 +301,8 @@ b(\x_0) = \bar f(\x_0) - \fopt(\x_0),
 \qquad
 v(\x_0) = \Var_{\mathcal{D}}\, \fD(\x_0) .
 $$ {#eq-obciazenie-wariancja-punkt}
-W rysunku [-@fig-wachlarz] obciążenie to pionowa odległość grubej
-niebieskiej linii od przerywanej, a wariancja opisuje rozrzut cienkich
+Na rysunku [-@fig-wachlarz] obciążenie to różnica wysokości grubej
+niebieskiej linii i linii przerywanej, z uwzględnieniem znaku, a wariancja opisuje rozrzut cienkich
 linii wokół niebieskiej. Obie wielkości są funkcjami punktu $\x_0$:
 wielomian stopnia $10$ ma dużą wariancję przy krańcach przedziału
 i znacznie mniejszą w środku.
@@ -299,7 +311,12 @@ i znacznie mniejszą w środku.
 
 Możemy teraz połączyć obie warstwy losowości: losowość nowej obserwacji,
 którą przewidujemy, i losowość zbioru uczącego, z którego wyznaczyliśmy
-predyktor.
+predyktor. W przykładzie popytu przyjmijmy, że wynik nowego dnia ma
+średnią $10$ i wariancję $4$, niezależnie od danych użytych do uczenia.
+Oczekiwany błąd predykcji metody A wynosi wtedy $4+14/3=26/3$,
+a metody B -- $4+6=10$. Do obu błędów dochodzi ten sam składnik:
+zmienność wyniku, której nie da się przewidzieć na podstawie dostępnych
+cech. Ogólnie otrzymujemy następujący wzór.
 
 ::: {#thm-obciazenie-wariancja}
 ## Rozkład na obciążenie i wariancję
@@ -359,8 +376,10 @@ $$
 $$ {#eq-rozklad-obciazenie-wariancja-globalny}
 Jest to rozkład ([-@eq-rozklad-bledu]) z rozdziału
 [-@sec-predyktory-optymalne], uśredniony po zbiorach uczących, w którym
-błąd redukowalny rozpadł się na całkowite obciążenie do kwadratu
-i całkowitą wariancję.
+błąd redukowalny rozpadł się na średni kwadrat obciążenia
+i średnią wariancję. Najpierw podnosimy obciążenie do kwadratu
+w każdym punkcie, a dopiero potem uśredniamy: dodatnie i ujemne
+odchylenia nie znoszą się w tej ocenie.
 
 ::: {.callout-note}
 ## Trzy uśrednienia
@@ -397,7 +416,8 @@ walidacja krzyżowa szacuje raczej drugą z tych wielkości niż pierwszą
 :::
 
 @thm-obciazenie-wariancja jest tożsamością: zachodzi dla każdej metody
-uczenia, każdego rozkładu i każdej liczności próby. Sam w sobie nie mówi
+uczenia i każdej liczności próby, o ile spełnione są założenia
+o niezależności i skończonych drugich momentach. Sam w sobie nie mówi
 nic o kompromisie. Kompromis to obserwacja dotycząca tego, jak oba
 składniki zależą od elastyczności metody: zwiększając elastyczność,
 zwykle zmniejszamy obciążenie i zwiększamy wariancję. Sprawdźmy to na
@@ -408,7 +428,7 @@ obu naszych metodach.
 Dla metody $k$-NN oba składniki można wypisać jawnie, jeśli przyjmiemy
 uproszczenie: punkty $\x_1, \dots, \x_n$ są ustalone, a losowe są tylko
 wyniki $Y_i = \fopt(\x_i) + \varepsilon_i$, z niezależnymi szumami
-o wariancji $\sigma^2$. Taki **ustalony układ** (ang. *fixed design*)
+o średniej zero i wariancji $\sigma^2$. Taki **ustalony układ** (ang. *fixed design*)
 upraszcza rachunki, bo zbiór sąsiadów $N_k(\x_0)$ zależy tylko od
 położenia punktów, a nie od wyników. Predykcja
 ([-@eq-knn-regresja]) jest wtedy średnią $k$ niezależnych zmiennych
@@ -422,14 +442,16 @@ $$ {#eq-knn-obciazenie-wariancja}
 Oba wzory odpowiadają dwóm źródłom błędu z rysunku [-@fig-knn-idea].
 Wariancja maleje jak $1/k$: im więcej wyników uśredniamy, tym mniej
 znaczy szum każdego z nich. Obciążenie to różnica między średnią
-wartości $\fopt$ w otoczeniu a wartością w samym punkcie. Rośnie wraz
-z $k$, bo otoczenie się poszerza, i jest tym większe, im bardziej $\fopt$
-zmienia się w otoczeniu. Dla $k = 1$ obciążenie jest małe, a wariancja
-równa $\sigma^2$, więc oczekiwany błąd predykcji wynosi w przybliżeniu
-$2\sigma^2$ -- znów pojawia się podwojenie, jak w twierdzeniu
-Covera--Harta (@thm-cover-hart). Dla $k = n$ wariancja jest najmniejsza,
-$\sigma^2/n$, ale obciążenie równa się odległości $\fopt(\x_0)$ od średniej
-wszystkich wartości $\fopt(\x_i)$.
+wartości $\fopt$ w otoczeniu a wartością w samym punkcie. Poszerzanie otoczenia może zwiększać jego wartość bezwzględną, jeśli
+uśredniamy coraz bardziej różniące się wartości funkcji. Nie jest to
+jednak reguła monotoniczna: dla funkcji stałej obciążenie wynosi zero
+przy każdym $k$, a w innych przypadkach odchylenia mogą się znosić.
+Dla $k=1$ wariancja wynosi $\sigma^2$. Jeśli najbliższy sąsiad ma też
+wartość funkcji regresji bliską $\fopt(\x_0)$, obciążenie jest małe,
+a oczekiwany błąd predykcji jest bliski $2\sigma^2$: po jednym składniku
+szumu pochodzi z wyniku sąsiada i z nowej obserwacji.
+Dla $k=n$ wariancja maleje do $\sigma^2/n$, ale predyktor uśrednia
+wyniki ze wszystkich punktów i może słabo oddawać lokalny kształt funkcji.
 
 Dla regresji wielomianowej takich prostych wzorów nie ma, ale oba
 składniki można oszacować symulacyjnie: wylosować wiele zbiorów
@@ -440,7 +462,7 @@ losowe, jak na rysunku [-@fig-knn-blad-k], a nie ustalone.
 
 ```{python}
 #| label: fig-dekompozycja
-#| fig-cap: "Rozkład ryzyka na obciążenie do kwadratu, wariancję i błąd nieredukowalny. Po lewej: regresja $k$-NN w zależności od $n/k$ ($n = 100$, 500 prób uczących); kropkowana linia to wariancja $\\sigma^2/k$ z ustalonego układu ([-@eq-knn-obciazenie-wariancja]). Po prawej: regresja wielomianowa w zależności od stopnia $d$ ($n = 50$, 1000 prób uczących, te same co na rysunku [-@fig-wielomiany-blad]). Ryzyko jest sumą trzech składników. Wzrost obciążenia powyżej $d = 8$ to błąd losowy oszacowania $\\bar f$ z 1000 prób, a nie własność metody. Oś pionowa w skali logarytmicznej."
+#| fig-cap: "Rozkład ryzyka na obciążenie do kwadratu, wariancję i błąd nieredukowalny. Po lewej: regresja $k$-NN w zależności od $n/k$ ($n = 100$, 500 prób uczących); kropkowana linia to wariancja $\\sigma^2/k$ z ustalonego układu ([-@eq-knn-obciazenie-wariancja]). Po prawej: regresja wielomianowa w zależności od stopnia $d$ ($n = 50$, 1000 prób uczących, te same co na rysunku [-@fig-wielomiany-blad]). Ryzyko jest sumą trzech składników. Dla wysokich stopni oszacowanie obciążenia jest niedokładne z powodu dużej wariancji predykcji. Oś pionowa w skali logarytmicznej."
 
 from sklearn.neighbors import KNeighborsRegressor
 
@@ -498,12 +520,15 @@ plt.tight_layout()
 plt.show()
 ```
 
-W obu panelach widać ten sam mechanizm. Obciążenie maleje, a wariancja
-rośnie wraz z elastycznością. Ryzyko, ich suma powiększona o $\sigma^2$,
-ma minimum tam, gdzie dalszy spadek obciążenia przestaje równoważyć
-wzrost wariancji. Kształt litery U z rysunków [-@fig-knn-blad-k]
-i [-@fig-wielomiany-blad] jest więc sumą dwóch monotonicznych krzywych
-biegnących w przeciwne strony.
+W obu panelach widać typowy kompromis: wraz ze wzrostem elastyczności
+obciążenie na ogół maleje, a wariancja rośnie. Najmniejsze ryzyko
+otrzymujemy tam, gdzie suma kwadratu obciążenia i wariancji jest
+najmniejsza. Nie wymaga to ani równości obu składników, ani ich ścisłej
+monotoniczności. Metoda $k$-NN i regresja wielomianowa nie mają ze sobą
+nic wspólnego poza tym, że obie mają regulowaną elastyczność i uczą się
+ze skończonej próby. Kompromis obciążenie--wariancja nie jest więc
+własnością konkretnego algorytmu, tylko uczenia z ograniczonej liczby
+danych.
 
 Przy $k$-NN wariancja jest bliska $\sigma^2/k$ dla małych $k$, ale
 przy dużych $k$ jest od niej wyraźnie większa: przy losowych cechach
@@ -512,42 +537,77 @@ wartości $\fopt$ w otoczeniu, i ten składnik nie maleje jak $1/k$.
 Najmniejsze ryzyko przypada na $k$ rzędu $7$--$10$, gdzie obciążenie
 i wariancja są porównywalne.
 
-Przy wielomianach obciążenie spada schodkami: stopnie parzyste prawie
-nic nie dodają do poprzedniego nieparzystego. Powodem jest symetria
-naszej funkcji regresji -- po odjęciu stałej $1/4$ jest ona nieparzysta
-względem punktu $x = 1/2$, więc człony parzyste w rozwinięciu wokół tego
-punktu nic nie wnoszą. Każdy taki współczynnik zwiększa jednak wariancję
-i nie zmniejsza obciążenia. To czysty koszt, który dobrze widać w ryzyku:
-stopień $4$ jest gorszy od stopnia $3$, a stopień $6$ od stopnia $5$.
-Od stopnia $5$ obciążenie jest praktycznie zerowe -- wielomian tego stopnia
-przybliża $\fopt$ na $[0, 1]$ niemal dokładnie -- a każdy kolejny stopień
-dokłada już tylko wariancji. Powyżej stopnia $8$ wariancja rośnie
-gwałtownie, bo dopasowania przy krańcach przedziału, widoczne w rysunku
-[-@fig-wachlarz], coraz częściej „uciekają”.
+Przy wielomianach obciążenie maleje schodkami. Przejście od prostej do
+stopnia $2$ prawie go nie zmienia; tak samo przejście od stopnia $3$
+do $4$ i od $5$ do $6$.[^parzystosc] Wariancja przy każdym takim kroku
+jednak rośnie: od $d = 1$ do $d = 2$ z około $0{,}013$ do $0{,}024$,
+od $d = 3$ do $d = 4$ z $0{,}009$ do $0{,}012$. Dodatkowy współczynnik
+nie poprawił przybliżenia funkcji regresji, ale jego oszacowanie zmienia
+się od próby do próby i dokłada własny rozrzut. Dlatego stopień $4$ ma
+większe ryzyko niż stopień $3$, a stopień $6$ -- niż stopień $5$.
+Odwrotnie przy przejściu od stopnia $2$ do $3$: wariancja spada,
+z $0{,}024$ do $0{,}009$. Przy losowych cechach model zbyt ubogi
+ma dodatkową zmienność, bo jego dopasowanie zależy od tego, gdzie
+w danej próbie wypadły punkty.
 
-Wzrost krzywej obciążenia powyżej stopnia $8$ jest artefaktem symulacji,
-a nie własnością metody. Predyktor przeciętny $\bar f$ szacujemy średnią
-z tysiąca dopasowań, a średnia zmiennej o ogromnej wariancji sama jest
-niedokładna. Jej błąd losowy zawyża oszacowanie obciążenia do kwadratu
-średnio o wariancję podzieloną przez liczbę prób. Przy stopniu $12$ to
-około $31/1000$, czyli tyle, ile widać na wykresie. Prawdziwe obciążenie
-pozostaje bliskie zera.
+Wniosek sięga dalej niż ten przykład: **parametr, który nie zmniejsza
+obciążenia, nie jest neutralny, tylko zwiększa wariancję**. Większa
+elastyczność opłaca się wtedy, gdy zmniejsza obciążenie bardziej, niż
+zwiększa wariancję. Podobnie szkodziły cechy szumowe w metodzie $k$-NN
+(@fig-knn-cechy-nieistotne), choć mechanizm był tam inny. Wrócimy do
+tego przy wyborze predyktorów w rozdziale [-@sec-selekcja-regularyzacja].
 
-Kompromis obciążenie--wariancja nie jest więc własnością konkretnego
-algorytmu. Metoda $k$-NN i regresja wielomianowa nie mają ze sobą nic
-wspólnego poza tym, że obie mają pokrętło elastyczności i uczą się ze
-skończonej próby.
+Od stopnia $5$ błąd aproksymacji jest praktycznie zerowy, więc każdy
+kolejny stopień dokłada już tylko wariancji. Powyżej stopnia $8$ wariancja
+rośnie gwałtownie, bo dopasowania przy krańcach przedziału coraz częściej
+„uciekają” (@fig-wachlarz).
+
+[^parzystosc]: Schodki wynikają z symetrii przykładu. Po podstawieniu
+    $t = x - \tfrac12$ mamy $\fopt(x) - \tfrac14 = \tfrac{t}{2} - \sin(2\pi t)$,
+    czyli funkcję nieparzystą w $t$, a rozkład $X$ jest symetryczny
+    względem $\tfrac12$. Najlepsze przybliżenie takiej funkcji wielomianem
+    jest więc również nieparzyste, a człon $t^{2m}$ nic do niego nie
+    wnosi. Najlepszy wielomian stopnia $2m$ pokrywa się z najlepszym
+    wielomianem stopnia $2m - 1$. W innym przykładzie bezużyteczne mogą
+    być inne współczynniki, ale zasada jest ta sama.
+
+Krzywą obciążenia dla wysokich stopni trzeba czytać ostrożnie.
+Predyktor przeciętny szacujemy z tysiąca prób. Gdy pojedyncze predykcje
+mają dużą wariancję, ich średnia również jest niedokładna. Oszacowanie
+kwadratu obciążenia jest przez to zawyżone, przeciętnie o wariancję
+podzieloną przez liczbę powtórzeń. Sam wzrost tej krzywej nie dowodzi
+więc wzrostu rzeczywistego obciążenia metody.
+
+::: {.callout-note}
+## Podwójne zejście
+Obraz z rysunku [-@fig-dekompozycja], w którym wariancja rośnie wraz
+z liczbą parametrów, nie jest prawem natury. @thm-obciazenie-wariancja
+jest tożsamością, a kompromis -- tylko typowym zachowaniem metod.
+@belkin2019 opisali sytuację, w której to zachowanie się zmienia:
+**podwójne zejście** (ang. *double descent*). Gdy liczba parametrów
+przekracza liczbę obserwacji, model może dopasować dane dokładnie na
+nieskończenie wiele sposobów. W naszym przykładzie odpowiadałoby to
+wielomianom stopnia wyższego niż $n - 1 = 49$. Jeśli algorytm wybiera
+spośród tych dopasowań rozwiązanie w pewnym sensie najprostsze, na
+przykład o najmniejszej normie współczynników, ryzyko po przejściu
+przez maksimum w progu interpolacji może znów maleć. Rozkład na
+obciążenie i wariancję nadal obowiązuje. Zmienia się tylko to, jak
+wariancja zależy od liczby parametrów. Do tego zjawiska wrócimy przy
+sieciach neuronowych (rozdział [-@sec-mlp-backprop]), które często mają
+więcej parametrów niż obserwacji.
+:::
 
 ## Błąd aproksymacji i błąd estymacji {#sec-aproksymacja-estymacja}
 
-W rozdziale [-@sec-predyktory-optymalne] zapowiedzieliśmy rozbicie błędu
+W sekcji [-@sec-strata-ryzyko] zapowiedzieliśmy rozbicie błędu
 redukowalnego na część wynikającą ze zbyt ubogiej klasy modeli i część
 wynikającą ze skończoności próby. Rozkład na obciążenie i wariancję jest
 do tego bliski, ale nie identyczny. Obciążenie mierzymy względem
 predyktora przeciętnego $\bar f$, który zależy od liczności próby i od
 metody, a nie tylko od klasy. Zapowiedziany rozkład wygląda inaczej.
 
-Niech metoda wybiera predyktor z ustalonej klasy $\mathcal{F}$ i niech
+Niech metoda wybiera predyktor z ustalonej klasy $\mathcal{F}$.
+Załóżmy, że istnieje w niej predyktor o najmniejszym ryzyku, i niech
 $$
 f_{\mathcal{F}} \in \argmin_{f \in \mathcal{F}} \Risk(f)
 $$
@@ -562,7 +622,8 @@ $$
 +
 \underbrace{\Risk(\widehat f) - \Risk(f_{\mathcal{F}})}_{\text{błąd estymacji}} .
 $$ {#eq-aproksymacja-estymacja}
-Tożsamość jest trywialna, ale jej składniki mają wyraźny sens. **Błąd
+Wzór otrzymaliśmy przez dodanie i odjęcie tego samego ryzyka.
+Jego składniki odpowiadają dwóm różnym ograniczeniom uczenia. **Błąd
 aproksymacji** mówi, ile tracimy, ograniczając się do klasy $\mathcal{F}$.
 Nie zależy od danych ani od $n$, tylko od klasy i od rozkładu. **Błąd
 estymacji** mówi, ile tracimy dlatego, że zamiast najlepszego elementu
@@ -580,6 +641,280 @@ uczących. Ma też ograniczenie: wymaga ustalonej klasy $\mathcal{F}$.
 Metoda $k$-NN, jak zauważyliśmy w sekcji [-@sec-knn-regula], niczego
 z ustalonej klasy nie wybiera, więc dla niej naturalny jest rozkład na
 obciążenie i wariancję.
+
+Obciążenie nie jest jednak tym samym co błąd aproksymacji, a wariancja
+nie jest tym samym co błąd estymacji. Pierwszy rozkład pyta, gdzie leży
+przeciętny predyktor i jak bardzo zmieniają się dopasowania. Drugi pyta,
+jak dobra jest wybrana klasa i jak daleko jesteśmy od jej najlepszego
+elementu.
+
+Gdy metoda wybiera predyktor z klasy takiej jak wielomiany stopnia
+co najwyżej $d$, oba rozkłady różnią się jednym składnikiem: średnim
+kwadratem odległości predyktora przeciętnego $\bar f$ od najlepszego
+elementu klasy $f_{\mathcal{F}}$,
+$$
+\|\bar f - f_{\mathcal{F}}\|^2 = \E\big[(\bar f(\X) - f_{\mathcal{F}}(\X))^2\big].
+$$
+Rozkład na obciążenie i wariancję zalicza go do obciążenia, rozkład
+na aproksymację i estymację -- do błędu estymacji:
+$$
+\text{obciążenie}^2 = \text{błąd aproksymacji} + \|\bar f - f_{\mathcal{F}}\|^2,
+\qquad
+\text{oczekiwany błąd estymacji} = \|\bar f - f_{\mathcal{F}}\|^2 + \text{wariancja}.
+$$
+Dowód podajemy w rozszerzeniu [-@sec-bw-porownanie-rozkladow].
+
+Dla metody najmniejszych kwadratów ten składnik jest zwykle znikomy
+i maleje, gdy danych przybywa. W naszym przykładzie z wielomianami jest
+kilkadziesiąt do kilkuset razy mniejszy od wariancji. Wtedy obciążenie
+do kwadratu jest w praktyce równe błędowi aproksymacji, a wariancja --
+błędowi estymacji. Z tego przybliżenia skorzystamy, czytając krzywe
+uczenia.
+
+Inaczej jest w metodach, które celowo odsuwają predyktor od
+$f_{\mathcal{F}}$. Estymator ściągający $c\bar Y$ i regresja grzbietowa
+wybierają predyktor z tej samej klasy co zwykłe dopasowanie, więc nie
+zmieniają błędu aproksymacji. Mimo to mają obciążenie, i leży ono właśnie
+w składniku $\|\bar f - f_{\mathcal{F}}\|^2$. Dlatego przy regularyzacji
+trzeba mówić o obciążeniu, a nie o błędzie aproksymacji.
+
+## Krzywe uczenia {#sec-krzywe-uczenia}
+
+Dotąd zmienialiśmy elastyczność przy ustalonej liczności próby. Zmieńmy
+teraz liczność próby przy ustalonej metodzie. Wykres ryzyka i błędu
+uczącego w zależności od $n$ nazywamy **krzywą uczenia** (ang. *learning
+curve*).
+
+Dla ustalonej klasy modeli błąd aproksymacji nie zależy od $n$.
+Jeśli metoda wraz ze wzrostem próby coraz lepiej przybliża najlepszy
+element klasy, jej oczekiwany błąd estymacji maleje do zera. Ryzyko
+zbliża się wtedy do $\Risk(f_{\mathcal{F}})$, czyli sumy błędu
+nieredukowalnego i błędu aproksymacji.
+
+Ryzyko zbliża się do tej granicy od góry. Błąd uczący zachowuje się
+odwrotnie. Przy małej próbie jest niski, bo model łatwo dopasowuje się
+do niewielu punktów razem z ich szumem. Gdy danych przybywa, zwykle
+rośnie i zbliża się do tej samej granicy od dołu. Różnica między
+krzywymi, czyli optymizm błędu uczącego z sekcji
+[-@sec-blad-uczacy-ryzyko], zmniejsza się więc z obu stron. Dla trafnego
+modelu liniowego z $p$ cechami widać to dokładnie: oczekiwany błąd
+uczący wynosi $\sigma^2\big(1 - (p+1)/n\big)$ i rośnie do $\sigma^2$
+(rozdział [-@sec-regresja-liniowa]). Nie oznacza to, że każda kolejna obserwacja musi
+poprawiać konkretny dopasowany model; porównujemy średnie po wielu
+próbach. @fig-krzywe-uczenia pokazuje wynik dla prostej ($d=1$)
+i wielomianu stopnia $9$.
+
+```{python}
+#| label: fig-krzywe-uczenia
+#| fig-cap: "Krzywe uczenia regresji wielomianowej stopnia $d = 1$ (po lewej) i $d = 9$ (po prawej): błąd na zbiorze uczącym i ryzyko w zależności od liczności próby $n$. Punkty to średnie z 300 prób uczących. Linia przerywana: granica ryzyka przy $n \\to \\infty$, równa sumie błędu nieredukowalnego i błędu aproksymacji. Linia kropkowana: błąd nieredukowalny $\\sigma^2$. Obie osie w skali logarytmicznej."
+
+gesta = np.linspace(0, 1, 20_001)
+rng = np.random.default_rng(4)
+licznosci = np.array([40, 60, 100, 200, 500, 1000, 3000])
+powtorzenia = 300
+
+fig, osie = plt.subplots(1, 2, figsize=(11, 4.0), sharey=True)
+for ax, d in zip(osie, [1, 9]):
+    blad_uczacy = np.zeros(len(licznosci))
+    ryzyko = np.zeros(len(licznosci))
+    for i, n in enumerate(licznosci):
+        for _ in range(powtorzenia):
+            x, y = probka(n, rng)
+            wielomian = Polynomial.fit(x, y, d)
+            blad_uczacy[i] += np.mean((wielomian(x) - y) ** 2)
+            ryzyko[i] += np.trapezoid((wielomian(siatka) - f_siatka) ** 2,
+                                      siatka) + sigma ** 2
+    blad_uczacy /= powtorzenia
+    ryzyko /= powtorzenia
+    f_klasa = Polynomial.fit(gesta, f_prawdziwa(gesta), d)
+    granica = np.trapezoid((f_klasa(siatka) - f_siatka) ** 2, siatka) + sigma ** 2
+
+    ax.plot(licznosci, blad_uczacy, "o-", color="0.45",
+            label="błąd na zbiorze uczącym")
+    ax.plot(licznosci, ryzyko, "o-", color="#1B6CA8", label="ryzyko")
+    ax.axhline(granica, color="0.2", ls="--", lw=1.3,
+               label=r"$\sigma^2$ + błąd aproksymacji")
+    ax.axhline(sigma ** 2, color="#D7263D", ls=":", lw=1.5,
+               label=r"$\sigma^2$")
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    ax.set_title(f"$d = {d}$")
+    ax.set_xlabel("liczność próby uczącej $n$")
+osie[0].set_ylabel("średni kwadrat błędu")
+osie[0].legend(frameon=False, fontsize=8)
+plt.tight_layout()
+plt.show()
+```
+
+Dwa panele pokazują dwa typowe obrazy. Prosta szybko osiąga swoją
+granicę $\sigma^2 + 0{,}196 \approx 0{,}286$, gdzie $0{,}196$ to błąd
+aproksymacji, i dalsze dane już nic nie dają. Krzywe błędu uczącego i ryzyka są blisko siebie,
+a obie leżą wysoko nad $\sigma^2$. Tak wygląda model, którego ryzyko
+zdominowało obciążenie. Wielomian stopnia $9$ przy małym $n$ ma ogromne
+ryzyko i wielką szczelinę między ryzykiem a błędem uczącym. Tak wygląda
+model, którego ryzyko zdominowała wariancja. Z rosnącym $n$ szczelina
+się zamyka, a obie krzywe zbiegają do granicy praktycznie równej
+$\sigma^2$, bo błąd aproksymacji wielomianu stopnia $9$ jest znikomy.
+
+Z porównania paneli wynika rzecz ważna dla praktyki: **najlepsza
+elastyczność zależy od liczności próby**. Przy $n = 40$ prosta ma
+ryzyko ponad dziesięć razy mniejsze niż wielomian stopnia $9$, a już przy
+$n = 100$ -- mniej więcej trzy razy większe. Nie ma modelu „właściwie złożonego” w oderwaniu od
+ilości danych.
+
+Krzywe uczenia pomagają zdecydować, co zmienić w modelowaniu.
+Duża różnica między ryzykiem a błędem uczącym, malejąca przy większym
+$n$, sugeruje, że warto zebrać więcej danych lub sprawdzić prostszy
+model. Gdy obie krzywe się wypłaszczają i zbliżają do siebie,
+samo zwiększenie próby może już niewiele dać.
+
+Płaskie krzywe nie mówią jednak, czy osiągnęliśmy granicę wynikającą
+z szumu, czy ogranicza nas klasa modeli. W symulacji znamy błąd
+nieredukowalny i możemy go zaznaczyć. W praktyce warto porównać klasy:
+jeśli bogatsza klasa daje niższy błąd na nowych danych, dotychczasowa
+była zbyt uboga. Brak poprawy w kilku sprawdzonych klasach nie dowodzi
+jeszcze, że osiągnęliśmy najlepsze możliwe ryzyko. Warto wtedy rozważyć
+zmianę cech: błąd nieredukowalny odnosi się do ustalonego zestawu cech
+(sekcja [-@sec-blad-nieredukowalny]), a nowa cecha niosąca informację
+o wyniku może go obniżyć.
+
+Na wykresie z osią logarytmiczną odległość między krzywymi pokazuje
+stosunek błędów, a nie ich różnicę. Przy ocenie wielkości poprawy trzeba
+więc sprawdzić wartości liczbowe. W rzeczywistym problemie ryzyka nie
+znamy: zastępujemy je oceną na niezależnych danych. Sposoby uzyskania
+takiej oceny poznamy w rozdziale [-@sec-ocena-modeli].
+
+## Co pomaga zmniejszyć błąd {#sec-kompromis-nieusuwalny}
+
+Gdybyśmy znali rozkład $P$, wybralibyśmy po prostu funkcję regresji
+$\fopt$ z rozdziału [-@sec-predyktory-optymalne] i nie byłoby czego
+równoważyć. Kompromis bierze się z uczenia ze skończonej próby
+w ograniczonej klasie modeli. Przy ustalonej liczności próby i ustalonej
+rodzinie modeli zmiana elastyczności pozwala tylko wybrać najlepszy punkt
+krzywej ryzyka. Zwykle wymienia przy tym obciążenie na wariancję, choć
+nie każda poprawa jednego składnika pogarsza drugi: przejście od
+stopnia $2$ do $3$ zmniejszyło oba. Aby zejść poniżej minimum tej
+krzywej, trzeba zmienić coś innego niż elastyczność. Warto rozróżnić
+dwa sposoby poprawy.
+
+Pierwszy to **więcej danych**. Pozwalają one dokładniej dopasować model,
+a często także bezpiecznie zwiększyć jego elastyczność. W metodzie
+$k$-NN możemy wówczas uśredniać więcej wyników, a jednocześnie wybierać
+sąsiadów z mniejszego otoczenia. W ten sposób zmniejszamy wpływ szumu
+i błąd wynikający z uśredniania odległych wartości funkcji regresji.
+
+Drugi to **trafne założenie o zależności**. Jeśli funkcja regresji jest
+liniowa, nie musimy szukać jej wśród wszystkich możliwych funkcji.
+Regresja liniowa z $p$ cechami ma wtedy zerowy błąd aproksymacji,
+a jej wariancja, uśredniona po punktach zbioru uczącego, wynosi
+$\sigma^2(p+1)/n$ (rozdział [-@sec-regresja-liniowa]). Maleje więc jak
+$1/n$, a wymiar wpływa tylko na stałą: aby zmniejszyć ją o połowę,
+wystarczy podwoić liczbę obserwacji, bez względu na $p$.
+
+Metoda lokalna, która niczego o kształcie zależności nie zakłada,
+płaci za to wolniejszym uczeniem, tym wolniejszym, im więcej cech.
+Aby zmniejszyć otoczenie i zachować w nim dość obserwacji, trzeba
+zwiększać próbę znacznie szybciej niż w jednym wymiarze. To poznane
+już przekleństwo wymiarowości. Przybliżony rachunek w rozszerzeniu
+[-@sec-bw-tempo] pokazuje skalę: dla $k$-NN przy dziesięciu cechach
+zmniejszenie nadwyżki ryzyka o połowę wymaga mniej więcej
+sześćdziesięcioczterokrotnie większej próby.
+
+Trafne założenie zastępuje więc dane. Nietrafne wprowadza błąd
+aproksymacji, którego żadna liczba danych nie usunie. Wybór między
+modelem o mocnych założeniach a metodą elastyczną jest wyborem między
+tymi dwoma ryzykami. Do tego wyboru będziemy wracać przy każdej
+kolejnej klasie modeli.
+
+## Obciążenie i wariancja w klasyfikacji {#sec-bw-klasyfikacja}
+
+Przy stracie 0--1 rozkład tak prosty jak ([-@eq-rozklad-obciazenie-wariancja])
+nie istnieje. Zobaczmy dlaczego. Ograniczmy się do dwóch klas i reguły
+podstawienia $\widehat g_{\mathcal{D}}(\x) = \ind\big(\widehat\eta_{\mathcal{D}}(\x)
+> \tfrac12\big)$, takiej jak klasyfikator $k$-NN.
+
+Ustalmy punkt $\x$. Klasyfikator wskazujący w nim klasę $1$ myli się
+z prawdopodobieństwem $1 - \eta(\x)$, wskazujący klasę $0$ --
+z prawdopodobieństwem $\eta(\x)$. Klasyfikator bayesowski wybiera
+mniejszą z tych liczb. Jeśli $\widehat g$ wskazuje w punkcie $\x$ inną
+klasę niż $\Bayes$, płaci więc nadwyżkę równą różnicy obu liczb,
+$|2\eta(\x) - 1|$. Uśredniając po $\X$, dostajemy
+$$
+\Risk(\widehat g) - \Risk(\Bayes)
+= \E\Big[\, |2\eta(\X) - 1| \; \ind\big(\widehat g(\X) \ne \Bayes(\X)\big) \Big],
+$$ {#eq-nadwyzka-ryzyka-01}
+a po uśrednieniu po zbiorach uczących
+$$
+\E_{\mathcal{D}}\big[\Risk(\widehat g_{\mathcal{D}})\big] - \Risk(\Bayes)
+= \E\Big[\, |2\eta(\X) - 1| \;
+\Prob_{\mathcal{D}}\big(\widehat g_{\mathcal{D}}(\X) \ne \Bayes(\X)\big) \Big].
+$$
+Przy $\eta(\x)=0{,}7$ decyzja bayesowska to klasa $1$ i jej ryzyko
+warunkowe wynosi $0{,}3$. Wybór klasy $0$ daje ryzyko $0{,}7$,
+czyli o $0{,}4$ większe. Zarówno oszacowanie $0{,}55$, jak i $0{,}9$
+prowadzi do tej samej, optymalnej decyzji. Oszacowanie $0{,}45$ prowadzi
+do decyzji przeciwnej. Dla straty 0--1 liczy się strona progu,
+a nie sama odległość oszacowania od prawdziwego prawdopodobieństwa.
+
+Wynika stąd wniosek dotyczący obciążenia. Przypuśćmy, że oszacowania
+prawdopodobieństwa skupiają się wokół $0{,}9$, choć prawdziwa wartość
+wynosi $0{,}7$. Są wyraźnie obciążone, a mimo to prowadzą do decyzji
+bayesowskiej. Przy stracie 0--1 obciążenie oszacowania $\widehat\eta$
+nic nie kosztuje, dopóki nie przesunie go na drugą stronę progu. Model
+może więc źle szacować prawdopodobieństwa i mimo to dobrze klasyfikować.
+W ten sposób @friedman1997 tłumaczy skuteczność prostych klasyfikatorów
+opartych na mocnych, często nietrafnych założeniach. Przykładem jest
+naiwny klasyfikator Bayesa z rozdziału [-@sec-modele-generatywne]:
+zakłada niezależność cech w obrębie klasy, więc jego oszacowania
+prawdopodobieństw bywają mocno obciążone, ale to samo założenie
+zmniejsza liczbę parametrów, a z nią wariancję.
+
+Wariancja działa tu inaczej niż w regresji. Mała wariancja pomaga, gdy
+oszacowania skupiają się po właściwej stronie progu. Jeżeli skupiają się
+po złej stronie, stabilność tylko utrwala złą decyzję. Nie możemy więc
+przenieść do klasyfikacji prostej reguły „mniejsza wariancja to mniejszy
+błąd”.
+
+Tolerancja na obciążenie ma jednak granicę: dotyczy decyzji przy
+ustalonym progu $1/2$. Dobra klasyfikacja przy tym progu nie gwarantuje
+dobrych oszacowań prawdopodobieństw. Po zmianie kosztów błędów zmienia
+się próg decyzji, a oszacowania, które wystarczały przy progu $1/2$,
+mogą prowadzić do gorszych wyborów. Dotyczy to także reguł z opcją
+odmowy z sekcji [-@sec-od-prawdopodobienstw-do-decyzji]. Przy takich
+decyzjach obciążenie oszacowań znów kosztuje.
+
+::: {.callout-note collapse="true"}
+## Rozszerzenie: normalne przybliżenie oszacowań
+Wymagana jest dystrybuanta standardowego rozkładu normalnego $\Phi$.
+Poniższy rachunek jest ilustracją lokalną: rozkład normalny może jedynie
+przybliżać oszacowanie prawdopodobieństwa ograniczone do $[0,1]$.
+
+Niech na przykład $\eta(\x) > \tfrac12$ i niech
+$\widehat\eta_{\mathcal{D}}(\x)$ ma w przybliżeniu rozkład normalny
+o średniej $\bar\eta(\x)$ i odchyleniu standardowym $s(\x)$. Wtedy
+$$
+\Prob_{\mathcal{D}}\big(\widehat g_{\mathcal{D}}(\x) \ne \Bayes(\x)\big)
+\approx \Phi\Big(\frac{\tfrac12 - \bar\eta(\x)}{s(\x)}\Big) .
+$$ {#eq-klasyfikacja-obciazenie-wariancja}
+Obciążenie i wariancja nie dodają się tu, tylko oddziałują
+[@friedman1997]. Jeśli przeciętne oszacowanie leży po właściwej stronie
+progu ($\bar\eta(\x) > \tfrac12$), licznik jest ujemny i wzrost wariancji
+zwiększa prawdopodobieństwo błędu. Samo obciążenie nie określa więc jakości decyzji: znaczenie ma
+położenie całego rozkładu oszacowań względem progu. Jeśli
+przeciętne oszacowanie leży po złej stronie, licznik jest dodatni
+i wzrost wariancji prawdopodobieństwo błędu **zmniejsza**, bo częściej
+wyrzuca $\widehat\eta$ na właściwą stronę (@exr-obciazenie-01).
+
+:::
+
+## Rozszerzenie: porównanie dwóch rozkładów błędu {#sec-bw-porownanie-rozkladow}
+
+::: {.callout-note appearance="simple" icon="false"}
+## Materiał nieobowiązkowy
+Wymagane są przestrzenie liniowe funkcji, iloczyn skalarny i rzut
+ortogonalny.
+Tekst główny i zadania podstawowe z tej sekcji nie korzystają.
+:::
 
 Gdy oba rozkłady mają sens, są ze sobą ściśle związane. Oznaczmy
 $\|g\|^2 = \E\big[g(\X)^2\big]$, gdzie średnią liczymy po rozkładzie cech.
@@ -638,14 +973,8 @@ $\E_{\mathcal{D}}\big[\|\fD - \bar f\|^2\big] = \E\big[v(\X)\big]$.
 $\square$
 :::
 
-Oba rozkłady różnią się więc tylko tym, gdzie zaliczają składnik
-$\|\bar f - f_{\mathcal{F}}\|^2$, czyli odległość predyktora przeciętnego
-od najlepszego elementu klasy. Rozkład na obciążenie i wariancję
-traktuje go jako część obciążenia, rozkład na aproksymację i estymację
--- jako część błędu estymacji. Dla metody najmniejszych kwadratów ten
-składnik jest zwykle bardzo mały i znika, gdy $n$ rośnie. Wtedy
-obciążenie do kwadratu jest w praktyce równe błędowi aproksymacji,
-a wariancja -- błędowi estymacji. Sprawdza to poniższe zestawienie dla
+Twierdzenie uzasadnia dwie równości podane w sekcji
+[-@sec-aproksymacja-estymacja]. Poniższe zestawienie sprawdza je dla
 wielomianów z rysunku [-@fig-dekompozycja]. Najlepszy wielomian
 $f_{\mathcal{F}_d}$ wyznaczyliśmy, dopasowując wielomian metodą
 najmniejszych kwadratów do samej funkcji $\fopt$ na gęstej siatce.
@@ -669,127 +998,15 @@ miejsca po przecinku, a składnik $\|\bar f - f_{\mathcal{F}}\|^2$ jest
 kilkadziesiąt do kilkuset razy mniejszy od wariancji. Część tej różnicy to zresztą
 błąd symulacji, bo $\bar f$ szacujemy z tysiąca prób.
 
-## Krzywe uczenia {#sec-krzywe-uczenia}
+## Rozszerzenie: tempo uczenia w wielu wymiarach {#sec-bw-tempo}
 
-Dotąd zmienialiśmy elastyczność przy ustalonej liczności próby. Zmieńmy
-teraz liczność próby przy ustalonej metodzie. Wykres ryzyka i błędu
-uczącego w zależności od $n$ nazywamy **krzywą uczenia** (ang. *learning
-curve*).
+::: {.callout-note appearance="simple" icon="false"}
+## Materiał nieobowiązkowy
+Wymagane są różniczkowanie i porównywanie rzędów wielkości.
+Tekst główny i zadania podstawowe z tej sekcji nie korzystają.
+:::
 
-Rozkład ([-@eq-aproksymacja-estymacja]) mówi, czego się spodziewać.
-Błąd aproksymacji nie zależy od $n$. Błąd estymacji maleje, gdy danych
-przybywa, bo dopasowany predyktor zbliża się do $f_{\mathcal{F}}$.
-Ryzyko dąży więc do poziomu $\Risk(\fopt) + [\Risk(f_{\mathcal{F}})
-- \Risk(\fopt)]$, czyli sumy błędu nieredukowalnego i błędu aproksymacji.
-Błąd uczący zachowuje się odwrotnie: rośnie z $n$, bo coraz trudniej
-dopasować się do coraz większej liczby punktów, i dąży do tego samego
-poziomu od dołu. @fig-krzywe-uczenia pokazuje to dla dwóch wielomianów:
-sztywnego ($d = 1$) i elastycznego ($d = 9$).
-
-```{python}
-#| label: fig-krzywe-uczenia
-#| fig-cap: "Krzywe uczenia regresji wielomianowej stopnia $d = 1$ (po lewej) i $d = 9$ (po prawej): błąd na zbiorze uczącym i ryzyko w zależności od liczności próby $n$. Punkty to średnie z 300 prób uczących. Linia przerywana: granica ryzyka przy $n \\to \\infty$, równa sumie błędu nieredukowalnego i błędu aproksymacji. Linia kropkowana: błąd nieredukowalny $\\sigma^2$. Obie osie w skali logarytmicznej."
-
-rng = np.random.default_rng(4)
-licznosci = np.array([40, 60, 100, 200, 500, 1000, 3000])
-powtorzenia = 300
-
-fig, osie = plt.subplots(1, 2, figsize=(11, 4.0), sharey=True)
-for ax, d in zip(osie, [1, 9]):
-    blad_uczacy = np.zeros(len(licznosci))
-    ryzyko = np.zeros(len(licznosci))
-    for i, n in enumerate(licznosci):
-        for _ in range(powtorzenia):
-            x, y = probka(n, rng)
-            wielomian = Polynomial.fit(x, y, d)
-            blad_uczacy[i] += np.mean((wielomian(x) - y) ** 2)
-            ryzyko[i] += np.trapezoid((wielomian(siatka) - f_siatka) ** 2,
-                                      siatka) + sigma ** 2
-    blad_uczacy /= powtorzenia
-    ryzyko /= powtorzenia
-    f_klasa = Polynomial.fit(gesta, f_prawdziwa(gesta), d)
-    granica = np.trapezoid((f_klasa(siatka) - f_siatka) ** 2, siatka) + sigma ** 2
-
-    ax.plot(licznosci, blad_uczacy, "o-", color="0.45",
-            label="błąd na zbiorze uczącym")
-    ax.plot(licznosci, ryzyko, "o-", color="#1B6CA8", label="ryzyko")
-    ax.axhline(granica, color="0.2", ls="--", lw=1.3,
-               label=r"$\sigma^2$ + błąd aproksymacji")
-    ax.axhline(sigma ** 2, color="#D7263D", ls=":", lw=1.5,
-               label=r"$\sigma^2$")
-    ax.set_xscale("log")
-    ax.set_yscale("log")
-    ax.set_title(f"$d = {d}$")
-    ax.set_xlabel("liczność próby uczącej $n$")
-osie[0].set_ylabel("średni kwadrat błędu")
-osie[0].legend(frameon=False, fontsize=8)
-plt.tight_layout()
-plt.show()
-```
-
-Dwa panele pokazują dwa typowe obrazy. Prosta szybko osiąga swoją
-granicę $\sigma^2 + 0{,}196 \approx 0{,}286$, gdzie $0{,}196$ to błąd
-aproksymacji, i dalsze dane już nic nie dają. Krzywe błędu uczącego i ryzyka są blisko siebie,
-a obie leżą wysoko nad $\sigma^2$. Tak wygląda model, którego ryzyko
-zdominowało obciążenie. Wielomian stopnia $9$ przy małym $n$ ma ogromne
-ryzyko i wielką szczelinę między ryzykiem a błędem uczącym. Tak wygląda
-model, którego ryzyko zdominowała wariancja. Z rosnącym $n$ szczelina
-się zamyka, a obie krzywe zbiegają do granicy praktycznie równej
-$\sigma^2$, bo błąd aproksymacji wielomianu stopnia $9$ jest znikomy.
-
-Z porównania paneli wynika rzecz ważna dla praktyki: **najlepsza
-elastyczność zależy od liczności próby**. Przy $n = 40$ prosta ma
-ryzyko ponad dziesięć razy mniejsze niż wielomian stopnia $9$, a już przy
-$n = 100$ -- mniej więcej trzy razy większe. Nie ma modelu „właściwie złożonego” w oderwaniu od
-ilości danych.
-
-Krzywe uczenia odpowiadają też na pytanie diagnostyczne z rozdziału
-[-@sec-predyktory-optymalne]: czy wypłaszczenie ryzyka oznacza, że
-dotarliśmy do granicy zjawiska, czy że model jest za słaby? Rozstrzyga
-przebieg obu krzywych w funkcji $n$, a nie ich wygląd przy jednej
-liczności. Jeśli ryzyko wciąż spada, a szczelina między nim a błędem
-uczącym się zamyka, dominuje wariancja: pomoże więcej danych albo
-prostszy model. Jeśli obie krzywe są już płaskie i zbieżne, dominuje
-obciążenie i więcej danych nie pomoże. Samą szerokość szczeliny, czyli
-optymizm, trzeba
-czytać jako liczbę w jednostkach straty, bo jej wrażenie na rysunku
-zależy od skali osi: na rysunku [-@fig-krzywe-uczenia] oś pionowa jest
-logarytmiczna, więc widać iloraz obu błędów, nie ich różnicę. Płaskie
-i zbieżne krzywe nie rozstrzygają jednak, czy ich granica to sam błąd
-nieredukowalny, czy błąd nieredukowalny powiększony o błąd aproksymacji;
-„wysoki poziom” wymaga punktu odniesienia. W lewym panelu wiemy, że to
-drugie, bo znamy $\sigma^2$. W praktyce punktem odniesienia jest
-porównanie różnych klas modeli: jeśli bogatsza klasa przy dużym $n$
-schodzi niżej, ograniczała nas klasa. Jeśli żadna nie schodzi niżej, ograniczają nas
-zapewne cechy, a poprawę może dać tylko ich zmiana. W realnym problemie
-ryzyka nie znamy i krzywą uczenia trzeba szacować, czym zajmuje się
-rozdział [-@sec-ocena-modeli].
-
-## Dlaczego kompromis jest nieusuwalny {#sec-kompromis-nieusuwalny}
-
-W rozdziale [-@sec-predyktory-optymalne] zauważyliśmy, że gdybyśmy znali
-$P$ i mogli wybrać dowolną funkcję, żaden kompromis by nie istniał.
-Każdy kompromis bierze się z ograniczeń klasy modeli lub ze
-skończoności próby. Kompromis obciążenie--wariancja łączy oba te
-ograniczenia. Przy ustalonym $n$ obciążenie zmniejszamy, poszerzając
-klasę lub zawężając otoczenie, a każdy taki krok sprawia, że predyktor
-mocniej zależy od przypadkowych cech próby. Pokrętło elastyczności
-przesuwa błąd z jednego składnika do drugiego, ale nie usuwa go.
-
-Są dwa sposoby, by zmniejszyć oba składniki naraz. Pierwszy to więcej
-danych: przy większym $n$ ta sama elastyczność kosztuje mniej wariancji,
-więc optimum przesuwa się w stronę modeli bogatszych, jak w rysunku
-[-@fig-krzywe-uczenia]. Drugi to **trafne założenie strukturalne**. Jeśli
-$\fopt$ należy do małej klasy $\mathcal{F}$, to metoda wybierająca z tej
-klasy ma zerowy błąd aproksymacji i małą wariancję. Gdyby $\fopt$ była
-liniowa, regresja liniowa z $p$ cechami miałaby zerowe obciążenie
-i wariancję rzędu $\sigma^2 (p + 1)/n$ ([-@eq-mnk-srednia-wariancja]).
-Trafne założenie zastępuje dane. Nietrafne wprowadza obciążenie, którego
-żadna ilość danych nie usunie.
-
-### Ile kosztuje elastyczność w wielu wymiarach
-
-Jak drogie bywa nieprzyjmowanie żadnych założeń, pokazuje prosty rachunek
+Jak kosztowne bywa uczenie przy słabych założeniach, pokazuje prosty rachunek
 dla metody $k$-NN. Niech cechy mają rozkład jednostajny w kostce
 $[0, 1]^p$, szum ma wariancję $\sigma^2$, a funkcja regresji spełnia
 warunek Lipschitza
@@ -798,8 +1015,10 @@ zbyt szybko. Rachunek jest przybliżony, ale jego wynik daje się
 uściślić [@gyorfi2002].
 
 Z ([-@eq-bok-otoczenia]) otoczenie zawierające $k$ z $n$ punktów jest
-kostką o boku około $(k/n)^{1/p}$. Sąsiedzi leżą więc od $\x$ w odległości
-co najwyżej około połowy tego boku, a wartości $\fopt$ różnią się od
+w przybliżeniu obszarem o objętości $k/n$. Dla punktu we wnętrzu
+$[0,1]^p$ zastąpmy ten obszar kostką o boku $(k/n)^{1/p}$,
+wyśrodkowaną w $\x$. Sąsiedzi leżą wtedy w odległości
+(w metryce maksimum) około połowy jej boku lub mniejszej, a wartości $\fopt$ różnią się od
 $\fopt(\x)$ najwyżej o $L$ razy tyle. Z ([-@eq-knn-obciazenie-wariancja])
 $$
 b(\x)^2 + v(\x) \;\lesssim\; \frac{L^2}{4} \Big(\frac{k}{n}\Big)^{2/p}
@@ -821,80 +1040,14 @@ trzy razy dla $p = 1$, cztery razy dla $p = 2$, $64$ razy dla $p = 10$,
 ponad $2000$ razy dla $p = 20$. Jest to przekleństwo wymiarowości
 z sekcji [-@sec-przeklenstwo-wymiarowosci] w języku tego rozdziału:
 w wielu wymiarach otoczenia muszą być szerokie, żeby zawierały dość
-punktów, a szerokie otoczenia oznaczają duże obciążenie. Tego tempa nie
-poprawi przy tym żadna inna metoda. @stone1982 wykazał, że przy samym
-założeniu Lipschitza $n^{-2/(p+2)}$ jest najlepszym tempem, jakie może
-zagwarantować jakikolwiek estymator. Ceną jest brak założeń, a nie
+punktów, a szerokie otoczenia oznaczają duże obciążenie. Nie jest to uniwersalne tempo dla każdej funkcji z osobna.
+Opisuje ono trudność uczenia w najgorszym przypadku w rozważanej klasie.
+Przy standardowych założeniach tego modelu nie można zagwarantować
+szybszego tempa jednostajnie w całej klasie funkcji o ustalonej stałej
+Lipschitza [@stone1982]. Ceną są słabe założenia o funkcji, a nie
 słabość metody $k$-NN. Model liniowy, jeśli jest trafny, osiąga tempo
 $1/n$ niezależnie od $p$, ze stałą proporcjonalną do $p + 1$ -- stąd przewaga, o której pisaliśmy pod koniec
 sekcji [-@sec-przeklenstwo-wymiarowosci].
-
-::: {.callout-note}
-## Podwójne zejście
-Obraz z rysunku [-@fig-dekompozycja], w którym wariancja rośnie
-nieograniczenie wraz z liczbą parametrów, nie jest prawem natury.
-@belkin2019 opisali zjawisko **podwójnego zejścia** (ang. *double
-descent*). Gdy liczba parametrów przekracza liczbę obserwacji, model może
-dopasować dane dokładnie na nieskończenie wiele sposobów. Jeśli algorytm
-wybiera spośród nich rozwiązanie w pewnym sensie najprostsze, na przykład
-o najmniejszej normie współczynników, ryzyko po przejściu przez maksimum
-w progu interpolacji może znów maleć. Rozkład
-z twierdzenia [-@thm-obciazenie-wariancja] nadal obowiązuje, bo jest tożsamością.
-Zmienia się tylko to, jak wariancja zależy od liczby parametrów. Do tego
-zjawiska wrócimy przy sieciach neuronowych (rozdział [-@sec-mlp-backprop]).
-:::
-
-## Obciążenie i wariancja w klasyfikacji {#sec-bw-klasyfikacja}
-
-Przy stracie 0--1 rozkład tak prosty jak ([-@eq-rozklad-obciazenie-wariancja])
-nie istnieje. Zobaczmy dlaczego. Ograniczmy się do dwóch klas i reguły
-podstawienia $\widehat g_{\mathcal{D}}(\x) = \ind\big(\widehat\eta_{\mathcal{D}}(\x)
-> \tfrac12\big)$, takiej jak klasyfikator $k$-NN.
-
-Ustalmy punkt $\x$. Klasyfikator wskazujący w nim klasę $1$ myli się
-z prawdopodobieństwem $1 - \eta(\x)$, wskazujący klasę $0$ --
-z prawdopodobieństwem $\eta(\x)$. Klasyfikator bayesowski wybiera
-mniejszą z tych liczb. Jeśli $\widehat g$ wskazuje w punkcie $\x$ inną
-klasę niż $\Bayes$, płaci więc nadwyżkę równą różnicy obu liczb,
-$|2\eta(\x) - 1|$. Uśredniając po $\X$, dostajemy
-$$
-\Risk(\widehat g) - \Risk(\Bayes)
-= \E\Big[\, |2\eta(\X) - 1| \; \ind\big(\widehat g(\X) \ne \Bayes(\X)\big) \Big],
-$$ {#eq-nadwyzka-ryzyka-01}
-a po uśrednieniu po zbiorach uczących
-$$
-\E_{\mathcal{D}}\big[\Risk(\widehat g_{\mathcal{D}})\big] - \Risk(\Bayes)
-= \E\Big[\, |2\eta(\X) - 1| \;
-\Prob_{\mathcal{D}}\big(\widehat g_{\mathcal{D}}(\X) \ne \Bayes(\X)\big) \Big].
-$$
-Liczy się więc tylko prawdopodobieństwo, że oszacowanie
-$\widehat\eta_{\mathcal{D}}(\x)$ znajdzie się po złej stronie progu
-$\tfrac12$. Niech na przykład $\eta(\x) > \tfrac12$ i niech
-$\widehat\eta_{\mathcal{D}}(\x)$ ma w przybliżeniu rozkład normalny
-o średniej $\bar\eta(\x)$ i odchyleniu standardowym $s(\x)$. Wtedy
-$$
-\Prob_{\mathcal{D}}\big(\widehat g_{\mathcal{D}}(\x) \ne \Bayes(\x)\big)
-\approx \Phi\Big(\frac{\tfrac12 - \bar\eta(\x)}{s(\x)}\Big) .
-$$ {#eq-klasyfikacja-obciazenie-wariancja}
-Obciążenie i wariancja nie dodają się tu, tylko oddziałują
-[@friedman1997]. Jeśli przeciętne oszacowanie leży po właściwej stronie
-progu ($\bar\eta(\x) > \tfrac12$), licznik jest ujemny i wzrost wariancji
-zwiększa prawdopodobieństwo błędu. Obciążenie może być wtedy duże i nic
-nie kosztować, dopóki nie przeprowadzi $\bar\eta$ przez próg. Jeśli
-przeciętne oszacowanie leży po złej stronie, licznik jest dodatni
-i wzrost wariancji prawdopodobieństwo błędu **zmniejsza**, bo częściej
-wyrzuca $\widehat\eta$ na właściwą stronę (@exr-obciazenie-01).
-
-Z tej obserwacji wynikają dwa praktyczne wnioski. Po pierwsze, w klasyfikacji
-liczy się przede wszystkim mała wariancja. Klasyfikator może opierać się
-na mocno obciążonych oszacowaniach prawdopodobieństw i mimo to klasyfikować
-dobrze. @friedman1997 tłumaczy w ten sposób skuteczność prostych metod, takich
-jak naiwny klasyfikator Bayesa z rozdziału [-@sec-modele-generatywne]. Po
-drugie, ta tolerancja dotyczy wyłącznie decyzji podejmowanej progiem
-$\tfrac12$. Gdy oszacowanie $\widehat\eta$ ma służyć regule kosztowej albo
-regule z opcją odmowy z sekcji [-@sec-od-prawdopodobienstw-do-decyzji],
-liczy się jego wartość, a nie tylko strona progu, i obciążenie znów
-kosztuje.
 
 ## Uwagi bibliograficzne {.unnumbered}
 
@@ -924,15 +1077,29 @@ opisują @belkin2019.
 
 ## Zadania {.unnumbered}
 
+Pierwsze zadania to rachunki na małych przykładach: obciążenie,
+wariancja i rozkład błędu. Dalej pojawiają się symulacje dla k-NN
+i wielomianów oraz krzywe uczenia. Zadania oznaczone **Rozszerzenie**
+można pominąć przy pierwszej lekturze; wskazujemy w nich dodatkowe
+potrzebne narzędzia.
+
 ::: {#exr-estymator-sciagajacy}
+Na początek w przykładzie metod A i B zastąp prognozy metody A
+wartościami $8,9,10$, nadal jednakowo prawdopodobnymi. Oblicz obciążenie,
+wariancję i średni kwadrat odległości od prawdziwej wartości $10$.
+Czy porównanie z metodą B się zmieniło?
+
+Następnie zbadaj ogólniejszy sposób zmniejszania wariancji.
 Niech $Y_1, \dots, Y_n$ będzie próbą z rozkładu o średniej $\mu \ne 0$
-i wariancji $\sigma^2$, a $\widehat\mu_c = c\bar Y$ dla $c \in \R$.
+i wariancji $\sigma^2>0$, a $\widehat\mu_c = c\bar Y$ dla $c \in \R$.
 
 a) Wyznacz obciążenie, wariancję i błąd średniokwadratowy $\widehat\mu_c$.
 b) Wykaż, że błąd średniokwadratowy jest najmniejszy dla
    $c^* = \mu^2 / (\mu^2 + \sigma^2/n)$, i wyznacz jego wartość
-   w minimum. Sprawdź liczby podane w sekcji
-   [-@sec-obciazenie-wariancja-estymatora].
+   w minimum. Dla $\mu=1$, $\sigma=3$ i $n=10$ porównaj wynik
+   ze średnią $\bar Y$. Wyznacz też wszystkie $h = 1 - c \in (0, 1]$,
+   dla których $c\bar Y$ ma mniejszy błąd niż $\bar Y$, i porównaj ten
+   zakres dla $\mu = 1$ oraz $\mu = 10$ przy $\sigma = 3$ i $n = 10$.
 c) Wyraź $c^*$ przez stosunek sygnału do szumu $\mu^2/(\sigma^2/n)$.
    Kiedy ściąganie daje duży zysk, a kiedy prawie żaden?
 d) Dlaczego $\widehat\mu_{c^*}$ nie jest estymatorem, którego można użyć
@@ -959,7 +1126,7 @@ c) Szumy mają stałą wariancję $\sigma^2$, a punkty uczące są ustalone
 
 ::: {#exr-knn-ustalony-uklad}
 Punkty uczące leżą na siatce $x_i = i/n$, $i = 1, \dots, n$, a
-$Y_i = \fopt(x_i) + \varepsilon_i$ z niezależnymi szumami o wariancji
+$Y_i = \fopt(x_i) + \varepsilon_i$ z niezależnymi szumami o średniej zero i wariancji
 $\sigma^2$. Rozważ regresję $k$-NN z $k = 2m + 1$ w punkcie $x_0 = x_j$
 leżącym na tyle daleko od krańców, by sąsiedzi leżeli symetrycznie.
 
@@ -988,6 +1155,9 @@ ryzyka przy małym $k$?
 :::
 
 ::: {#exr-aproksymacja-stale}
+**Rozszerzenie: błąd aproksymacji.** Wymagane są całkowanie i porównanie
+rozkładów błędu z sekcji [-@sec-bw-porownanie-rozkladow].
+
 Rozważ klasę funkcji stałych $\mathcal{F}_0$ i rozkład z tego rozdziału:
 $X$ jednostajny na $[0, 1]$, $\fopt(x) = \sin(2\pi x) + x/2$, szum
 o wariancji $\sigma^2$. Predyktorem jest średnia $\bar Y$ z próby.
@@ -1002,7 +1172,7 @@ c) Wyznacz obciążenie $b(x)$ w punkcie. Jest ono duże w niektórych
    punktach, choć $\bar f = f_{\mathcal{F}_0}$. Jak to pogodzić
    z twierdzeniem [-@thm-aproksymacja-obciazenie]?
 d) Porównaj wyniki z pierwszymi wierszami zestawienia w sekcji
-   [-@sec-aproksymacja-estymacja] dla $n = 50$ i $\sigma = 0{,}3$.
+   [-@sec-bw-porownanie-rozkladow] dla $n = 50$ i $\sigma = 0{,}3$.
 :::
 
 ::: {#exr-wielomiany-dekompozycja}
@@ -1024,9 +1194,10 @@ i z $k = \lceil \sqrt{n}\, \rceil$.
 
 a) Do jakiej granicy dąży ryzyko w każdym wariancie? (Wskazówka: dla
    stałego $k$ obciążenie znika przy $n \to \infty$, a wariancja nie.)
-b) Porównaj wynik wariantu ze stałym $k$ z twierdzeniem Covera--Harta
-   (@thm-cover-hart). Który składnik ryzyka odpowiada za to, że reguła
-   ze stałym $k$ nie jest zgodna?
+b) Który składnik ryzyka odpowiada za to, że przy dodatniej wariancji
+   szumu reguła ze stałym $k$ nie zbliża się do ryzyka optymalnego?
+   Wyjaśnij, dlaczego samo przybliżanie sąsiadów do punktu predykcji
+   nie wystarcza.
 c) Jak zachowuje się szczelina między ryzykiem a błędem uczącym
    w obu wariantach?
 :::
@@ -1051,6 +1222,9 @@ c) W praktyce mamy jeden zbiór uczący. Predyktory można wyznaczyć
 :::
 
 ::: {#exr-tempo-knn}
+**Rozszerzenie: tempo uczenia.** Wymagane są różniczkowanie i rachunek z sekcji
+[-@sec-bw-tempo].
+
 a) Wyznacz $k$ minimalizujące prawą stronę ([-@eq-knn-kompromis]),
    traktując $k$ jako zmienną ciągłą. Wykaż, że $k^*$ jest rzędu
    $n^{2/(p+2)}$, a oba składniki w optimum -- rzędu $n^{-2/(p+2)}$.
@@ -1065,9 +1239,14 @@ d) Zastąp warunek Lipschitza warunkiem $|\fopt(\x) - \fopt(\x')| \le L$
 :::
 
 ::: {#exr-obciazenie-01}
+**Rozszerzenie: obciążenie w klasyfikacji.** Wykorzystaj normalne przybliżenie z sekcji
+[-@sec-bw-klasyfikacja] i dystrybuantę rozkładu normalnego.
+
 W punkcie $\x$ prawdziwe prawdopodobieństwo klasy $1$ wynosi
 $\eta(\x) = 0{,}7$, a oszacowanie $\widehat\eta_{\mathcal{D}}(\x)$ ma
-rozkład normalny o średniej $\bar\eta$ i odchyleniu standardowym $s$.
+w przybliżeniu rozkład normalny o średniej $\bar\eta$ i odchyleniu
+standardowym $s$. Granicę dla $s\to\infty$ traktuj wyłącznie jako
+własność tego przybliżenia, nie oszacowania ograniczonego do $[0,1]$.
 
 a) Dla $\bar\eta \in \{0{,}65;\ 0{,}55;\ 0{,}45\}$ i
    $s \in \{0{,}05;\ 0{,}1;\ 0{,}2\}$ oblicz prawdopodobieństwo, że

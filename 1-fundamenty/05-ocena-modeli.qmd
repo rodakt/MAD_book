@@ -1,69 +1,61 @@
 # Ocena modeli w praktyce {#sec-ocena-modeli}
 
-Ryzyko $\Risk(f) = \E\big[\Loss(Y, f(\X))\big]$ jest średnią po rozkładzie
-$P$, którego nie znamy. W rozdziałach [-@sec-predyktory-optymalne]--[-@sec-bias-wariancja]
-mogliśmy je liczyć dokładnie, bo dane były sztuczne, a rozkład -- zadany
-przez nas. W realnym problemie mamy tylko próbę. Jedyną wielkością, jaką
-można policzyć od razu, jest błąd na zbiorze uczącym, a ten, jak
-pokazała sekcja [-@sec-blad-uczacy-ryzyko], jest optymistyczny i to tym
-bardziej, im elastyczniejsza metoda. Wskazuje zawsze model najbardziej
-elastyczny, a więc często najgorszy.
+Mamy jedną próbę pomiarów i chcemy rozpoznawać klasę nowych obiektów
+klasyfikatorem $k$-NN. Rozważamy $k = 3, 9, 21$. Którą wartość wybrać
+i jaki odsetek pomyłek podać jako ocenę wybranego klasyfikatora?
+To dwa różne pytania: dane, które pomogły dokonać wyboru, nie są już
+niezależnym sprawdzianem jego wyniku.
 
-Ten rozdział omawia, jak szacować ryzyko z danych. Wszystkie metody
-opierają się na jednej zasadzie, którą sformułowaliśmy już
-w rozdziale [-@sec-czym-jest-model]: model trzeba oceniać na obserwacjach,
-których nie widział podczas dopasowania. Różnią się tym, jak takie
-obserwacje uzyskać, gdy próba jest jedna, i jaką cenę za to płacimy.
-Przykłady liczymy dalej na danych sztucznych z rozdziału
-[-@sec-bias-wariancja], bo tylko tam możemy porównać oszacowanie
-z prawdziwym ryzykiem i sprawdzić, jak dobre jest.
+W rozdziale [-@sec-bias-wariancja] znaliśmy rozkład danych i mogliśmy
+obliczyć ryzyko. Teraz nauczymy się je szacować z jednej próby.
+Przejdziemy od oceny ustalonego modelu przez wybór ustawień do oceny
+całej procedury. Przykład $k$-NN domkniemy na danych o nowotworach
+piersi. Osobne eksperymenty z wielomianami pozwolą sprawdzić jakość
+oszacowań, bo znamy w nich rozkład i możemy numerycznie obliczać ryzyko.
 
-## Trzy pytania {#sec-trzy-pytania}
+## Dopasowanie, wybór i ocena {#sec-trzy-pytania}
 
-Pytanie „jak dobry jest model?” kryje w sobie trzy różne pytania, na
-które odpowiada się różnymi narzędziami.
+Praca z danymi obejmuje trzy czynności.
 
-**Selekcja modelu.** Mamy kilku kandydatów: różne wartości $k$ w metodzie
-$k$-NN, różne stopnie wielomianu, różne metody. Chcemy wybrać tego,
-którego ryzyko jest najmniejsze. Do tego wystarczy **uporządkować**
-kandydatów według ryzyka. Oszacowanie może systematycznie zawyżać
-ryzyko, na przykład dlatego, że modele uczymy na części danych, byle
-o podobną wielkość dla wszystkich kandydatów: wspólne przesunięcie nie
-zmienia kolejności. Liczy się dokładność, z jaką szacujemy **różnice**
-ryzyk.
+1. **Dopasowanie.** Dla ustalonego $k$ tworzymy predyktor z danych
+   uczących. W $k$-NN oznacza to zapamiętanie pomiarów i klas oraz
+   ustalenie przygotowania cech, na przykład parametrów standaryzacji.
+2. **Wybór.** Porównujemy kandydatów dla $k = 3, 9, 21$ na danych,
+   których nie użyliśmy do ich dopasowania, i wybieramy $k$.
+3. **Ocena.** Sprawdzamy wybrany model na obserwacjach, które nie
+   uczestniczyły ani w dopasowaniu, ani w wyborze.
 
-**Ocena modelu.** Wybraliśmy model i chcemy wiedzieć, ile wynosi jego
-ryzyko: jaki odsetek pomyłek popełni na nowych pacjentach, o ile
-przeciętnie pomyli się w prognozie. Tu potrzebna jest **wartość**
-ryzyka, a obciążenie oszacowania jest błędem.
+Wybór i ocena stawiają oszacowaniu ryzyka różne wymagania. Do wyboru
+wystarczy uporządkować kandydatów: jeśli oszacowanie zawyża ryzyko
+o podobną wielkość u wszystkich, na przykład dlatego, że każdego uczymy
+na części danych, kolejność się nie zmienia i liczy się tylko dokładność
+oszacowania różnic ryzyk. Przy ocenie potrzebna jest wartość ryzyka,
+więc takie przesunięcie jest błędem.
 
-**Ryzyko modelu czy ryzyko metody.** W ramce „Ryzyko modelu a ryzyko
-metody” z rozdziału [-@sec-bias-wariancja] rozróżniliśmy dwie wielkości.
-Pierwsza to ryzyko $\Risk(\fD)$ predyktora
-dopasowanego do zbioru uczącego $\mathcal{D}$, który faktycznie mamy.
-Druga to ryzyko oczekiwane metody uczenia, uśrednione po zbiorach
-uczących liczności $n$:
-$$
-\overline{\Risk}_n = \E_{\mathcal{D}}\big[\Risk(\fD)\big] .
-$$ {#eq-ryzyko-metody}
-Przy ocenie gotowego modelu, który trafi do użytku, interesuje nas
-pierwsza. Przy porównaniu metod, na przykład w pracy badawczej, częściej
-druga. Część narzędzi szacuje pierwszą z nich, część -- drugą, choć
-zwykle przedstawia się je wszystkie jako oszacowania „błędu modelu”.
+Dlaczego nie wystarczy błąd uczący? Jak widzieliśmy w sekcji
+[-@sec-blad-uczacy-ryzyko], model korzysta z wyników tych samych
+obserwacji, na których mierzymy jego skuteczność. Błąd uczący bywa
+przez to zaniżony, szczególnie przy elastycznych metodach. Dla $1$-NN
+bez powtarzających się punktów wynosi zero, choć nowe obiekty nadal
+możemy klasyfikować błędnie. Nie daje więc uczciwej podstawy do wyboru
+$k$ ani oceny przyszłych pomyłek.
 
-::: {.callout-note}
-## Pytania i narzędzia
-| Pytanie | Narzędzie | Sekcja |
-|---|---|---|
-| ryzyko dopasowanego predyktora, gdy nic już nie wybieramy | zbiór testowy | [-@sec-zbior-testowy] |
-| wybór spośród kandydatów | zbiór walidacyjny, walidacja krzyżowa | [-@sec-zbior-walidacyjny], [-@sec-walidacja-krzyzowa] |
-| ryzyko predyktora wybranego spośród kandydatów na tych samych danych | nietknięty zbiór testowy (ryzyko wybranego modelu) albo zagnieżdżona walidacja krzyżowa (ryzyko oczekiwane procedury wyboru) | [-@sec-selekcja-ocena] |
-| niepewność dowolnej wielkości obliczonej z próby | bootstrap | [-@sec-bootstrap] |
-:::
+Rozróżnijmy też **model** i **metodę**. Możemy pytać o ryzyko jednego,
+już dopasowanego predyktora albo o to, jak metoda uczenia sprawdzałaby
+się przeciętnie, gdybyśmy zbierali nowe próby i za każdym razem
+uczyli ją od początku. Zbiór testowy pozwala odpowiedzieć na pierwsze
+pytanie. Przy walidacji krzyżowej wrócimy do drugiego.
 
 ## Zbiór testowy {#sec-zbior-testowy}
 
-Najprostsza sytuacja wygląda tak. Predyktor $\widehat f$ jest już
+Ustalony klasyfikator pomylił się $10$ razy na $100$ nowych
+obserwacjach. Oszacowanie ryzyka wynosi $10/100 = 0{,}10$, czyli $10\%$.
+Inna setka może dać inny wynik, mimo że model pozostanie ten sam.
+W regresji liczymy analogicznie średnią strat kwadratowych: jeśli
+przewidujemy sprzedaż w złotych, taki wynik ma jednostkę $\text{zł}^2$.
+Pierwiastek z niego (RMSE) ma jednostkę złotych.
+
+Uogólnijmy ten rachunek. Predyktor $\widehat f$ jest już
 ustalony: dopasowaliśmy go do zbioru uczącego $\mathcal{D}$ i więcej go
 nie zmieniamy. Mamy też **zbiór testowy** -- $m$ nowych obserwacji
 $(\X'_1, Y'_1), \dots, (\X'_m, Y'_m)$, niezależnych od siebie i od
@@ -79,12 +71,17 @@ zauważyliśmy, że dla predyktora ustalonego niezależnie od danych taka
 średnia jest nieobciążonym oszacowaniem ryzyka. Teraz możemy to
 powiedzieć dokładniej.
 
+Zwrot **„przy ustalonym zbiorze uczącym”** oznacza, że nie uczymy modelu
+ponownie. Wyobrażamy sobie tylko losowanie kolejnych zbiorów testowych
+dla tego samego predyktora. Taki sens ma warunkowanie względem
+$\mathcal D$ w poniższym twierdzeniu.
+
 ::: {#thm-ocena-testowa}
 ## Własności oszacowania testowego
 Niech zbiór testowy będzie niezależny od $\mathcal{D}$, a jego obserwacje
 niezależne i o rozkładzie $P$. Oznaczmy
 $\tau^2 = \Var\big(\Loss(Y, \widehat f(\X)) \,\big|\, \mathcal{D}\big)$
-wariancję straty na nowej obserwacji przy ustalonym predyktorze. Wtedy
+skończoną wariancję straty na nowej obserwacji przy ustalonym predyktorze. Wtedy
 $$
 \E\big[\widehat\Risk_{\mathrm{test}} \,\big|\, \mathcal{D}\big] = \Risk(\widehat f),
 \qquad
@@ -102,7 +99,9 @@ zmiennymi losowymi o tym samym rozkładzie, ze średnią $\Risk(\widehat f)$
 i wariancją $\tau^2$. Średnia $m$ takich zmiennych ma tę samą wartość
 oczekiwaną i wariancję $\tau^2/m$. Przy stracie 0--1 każda strata $L_j$ jest
 zmienną zero-jedynkową z prawdopodobieństwem sukcesu $\Risk(\widehat f)$,
-więc ich suma ma rozkład dwumianowy. $\square$
+więc ich suma ma rozkład dwumianowy. Ponieważ $L_j^2 = L_j$, wariancja
+pojedynczej straty wynosi
+$\E L_j - (\E L_j)^2 = \Risk(\widehat f)\big(1 - \Risk(\widehat f)\big)$. $\square$
 :::
 
 Założenie niezależności od $\mathcal{D}$ jest tu wszystkim. Gdyby
@@ -110,23 +109,28 @@ obserwacje testowe trafiły choć częściowo do zbioru uczącego, straty $L_j$
 nie miałyby średniej $\Risk(\widehat f)$ -- mielibyśmy z powrotem
 optymizm błędu uczącego. Zwróćmy też uwagę, co twierdzenie szacuje:
 ryzyko **tego** predyktora, $\Risk(\fD)$, a nie
-ryzyko metody ([-@eq-ryzyko-metody]).
+ryzyko uśrednione po ponownych dopasowaniach do innych prób.
 
 ### Niepewność oszacowania
 
 Pierwiastek z wariancji, $\tau/\sqrt{m}$, to **błąd standardowy**
-oszacowania testowego. W klasyfikacji szacujemy go, podstawiając
-oszacowanie w miejsce ryzyka:
+oszacowania testowego. W klasyfikacji $\tau^2 = \Risk(1-\Risk)$ jest
+wariancją zmiennej zero-jedynkowej, a $\tau^2/m$ -- wariancją odsetka
+błędów, czyli zmiennej o rozkładzie dwumianowym podzielonej przez $m$.
+Błąd standardowy szacujemy,
+podstawiając oszacowanie w miejsce ryzyka:
 $$
 \widehat{\mathrm{se}} = \sqrt{\frac{\widehat\Risk_{\mathrm{test}}\,\big(1 - \widehat\Risk_{\mathrm{test}}\big)}{m}} .
 $$ {#eq-blad-standardowy-testowy}
-Przy dużym $m$ rozkład dwumianowy jest bliski normalnemu, więc przedział
-$\widehat\Risk_{\mathrm{test}} \pm 1{,}96\,\widehat{\mathrm{se}}$ pokrywa
-ryzyko z prawdopodobieństwem około $95\%$. W regresji nie ma takiego
-wzoru i wariancję $\tau^2$ szacujemy wariancją z próby strat testowych
-$L_j = \Loss\big(Y'_j, \widehat f(\X'_j)\big)$, $j = 1, \dots, m$. Kwadraty błędów mają jednak
-zwykle rozkład silnie skośny, więc przybliżenie normalne wymaga tu
-większego $m$ niż w klasyfikacji.
+Przedział $\widehat\Risk_{\mathrm{test}} \pm 1{,}96\,\widehat{\mathrm{se}}$
+jest **przybliżonym** przedziałem ufności na poziomie $95\%$.
+Przybliżenie normalne wymaga dostatecznie wielu błędów i trafień,
+nie tylko dużego $m$; przy zerowej lub bardzo małej liczbie błędów
+zawodzi. Poziom $95\%$ opisuje częstość pokrywania ryzyka
+przez tak budowane przedziały w powtarzanych próbach.
+W regresji wariancję $\tau^2$ szacujemy wariancją z próby strat testowych,
+a błąd standardowy wynosi $s_L/\sqrt m$. Silna skośność kwadratów błędów
+może wymagać większej próby, zanim przybliżenie normalne będzie dobre.
 
 Wzór ([-@eq-blad-standardowy-testowy]) szybko studzi zaufanie do małych
 zbiorów testowych. Przy błędzie rzędu $10\%$ i $m = 100$ błąd standardowy
@@ -138,46 +142,35 @@ $$
 obserwacji. Dla $\Risk = 0{,}1$ i $h = 0{,}01$ to około $3500$ obserwacji,
 dla $h = 0{,}005$ -- około $14\,000$. Dokładność rośnie jak
 $\sqrt{m}$: dwukrotne zawężenie przedziału kosztuje czterokrotnie więcej
-danych. Ten sam rachunek stał za ramką „Dlaczego całkujemy zamiast
-losować zbiór testowy” w rozdziale [-@sec-predyktory-optymalne]: przy błędzie
-około $0{,}16$ i $20\,000$ obserwacjach testowych błąd standardowy wynosi
-$\sqrt{0{,}16 \cdot 0{,}84 / 20\,000} \approx 0{,}0026$.
+danych. Dlatego w kontrolowanych symulacjach korzystamy czasem
+z całkowania po znanym rozkładzie: nawet przy $20\,000$ obserwacjach
+testowych i ryzyku $0{,}16$ błąd standardowy oceny to jeszcze
+$\sqrt{0{,}16\cdot0{,}84/20\,000}\approx0{,}0026$.
 
 ### Porównanie dwóch modeli
 
-Częściej niż wartość ryzyka interesuje nas, który z dwóch modeli, $A$
-czy $B$, jest lepszy. Naturalnym oszacowaniem różnicy ryzyk jest różnica
-oszacowań testowych. Jeśli oba modele oceniamy na **tym samym** zbiorze
-testowym, różnica ta jest średnią różnic strat
-$D_j = L^A_j - L^B_j$ na poszczególnych obserwacjach, a jej wariancja wynosi
-$$
-\frac{\Var(L^A - L^B)}{m}
-= \frac{\tau_A^2 + \tau_B^2 - 2\Cov(L^A, L^B)}{m} .
-$$
-Straty dwóch rozsądnych modeli są silnie dodatnio skorelowane: oba mylą się
-na trudnych przypadkach i oba trafiają na łatwych. Kowariancja
-odejmuje się więc od sumy wariancji, a różnica jest szacowana znacznie
-dokładniej niż każde z ryzyk z osobna. Porównując modele, należy zatem
-korzystać z par strat na tych samych obserwacjach, a nie z dwóch
-oddzielnych przedziałów ufności.
+Modele $A$ i $B$ warto oceniać na **tych samych obserwacjach**.
+Oba dostają wtedy te same łatwe i trudne przypadki. Dla każdej
+obserwacji odejmujemy stratę modelu $B$ od straty modelu $A$, a potem
+uśredniamy te różnice. To porównanie sparowane; zwykle daje dokładniejszą
+ocenę różnicy ryzyk niż ocena modeli na dwóch osobnych próbach.
 
-Przy stracie 0--1 rachunek ma prostą postać. Obserwacje, na których oba
-modele się mylą albo oba trafiają, nic nie mówią o różnicy. Liczą się
-tylko obserwacje sporne: $n_{AB}$ takich, na których myli się tylko $A$,
-i $n_{BA}$ takich, na których myli się tylko $B$. Jeśli oba modele mają
-to samo ryzyko, to każda obserwacja sporna jest z równym
-prawdopodobieństwem jednego lub drugiego rodzaju, czyli $n_{AB}$ ma rozkład
-dwumianowy z parametrami $n_{AB} + n_{BA}$ i $1/2$. Na tym opiera się
-**test McNemara**, polecany do porównywania dwóch klasyfikatorów na
-jednym zbiorze testowym [@dietterich1998]. Przykład: na $m = 1000$
-obserwacjach model $A$ myli się $100$ razy, a model $B$ -- $120$ razy.
-Dwa oddzielne przedziały ufności wyraźnie na siebie nachodzą: różnica
-$0{,}02$ to tylko około $1{,}4$ błędu standardowego różnicy dwóch
-niezależnych oszacowań. Jeśli jednak modele różnią się na $40$
-obserwacjach, z których na $30$ myli się tylko $B$, a na $10$ tylko $A$,
-to przy równości ryzyk wynik tak skrajny jak $10$ do $30$ ma
-prawdopodobieństwo około $0{,}002$. Przewaga modelu $A$ jest dobrze
-udokumentowana (@exr-porownanie-sparowane).
+W klasyfikacji obserwacja, na której oba modele trafiają lub oba się
+mylą, wnosi do różnicy zero. Jeśli na $100$ przypadkach tylko $A$ myli
+się $3$ razy, a tylko $B$ -- $7$ razy, różnica oszacowań ryzyka wynosi
+$(3-7)/100=-0{,}04$, czyli $4$ punkty procentowe na korzyść $A$.
+Sama różnica nie rozstrzyga jeszcze, czy przewaga powtórzy się na nowych
+danych. O tym, który model jest lepszy, świadczy tylko $10$ obserwacji
+spornych. Gdyby modele miały równe ryzyko, każdy spór przypadałby
+na niekorzyść $A$ albo $B$ z prawdopodobieństwem $1/2$, jak w rzucie
+monetą. Przy $10$ sporach podział $3$ do $7$ lub bardziej skrajny,
+w którąkolwiek stronę, zdarza się wtedy z prawdopodobieństwem około
+$0{,}34$, więc nie jest niczym niezwykłym. Podział $10$ do $30$ przy
+$40$ sporach ma już prawdopodobieństwo około $0{,}002$ i jest mocnym
+argumentem za modelem $A$. O pewności porównania decydują liczba sporów
+i ich podział; obserwacje zgodne nic tu nie wnoszą.
+Rachunek niepewności i test McNemara [@dietterich1998] omawia rozszerzenie
+[-@sec-porownania-sparowane].
 
 ### Cena odłożenia danych
 
@@ -196,14 +189,33 @@ ocenimy nowy model na tym samym zbiorze, zbiór testowy stał się częścią
 procedury uczenia. Każde takie spojrzenie zużywa go po trochu
 (sekcja [-@sec-selekcja-ocena]).
 
+Po ocenie możemy dołączyć obserwacje testowe do uczenia, ale ponowne
+dopasowanie tworzy **inny model**. Dotychczasowy wynik testowy pozostaje
+oceną wcześniejszego predyktora; nie jest niezależną oceną nowego.
+
 ## Zbiór walidacyjny {#sec-zbior-walidacyjny}
 
-Gdy oprócz oceny trzeba dokonać wyboru -- ustalić $k$, stopień
-wielomianu albo metodę -- dane dzieli się na trzy części. Na **zbiorze
-uczącym** dopasowujemy kandydatów. Na **zbiorze walidacyjnym** szacujemy
-ich ryzyka i wybieramy najlepszego. Na **zbiorze testowym**, którego
-dotąd nie dotykaliśmy, oceniamy model wybrany. Zbiór walidacyjny
-odpowiada na pytanie o selekcję, zbiór testowy -- na pytanie o ocenę.
+Dopasowaliśmy trzech kandydatów do tego samego zbioru uczącego.
+Na osobnych $100$ obserwacjach dostaliśmy następujące wyniki.
+Tabela jest przykładem dydaktycznym, a nie wynikiem obliczeń na danych
+z późniejszej sekcji praktycznej.
+
+| Liczba sąsiadów $k$ | Liczba pomyłek | Błąd walidacyjny |
+|---|---:|---:|
+| 3 | 14 | 14% |
+| 9 | 10 | 10% |
+| 21 | 12 | 12% |
+
+Najmniejszy wynik wskazuje $k=9$. Obserwacje użyte do tego wyboru tworzą
+**zbiór walidacyjny**. Wyniku $10\%$ nie traktujemy jeszcze jako końcowej
+oceny: właśnie na jego podstawie wybraliśmy model. Mechanizm zaniżenia
+wyniku zwycięzcy policzymy w sekcji [-@sec-selekcja-ocena].
+
+| Część danych | Czynność | Wynik czynności |
+|---|---|---|
+| ucząca | dopasowujemy kandydatów | trzy predyktory |
+| walidacyjna | porównujemy ich straty | wybór $k=9$ |
+| testowa | oceniamy wybrany predyktor | niezależne oszacowanie jego ryzyka |
 
 Podział na zbiór uczący i walidacyjny ma dwie wady. Obie widać na
 rysunku [-@fig-walidacja-podzialy]. Wzięliśmy próbę $n = 100$ obserwacji
@@ -283,300 +295,188 @@ wielomiany uczymy na połowie danych, więc oceniamy modele gorsze niż te,
 które moglibyśmy dopasować do całej próby. Przy stromej krzywej uczenia
 błąd walidacyjny przeszacowuje wtedy ryzyko, a przy stopniach wysokich,
 których wariancja najsilniej zależy od $n$, przeszacowuje je najbardziej.
+Przesunięcie nie jest więc wspólne dla kandydatów i może zmienić ich kolejność.
 Wybieramy przez to model zwykle prostszy niż ten, który byłby najlepszy
 po dopasowaniu do całej próby.
 
 ## Walidacja krzyżowa {#sec-walidacja-krzyzowa}
 
-Obie wady łagodzi prosty pomysł: zamiast jednego podziału zrobić kilka
-i tak je dobrać, by każda obserwacja trafiła do części oceniającej
-dokładnie raz.
+Zamiast odkładać na stałe jedną część do walidacji, możemy zmieniać
+jej rolę. Weźmy $12$ obserwacji i podzielmy je na trzy części po cztery.
+Dla klasyfikatora $3$-NN otrzymaliśmy poniższy dydaktyczny wynik.
+
+| Krok | Obserwacje uczące | Obserwacje oceniane | Liczba błędów |
+|---|---|---|---:|
+| 1 | części 2 i 3: razem 8 | część 1: 4 | 1 |
+| 2 | części 1 i 3: razem 8 | część 2: 4 | 0 |
+| 3 | części 1 i 2: razem 8 | część 3: 4 | 2 |
+
+Łącznie mamy $1+0+2=3$ błędy w $12$ ocenianych predykcjach, czyli
+$3/12=25\%$. Każda obserwacja otrzymała jedną predykcję z dopasowania,
+które jej nie widziało. **Uśredniamy straty, nie predykcje trzech modeli.**
 
 ::: {#def-walidacja-krzyzowa}
 ## Walidacja krzyżowa
-Podzielmy indeksy $\{1, \dots, n\}$ losowo na $K$ rozłącznych części
-$F_1, \dots, F_K$ możliwie równej liczności. Niech $\widehat f^{(-k)}$
-oznacza predyktor dopasowany do wszystkich obserwacji poza częścią $F_k$.
-**$K$-krotną walidacją krzyżową** (ang. *$K$-fold cross-validation*)
-nazywamy oszacowanie ryzyka
+Podzielmy indeksy $\{1,\dots,n\}$ losowo na $K$ rozłącznych części
+$F_1,\dots,F_K$ możliwie równej liczności. Niech $\widehat f^{(-r)}$
+oznacza predyktor dopasowany do wszystkich obserwacji poza częścią $F_r$.
+**$K$-krotną walidacją krzyżową** (ang. *$K$-fold cross-validation*, CV)
+nazywamy oszacowanie
 $$
-\mathrm{CV}_K = \frac{1}{n} \sum_{k=1}^{K} \sum_{i \in F_k}
-\Loss\big(y_i, \widehat f^{(-k)}(\x_i)\big) .
+\mathrm{CV}_K=\frac1n\sum_{r=1}^K\sum_{i\in F_r}
+\Loss\big(y_i,\widehat f^{(-r)}(\x_i)\big).
 $$ {#eq-cv}
-Przypadek $K = n$, w którym każda część zawiera jedną obserwację, nazywamy
-**walidacją typu „pozostaw jeden”** (ang. *leave-one-out
-cross-validation*, LOOCV).
 :::
 
-Każda obserwacja jest oceniana dokładnie raz, przez predyktor, który jej
-nie widział, i bierze udział w uczeniu $K - 1$ razy. Wszystkie dane służą
-więc zarówno do uczenia, jak i do oceny, choć nigdy jednocześnie. Kosztem
-jest $K$ dopasowań zamiast jednego. Pomysł ma długą historię; jego
-ujęcie jako ogólnej metody wyboru i oceny predyktorów zawdzięczamy
-@stone1974.
+Duże $K$ oznacza liczbę części, małe $k$ -- liczbę sąsiadów w $k$-NN.
+Indeks $r$ wskazuje część. Wewnętrzna suma dodaje straty w jednej części,
+a zewnętrzna -- we wszystkich częściach. Dzielimy przez liczbę
+ocenianych obserwacji $n$. Jeśli części mają nierówne liczności,
+nie wolno zastąpić tego rachunku nieważoną średnią odsetków błędów:
+część zawierająca więcej obserwacji powinna mieć większą wagę.
 
-Przy wyborze spośród kandydatów każdy z nich oceniamy na tym samym
-podziale na części, a wybieramy tego o najmniejszym $\mathrm{CV}_K$.
-Dzięki temu porównanie jest sparowane w sensie sekcji
-[-@sec-zbior-testowy]: losowość podziału wpływa podobnie na wszystkich
-kandydatów.
+Każda obserwacja jest oceniana raz i bierze udział w uczeniu $K-1$ razy.
+Koszt to $K$ dopasowań zamiast jednego. Ujęcie walidacji krzyżowej jako
+ogólnej metody wyboru i oceny predyktorów zawdzięczamy @stone1974.
 
-### Błąd uczący a LOOCV
+Aby wybrać $k$, powtarzamy rachunek dla każdego kandydata **na tym samym
+podziale** i porównujemy wyniki. To ponownie porównanie sparowane:
+każdy kandydat dostaje te same przypadki. Ręczne obliczenie takiego
+wyboru proponuje @exr-cv-recznie.
 
-Błąd uczący zaniża ryzyko, bo każdy punkt uczący wpływa na własną
-predykcję. W regresji $k$-NN ([-@eq-knn-regresja]) ten wpływ ma prostą
-postać: wynik $y_i$ wchodzi do predykcji w $\x_i$ z wagą $1/k$. Pozwala
-to wyrazić resztę „pozostaw jeden” przez resztę na zbiorze uczącym. Niech wszystkie odległości między punktami będą
-różne, aby nie było remisów. Każdy punkt uczący $\x_i$ należy do swojego
-otoczenia $N_k(\x_i)$, bo sam od siebie ma odległość zero. Predykcja
-w punkcie uczącym to więc
+### Co jest uczone i co jest oceniane
+
+Przy $K=5$ każde dopasowanie wykorzystuje $80\%$ danych. Żaden z tych
+pięciu modeli nie jest modelem dopasowanym do całej próby. Oceniamy
+powtarzane zastosowania tej samej **metody**, a nie jeden gotowy model.
+Gdybyśmy losowali wiele prób liczności $n$ i w każdej od nowa dopasowywali
+predyktor, średnia ich ryzyk byłaby ryzykiem oczekiwanym metody:
 $$
-\widehat f(\x_i) = \frac{1}{k} \Big( y_i + \sum_{j \in N_k(\x_i),\, j \ne i} y_j \Big)
-= \frac{1}{k}\, y_i + \frac{k - 1}{k}\, \widehat f^{(-i)}(\x_i),
-$$
-gdzie $\widehat f^{(-i)}(\x_i)$ jest średnią wyników $k - 1$ pozostałych
-sąsiadów. Te $k - 1$ punktów to dokładnie najbliżsi sąsiedzi $\x_i$ po
-usunięciu obserwacji $i$ ze zbioru uczącego, więc $\widehat f^{(-i)}$ jest
-predyktorem $(k-1)$-NN dopasowanym bez obserwacji $i$. Odejmując obie
-strony od $y_i$, dostajemy
-$$
-y_i - \widehat f(\x_i) = \frac{k - 1}{k}\, \big( y_i - \widehat f^{(-i)}(\x_i) \big) .
-$$ {#eq-loo-knn}
-Reszta na zbiorze uczącym jest więc resztą „pozostaw jeden” pomniejszoną
-o czynnik $(k-1)/k$. Stąd błąd LOOCV reguły $(k-1)$-NN jest równy
-błędowi uczącemu reguły $k$-NN pomnożonemu przez $\big(k/(k-1)\big)^2$
-(@exr-loo-knn). Dla dużego $k$ ten czynnik wynosi w przybliżeniu
-$1 + 2/k$, co zgadza się z wynikiem zadania [-@exr-optymizm-knn]: optymizm
-błędu uczącego reguły $k$-NN jest rzędu $2\sigma^2/k$.
+\overline{\Risk}_n=\E_{\mathcal D}\big[\Risk(\fD)\big].
+$$ {#eq-ryzyko-metody}
+Wewnętrzne $\Risk(\fD)$ uśrednia stratę na nowych obserwacjach dla jednego
+modelu; zewnętrzne oczekiwanie uśrednia te ryzyka po zbiorach uczących.
 
-Podobną postać mają wszystkie metody, w których wektor predykcji na
-zbiorze uczącym jest liniową funkcją wektora wyników,
-$\widehat{\mathbf{y}} = \mathbf{S}\mathbf{y}$, a usunięcie obserwacji nie
-zmienia sposobu ważenia pozostałych. Reszta „pozostaw jeden” wynosi
-wtedy $(y_i - \widehat f(\x_i))/(1 - S_{ii})$, gdzie $S_{ii}$ to waga, jaką
-predykcja w $\x_i$ przypisuje własnemu wynikowi [@esl, rozdz. 7.10].
-Dla $k$-NN $S_{ii} = 1/k$. Do tej klasy należy też metoda najmniejszych
-kwadratów, w tym regresja wielomianowa z rozdziału [-@sec-bias-wariancja].
-Im większa waga $S_{ii}$, tym mniejsza jest reszta na zbiorze uczącym
-w porównaniu z resztą „pozostaw jeden”. Ubocznym skutkiem jest oszczędność obliczeń:
-walidacja „pozostaw jeden” wymaga wtedy jednego dopasowania zamiast $n$.
+Dla niezależnych obserwacji z jednego rozkładu, ustalonej metody oraz
+równych części losowanych niezależnie od wartości danych mamy
+$$
+\E[\mathrm{CV}_K]=\overline{\Risk}_{n(K-1)/K}.
+$$ {#eq-cv-wartosc-oczekiwana}
+Każdy oceniany przypadek jest bowiem niezależny od próby, która posłużyła
+do jego predykcji, a próba ta liczy $n(K-1)/K$ obserwacji.
+Równość dotyczy średniej po powtórzeniach całego badania i nie obejmuje
+minimum wybranego spośród wielu wyników CV (sekcja
+[-@sec-selekcja-ocena]). Wynik CV z jednej próby
+słabo informuje, czy model dopasowany do tej próby wyszedł lepszy, czy
+gorszy od przeciętnego: szacuje raczej ryzyko metody niż ryzyko tego
+modelu (ramka „Ryzyko modelu a ryzyko metody” w rozdziale
+[-@sec-bias-wariancja]). Symulację pokazuje rozszerzenie
+[-@sec-cv-szczegoly].
+
+Jeżeli ryzyko metody maleje wraz z licznością uczenia, CV ma względem
+$\overline{\Risk}_n$ **pesymistyczne** przesunięcie: ocenia uczenie
+na mniejszej próbie.
 
 ### Ile części
 
-Wybór $K$ to znów kompromis między obciążeniem a wariancją, tym razem
-nie predyktora, tylko oszacowania ryzyka.
+Typowy wybór to $K=5$ lub $K=10$ [@islp, rozdz. 5.1]. Wtedy każde
+dopasowanie wykorzystuje odpowiednio $80\%$ lub $90\%$ próby, a koszt
+wynosi pięć lub dziesięć dopasowań na kandydata. Przy $K=2$ do uczenia
+zostaje tylko połowa danych. Wybór $K$ jest kompromisem: im mniejsze $K$,
+tym mniejsze zbiory uczące i większe pesymistyczne przesunięcie; im
+większe, tym więcej dopasowań i tym silniej pokrywają się zbiory uczące.
+Przy $K=5$ lub $K=10$ pesymizm jest zwykle niewielki. Skrajny przypadek
+$K=n$ to **walidacja „pozostaw jeden”** (LOOCV): uczymy na $n-1$ obserwacjach i oceniamy na
+jednej, kolejno dla wszystkich obserwacji. Wymaga to zwykle $n$ dopasowań.
+Dla niektórych metod rachunek można uprościć; pokazuje to rozszerzenie
+[-@sec-loocv-wygladzanie].
 
-Najpierw obciążenie. Każdy z predyktorów $\widehat f^{(-k)}$ uczy się na
-$n(K-1)/K$ obserwacjach i jest oceniany na obserwacjach, których nie
-widział. Jeśli części mają równe liczności, każdy składnik sumy
-([-@eq-cv]) ma więc wartość oczekiwaną równą ryzyku oczekiwanemu metody
-uczonej na próbie mniejszej niż $n$:
+Większe $K$ nie gwarantuje mniejszej wariancji oszacowania. Zależy ona
+od tego pokrycia, a także od stabilności metody. Symulacje i dokładniejszą
+analizę odkładamy do rozszerzenia [-@sec-cv-szczegoly].
+
+### Błąd standardowy walidacji krzyżowej {#błąd-standardowy-walidacji-krzyżowej}
+
+Wynik CV, podobnie jak oszacowanie testowe, jest średnią $n$ strat.
+Błąd standardowy liczymy więc tak, jakby były to straty testowe:
+odchylenie standardowe $n$ strat dzielimy przez $\sqrt n$. Dla straty
+$0$--$1$ daje to praktycznie wzór ([-@eq-blad-standardowy-testowy])
+z wynikiem CV w miejscu oszacowania testowego:
 $$
-\E\big[\mathrm{CV}_K\big] = \overline{\Risk}_{n(K-1)/K} .
-$$ {#eq-cv-wartosc-oczekiwana}
-Walidacja krzyżowa jest zatem **pesymistyczna**: szacuje ryzyko metody
-uczonej na mniejszej próbie, niż ta, której użyjemy. Wielkość
-pesymizmu zależy od nachylenia krzywej uczenia w okolicy $n$. Przy $K = 2$
-uczymy na połowie danych i pesymizm bywa znaczny, przy $K = n$ jest
-praktycznie zerowy.
+\widehat{\mathrm{se}}_{\mathrm{CV}} = \sqrt{\frac{\mathrm{CV}_K\,\big(1 - \mathrm{CV}_K\big)}{n}} .
+$$
+Straty z różnych części nie są jednak niezależne, bo modele korzystają
+ze wspólnych obserwacji uczących. Ta miara jest więc naiwna i zwykle
+zaniżona, ale wystarcza jako orientacyjna skala różnic przy wyborze.
+Ponowne losowanie podziału pokazuje wrażliwość
+na podział, ale **nie tworzy nowych obserwacji** i nie mierzy całej
+niepewności wynikającej z posiadania jednej próby.
 
-Z wariancją sprawa jest mniej oczywista. Przy dużym $K$ zbiory uczące
-różnych części pokrywają się prawie całkowicie, więc predyktory
-$\widehat f^{(-k)}$ są do siebie bardzo podobne, a ich błędy -- silnie
-skorelowane. Średnia skorelowanych wielkości ma większą wariancję niż
-średnia niezależnych (@exr-usrednianie-predyktorow). Z tego powodu często
-mówi się, że LOOCV ma dużą wariancję. Z drugiej strony przy dużym $K$
-każdy predyktor jest lepszy, a podziałów nie trzeba losować. Który efekt
-przeważa, zależy od metody. Sprawdźmy to na naszym przykładzie: dla
-wielomianu stopnia $3$ i $n = 50$ wylosowaliśmy $500$ prób i w każdej
-policzyliśmy $\mathrm{CV}_K$ dla $K = 2, 5, 10, 50$ oraz, całkowaniem,
-prawdziwe ryzyko dopasowanego modelu.
+Taką przybliżoną miarę wykorzystuje **reguła jednego błędu standardowego**
+[@esl, rozdz. 7.10]. Rozważmy inną, większą próbę i dydaktyczną tabelę:
 
-```{python}
-rng = np.random.default_rng(5)
-n_cv, d_cv, powt_cv = 50, 3, 500
-wartosci_K = [2, 5, 10, n_cv]
+| Liczba sąsiadów $k$ | Wynik CV |
+|---|---:|
+| 1 | 0,12 |
+| 5 | 0,10 |
+| 15 | 0,11 |
+| 51 | 0,14 |
 
-def walidacja_krzyzowa(x, y, d, K, rng):
-    """K-krotna walidacja krzyżowa wielomianu stopnia d; zwraca straty
-    poszczególnych obserwacji, ocenianych przez model, który ich nie widział."""
-    straty = np.empty(len(x))
-    for czesc in np.array_split(rng.permutation(len(x)), K):
-        ucz = np.ones(len(x), dtype=bool)
-        ucz[czesc] = False
-        wielomian = Polynomial.fit(x[ucz], y[ucz], d)
-        straty[czesc] = (wielomian(x[czesc]) - y[czesc]) ** 2
-    return straty
+Niech próba liczy $n = 225$ obserwacji. Błąd standardowy przy minimum
+wynosi wtedy $\sqrt{0{,}10\cdot 0{,}90/225} = 0{,}02$.
+Minimum wskazuje $k=5$. Reguła dopuszcza wyniki nie większe niż
+$0{,}10+0{,}02=0{,}12$, czyli $k=1,5,15$, i wybiera spośród nich model
+najmniej elastyczny. Dla $k$-NN jest to największe $k$, tutaj $15$.
 
-cv = np.zeros((powt_cv, len(wartosci_K)))
-blad_std_naiwny = np.zeros(powt_cv)     # dla K = 10, patrz dalej
-ryzyko_modelu = np.zeros(powt_cv)
-for r in range(powt_cv):
-    x, y = probka(n_cv, rng)
-    ryzyko_modelu[r] = ryzyko(Polynomial.fit(x, y, d_cv))
-    for j, K in enumerate(wartosci_K):
-        straty = walidacja_krzyzowa(x, y, d_cv, K, rng)
-        cv[r, j] = straty.mean()
-        if K == 10:
-            blad_std_naiwny[r] = straty.std(ddof=1) / np.sqrt(n_cv)
+Ogólnie próg stanowi najmniejszy wynik CV powiększony o jego oszacowany
+błąd standardowy. Wybieramy najmniej elastycznego kandydata mieszczącego
+się pod progiem. To **heurystyka** skłaniająca do prostszego modelu przy
+małych różnicach wyników, a nie test równoważności kandydatów.
+Porządek od mniej do bardziej elastycznych modeli trzeba określić
+przed użyciem tej reguły.
 
-# Ryzyko oczekiwane metody przy liczności zbioru uczącego n(K-1)/K.
-def ryzyko_oczekiwane(n, rng, powtorzenia=3000):
-    return np.mean([ryzyko(Polynomial.fit(*probka(n, rng), d_cv))
-                    for _ in range(powtorzenia)])
+### Walidacja krzyżowa w klasyfikacji {#walidacja-krzyżowa-w-klasyfikacji}
 
-print(f"ryzyko oczekiwane przy n = {n_cv}: {ryzyko_modelu.mean():.4f}")
-print(" K   uczących   E[R] przy n(K-1)/K   średnia CV   odch. std. CV")
-for j, K in enumerate(wartosci_K):
-    m = n_cv * (K - 1) // K
-    print(f"{K:2d}   {m:8d}   {ryzyko_oczekiwane(m, rng):18.4f}"
-          f"   {cv[:, j].mean():10.4f}   {cv[:, j].std():13.4f}")
-```
+W klasyfikacji części zwykle losujemy **warstwowo** (ang. *stratified*),
+zachowując w przybliżeniu proporcje klas. Przy rzadkiej klasie zmniejsza
+to ryzyko uzyskania części bez jej przedstawicieli. Nie zastępuje jednak
+zebrania dostatecznie wielu takich obserwacji; liczba części musi być
+dostosowana do liczności najmniejszej klasy.
 
-Średnie oszacowań układają się zgodnie z ([-@eq-cv-wartosc-oczekiwana]).
-Dla $K = 2$ średnia jest bliska ryzyku metody uczonej na $25$
-obserwacjach i wyraźnie wyższa niż ryzyko przy $n = 50$. Dla $K \ge 5$
-pesymizm jest już mały w porównaniu z rozrzutem oszacowania. Odchylenie
-standardowe maleje z $K$, ale dla $K = 5, 10, 50$ jest prawie takie
-samo. W tym przykładzie LOOCV nie ma więc większej wariancji niż walidacja
-dziesięciokrotna. Wariancja LOOCV bywa duża przy metodach niestabilnych,
-których dopasowanie zmienia się skokowo przy niewielkiej zmianie danych
-[@arlot2010]. Przy małym $K$ niestabilność dotyka też walidacji
-krzyżowej: wielomian wysokiego stopnia uczony na połowie próby czasem
-„ucieka” przy krańcach przedziału, jak na rysunku [-@fig-wachlarz],
-i pojedyncza część daje wtedy ogromny błąd.
+Stratę dobieramy do celu. Strata 0--1 mierzy częstość pomyłek,
+ale nie ocenia jakości podawanych prawdopodobieństw: nie odróżnia modelu,
+który pomylił się, podając $\widehat\eta=0{,}51$, od modelu, który podał
+$0{,}99$. Jeśli potrzebujemy prawdopodobieństw, na przykład do reguły
+z progiem kosztowym z sekcji [-@sec-od-prawdopodobienstw-do-decyzji], możemy
+użyć straty Briera $(y-\widehat\eta)^2$ lub
+logarytmicznej $-y\log\widehat\eta-(1-y)\log(1-\widehat\eta)$.
+Są to **straty właściwe** [@gneiting2007]: w populacji premiują podawanie prawdziwego
+prawdopodobieństwa klasy. Uzasadnienie zawiera rozszerzenie
+[-@sec-rozszerzenia-predykcji], ale do użycia CV wystarczy ustalić
+wybraną stratę przed porównywaniem kandydatów.
 
-W praktyce standardem jest $K = 5$ lub $K = 10$ [@islp, rozdz. 5.1].
-Pesymizm jest wtedy zwykle niewielki, koszt -- pięć lub dziesięć
-dopasowań, a wynik nie zależy od szczególnych własności metody.
-
-### Co szacuje walidacja krzyżowa
-
-Z ([-@eq-cv-wartosc-oczekiwana]) wynika, że walidacja krzyżowa jest
-oszacowaniem ryzyka oczekiwanego metody, a nie ryzyka modelu
-dopasowanego do naszej próby. Można by jednak sądzić, że skoro oszacowanie liczymy z naszej próby, to przynajmniej podąża za
-ryzykiem naszego modelu: w próbach, z których wyszedł model gorszy niż
-przeciętny, powinno być wyższe. Rysunek [-@fig-cv-ryzyko] pokazuje, że
-tak nie jest.
-
-```{python}
-#| label: fig-cv-ryzyko
-#| fig-cap: "Oszacowanie dziesięciokrotną walidacją krzyżową a ryzyko dopasowanego modelu $\\Risk(\\widehat f_{\\mathcal{D}})$ dla 500 prób liczności $n = 50$ (wielomian stopnia $3$). Linie przerywane: ryzyko oczekiwane metody $\\overline{\\Risk}_n$. Linia kropkowana: prosta $y = x$."
-
-j10 = wartosci_K.index(10)
-fig, ax = plt.subplots(figsize=(5.5, 5.0))
-ax.scatter(ryzyko_modelu, cv[:, j10], s=8, color="#1B6CA8", alpha=0.5)
-srednia = ryzyko_modelu.mean()
-ax.axvline(srednia, color="0.3", ls="--", lw=1)
-ax.axhline(srednia, color="0.3", ls="--", lw=1)
-granice = [0.03, 0.2]
-ax.plot(granice, granice, ":", color="#D7263D", lw=1.5)
-ax.set_xlim(0.03, 0.2)
-ax.set_ylim(granice)
-ax.set_aspect("equal")
-ax.set_xlabel(r"ryzyko dopasowanego modelu $R(\widehat f_{\mathcal{D}})$")
-ax.set_ylabel(r"oszacowanie $\mathrm{CV}_{10}$")
-plt.tight_layout()
-plt.show()
-
-print(f"odch. std. ryzyka modelu:  {ryzyko_modelu.std():.4f}")
-print(f"odch. std. CV_10:          {cv[:, j10].std():.4f}")
-print(f"korelacja:                 {np.corrcoef(ryzyko_modelu, cv[:, j10])[0, 1]:.3f}")
-```
-
-Chmura punktów jest wydłużona w pionie i nie układa się wzdłuż
-przekątnej. Ryzyko dopasowanego modelu zmienia się od próby do próby
-niewiele, a oszacowanie walidacją krzyżową --
-ponad dwa razy bardziej, i obie wielkości są praktycznie nieskorelowane.
-Większość rozrzutu oszacowania pochodzi z szumu w $n$ obserwacjach, na
-których je liczymy, a nie z różnic między dopasowanymi modelami.
-Oszacowanie trafia przeciętnie w $\overline{\Risk}_n$ -- środek chmury
-leży na przecięciu linii przerywanych -- ale nie mówi, czy nasz model jest
-lepszy, czy gorszy od przeciętnego. Podobny obraz w przykładzie
-klasyfikacyjnym przedstawiają @esl [rozdz. 7.12]. @bates2024 wykazali,
-że dla modelu liniowego dopasowanego metodą najmniejszych kwadratów
-wielkością szacowaną przez walidację krzyżową nie jest ryzyko modelu
-dopasowanego do posiadanych danych, lecz ryzyko uśrednione po wielu
-hipotetycznych próbach, czyli $\overline{\Risk}_n$. Ramka „Ryzyko
-modelu a ryzyko metody” z rozdziału [-@sec-bias-wariancja] dostaje w ten
-sposób konkretną treść: walidacja krzyżowa ocenia procedurę uczenia
-zastosowaną do prób liczności $n$, a nie konkretny dopasowany model.
-Ocenę konkretnego modelu daje tylko niezależny zbiór testowy.
-
-### Błąd standardowy walidacji krzyżowej
-
-Wynik walidacji krzyżowej podaje się zwykle z błędem standardowym.
-Najprostszy przepis traktuje $n$ strat z ([-@eq-cv]) jak straty na
-zbiorze testowym i dzieli ich odchylenie standardowe przez $\sqrt{n}$.
-Te straty nie są jednak niezależne: każda para obserwacji z różnych
-części ma wspólną większość zbioru uczącego. @bengio2004 wykazali, że
-nieobciążony estymator wariancji $\mathrm{CV}_K$ nie istnieje dla żadnego
-$K$. Naiwny błąd standardowy jest zwykle zaniżony. W symulacji z rysunku
-[-@fig-cv-ryzyko] wygląda to tak:
-
-```{python}
-pokrycie = np.mean(np.abs(cv[:, j10] - ryzyko_modelu.mean())
-                   < 1.96 * blad_std_naiwny)
-print(f"rzeczywiste odch. std. CV_10:      {cv[:, j10].std():.4f}")
-print(f"średni naiwny błąd standardowy:    {blad_std_naiwny.mean():.4f}")
-print(f"pokrycie przedziału +- 1,96 se:    {pokrycie:.3f}")
-```
-
-Naiwny błąd standardowy jest tu zaniżony o około $10\%$, a przedział,
-który nominalnie ma pokrywać ryzyko oczekiwane w $95\%$ prób, pokrywa je
-w $89\%$. Przy metodach mniej stabilnych różnica bywa
-większa. Poprawne przedziały ufności dla walidacji krzyżowej wymagają
-dodatkowej pracy obliczeniowej [@bates2024]. Do porównań i do wyboru
-modelu naiwny błąd standardowy wystarcza jednak jako miara skali
-niepewności.
-
-Tak używa go **reguła jednego błędu standardowego** [@esl, rozdz. 7.10].
-Niech $j^*$ będzie kandydatem o najmniejszym oszacowaniu
-$\mathrm{CV}_K$, a $\mathrm{se}_{j^*}$ jego błędem standardowym.
-Spośród kandydatów, dla których
-$\mathrm{CV}_K(j)\le\mathrm{CV}_K(j^*)+\mathrm{se}_{j^*}$,
-wybieramy najprostszego, czyli najmniej elastycznego.
-Uzasadnienie jest heurystyczne: różnice mniejsze niż błąd
-standardowy mogą być przypadkowe, a w razie wątpliwości model prostszy
-ma mniejszą wariancję i łatwiej go interpretować.
-
-### Walidacja krzyżowa w klasyfikacji
-
-W klasyfikacji podział na części losuje się zwykle **warstwowo**
-(ang. *stratified*): tak, by proporcje klas w każdej części były takie
-jak w całej próbie. Przy rzadkiej klasie podział niewarstwowy może dać
-część bez żadnej obserwacji z tej klasy i błąd tej części nic o niej nie
-powie.
-
-Druga decyzja dotyczy straty, którą oceniamy. Strata 0--1 odpowiada
-pytaniu o odsetek pomyłek, ale jest bardzo zgrubna: oszacowanie zmienia
-się skokami $1/n$ i nie odróżnia modelu, który pomylił się, podając
-$\widehat\eta = 0{,}51$, od modelu, który podał $0{,}99$. Jeśli model ma
-zwracać prawdopodobieństwa, na przykład dla reguły kosztowej z sekcji
-[-@sec-od-prawdopodobienstw-do-decyzji], należy go oceniać stratą
-właściwą: Briera albo logarytmiczną. Oszacowanie jest wtedy mniej
-zmienne, bo każda obserwacja wnosi informację ciągłą, a nie tylko
-„trafił--nie trafił”. Strata logarytmiczna ma przy tym pułapkę: model
-$k$-NN zwraca $\widehat\eta = 0$ albo $1$, gdy wszyscy sąsiedzi są z jednej
-klasy. Jedna taka pomyłka daje stratę nieskończoną.
+Przy stracie logarytmicznej trzeba uważać na skrajne prawdopodobieństwa:
+$k$-NN może podać $\widehat\eta=0$ albo $1$, a błędna predykcja z taką
+pewnością daje nieskończoną stratę.
+Sposób wygładzania prawdopodobieństw, jeśli go stosujemy, również musi
+być częścią ocenianej procedury.
 
 ## Wyciek informacji {#sec-wyciek}
 
-Twierdzenie [-@thm-ocena-testowa] i równość ([-@eq-cv-wartosc-oczekiwana])
-mają wspólne założenie: obserwacje, na których oceniamy, nie mają żadnego
-wpływu na predyktor. W walidacji krzyżowej dotyczy to **całej
-procedury**, która z danych tworzy predyktor, a nie tylko ostatniego
-kroku, czyli dopasowania modelu. Każdy krok, w którym coś wyznaczamy
-z danych -- parametry standaryzacji ([-@eq-standaryzacja]), uzupełnianie
-braków średnimi, wybór cech -- trzeba powtarzać wewnątrz każdej części,
-korzystając wyłącznie z jej danych uczących. Złamanie tej zasady nazywa
-się **wyciekiem informacji** (ang. *data leakage*): informacja
-o obserwacjach oceniających przecieka do predyktora.
+Wybieramy cechy najbardziej związane z klasą, a dopiero potem
+rozdzielamy dane do uczenia i oceny. Co już zdradziły przyszłe obserwacje
+oceniające? Ich **klasy** pomogły zdecydować, które cechy zachować.
+Nawet jeśli klasyfikator nie zobaczy ich podczas dopasowania, korzysta
+z informacji, której nie miałby dla nowych obiektów.
 
-Przy standaryzacji wyciek jest zwykle niewielki. Średnia i odchylenie
-standardowe liczone z $n$ zamiast z $n(K-1)/K$ obserwacji różnią się
-niewiele i prawie nic nie mówią o wynikach. Przy wyborze cech może być
-ogromny. Rozważmy przykład z @esl [rozdz. 7.10.2]. Mamy $n = 50$
+| Błędna kolejność | Poprawna kolejność w każdym kroku CV |
+|---|---|
+| wybierz cechy na całej próbie | odłóż część oceniającą |
+| podziel dane na części | wybierz cechy tylko na pozostałych danych |
+| dopasuj model bez części oceniającej | dopasuj model na tych danych |
+| oceń na odłożonej części | użyj wybranych cech do predykcji na odłożonej części |
+
+Rozważmy przykład z @esl [rozdz. 7.10.2]. Mamy $n = 50$
 obserwacji z dwóch równolicznych klas i $p = 5000$ cech, które są czystym
 szumem: nie zależą od klasy. Każdy klasyfikator ma tu ryzyko $1/2$.
 Procedura jest następująca: wybieramy $100$ cech najsilniej
@@ -650,6 +550,18 @@ pokazali, że w opublikowanych analizach danych z mikromacierzy, gdzie
 cech są tysiące, a obserwacji kilkadziesiąt, prowadził on do raportowania
 błędów bliskich zera dla klasyfikatorów bez wartości predykcyjnej.
 
+To **wyciek informacji** (ang. *data leakage*). Oceniana obserwacja
+nie może wpływać na żaden etap budowy predyktora: wybór cech, parametry
+standaryzacji ([-@eq-standaryzacja]), uzupełnianie braków ani dopasowanie.
+Skala wycieku zależy od procedury i danych. Przy standaryzacji jest
+zwykle niewielka: średnia i odchylenie standardowe nie korzystają
+z odpowiedzi, a liczone z $n$ zamiast z $n(K-1)/K$ obserwacji zmieniają
+się nieznacznie. Wybór cech korzysta natomiast z klas obserwacji
+oceniających i dlatego może zaniżyć oszacowanie tak silnie jak
+w przykładzie powyżej.
+Brak widocznego spadku błędu nie dowodzi jednak poprawności postępowania,
+więc standaryzację także dopasowujemy osobno w każdej części.
+
 W bibliotece scikit-learn przed tym błędem chroni potok (`Pipeline`),
 o którym mówiliśmy w sekcji [-@sec-knn-praktyka]. Funkcje walidacji
 krzyżowej wywołują `fit` całego potoku osobno w każdej części, więc
@@ -658,13 +570,14 @@ standaryzacja, wybór cech i model widzą tylko jej dane uczące.
 Wyciek ma też źródła, przed którymi potok nie chroni, bo dotyczą samego
 podziału na części. Walidacja krzyżowa zakłada, że obserwacje są
 niezależne, a nowe dane pochodzą z tego samego rozkładu. Gdy to
-założenie zawodzi, losowy podział daje ocenę zbyt optymistyczną:
+założenie zawodzi, losowy podział może odpowiadać na inne pytanie
+i dawać ocenę zbyt optymistyczną:
 
 - **Obserwacje zgrupowane.** Jeśli mamy po kilka pomiarów każdego
   pacjenta, a model ma działać dla nowych pacjentów, to losowy podział
   pomiarów pozwala ocenić model na pacjencie, którego inne pomiary
   widział. Dzielić trzeba całe grupy (w scikit-learn `GroupKFold`).
-- **Dane uporządkowane w czasie.** Jeśli model ma przewidywać przyszłość,
+- **Dane uporządkowane w czasie.** Jeśli model ma przewidywać sprzedaż w przyszłym dniu,
   ocenia się go tylko na obserwacjach późniejszych niż te, na których się
   uczył (`TimeSeriesSplit`). Losowy podział pozwala „przewidywać”
   przeszłość na podstawie przyszłości.
@@ -687,66 +600,52 @@ zebrania danych.
 
 ## Selekcja modelu a ocena modelu {#sec-selekcja-ocena}
 
-Wróćmy do trzech pytań z początku rozdziału. Walidacja krzyżowa służy
-do wyboru spośród kandydatów. Po wyborze kusi, by jako ocenę wybranego
-modelu podać jego wynik walidacji krzyżowej, najmniejszy wśród
-kandydatów. To błąd, i to systematyczny.
+W tabeli z sekcji [-@sec-zbior-walidacyjny] wybraliśmy $k=9$, bo miał
+najmniejszy błąd walidacyjny: $10\%$. Wynik zależy jednak od jakości
+modelu **i** od przypadkowego zestawu łatwych i trudnych obserwacji.
+Wybór minimum premiuje również korzystny przypadek. Dlatego liczba,
+która pozwoliła wygrać, może zbyt dobrze przedstawiać jakość zwycięzcy.
 
-::: {#thm-optymizm-wyboru}
-## Optymizm wyboru
-Niech $\widehat\Risk_1, \dots, \widehat\Risk_M$ będą oszacowaniami ryzyk
-$\Risk_1, \dots, \Risk_M$ kandydatów, nieobciążonymi:
-$\E[\widehat\Risk_j] = \Risk_j$. Niech $\widehat\jmath$ będzie indeksem
-najmniejszego oszacowania. Ryzyka $\Risk_j$ są tu liczbami, a losowe są
-oszacowania i wraz z nimi indeks $\widehat\jmath$, więc także
-$\Risk_{\widehat\jmath}$. Wtedy
-$$
-\E\big[\widehat\Risk_{\widehat\jmath}\big]
-= \E\Big[\min_{j} \widehat\Risk_j\Big]
-\le \min_{j} \Risk_j
-\le \E\big[\Risk_{\widehat\jmath}\big] .
-$$
-Gdy kandydaci są dopasowani do zbioru uczącego $\mathcal D$, a oceniani
-na niezależnym zbiorze walidacyjnym, twierdzenie stosujemy przy ustalonym
-$\mathcal D$, z wartościami oczekiwanymi warunkowymi względem $\mathcal D$.
-:::
+### Mały rachunek optymizmu
 
-::: {.proof}
-Dla każdego $l$ zachodzi $\min_j \widehat\Risk_j \le \widehat\Risk_l$.
-Biorąc wartość oczekiwaną, dostajemy
-$\E[\min_j \widehat\Risk_j] \le \Risk_l$ dla każdego $l$, a więc także dla
-tego, przy którym $\Risk_l$ jest najmniejsze. Zmienna
-$\Risk_{\widehat\jmath}$ zależy od danych tylko przez indeks
-$\widehat\jmath$, więc
-$$
-\E\big[\Risk_{\widehat\jmath}\big] = \sum_{j=1}^{M} \Risk_j \, P(\widehat\jmath = j) .
-$$
-Jest to średnia ważona ryzyk $\Risk_1, \dots, \Risk_M$, a średnia ważona
-nie jest mniejsza od najmniejszego ze składników. Stąd druga
-nierówność. $\square$
-:::
+Dwaj kandydaci $A$ i $B$ mają rzeczywiste ryzyko $15\%$. Przyjmijmy
+uproszczony model ich oszacowań: każde z nich niezależnie wynosi
+$10\%$ albo $20\%$, z prawdopodobieństwem $1/2$. To **model błędów
+oszacowania**, a nie wynik $k$-NN na rzeczywistych danych. Cztery
+możliwości są jednakowo prawdopodobne:
 
-Trzydziestu uczniów pisze test z dwudziestu pytań. Wszyscy umieją tyle
-samo: każdy myli się w każdym pytaniu z prawdopodobieństwem $0{,}3$, więc
-przeciętnie popełnia $6$ błędów. Liczba błędów każdego ucznia z osobna
-jest uczciwym oszacowaniem jego umiejętności. Wyniki rozrzucą się jednak
-wokół $6$ z odchyleniem standardowym około $2$, a najlepszy z trzydziestu
-popełni zwykle dwa albo trzy błędy. Nauczyciel, który uzna na tej
-podstawie, że zwycięzca myli się w co dziesiątym pytaniu, będzie
-w błędzie: zwycięzca umie tyle samo co reszta. Wygrał, bo los sprzyjał
-mu najbardziej, a jego wynik zawiera całe to szczęście. W następnym
-teście popełni przeciętnie $6$ błędów.
+| Oszacowanie $A$ | Oszacowanie $B$ | Najmniejszy wynik | Ryzyko wybranego kandydata |
+|---|---|---|---|
+| 10% | 10% | 10% | 15% |
+| 10% | 20% | 10% | 15% |
+| 20% | 10% | 10% | 15% |
+| 20% | 20% | 20% | 15% |
 
-Uczniowie to kandydaci, pytania -- obserwacje walidacyjne, a odsetek
-błędnych odpowiedzi -- oszacowanie $\widehat\Risk_j$. Wybierając
-najmniejsze oszacowanie, wybieramy zarazem najkorzystniejszy szum, stąd
-pierwsza nierówność. Gdy umiejętności się różnią, szczęście może wynieść
-na pierwsze miejsce kogoś słabszego od najlepszego, stąd druga. Obie
-sytuacje pokazuje rysunek [-@fig-wybor-schemat].
+Każde oszacowanie z osobna ma średnią $(10+20)/2=15\%$. Natomiast
+średnia najmniejszego wyniku to
+$$
+\frac{10+10+10+20}{4}\%=12{,}5\%,
+$$
+choć ryzyko wybranego kandydata zawsze wynosi $15\%$. Zaniżenie wynosi
+przeciętnie $2{,}5$ punktu procentowego. W ostatnim wierszu oszacowanie
+**zawyża** ryzyko: optymizm dotyczy średniej po powtórzeniach, nie każdej
+realizacji. Niezależność pozwoliła łatwo rozpisać tabelę; wyniki modeli
+na wspólnych danych zwykle są zależne. Ogólna nierówność poniżej
+nie wymaga niezależności oszacowań.
+
+### Wynik zwycięzcy, jego ryzyko i najlepsze ryzyko
+
+Gdy kandydaci mają różne ryzyka, dochodzi drugi problem. Na ilustracji
+[-@fig-wybor-schemat] najmniejszy wynik to **21%**, rzeczywiste ryzyko
+wybranego kandydata to **28%**, a najmniejsze ryzyko wśród wszystkich
+kandydatów to **24%**. Zatem wynik zwycięzcy zaniża jego ryzyko,
+a wybrany kandydat jest gorszy od rzeczywiście najlepszego.
+To dwie osobne konsekwencje niedokładnej oceny. Liczby na rysunku
+dobrano do ilustracji; nie pochodzą z obliczeń na danych.
 
 ```{python}
 #| label: fig-wybor-schemat
-#| fig-cap: "Jedna realizacja oszacowań dla sześciu kandydatów. Pasek: typowy rozrzut oszacowania $\\widehat\\Risk_j$ (dwa błędy standardowe w każdą stronę), kreska: ryzyko $\\Risk_j$, kropka: wylosowane oszacowanie. Najmniejsze oszacowanie (czerwone) wypadło na lewym krańcu rozrzutu kandydata $3$ i leży na lewo od wszystkich ryzyk, także od najmniejszego, które ma kandydat $4$. Wybrany kandydat nie jest najlepszy, więc jego ryzyko $\\Risk_{\\widehat\\jmath}$ przekracza $\\min_j \\Risk_j$."
+#| fig-cap: "Dydaktyczna ilustracja oszacowań dla sześciu kandydatów. Pasek: typowy rozrzut oszacowania $\\widehat\\Risk_j$ (dwa błędy standardowe w każdą stronę), kreska: ryzyko $\\Risk_j$, kropka: przykładowe oszacowanie. Najmniejsze oszacowanie (czerwone) wypadło na lewym krańcu rozrzutu kandydata $3$ i leży na lewo od wszystkich ryzyk, także od najmniejszego, które ma kandydat $4$. Wybrany kandydat nie jest najlepszy, więc jego ryzyko $\\Risk_{\\widehat\\jmath}$ przekracza $\\min_j \\Risk_j$."
 
 niebieski, czerwony, szary = "#1B6CA8", "#D7263D", "#888888"
 ryzyka = np.array([0.30, 0.26, 0.28, 0.24, 0.27, 0.31])
@@ -782,104 +681,197 @@ plt.tight_layout()
 plt.show()
 ```
 
-Wynik wybranego kandydata zaniża więc ryzyko nawet najlepszego
-z kandydatów, a ryzyko faktycznie wybranego modelu jest jeszcze większe.
-Zjawisko to bywa nazywane **klątwą zwycięzcy**. Rośnie z liczbą
-kandydatów i z wariancją oszacowań, a maleje, gdy jeden kandydat jest
-wyraźnie lepszy od pozostałych.
+Dopiero teraz zapiszmy te trzy znaczenia symbolami: najmniejszy wynik
+to $\widehat\Risk_{\widehat\jmath}$, najmniejsze ryzyko kandydatów to
+$\min_j\Risk_j$, a ryzyko zwycięzcy to $\Risk_{\widehat\jmath}$.
+Indeks $\widehat\jmath$ wskazuje kandydata wybranego według oszacowania.
 
-Jak zmierzyć ryzyko modelu, który wybieramy? Trzeba ocenić całą
-procedurę -- „wybierz kandydata walidacją krzyżową i dopasuj go do
-danych” -- tak samo, jak oceniamy każdą inną metodę uczenia: na danych,
-których ta procedura nie widziała. Prowadzi to do **zagnieżdżonej
-walidacji krzyżowej** [@varma2006].
-
-::: {.callout-note}
-## Zagnieżdżona walidacja krzyżowa
-Niech $\mathcal W$ oznacza procedurę wyboru: dla zbioru uczącego
-$\mathcal D'$
-
-1. dzieli $\mathcal D'$ na $L$ części wewnętrznych i dla każdego
-   kandydata $j$ oblicza na $\mathcal D'$ oszacowanie $\mathrm{CV}_L^{(j)}$
-   według ([-@eq-cv]);
-2. wybiera kandydata $\widehat\jmath$ o najmniejszym $\mathrm{CV}_L^{(j)}$;
-3. dopasowuje go do całego $\mathcal D'$ i zwraca otrzymany predyktor
-   $\mathcal W(\mathcal D')$.
-
-Zagnieżdżona walidacja krzyżowa to walidacja krzyżowa ([-@eq-cv])
-procedury $\mathcal W$. Dzielimy dane na $K$ części zewnętrznych
-$F_1, \dots, F_K$; niech $\mathcal D^{(-k)}$ oznacza dane poza $F_k$.
-Oszacowaniem ryzyka całej procedury, łącznie z wyborem, jest
+::: {#thm-optymizm-wyboru}
+## Optymizm wyboru
+Niech $\widehat\Risk_1, \dots, \widehat\Risk_M$ będą oszacowaniami ryzyk
+$\Risk_1, \dots, \Risk_M$ kandydatów, nieobciążonymi:
+$\E[\widehat\Risk_j] = \Risk_j$. Niech $\widehat\jmath$ będzie indeksem
+najmniejszego oszacowania. Ryzyka $\Risk_j$ są tu liczbami, a losowe są
+oszacowania i wraz z nimi indeks $\widehat\jmath$, więc także
+$\Risk_{\widehat\jmath}$. Wtedy
 $$
-\mathrm{CV}_K^{\mathrm{zagn}} = \frac{1}{n} \sum_{k=1}^{K} \sum_{i \in F_k}
-\Loss\big(y_i, \mathcal W(\mathcal D^{(-k)})(\x_i)\big) .
+\E\big[\widehat\Risk_{\widehat\jmath}\big]
+= \E\Big[\min_{j} \widehat\Risk_j\Big]
+\le \min_{j} \Risk_j
+\le \E\big[\Risk_{\widehat\jmath}\big] .
 $$
-Część $F_k$ nie bierze udziału ani w wyborze, ani w dopasowaniu.
-W różnych częściach zewnętrznych wybrany może zostać inny kandydat --
-to normalne, bo oceniamy procedurę wyboru, a nie jednego kandydata.
+Gdy kandydaci są dopasowani do zbioru uczącego $\mathcal D$, a oceniani
+na niezależnym zbiorze walidacyjnym, twierdzenie stosujemy przy ustalonym
+$\mathcal D$, z wartościami oczekiwanymi warunkowymi względem $\mathcal D$.
 :::
 
-Jeden krok zewnętrzny przedstawia rysunek [-@fig-zagniezdzona-schemat].
+Lewy człon nierówności jest średnim wynikiem zwycięzcy, środkowy --
+najmniejszym rzeczywistym ryzykiem, prawy -- średnim ryzykiem wybranego
+kandydata; wszystkie trzy są średnimi po powtórzeniach oszacowań
+i wyboru.
+
+:::: {.callout-note collapse="true"}
+## Dowód nierówności wyboru
+Wymagane są liniowość wartości oczekiwanej i własność średniej ważonej.
+
+::: {.proof}
+Dla każdego $l$ zachodzi $\min_j \widehat\Risk_j \le \widehat\Risk_l$.
+Biorąc wartość oczekiwaną, dostajemy
+$\E[\min_j \widehat\Risk_j] \le \Risk_l$ dla każdego $l$, a więc także dla
+tego, przy którym $\Risk_l$ jest najmniejsze. Zmienna
+$\Risk_{\widehat\jmath}$ zależy od danych tylko przez indeks
+$\widehat\jmath$, więc
+$$
+\E\big[\Risk_{\widehat\jmath}\big] = \sum_{j=1}^{M} \Risk_j \, P(\widehat\jmath = j) .
+$$
+Jest to średnia ważona ryzyk $\Risk_1, \dots, \Risk_M$, a średnia ważona
+nie jest mniejsza od najmniejszego ze składników. Stąd druga
+nierówność. $\square$
+:::
+
+::::
+
+Twierdzenie zakłada ustalone ryzyka kandydatów i nieobciążone
+oszacowania. W CV kandydatów uczymy na mniejszych próbach, co przy
+opadającej krzywej uczenia zawyża ich oszacowania; ten pesymizm
+i optymizm wyboru działają w przeciwne strony, więc łączny błąd minimum
+CV nie musi mieć jednego znaku.
+
+### Wybór przez CV i osobny test
+
+Najprostsze rozwiązanie polega na odłożeniu testu **przed wyborem**.
+Na pozostałych danych przeprowadzamy CV, wybieramy $k$, po czym
+**dopasowujemy wybrany potok ponownie do wszystkich danych przeznaczonych
+do uczenia**. Dopiero ten predyktor raz oceniamy na odłożonym teście.
+
+| Etap | Użyte dane | Co robimy |
+|---|---|---|
+| wybór | dane uczące dzielone w CV | porównujemy wartości $k$ |
+| ponowne dopasowanie | całe dane uczące | wyznaczamy standaryzację i dopasowujemy wybrane $k$ |
+| końcowa ocena | odłożony test | liczymy średnią stratę gotowego predyktora |
+
+Modele z części CV były pomocnicze: każdy widział tylko fragment danych
+uczących. Ponowne dopasowanie pozwala wykorzystać je wszystkie.
+Parametry standaryzacji też ustalamy od nowa, bez testu. W tym wariancie
+niezależny test wystarcza do końcowej oceny; wyniku testowego nie używamy
+już do poprawiania procedury.
+
+### Zagnieżdżenie krok po kroku
+
+Jeśli nie chcemy opierać oceny na jednym stałym podziale, możemy
+powtórzyć całe powyższe rozwiązanie, za każdym razem odkładając inną
+część do oceny. To **zagnieżdżona walidacja krzyżowa** [@varma2006].
+Zewnętrzny podział służy ocenie, wewnętrzny -- wyborowi.
+
+Mamy $200$ obserwacji, pięć części zewnętrznych i cztery wewnętrzne.
+Jeden krok wygląda tak:
+
+1. Odkładamy $40$ obserwacji do oceny. Na razie ich nie używamy.
+2. Pozostałe $160$ dzielimy na cztery części po $40$. Dla każdego
+   $k\in\{3,9,21\}$ wykonujemy cztery dopasowania na $120$ obserwacjach
+   i oceny na $40$.
+3. Wybieramy $k$ według średniej strat ze $160$ wewnętrznych predykcji.
+4. Wybraną wersję potoku dopasowujemy od nowa na wszystkich $160$
+   obserwacjach. Obejmuje to także ponowne wyznaczenie standaryzacji.
+5. Liczymy błąd na $40$ obserwacjach odłożonych w punkcie 1.
+6. Powtarzamy cały proces dla każdej części zewnętrznej.
+
+Całe przygotowanie danych powtarzamy **wewnątrz odpowiednich podziałów**.
+Wyniki zewnętrzne nie służą do zmieniania listy kandydatów, cech ani
+reguły wyboru; taka zmiana ponownie użyłaby danych oceniających do wyboru.
 
 ```{python}
 #| label: fig-zagniezdzona-schemat
-#| fig-cap: "Jeden krok zagnieżdżonej walidacji krzyżowej ($K = L = 5$). Górny pasek: części zewnętrzne; część $F_k$ (czerwona) jest odłożona do oceny. Dolny pasek: pozostałe dane $\\mathcal{D}^{(-k)}$ podzielone na części wewnętrzne; każda z nich kolejno (pomarańczowa) służy do walidacji kandydatów uczonych na pozostałych. Wybrany kandydat $\\widehat\\jmath$ jest dopasowywany do całego $\\mathcal{D}^{(-k)}$ i oceniany na $F_k$. Krok powtarzamy dla $k = 1, \\dots, K$."
+#| fig-cap: "Jeden z pięciu kroków zewnętrznych dla 200 obserwacji. Odkładamy 40 do oceny, a na 160 wykonujemy czterokrotną CV. Każdy kandydat jest cztery razy uczony na 120 i oceniany na 40 obserwacjach. Po wyborze dopasowujemy cały potok na 160 i oceniamy na odłożonych 40."
 
 from matplotlib.patches import Rectangle, FancyArrowPatch
 
-K, L = 5, 5
+fig, ax = plt.subplots(figsize=(10, 4.8))
 niebieski, czerwony, pomaranczowy = "#1B6CA8", "#D7263D", "#F28E2B"
 
-fig, ax = plt.subplots(figsize=(8, 2.9))
-
-def pasek(x0, y0, szer, wys, kolory, napisy):
-    """Rysuje pasek podzielony na równe części o podanych kolorach i napisach."""
+def pasek(x0, y0, szer, kolory, napisy):
     w = szer / len(kolory)
-    for i, (kol, nap) in enumerate(zip(kolory, napisy)):
-        ax.add_patch(Rectangle((x0 + i * w, y0), w, wys, facecolor=kol,
-                               edgecolor="white", lw=2))
-        ax.text(x0 + (i + 0.5) * w, y0 + wys / 2, nap, ha="center",
-                va="center", color="white", fontsize=11)
+    for i, (kol, napis) in enumerate(zip(kolory, napisy)):
+        ax.add_patch(Rectangle((x0 + i * w, y0), w, 0.65,
+                               facecolor=kol, edgecolor="white", lw=2))
+        ax.text(x0 + (i + 0.5) * w, y0 + 0.325, napis,
+                ha="center", va="center", color="white", fontsize=10)
 
-# Części zewnętrzne: F_k (tu ostatnia) odłożona do oceny.
-y_zew, y_wew, wys = 2.6, 0.6, 0.7
-pasek(0, y_zew, 10, wys, [niebieski] * (K - 1) + [czerwony],
-      [""] * (K - 1) + [r"$F_k$"])
-ax.text(4, y_zew + wys + 0.15, r"$\mathcal{D}^{(-k)}$", ha="center",
-        va="bottom", fontsize=12)
-ax.text(-0.2, y_zew + wys / 2, "części\nzewnętrzne", ha="right",
-        va="center", fontsize=10)
-
-# Części wewnętrzne: D^(-k) rozpięte na całą szerokość.
-kolory_wew = [niebieski] * L
-kolory_wew[1] = pomaranczowy
-pasek(0, y_wew, 8, wys, kolory_wew, [""] * L)
-ax.text(-0.2, y_wew + wys / 2, "części\nwewnętrzne", ha="right",
-        va="center", fontsize=10)
-for x_gora, x_dol in [(0, 0), (8, 8)]:
-    ax.plot([x_gora, x_dol], [y_zew, y_wew + wys], ":", color="0.5", lw=1)
-
-ax.text(4, y_wew - 0.15,
-        "walidacja krzyżowa każdego kandydata na $\\mathcal{D}^{(-k)}$"
-        " $\\rightarrow$ wybór $\\widehat\\jmath$",
-        ha="center", va="top", fontsize=10)
-
-# Wybrany kandydat dopasowany do D^(-k) i oceniony na F_k.
-ax.add_patch(FancyArrowPatch((8.3, y_wew + wys / 2), (9, y_zew - 0.05),
-                             connectionstyle="arc3,rad=0.35",
-                             arrowstyle="-|>", mutation_scale=15,
-                             color="0.25", lw=1.3))
-ax.text(9.3, (y_wew + y_zew) / 2 + 0.35,
-        "dopasowanie $\\widehat\\jmath$\ndo $\\mathcal{D}^{(-k)}$,\nocena na $F_k$",
-        ha="left", va="center", fontsize=10)
-
-ax.set_xlim(-1.9, 11.6)
-ax.set_ylim(-0.1, 3.6)
-ax.set_aspect("equal")
+ax.text(0, 4.5, "1. Podziel 200 obserwacji: odłóż 40, wybieraj na 160", fontsize=11)
+pasek(0, 3.6, 10, [niebieski] * 4 + [czerwony],
+      ["40", "40", "40", "40", "40: test"])
+ax.text(0, 3.05, "2. Na 160: ucz na 120, oceniaj na 40; zmień część cztery razy", fontsize=11)
+pasek(0, 2.15, 8, [niebieski, pomaranczowy, niebieski, niebieski],
+      ["40: ucz", "40: waliduj", "40: ucz", "40: ucz"])
+ax.text(0, 1.65, "3. Wybierz k według średniej strat wewnętrznych", fontsize=11)
+ax.text(0, 0.95, "4. Dopasuj cały wybrany potok na 160", fontsize=11)
+ax.text(0, 0.25, "5. Oceń na odłożonych 40", fontsize=11)
+ax.add_patch(FancyArrowPatch((9, 3.55), (6.6, 0.3),
+                             connectionstyle="arc3,rad=-0.2",
+                             arrowstyle="-|>", mutation_scale=16,
+                             color=czerwony, lw=1.5))
+ax.set_xlim(-0.2, 10.3)
+ax.set_ylim(-0.1, 4.9)
 ax.axis("off")
 plt.tight_layout()
 plt.show()
 ```
+
+### Co uśredniamy i jaki model zostaje
+
+Przypuśćmy, że otrzymaliśmy poniższe wyniki. To tabela dydaktyczna,
+nie wynik wykonanej symulacji.
+
+| Część zewnętrzna | Wybrane $k$ | Liczność testu | Liczba błędów |
+|---|---:|---:|---:|
+| 1 | 9 | 40 | 4 |
+| 2 | 21 | 40 | 5 |
+| 3 | 9 | 40 | 3 |
+| 4 | 3 | 40 | 6 |
+| 5 | 21 | 40 | 2 |
+
+Wynik oceny wynosi $(4+5+3+6+2)/200=10\%$. Uśredniamy **straty na
+zewnętrznych częściach**. Nie wybieramy części z najmniejszym błędem,
+nie uśredniamy wybranych $k$ i nie głosujemy nad nimi. Różne $k$ są
+dopuszczalne, bo badamy regułę „wybierz $k$ i dopasuj model”.
+
+Po zakończeniu oceny uruchamiamy **tę samą regułę na wszystkich $200$
+obserwacjach**: wybieramy $k$ czterokrotną CV i dopasowujemy wybrany
+potok do całych danych. Dopiero to daje model do dalszego używania.
+Ocena zewnętrzna opisuje procedurę uczoną na $160$ obserwacjach;
+nie jest niezależnym pomiarem ryzyka konkretnego końcowego dopasowania
+na $200$. Jako ocenę modelu końcowego podajemy więc $10\%$ z opisem,
+że jest to ocena procedury, którą ten model zbudowano. Gdy krzywa
+uczenia jeszcze opada, wynik ten jest zwykle lekko pesymistyczny, bo
+w krokach zewnętrznych procedura miała $160$ obserwacji zamiast $200$.
+Te role danych warto przećwiczyć w @exr-zagniezdzona-krok-po-kroku.
+
+Przy dużej liczbie danych prościej odłożyć test na początku, jak
+w wariancie z osobnym testem; ocenia on konkretny model, którego potem
+używamy. Przy $200$ obserwacjach taki test liczyłby kilkadziesiąt
+przypadków: dla $40$ obserwacji i błędu rzędu $10\%$ błąd standardowy
+wynosi około $0{,}05$ (sekcja [-@sec-zbior-testowy]), a zagnieżdżenie
+wykorzystuje do oceny każdą obserwację.
+
+::: {.callout-note collapse="true"}
+## Formalny zapis zagnieżdżonej walidacji krzyżowej
+Wymagane są zapis funkcji złożonej i indeksowanie części próby.
+Niech $\mathcal W(\mathcal D')$ oznacza wykonanie na danych
+$\mathcal D'$ całej reguły: wybór kandydata wewnętrzną CV, a następnie
+ponowne dopasowanie do całego $\mathcal D'$. Wynikiem $\mathcal W$ jest
+predyktor. Dla części zewnętrznych $F_1,\dots,F_K$ niech
+$\mathcal D^{(-r)}$ oznacza dane poza $F_r$. Wtedy
+$$
+\mathrm{CV}^{\mathrm{zagn}}_K=
+\frac1n\sum_{r=1}^K\sum_{i\in F_r}
+\Loss\big(y_i,\mathcal W(\mathcal D^{(-r)})(\x_i)\big).
+$$
+Najpierw $\mathcal W$ tworzy predyktor bez części $F_r$, następnie
+predyktor podaje wynik dla $\x_i$, a strata porównuje go z $y_i$.
+To zwykły wzór CV zastosowany do całej procedury wyboru i dopasowania.
+:::
+
+### Jak duży może być efekt wyboru
 
 Rysunek [-@fig-klatwa-zwyciezcy] pokazuje skalę zjawiska na danych bez
 żadnej informacji. Mamy $n = 100$ obserwacji z $p = 10$ cechami
@@ -968,81 +960,301 @@ niż byłby dla niezależnych oszacowań (@exr-minimum-oszacowan), bo
 kandydaci o podobnych $k$ albo wspólnych cechach mają silnie
 skorelowane wyniki.
 
-W tym przykładzie wybór jest bezwartościowy, bo kandydaci są równi.
-Gdy jeden z nich jest wyraźnie lepszy, optymizm wyboru jest mniejszy,
-ale zawsze ma ten sam kierunek. @cawley2010 pokazali, że przy wielu
-hiperparametrach i małych próbach przekracza on różnice między
-porównywanymi metodami, więc porównanie metod na podstawie
-najmniejszych wyników walidacji krzyżowej może wskazać złego zwycięzcę.
+Ten efekt nazywamy **klątwą zwycięzcy**: najmniejszy wynik zawiera
+korzystny błąd oszacowania. Optymizm rośnie z liczbą kandydatów, bo
+więcej jest okazji, by któryś dostał wyjątkowo korzystny błąd, oraz
+z rozrzutem oszacowań, na przykład przy małym zbiorze walidacyjnym,
+bo wtedy same błędy są większe. Maleje, gdy jeden kandydat ma wyraźnie
+mniejsze ryzyko od pozostałych: wygrywa wtedy niemal zawsze, także
+z niekorzystnym błędem oszacowania, więc wynik zwycięzcy mało zależy
+od szczęścia. W tym eksperymencie kandydaci są równi, więc wybór
+niczego nie poprawia, a każdy kolejny kandydat tylko obniża raportowane
+minimum.
 
-Zostaje pytanie, który model ostatecznie oddajemy do użytku. Zagnieżdżona
-walidacja krzyżowa ocenia procedurę, a nie jeden model, więc po jej
-zakończeniu procedurę wyboru przeprowadza się jeszcze raz, na wszystkich
-danych, i wybranego kandydata dopasowuje do całej próby. Ocena
-z zagnieżdżonej walidacji odnosi się do tego modelu w takim sensie,
-w jakim walidacja krzyżowa odnosi się do każdego modelu: jest
-oszacowaniem ryzyka oczekiwanego procedury, nieco pesymistycznym, bo
-liczonym dla mniejszych prób. Alternatywą, prostszą i często lepszą, gdy
-danych jest dużo, jest odłożenie na samym początku zbioru testowego,
-na który nie patrzy się aż do końca. Ten zbiór ocenia wtedy konkretny,
-ostatecznie wybrany model.
+@cawley2010 pokazali, że przy wielu hiperparametrach i małych próbach
+zniekształcenie oceny przez wybór może być porównywalne z różnicami
+między metodami. Dlatego porównując metody, z których każdą stroimy
+osobno, nie zestawiamy ich najmniejszych wyników walidacji krzyżowej:
+metoda z większą liczbą hiperparametrów albo gęstszą siatką ma więcej
+kandydatów i dostaje większą premię za wybór. Każdą metodę razem z jej
+strojeniem oceniamy niezależnie, na osobnym zbiorze testowym albo
+zagnieżdżoną walidacją krzyżową.
+
+Zagnieżdżenie usuwa wykorzystanie części oceniającej do wyboru,
+ale nie niepewność małej próby: wykres pokazuje średnie z $200$ prób,
+a pojedyncze badanie może dać wynik daleki od $1/2$.
 
 ## Strojenie hiperparametrów {#sec-strojenie}
 
-Wybór hiperparametrów na podstawie walidacji krzyżowej to
-**strojenie** (ang. *hyperparameter tuning*). Gdy hiperparametr jest
-jeden, jak $k$ w metodzie $k$-NN, wystarczy policzyć wynik dla każdej
-rozsądnej wartości. Gdy jest ich kilka, liczba kombinacji rośnie
-wykładniczo i trzeba wybrać, które sprawdzić.
+**Hiperparametr** to ustawienie metody wybierane przed jej dopasowaniem,
+na przykład liczba sąsiadów $k$ albo stopień wielomianu. Wybór takich
+ustawień na podstawie walidacji to **strojenie**. Przy jednym ustawieniu
+wystarcza zwykle krótka lista kandydatów. Przy kilku liczba kombinacji
+szybko rośnie.
 
-**Przeszukiwanie siatki** (ang. *grid search*) sprawdza wszystkie
-kombinacje z ustalonych list wartości. Jest proste i łatwe do
-zrównoleglenia, ale marnotrawne, gdy hiperparametry są nierówno ważne.
-@bergstra2012 zwrócili uwagę, że tak bywa zwykle: ryzyko zależy silnie
-od jednego lub dwóch hiperparametrów, a od reszty słabo. Siatka $3 \times 3$
-w dwóch wymiarach sprawdza dziewięć kombinacji, ale tylko trzy różne
-wartości każdego hiperparametru z osobna. Jeśli ważny jest tylko jeden,
-osiem z dziewięciu dopasowań niewiele wnosi. **Przeszukiwanie losowe**
-(ang. *random search*) losuje dziewięć punktów z tego samego obszaru, więc
-sprawdza dziewięć różnych wartości ważnego hiperparametru. Przy tej samej
-liczbie dopasowań przeszukiwanie losowe znajduje zwykle konfiguracje nie
-gorsze niż siatka, a w wielu wymiarach -- wyraźnie lepsze.
+**Przeszukiwanie siatki** sprawdza wszystkie kombinacje z ustalonych
+list. **Przeszukiwanie losowe** losuje konfiguracje z wcześniej
+określonych zakresów. Różnicę pokazuje prosty schemat dla dwóch
+parametrów, z których pierwszy silniej wpływa na wynik [@bergstra2012].
 
-Obie metody nie korzystają z wyników dotychczasowych prób. Metody
-**sekwencyjne** budują przybliżony model zależności wyniku walidacji od
-hiperparametrów i kolejne punkty wybierają tam, gdzie ten model
-przewiduje dobry wynik albo jest najbardziej niepewny. Należą do nich
-optymalizacja bayesowska i metoda TPE (ang. *tree-structured Parzen
-estimator*), stosowana domyślnie w bibliotece Optuna. Przy kosztownych
-modelach pozwalają one dodatkowo przerywać w trakcie uczenia próby,
-które od początku wypadają słabo.
+| Sposób | Dziewięć sprawdzanych konfiguracji | Wartości pierwszego parametru |
+|---|---|---|
+| siatka $3\times3$ | każdy z trzech poziomów łączymy z trzema poziomami drugiego parametru | 3 różne, każda sprawdzona 3 razy |
+| losowanie z ciągłych zakresów | dziewięć niezależnie wylosowanych par | zwykle 9 różnych |
 
-Każda z tych metod jest procedurą wyboru spośród kandydatów, więc
-podlega twierdzeniu [-@thm-optymizm-wyboru]. Im więcej konfiguracji
-sprawdzimy i im skuteczniej szukamy minimum, tym bardziej najlepszy
-znaleziony wynik walidacji krzyżowej jest optymistyczny. Można dopasować
-się do szumu w walidacji tak samo, jak model dopasowuje się do szumu
-w danych uczących. Wynik strojenia nie jest więc oceną modelu. Ocenę daje
-zagnieżdżona walidacja krzyżowa albo zbiór testowy, który w strojeniu
-nie uczestniczył.
+Losowanie pozwala szerzej zbadać ważny parametr przy tym samym budżecie.
+Koszt strojenia to
+liczba kandydatów pomnożona przez liczbę części CV; w zagnieżdżeniu
+wykonujemy ten wybór od nowa w każdym kroku zewnętrznym.
+
+Metody **sekwencyjne** wykorzystują wyniki już sprawdzonych konfiguracji,
+aby zdecydować, co sprawdzić dalej. Pozwalają oszczędzać kosztowne
+dopasowania, lecz nadal korzystają z tych samych danych walidacyjnych.
+
+Skuteczniejsze szukanie może silniej dopasować wybór do szumu
+w walidacji; działa tu mechanizm optymizmu z sekcji
+[-@sec-selekcja-ocena]. Dlatego budżet szukania i regułę wyboru
+traktujemy jako części procedury, a jej ocenę przeprowadzamy na osobnym
+teście albo zewnętrzną CV.
+
+## Ocena modeli w praktyce {#sec-ocena-praktyka}
+
+Wróćmy do danych o nowotworach piersi z sekcji [-@sec-knn-praktyka].
+Tam przyjęliśmy $k=10$ arbitralnie. Teraz ustalamy listę kandydatów,
+regułę wyboru minimum błędu i podziały, oceniamy całą procedurę,
+a na końcu tworzymy model do używania.
+
+### Przygotowanie potoku
+
+Standaryzacja należy do potoku, więc w każdym dopasowaniu wykorzysta
+tylko dostępne w nim dane uczące. Wewnętrzna CV ma cztery części,
+zewnętrzna -- pięć, tak jak w przykładzie z poprzedniej sekcji.
+
+```{python}
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import GridSearchCV, StratifiedKFold, cross_validate
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+
+X, y = load_breast_cancer(return_X_y=True)
+potok = make_pipeline(StandardScaler(), KNeighborsClassifier())
+siatka_k = {"kneighborsclassifier__n_neighbors": [1, 3, 5, 7, 9, 11, 15, 21, 31, 51]}
+wewnetrzna = StratifiedKFold(n_splits=4, shuffle=True, random_state=0)
+zewnetrzna = StratifiedKFold(n_splits=5, shuffle=True, random_state=1)
+
+strojenie = GridSearchCV(potok, siatka_k, cv=wewnetrzna)
+```
+
+### Ocena procedury wyboru
+
+`cross_validate` dopasuje od nowa całe `strojenie` wewnątrz każdej
+części zewnętrznej. `GridSearchCV` domyślnie ponownie dopasowuje
+zwycięski potok do wszystkich danych dostępnych w danym kroku.
+Zwracany wynik dotyczy zewnętrznych obserwacji, które nie brały udziału
+w tym wyborze.
+
+```{python}
+zagn = cross_validate(strojenie, X, y, cv=zewnetrzna, return_estimator=True)
+blad_zewnetrzny = 1 - zagn["test_score"].mean()
+print(f"Błąd procedury wyboru minimum: {blad_zewnetrzny:.4f}")
+print(f"Naiwny błąd standardowy: "
+      f"{np.sqrt(blad_zewnetrzny * (1 - blad_zewnetrzny) / len(y)):.4f}")
+print("k wybrane w częściach zewnętrznych:",
+      [e.best_params_["kneighborsclassifier__n_neighbors"] for e in zagn["estimator"]])
+```
+
+Pierwsza liczba odpowiada na pytanie o częstość pomyłek **procedury
+wybierającej minimum**, gdy dostaje około $80\%$ naszej próby:
+$0{,}0316$, czyli $18$ pomyłek na $569$ obserwacjach. Naiwny błąd
+standardowy, liczony jak w podsekcji o błędzie standardowym walidacji
+krzyżowej, wynosi $0{,}0073$, więc przybliżony przedział $95\%$ to
+około $\pm 1{,}4$ punktu procentowego, od $1{,}7\%$ do $4{,}6\%$.
+Lista wybranych $k$ pokazuje wrażliwość wyboru na dane.
+Części różnią się licznością najwyżej o jedną obserwację, więc średnia
+ich odsetków pomyłek praktycznie pokrywa się ze średnią po obserwacjach
+z definicji ([-@eq-cv]).
+
+### Końcowy wybór i dopasowanie
+
+Po ocenie uruchamiamy tę samą procedurę na wszystkich danych.
+
+```{python}
+strojenie.fit(X, y)
+model_koncowy = strojenie.best_estimator_
+bledy = 1 - strojenie.cv_results_["mean_test_score"]
+print("  k   błąd CV na wszystkich danych")
+for k, b in zip(siatka_k["kneighborsclassifier__n_neighbors"], bledy):
+    print(f"{k:3d}   {b:.4f}")
+print("Końcowe k:", strojenie.best_params_["kneighborsclassifier__n_neighbors"])
+```
+
+Krzywa jest płaska: $k$ od $3$ do $15$ daje wyniki od $3{,}3\%$
+do $3{,}9\%$, czyli od $19$ do $22$ pomyłek. Różnice wynoszą $1$--$3$
+pomyłki, więc rozstrzyga je przewaga kilku obserwacji spornych, a przy
+tak małej liczbie sporów o zwycięzcy w dużej mierze decyduje przypadek
+(sekcja [-@sec-zbior-testowy]).
+Dlatego w częściach zewnętrznych wygrywały różne wartości: $7, 11, 5,
+7, 3$. Wszystkie leżą jednak na płaskim dnie krzywej, więc niestabilny
+jest wybór konkretnego $k$, a jakość wybranego modelu zmienia się
+niewiele.
+
+Tabela służy końcowemu **wyborowi**, a `model_koncowy` jest potokiem
+już dopasowanym do całej próby. Najmniejsza liczba z tabeli nie jest
+nową niezależną oceną. Tutaj jest nawet nieco większa od wyniku
+zewnętrznego: $0{,}0334$ wobec $0{,}0316$. Obie liczby pochodzą
+z różnych podziałów i różnią się o jedną pomyłkę, znacznie mniej niż
+błąd standardowy, więc ich porównanie nie mierzy optymizmu wyboru.
+
+### Osobny wariant: reguła jednego błędu standardowego
+
+Na tej samej tabeli można zilustrować inną regułę wyboru. Błąd
+standardowy przy minimalnym wyniku $b$ liczymy jak w podsekcji o błędzie
+standardowym walidacji krzyżowej: $\sqrt{b(1-b)/n}$, gdzie $n$ to
+liczba wszystkich obserwacji.
+
+```{python}
+b_min = bledy.min()
+prog = b_min + np.sqrt(b_min * (1 - b_min) / len(y))
+k_1se = max(k for k, b in zip(siatka_k["kneighborsclassifier__n_neighbors"], bledy)
+            if b <= prog)
+print(f"Próg reguły 1 SE: {prog:.4f}; wybrane k: {k_1se}")
+```
+
+Pod progiem $0{,}0409$ mieści się jeszcze $k=15$ z wynikiem $0{,}0387$,
+czyli model gładszy od $k=7$ przy ocenie gorszej o trzy pomyłki
+na $569$ obserwacji.
+Ocena zewnętrzna z poprzedniej podsekcji dotyczy wyboru minimum; aby
+ocenić regułę jednego błędu standardowego, powtarzamy zagnieżdżoną
+walidację, stosując tę regułę wewnątrz każdego kroku zewnętrznego.
+
+## Krzywe uczenia z danych {#sec-krzywe-uczenia-cv}
+
+W sekcji [-@sec-krzywe-uczenia] krzywe uczenia rysowaliśmy, znając
+ryzyko. Z danych szacuje się je tak samo jak każde ryzyko: walidacją
+krzyżową. Dla każdej części $F_r$ i każdej liczności $m$ mniejszej niż
+liczność zbioru uczącego losujemy z danych spoza $F_r$ podpróbę
+liczności $m$, dopasowujemy do niej model i liczymy jego błąd na $F_r$
+oraz na samej podpróbie. Losowanie podpróby powtarzamy kilkakrotnie
+i uśredniamy. W bibliotece scikit-learn robi to funkcja
+`learning_curve`. Rysunek [-@fig-krzywa-uczenia-cv] porównuje tak
+oszacowane krzywe z prawdziwymi dla wielomianów stopnia $1$ i $9$ z rysunku
+[-@fig-krzywe-uczenia], przy jednej próbie liczności $N = 1000$.
+
+```{python}
+#| label: fig-krzywa-uczenia-cv
+#| fig-cap: "Krzywe uczenia regresji wielomianowej stopnia $d = 1$ (po lewej) i $d = 9$ (po prawej) oszacowane z jednej próby liczności $N = 1000$ pięciokrotną walidacją krzyżową, z 20 podpróbami dla każdej części i liczności (punkty), na tle prawdziwych krzywych z 300 prób z populacji (linie). Linia kropkowana: błąd nieredukowalny $\\sigma^2$. Obie osie w skali logarytmicznej."
+
+rng = np.random.default_rng(9)
+N_lc, K_lc, podproby = 1000, 5, 20
+licznosci = np.array([40, 60, 100, 200, 400, 800])
+x, y = probka(N_lc, rng)
+czesci = np.array_split(rng.permutation(N_lc), K_lc)
+
+fig, osie = plt.subplots(1, 2, figsize=(11, 4.0), sharey=True)
+for ax, d in zip(osie, [1, 9]):
+    uczacy_cv = np.zeros(len(licznosci))
+    walid_cv = np.zeros(len(licznosci))
+    for czesc in czesci:
+        reszta = np.setdiff1d(np.arange(N_lc), czesc)
+        for _ in range(podproby):
+            for i, m in enumerate(licznosci):
+                podproba = rng.choice(reszta, m, replace=False)
+                wielomian = Polynomial.fit(x[podproba], y[podproba], d)
+                uczacy_cv[i] += np.mean((wielomian(x[podproba]) - y[podproba]) ** 2)
+                walid_cv[i] += np.mean((wielomian(x[czesc]) - y[czesc]) ** 2)
+    uczacy_cv /= K_lc * podproby
+    walid_cv /= K_lc * podproby
+
+    ryzyko_prawdziwe = np.zeros(len(licznosci))
+    uczacy_prawdziwy = np.zeros(len(licznosci))
+    for i, m in enumerate(licznosci):
+        for _ in range(300):
+            xs, ys = probka(m, rng)
+            wielomian = Polynomial.fit(xs, ys, d)
+            ryzyko_prawdziwe[i] += ryzyko(wielomian) / 300
+            uczacy_prawdziwy[i] += np.mean((wielomian(xs) - ys) ** 2) / 300
+
+    ax.plot(licznosci, ryzyko_prawdziwe, "-", color="#1B6CA8", lw=1.5,
+            label="ryzyko")
+    ax.plot(licznosci, walid_cv, "o", color="#1B6CA8",
+            label="ryzyko: walidacja krzyżowa")
+    ax.plot(licznosci, uczacy_prawdziwy, "-", color="0.45", lw=1.5,
+            label="błąd uczący")
+    ax.plot(licznosci, uczacy_cv, "o", color="0.45",
+            label="błąd uczący: z podprób")
+    ax.axhline(sigma ** 2, color="#D7263D", ls=":", lw=1.5)
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    ax.set_xticks(licznosci, [str(m) for m in licznosci])
+    ax.xaxis.set_minor_locator(plt.NullLocator())
+    ax.set_title(f"$d = {d}$")
+    ax.set_xlabel("liczność próby uczącej $m$")
+    print(f"d = {d}: walidacja krzyżowa", np.round(walid_cv, 3))
+    print(f"        prawdziwe ryzyko   ", np.round(ryzyko_prawdziwe, 3))
+osie[0].set_ylabel("średni kwadrat błędu")
+osie[1].legend(frameon=False, fontsize=8)
+plt.tight_layout()
+plt.show()
+```
+
+Oszacowane krzywe odtwarzają obraz z sekcji [-@sec-krzywe-uczenia]:
+dla prostej szczelina między krzywymi jest wąska, a obie leżą wysoko nad
+$\sigma^2$; dla wielomianu stopnia $9$ szczelina jest szeroka przy małych
+licznościach i zamyka się, gdy danych przybywa. W symulacji znamy
+$\sigma^2$, więc wiemy, że prosta pozostawia dużą część błędu możliwą
+do usunięcia przez zmianę metody. W rzeczywistych danych tego poziomu
+zwykle nie znamy, więc płaskie krzywe nie mówią, czy ogranicza nas szum,
+czy klasa modeli; pomaga wtedy porównanie klas i rozważenie nowych cech
+(sekcja [-@sec-krzywe-uczenia]).
+Największa rozbieżność występuje dla $d = 9$ przy najmniejszej liczności.
+Ryzyko oczekiwane jest tam średnią zdominowaną przez nieliczne próby,
+w których wielomian wysokiego stopnia „ucieka” przy krańcu przedziału.
+Sto dopasowań z podprób jednej próby takie rzadkie zdarzenia łapie
+nieregularnie, więc w tym punkcie oszacowanie jest niedokładne.
+
+Krzywa uczenia oszacowana z danych kończy się na liczności zbioru
+uczącego w walidacji krzyżowej, czyli $N(K-1)/K$. Czy dodanie danych
+pomoże, ocenia się więc, ekstrapolując jej przebieg poza zakres obserwacji.
+Jeśli krzywa ryzyka przy największych licznościach nadal wyraźnie
+opada, więcej danych prawdopodobnie pomoże; jeśli jest już płaska,
+można oczekiwać niewielkiej korzyści z podobnych danych, choć poza
+obserwowanym zakresem krzywa może zmienić przebieg.
 
 ## Bootstrap {#sec-bootstrap}
 
-Dotąd szacowaliśmy ryzyko. Równie często potrzebujemy niepewności innej
-wielkości obliczonej z próby: współczynnika modelu, predykcji w danym
-punkcie, pola pod krzywą, a nawet samego oszacowania ryzyka. Gdybyśmy
-znali rozkład $P$, sprawa byłaby prosta. Wylosowalibyśmy z niego wiele
-prób, w każdej policzyli interesującą nas wielkość i zobaczyli jej
-rozrzut -- tak jak w rozdziale [-@sec-bias-wariancja] oglądaliśmy rozrzut
-dopasowanych wielomianów na rysunku [-@fig-wachlarz]. Rozkładu $P$ nie
-znamy, mamy tylko próbę.
+Poza ryzykiem często potrzebujemy niepewności innych wielkości
+obliczonych z próby: współczynnika modelu, predykcji w danym punkcie,
+a także samego oszacowania błędu. Gdybyśmy znali rozkład $P$,
+losowalibyśmy z niego nowe próby i oglądali rozrzut tej wielkości, jak
+rozrzut dopasowanych wielomianów na rysunku [-@fig-wachlarz]
+w rozdziale [-@sec-bias-wariancja].
 
-**Bootstrap** [@efron1979] zastępuje nieznany rozkład $P$ jego najlepszym
-przybliżeniem, jakim dysponujemy: **rozkładem empirycznym**
+Weźmy najprostszy przypadek: pięć pomiarów $2,4,4,6,9$ o średniej $5$.
+Chcemy oszacować, jak zmieniałaby się średnia, gdybyśmy ponownie
+zbierali po pięć pomiarów. Nie znamy jednak populacji. Możemy spróbować
+ją przybliżyć, wielokrotnie losując **ze zwracaniem** z posiadanej próby.
+Każde losowanie wybiera jeden z pięciu zapisów; oba zapisy wartości $4$
+są osobnymi obserwacjami. Oto trzy przykładowe replikacje:
+
+| Próba ze zwracaniem | Średnia |
+|---|---:|
+| $2,2,4,6,6$ | 4,0 |
+| $4,4,6,9,9$ | 6,4 |
+| $2,4,4,6,9$ | 5,0 |
+
+Średnie są różne, choć żadna replikacja nie zawiera nowej informacji
+z populacji. Rozrzut średnich z wielu takich replikacji wykorzystamy
+jako przybliżenie niepewności średniej z naszej próby. Trzy wypisane
+próby tylko ilustrują pomysł; do obliczeń używamy znacznie większej
+liczby replikacji.
+
+**Bootstrap** [@efron1979] zastępuje nieznany rozkład $P$ przybliżeniem z danych: **rozkładem empirycznym**
 $\widehat P_n$, który każdej z $n$ obserwacji próby przypisuje
 prawdopodobieństwo $1/n$. Losowanie $n$ obserwacji z $\widehat P_n$ to
 losowanie $n$ obserwacji z próby **ze zwracaniem**. Taką **próbę
-bootstrapową** $\mathcal{D}^*$ traktujemy jak nową próbę z populacji.
+bootstrapową** $\mathcal{D}^*$ wykorzystujemy do naśladowania
+ponownego zbierania danych; nie jest ona nową próbą z populacji.
 
 ::: {.callout-note}
 ## Błąd standardowy metodą bootstrap
@@ -1053,17 +1265,37 @@ Niech $\widehat\theta = s(\mathcal{D})$ będzie wielkością obliczoną z próby
    $\widehat\theta^*_b = s(\mathcal{D}^*_b)$.
 2. Oszacowaniem błędu standardowego $\widehat\theta$ jest odchylenie
    standardowe liczb $\widehat\theta^*_1, \dots, \widehat\theta^*_B$.
-3. Przedziałem ufności na poziomie $95\%$ jest przedział między
-   kwantylami rzędu $0{,}025$ i $0{,}975$ tych liczb (**przedział
-   percentylowy**).
+3. Kwantyle rzędu $0{,}025$ i $0{,}975$ tych liczb wyznaczają
+   **przedział percentylowy**, używany jako przybliżony przedział
+   ufności na poziomie $95\%$.
 :::
+
+Dla pięciu pomiarów z początku sekcji granicę przy $B \to \infty$
+można obliczyć dokładnie. Średnia $n$ niezależnych losowań
+z $\widehat P_n$ ma wariancję $\widehat\sigma^2/n$, gdzie
+$\widehat\sigma^2 = 28/5 = 5{,}6$ to wariancja próby z dzieleniem
+przez $n$, więc odchylenie standardowe średnich bootstrapowych dąży do
+$\sqrt{5{,}6/5} \approx 1{,}06$. Klasyczny wzór $s/\sqrt n$ z $s^2 = 28/4 = 7$
+daje $\sqrt{7/5} \approx 1{,}18$. Bootstrap odtwarza więc znany błąd
+standardowy średniej, z dzieleniem przez $n$ zamiast $n-1$; przy
+większym $n$ różnica zanika. Jego wartość polega na tym, że ten sam
+przepis działa dla wielkości, dla których wzoru nie mamy, np. dla
+predykcji wielomianu na rysunku [-@fig-bootstrap].
+
+Ten prosty bootstrap zakłada niezależne obserwacje z tego samego
+rozkładu; przy zależnościach czasowych lub grupach potrzebny jest inny
+schemat losowania. Przy małych próbach, estymatorach nieregularnych albo
+dużym obciążeniu pokrycie przedziału percentylowego może mocno odbiegać
+od $95\%$ [@efron1993].
 
 Metoda zawiera dwa przybliżenia. Pierwsze, statystyczne, to zastąpienie
 $P$ przez $\widehat P_n$; jego jakość zależy od $n$ i od tego, jak gładko
 $\widehat\theta$ zależy od danych. Drugie, numeryczne, to skończone $B$;
 to przybliżenie poprawiamy po prostu, zwiększając $B$. Do błędu
 standardowego wystarcza zwykle $B$ rzędu kilkuset, do kwantyli
-w przedziale -- kilku tysięcy.
+w przedziale -- kilku tysięcy. Większe $B$ wygładza wynik obliczeń,
+ale nie zastępuje większego $n$: tysiące replikacji pięciu pomiarów
+nadal opierają się na wiedzy zawartej w pięciu pomiarach.
 
 Próba bootstrapowa zawiera niektóre obserwacje wielokrotnie, a innych
 wcale. Prawdopodobieństwo, że ustalona obserwacja nie zostanie
@@ -1078,7 +1310,7 @@ obserwacji z próby, a pozostałe $36{,}8\%$ w niej nie występują
 Rysunek [-@fig-bootstrap] pokazuje działanie metody na przykładzie, w którym
 znamy prawdziwy rozkład. Szacujemy błąd standardowy predykcji wielomianu
 stopnia $3$ w punkcie $x_0 = 0{,}95$, blisko krańca przedziału, gdzie
-dopasowania są najmniej stabilne.
+dopasowania są szczególnie niestabilne.
 
 ```{python}
 #| label: fig-bootstrap
@@ -1130,8 +1362,9 @@ print("kwantyle 10% i 90% oszacowań:        ",
 Lewy panel pokazuje najważniejszą własność bootstrapu. Replikacje
 rozkładają się wokół predykcji $\widehat f(x_0)$ z naszej próby, a nie
 wokół prawdziwej wartości $\fopt(x_0)$: próba bootstrapowa „nie wie”
-więcej o populacji niż próba, z której ją wylosowano. Bootstrap
-odtwarza więc co najwyżej **rozrzut** estymatora, a nie jego położenie.
+więcej o populacji niż próba, z której ją wylosowano. Same
+replikacje nie usuwają więc obciążenia względem $\fopt(x_0)$; tutaj
+służą do oceny **rozrzutu** predykcji.
 W tej akurat próbie odtwarza go źle: replikacje są ponad dwa razy
 szersze niż prawdziwy rozkład. Prawy panel pokazuje, że to próba
 nietypowa. Oszacowania błędu standardowego skupiają się w pobliżu
@@ -1143,7 +1376,279 @@ punktów i wielomiany dopasowane do prób bootstrapowych mocno się tam
 rozchodzą. Bootstrap jest zawodny dokładnie tam, gdzie estymator jest
 niestabilny.
 
-### Bootstrap a ocena ryzyka
+Ocena ryzyka wymaga ponadto rozdzielenia obserwacji uczących i ocenianych.
+Bootstrapowe rozwiązania tego problemu, w tym estymatory .632 i .632+,
+omawia rozszerzenie [-@sec-bootstrap-ryzyko].
+
+## Rozszerzenie: porównania sparowane {#sec-porownania-sparowane}
+
+::: {.callout-note appearance="simple" icon="false"}
+## Materiał nieobowiązkowy
+Wymagane są kowariancja, wariancja sumy i rozkład dwumianowy.
+Tekst główny i zadania podstawowe z tej sekcji nie korzystają.
+:::
+
+Częściej niż wartość ryzyka interesuje nas, który z dwóch modeli, $A$
+czy $B$, jest lepszy. Naturalnym oszacowaniem różnicy ryzyk jest różnica
+oszacowań testowych. Jeśli oba modele oceniamy na **tym samym** zbiorze
+testowym, różnica ta jest średnią różnic strat
+$D_j = L^A_j - L^B_j$ na poszczególnych obserwacjach, a jej wariancja wynosi
+$$
+\frac{\Var(L^A - L^B)}{m}
+= \frac{\tau_A^2 + \tau_B^2 - 2\Cov(L^A, L^B)}{m} .
+$$
+Straty podobnych modeli bywają dodatnio skorelowane: oba mylą się
+na trudnych przypadkach i oba trafiają na łatwych. Dodatnia kowariancja
+odejmuje się wtedy od sumy wariancji, więc porównanie jest
+dokładniejsze niż przy niezależnych zbiorach testowych tej samej
+liczności. Przy silnej korelacji różnica bywa oszacowana dokładniej
+niż każde z ryzyk z osobna. Porównując modele, należy zatem
+korzystać z par strat na tych samych obserwacjach, a nie z dwóch
+oddzielnych przedziałów ufności.
+
+Przy stracie 0--1 rachunek ma prostą postać. Obserwacje, na których oba
+modele się mylą albo oba trafiają, nic nie mówią o różnicy. Liczą się
+tylko obserwacje sporne: $n_{AB}$ takich, na których myli się tylko $A$,
+i $n_{BA}$ takich, na których myli się tylko $B$. Jeśli oba modele mają
+to samo ryzyko, to każda obserwacja sporna jest z równym
+prawdopodobieństwem jednego lub drugiego rodzaju. Warunkowo przy
+ustalonej liczbie sporów $n_{AB}$ ma więc rozkład dwumianowy z parametrami $n_{AB} + n_{BA}$ i $1/2$. Na tym opiera się
+**test McNemara**, polecany do porównywania dwóch klasyfikatorów na
+jednym zbiorze testowym [@dietterich1998]. Przykład: na $m = 1000$
+obserwacjach model $A$ myli się $100$ razy, a model $B$ -- $120$ razy.
+Dwa oddzielne przedziały ufności wyraźnie na siebie nachodzą: różnica
+$0{,}02$ to tylko około $1{,}4$ błędu standardowego różnicy dwóch
+niezależnych oszacowań. Jeśli jednak modele różnią się na $40$
+obserwacjach, z których na $30$ myli się tylko $B$, a na $10$ tylko $A$,
+to przy równości ryzyk wynik tak skrajny jak $10$ do $30$ ma
+prawdopodobieństwo około $0{,}002$. Przewaga modelu $A$ jest dobrze
+udokumentowana (@exr-porownanie-sparowane).
+
+## Rozszerzenie: LOOCV i liniowe wygładzanie {#sec-loocv-wygladzanie}
+
+::: {.callout-note appearance="simple" icon="false"}
+## Materiał nieobowiązkowy
+Wymagane są rachunek algebraiczny i zapis macierzowy predykcji.
+Tekst główny i zadania podstawowe z tej sekcji nie korzystają.
+:::
+
+Błąd uczący zaniża ryzyko, bo każdy punkt uczący wpływa na własną
+predykcję. W regresji $k$-NN ([-@eq-knn-regresja]) ten wpływ ma prostą
+postać: wynik $y_i$ wchodzi do predykcji w $\x_i$ z wagą $1/k$. Pozwala
+to wyrazić resztę „pozostaw jeden” przez resztę na zbiorze uczącym. Niech wszystkie odległości między punktami będą
+różne, aby nie było remisów, i niech $k>1$. Każdy punkt uczący $\x_i$ należy do swojego
+otoczenia $N_k(\x_i)$, bo sam od siebie ma odległość zero. Predykcja
+w punkcie uczącym to więc
+$$
+\widehat f(\x_i) = \frac{1}{k} \Big( y_i + \sum_{j \in N_k(\x_i),\, j \ne i} y_j \Big)
+= \frac{1}{k}\, y_i + \frac{k - 1}{k}\, \widehat f^{(-i)}(\x_i),
+$$
+gdzie $\widehat f^{(-i)}(\x_i)$ jest średnią wyników $k - 1$ pozostałych
+sąsiadów. Te $k - 1$ punktów to dokładnie najbliżsi sąsiedzi $\x_i$ po
+usunięciu obserwacji $i$ ze zbioru uczącego, więc $\widehat f^{(-i)}$ jest
+predyktorem $(k-1)$-NN dopasowanym bez obserwacji $i$. Odejmując obie
+strony od $y_i$, dostajemy
+$$
+y_i - \widehat f(\x_i) = \frac{k - 1}{k}\, \big( y_i - \widehat f^{(-i)}(\x_i) \big) .
+$$ {#eq-loo-knn}
+Reszta na zbiorze uczącym jest więc resztą „pozostaw jeden” pomniejszoną
+o czynnik $(k-1)/k$. Stąd błąd LOOCV reguły $(k-1)$-NN jest równy
+błędowi uczącemu reguły $k$-NN pomnożonemu przez $\big(k/(k-1)\big)^2$
+(@exr-loo-knn). Dla dużego $k$ ten czynnik wynosi w przybliżeniu
+$1 + 2/k$, co zgadza się z wynikiem zadania [-@exr-optymizm-knn]: optymizm
+błędu uczącego reguły $k$-NN jest rzędu $2\sigma^2/k$.
+
+Zapis $\widehat{\mathbf y}=\mathbf S\mathbf y$ oznacza, że predykcje
+na zbiorze uczącym są liniowymi kombinacjami wyników. Element $S_{ii}$
+jest wagą, jaką predykcja dla obserwacji $i$ przypisuje jej własnemu
+wynikowi. Dla regresji $k$-NN wynosi $1/k$. Wyprowadzony wyżej wzór
+ma więc mianownik $1-S_{ii}$, ale po usunięciu obserwacji ocenia
+regułę $(k-1)$-NN.
+
+W metodzie najmniejszych kwadratów, w tym regresji wielomianowej
+z rozdziału [-@sec-bias-wariancja], reszta „pozostaw jeden” także wynosi
+$$
+\frac{y_i-\widehat f(\x_i)}{1-S_{ii}}.
+$$
+Tutaj po usunięciu obserwacji dopasowujemy tę samą rodzinę modeli,
+o ile nadal jest to możliwe jednoznacznie i $S_{ii}<1$.
+Tożsamość wynika z własności dopasowania najmniejszych kwadratów
+[@esl, rozdz. 7.10]; samo istnienie macierzy $\mathbf S$ nie wystarcza,
+by gwarantowała ją dowolna metoda liniowego wygładzania.
+
+Dzielenie przez $1-S_{ii}$ pokazuje wpływ własnej obserwacji: przy dużym
+$S_{ii}$ reszta ucząca może być dużo mniejsza od reszty „pozostaw jeden”.
+Pozwala też obliczyć LOOCV z jednego dopasowania zamiast $n$.
+Do macierzy $\mathbf S$ i tego wzoru wrócimy przy regresji liniowej.
+
+## Rozszerzenie: co dokładniej szacuje CV {#sec-cv-szczegoly}
+
+::: {.callout-note appearance="simple" icon="false"}
+## Materiał nieobowiązkowy
+Wymagane są wariancja, kowariancja i wartości oczekiwane warunkowe.
+Tekst główny i zadania podstawowe z tej sekcji nie korzystają.
+:::
+
+Wariancja CV zależy zarówno od nakładania się zbiorów uczących,
+jak i od stabilności metody. Przy dużym $K$ zbiory te pokrywają się
+prawie całkowicie. Predyktory $\widehat f^{(-r)}$ korzystają więc
+z podobnych danych, a straty z różnych części mogą być zależne.
+Przy dodatnich kowariancjach średnia ma większą wariancję niż średnia
+niezależnych wielkości o tych samych wariancjach
+(@exr-usrednianie-predyktorow). Z tego powodu często
+mówi się, że LOOCV ma dużą wariancję. Z drugiej strony przy dużym $K$
+każdy predyktor dostaje więcej danych, a przy $K=n$ wynik
+nie zależy od losowania podziału. Który efekt
+przeważa, zależy od metody. Sprawdźmy to na naszym przykładzie: dla
+wielomianu stopnia $3$ i $n = 50$ wylosowaliśmy $500$ prób i w każdej
+policzyliśmy $\mathrm{CV}_K$ dla $K = 2, 5, 10, 50$ oraz, całkowaniem,
+prawdziwe ryzyko dopasowanego modelu.
+
+```{python}
+rng = np.random.default_rng(5)
+n_cv, d_cv, powt_cv = 50, 3, 500
+wartosci_K = [2, 5, 10, n_cv]
+
+def walidacja_krzyzowa(x, y, d, K, rng):
+    """K-krotna walidacja krzyżowa wielomianu stopnia d; zwraca straty
+    poszczególnych obserwacji, ocenianych przez model, który ich nie widział."""
+    straty = np.empty(len(x))
+    for czesc in np.array_split(rng.permutation(len(x)), K):
+        ucz = np.ones(len(x), dtype=bool)
+        ucz[czesc] = False
+        wielomian = Polynomial.fit(x[ucz], y[ucz], d)
+        straty[czesc] = (wielomian(x[czesc]) - y[czesc]) ** 2
+    return straty
+
+cv = np.zeros((powt_cv, len(wartosci_K)))
+blad_std_naiwny = np.zeros(powt_cv)     # dla K = 10, patrz dalej
+ryzyko_modelu = np.zeros(powt_cv)
+for r in range(powt_cv):
+    x, y = probka(n_cv, rng)
+    ryzyko_modelu[r] = ryzyko(Polynomial.fit(x, y, d_cv))
+    for j, K in enumerate(wartosci_K):
+        straty = walidacja_krzyzowa(x, y, d_cv, K, rng)
+        cv[r, j] = straty.mean()
+        if K == 10:
+            blad_std_naiwny[r] = straty.std(ddof=1) / np.sqrt(n_cv)
+
+# Ryzyko oczekiwane metody przy liczności zbioru uczącego n(K-1)/K.
+def ryzyko_oczekiwane(n, rng, powtorzenia=3000):
+    return np.mean([ryzyko(Polynomial.fit(*probka(n, rng), d_cv))
+                    for _ in range(powtorzenia)])
+
+print(f"ryzyko oczekiwane przy n = {n_cv}: {ryzyko_modelu.mean():.4f}")
+print(" K   uczących   E[R] przy n(K-1)/K   średnia CV   odch. std. CV")
+for j, K in enumerate(wartosci_K):
+    m = n_cv * (K - 1) // K
+    print(f"{K:2d}   {m:8d}   {ryzyko_oczekiwane(m, rng):18.4f}"
+          f"   {cv[:, j].mean():10.4f}   {cv[:, j].std():13.4f}")
+```
+
+Średnie oszacowań układają się zgodnie z ([-@eq-cv-wartosc-oczekiwana]).
+Dla $K = 2$ średnia jest bliska ryzyku metody uczonej na $25$
+obserwacjach i wyraźnie wyższa niż ryzyko przy $n = 50$. Dla $K \ge 5$
+pesymizm jest już mały w porównaniu z rozrzutem oszacowania. Odchylenie
+standardowe maleje z $K$, ale dla $K = 5, 10, 50$ jest prawie takie
+samo. W tym przykładzie LOOCV nie ma więc większej wariancji niż walidacja
+dziesięciokrotna. Wariancja LOOCV bywa duża przy metodach niestabilnych,
+których dopasowanie zmienia się skokowo przy niewielkiej zmianie danych
+[@arlot2010]. Przy małym $K$ niestabilność dotyka też walidacji
+krzyżowej: wielomian wysokiego stopnia uczony na połowie próby czasem
+„ucieka” przy krańcach przedziału, jak na rysunku [-@fig-wachlarz],
+i pojedyncza część daje wtedy ogromny błąd.
+
+### Co szacuje walidacja krzyżowa
+
+Z ([-@eq-cv-wartosc-oczekiwana]) wynika, że walidacja krzyżowa jest
+oszacowaniem ryzyka oczekiwanego metody, a nie ryzyka modelu
+dopasowanego do naszej próby. Można by jednak sądzić, że skoro oszacowanie liczymy z naszej próby, to przynajmniej podąża za
+ryzykiem naszego modelu: w próbach, z których wyszedł model gorszy niż
+przeciętny, powinno być wyższe. Rysunek [-@fig-cv-ryzyko] pokazuje, że
+w tym przykładzie taki związek jest słaby.
+
+```{python}
+#| label: fig-cv-ryzyko
+#| fig-cap: "Oszacowanie dziesięciokrotną walidacją krzyżową a ryzyko dopasowanego modelu $\\Risk(\\widehat f_{\\mathcal{D}})$ dla 500 prób liczności $n = 50$ (wielomian stopnia $3$). Linie przerywane: ryzyko oczekiwane metody $\\overline{\\Risk}_n$. Linia kropkowana: prosta $y = x$."
+
+j10 = wartosci_K.index(10)
+fig, ax = plt.subplots(figsize=(5.5, 5.0))
+ax.scatter(ryzyko_modelu, cv[:, j10], s=8, color="#1B6CA8", alpha=0.5)
+srednia = ryzyko_modelu.mean()
+ax.axvline(srednia, color="0.3", ls="--", lw=1)
+ax.axhline(srednia, color="0.3", ls="--", lw=1)
+granice = [0.03, 0.2]
+ax.plot(granice, granice, ":", color="#D7263D", lw=1.5)
+ax.set_xlim(0.03, 0.2)
+ax.set_ylim(granice)
+ax.set_aspect("equal")
+ax.set_xlabel(r"ryzyko dopasowanego modelu $R(\widehat f_{\mathcal{D}})$")
+ax.set_ylabel(r"oszacowanie $\mathrm{CV}_{10}$")
+plt.tight_layout()
+plt.show()
+
+print(f"odch. std. ryzyka modelu:  {ryzyko_modelu.std():.4f}")
+print(f"odch. std. CV_10:          {cv[:, j10].std():.4f}")
+print(f"korelacja:                 {np.corrcoef(ryzyko_modelu, cv[:, j10])[0, 1]:.3f}")
+```
+
+Chmura punktów jest wydłużona w pionie i nie układa się wzdłuż
+przekątnej. Ryzyko dopasowanego modelu zmienia się od próby do próby
+niewiele, a oszacowanie walidacją krzyżową --
+ponad dwa razy bardziej, i obie wielkości są praktycznie nieskorelowane.
+Większość rozrzutu oszacowania pochodzi z szumu w $n$ obserwacjach, na
+których je liczymy, a nie z różnic między dopasowanymi modelami.
+Środek chmury leży blisko przecięcia linii przerywanych, bo przy
+$K=10$ ryzyka oczekiwane dla $45$ i $50$ obserwacji są tutaj zbliżone.
+Wynik CV słabo informuje jednak, czy model z konkretnej próby jest
+lepszy, czy gorszy od przeciętnego. Podobny obraz w przykładzie
+klasyfikacyjnym przedstawiają @esl [rozdz. 7.12]. @bates2024 [tw. 1] pokazują dokładniejszy wynik dla modelu liniowego
+z niezależnym szumem normalnym o stałej wariancji, dopasowanego metodą
+najmniejszych kwadratów i ocenianego stratą kwadratową: przy ustalonej
+macierzy cech wynik CV jest niezależny od ryzyka dopasowanego modelu.
+Nie jest to twierdzenie o każdej metodzie i każdym rozkładzie danych.
+Nasza symulacja ilustruje słaby związek obu wielkości, ale nie dowodzi
+spełnienia tych założeń. Także równość ([-@eq-cv-wartosc-oczekiwana])
+dotyczy liczności $n(K-1)/K$, a nie $n$. Niezależny test pozwala
+bezpośrednio ocenić konkretny, ustalony predyktor.
+
+### Ograniczenia prostych oszacowań niepewności
+
+Wynik walidacji krzyżowej podaje się zwykle z błędem standardowym.
+Najprostszy przepis traktuje $n$ strat z ([-@eq-cv]) jak straty na
+zbiorze testowym i dzieli ich odchylenie standardowe przez $\sqrt{n}$.
+Te straty nie są jednak niezależne: każda para obserwacji z różnych
+części ma wspólną większość zbioru uczącego. @bengio2004 wykazali, że
+na podstawie jednego wyniku $K$-krotnej walidacji nie da się
+zbudować uniwersalnego estymatora jej wariancji, nieobciążonego dla
+wszystkich rozkładów. Wynik ten nie wyklucza estymacji przy dodatkowych
+założeniach. Naiwny błąd standardowy jest zwykle zaniżony. W symulacji z rysunku
+[-@fig-cv-ryzyko] wygląda to tak:
+
+```{python}
+pokrycie = np.mean(np.abs(cv[:, j10] - ryzyko_modelu.mean())
+                   < 1.96 * blad_std_naiwny)
+print(f"rzeczywiste odch. std. CV_10:      {cv[:, j10].std():.4f}")
+print(f"średni naiwny błąd standardowy:    {blad_std_naiwny.mean():.4f}")
+print(f"pokrycie przedziału +- 1,96 se:    {pokrycie:.3f}")
+```
+
+Naiwny błąd standardowy jest tu zaniżony o około $10\%$, a przedział,
+zbudowany jako wynik CV plus/minus $1{,}96$ naiwnych błędów
+standardowych, obejmuje przybliżone $\overline{\Risk}_{50}$ w około
+$89\%$ prób. W tym porównaniu oprócz oszacowania wariancji znaczenie ma
+różnica między licznościami uczenia $45$ i $50$. Przy metodach mniej stabilnych różnica bywa
+większa. Poprawne przedziały ufności dla walidacji krzyżowej wymagają
+dodatkowej pracy obliczeniowej [@bates2024]. Naiwna miara może służyć orientacji przy wyborze, ale nie zastępuje
+uzasadnienia przedziału ufności ani testu różnicy ryzyk.
+
+## Rozszerzenie: bootstrapowe oszacowania ryzyka {#sec-bootstrap-ryzyko}
+
+::: {.callout-note appearance="simple" icon="false"}
+## Materiał nieobowiązkowy
+Wymagane są podstawy bootstrapu i rozróżnienie ryzyka modelu oraz metody.
+Tekst główny i zadania podstawowe z tej sekcji nie korzystają.
+:::
 
 Bootstrap można też wykorzystać do szacowania ryzyka. Pierwszy pomysł --
 uczyć predyktor na próbie bootstrapowej i oceniać go na całej próbie --
@@ -1151,11 +1656,10 @@ jest optymistyczny, bo około $63\%$ obserwacji oceniających było
 w zbiorze uczącym. Poprawka nasuwa się sama: każdą obserwację $i$ oceniać
 tylko predyktorami z tych prób bootstrapowych, które jej nie zawierają.
 Średnia takich strat po wszystkich obserwacjach to **bootstrap
-„pozostaw jeden”**, oznaczany $\widehat\Risk^{(1)}$. Każda obserwacja jest
-tu oceniana przez predyktor, który jej nie widział, więc optymizmu nie ma.
-Jest za to pesymizm podobny do walidacji krzyżowej: próba bootstrapowa
-zawiera tylko około $0{,}632n$ różnych obserwacji i predyktor zachowuje
-się mniej więcej tak, jakby uczył się na tej liczbie danych.
+„pozostaw jeden”**, oznaczany $\widehat\Risk^{(1)}$. Oceniana
+obserwacja nie wpływa wtedy na dopasowanie, ale predyktor uczy się na
+około $0{,}632n$ różnych obserwacjach, więc $\widehat\Risk^{(1)}$ bywa
+pesymistyczne.
 
 @efron1983 zaproponował, by oba błędy zrównoważyć, łącząc pesymistyczne
 $\widehat\Risk^{(1)}$ z optymistycznym błędem uczącym $\overline{\mathrm{err}}$:
@@ -1272,160 +1776,6 @@ krzyżowa, bo jest prostsza, nie wymaga poprawek zależnych od metody i nie
 zakłada nic o stracie; estymatory bootstrapowe bywają przydatne przy
 bardzo małych próbach.
 
-## Krzywe uczenia z danych {#sec-krzywe-uczenia-cv}
-
-W sekcji [-@sec-krzywe-uczenia] krzywe uczenia rysowaliśmy, znając
-ryzyko. Z danych szacuje się je tak samo jak każde ryzyko: walidacją
-krzyżową. Dla każdej części $F_k$ i każdej liczności $m$ mniejszej niż
-liczność zbioru uczącego losujemy z danych spoza $F_k$ podpróbę
-liczności $m$, dopasowujemy do niej model i liczymy jego błąd na $F_k$
-oraz na samej podpróbie. Losowanie podpróby powtarzamy kilkakrotnie
-i uśredniamy. W bibliotece scikit-learn robi to funkcja
-`learning_curve`. Rysunek [-@fig-krzywa-uczenia-cv] porównuje tak
-oszacowane krzywe z prawdziwymi dla wielomianów stopnia $1$ i $9$ z rysunku
-[-@fig-krzywe-uczenia], przy jednej próbie liczności $N = 1000$.
-
-```{python}
-#| label: fig-krzywa-uczenia-cv
-#| fig-cap: "Krzywe uczenia regresji wielomianowej stopnia $d = 1$ (po lewej) i $d = 9$ (po prawej) oszacowane z jednej próby liczności $N = 1000$ pięciokrotną walidacją krzyżową, z 20 podpróbami dla każdej części i liczności (punkty), na tle prawdziwych krzywych z 300 prób z populacji (linie). Linia kropkowana: błąd nieredukowalny $\\sigma^2$. Obie osie w skali logarytmicznej."
-
-rng = np.random.default_rng(9)
-N_lc, K_lc, podproby = 1000, 5, 20
-licznosci = np.array([40, 60, 100, 200, 400, 800])
-x, y = probka(N_lc, rng)
-czesci = np.array_split(rng.permutation(N_lc), K_lc)
-
-fig, osie = plt.subplots(1, 2, figsize=(11, 4.0), sharey=True)
-for ax, d in zip(osie, [1, 9]):
-    uczacy_cv = np.zeros(len(licznosci))
-    walid_cv = np.zeros(len(licznosci))
-    for czesc in czesci:
-        reszta = np.setdiff1d(np.arange(N_lc), czesc)
-        for _ in range(podproby):
-            for i, m in enumerate(licznosci):
-                podproba = rng.choice(reszta, m, replace=False)
-                wielomian = Polynomial.fit(x[podproba], y[podproba], d)
-                uczacy_cv[i] += np.mean((wielomian(x[podproba]) - y[podproba]) ** 2)
-                walid_cv[i] += np.mean((wielomian(x[czesc]) - y[czesc]) ** 2)
-    uczacy_cv /= K_lc * podproby
-    walid_cv /= K_lc * podproby
-
-    ryzyko_prawdziwe = np.zeros(len(licznosci))
-    uczacy_prawdziwy = np.zeros(len(licznosci))
-    for i, m in enumerate(licznosci):
-        for _ in range(300):
-            xs, ys = probka(m, rng)
-            wielomian = Polynomial.fit(xs, ys, d)
-            ryzyko_prawdziwe[i] += ryzyko(wielomian) / 300
-            uczacy_prawdziwy[i] += np.mean((wielomian(xs) - ys) ** 2) / 300
-
-    ax.plot(licznosci, ryzyko_prawdziwe, "-", color="#1B6CA8", lw=1.5,
-            label="ryzyko")
-    ax.plot(licznosci, walid_cv, "o", color="#1B6CA8",
-            label="ryzyko: walidacja krzyżowa")
-    ax.plot(licznosci, uczacy_prawdziwy, "-", color="0.45", lw=1.5,
-            label="błąd uczący")
-    ax.plot(licznosci, uczacy_cv, "o", color="0.45",
-            label="błąd uczący: z podprób")
-    ax.axhline(sigma ** 2, color="#D7263D", ls=":", lw=1.5)
-    ax.set_xscale("log")
-    ax.set_yscale("log")
-    ax.set_xticks(licznosci, [str(m) for m in licznosci])
-    ax.xaxis.set_minor_locator(plt.NullLocator())
-    ax.set_title(f"$d = {d}$")
-    ax.set_xlabel("liczność próby uczącej $m$")
-    print(f"d = {d}: walidacja krzyżowa", np.round(walid_cv, 3))
-    print(f"        prawdziwe ryzyko   ", np.round(ryzyko_prawdziwe, 3))
-osie[0].set_ylabel("średni kwadrat błędu")
-osie[1].legend(frameon=False, fontsize=8)
-plt.tight_layout()
-plt.show()
-```
-
-Oszacowane krzywe odtwarzają obraz z sekcji [-@sec-krzywe-uczenia]:
-dla prostej szczelina między krzywymi jest wąska, a obie leżą wysoko nad
-$\sigma^2$; dla wielomianu stopnia $9$ szczelina jest szeroka przy małych
-licznościach i zamyka się, gdy danych przybywa. Diagnostyka z tamtej
-sekcji -- ryzyko spada z $n$ i szczelina się zamyka, więc dominuje
-wariancja; obie krzywe płaskie i zbieżne, więc dominuje obciążenie --
-działa więc także bez znajomości ryzyka.
-Największa rozbieżność występuje dla $d = 9$ przy najmniejszej liczności.
-Ryzyko oczekiwane jest tam średnią zdominowaną przez nieliczne próby,
-w których wielomian wysokiego stopnia „ucieka” przy krańcu przedziału.
-Sto dopasowań z podprób jednej próby takie rzadkie zdarzenia łapie
-nieregularnie, więc w tym punkcie oszacowanie jest niedokładne.
-
-Krzywa uczenia oszacowana z danych kończy się na liczności zbioru
-uczącego w walidacji krzyżowej, czyli $N(K-1)/K$. Czy dodanie danych
-pomoże, ocenia się więc, ekstrapolując jej przebieg poza zakres obserwacji.
-Jeśli krzywa ryzyka przy największych licznościach jest już płaska,
-więcej danych tej samej natury niewiele da.
-
-## Ocena modeli w praktyce {#sec-ocena-praktyka}
-
-Wróćmy do przykładu z sekcji [-@sec-knn-praktyka]: klasyfikatora $k$-NN
-dla danych o nowotworach piersi, w którym $k = 10$ przyjęliśmy
-arbitralnie. Teraz wybierzemy $k$ walidacją krzyżową i ocenimy procedurę
-wyboru zagnieżdżoną walidacją krzyżową. Standaryzacja jest częścią potoku,
-więc w każdej części jej parametry są wyznaczane tylko z danych
-uczących.
-
-```{python}
-from sklearn.datasets import load_breast_cancer
-from sklearn.model_selection import GridSearchCV, StratifiedKFold, cross_validate
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
-
-X, y = load_breast_cancer(return_X_y=True)
-potok = make_pipeline(StandardScaler(), KNeighborsClassifier())
-siatka_k = {"kneighborsclassifier__n_neighbors": [1, 3, 5, 7, 9, 11, 15, 21, 31, 51]}
-
-# Wybór k: pięciokrotna warstwowa walidacja krzyżowa na całych danych.
-wewnetrzna = StratifiedKFold(n_splits=5, shuffle=True, random_state=0)
-strojenie = GridSearchCV(potok, siatka_k, cv=wewnetrzna, scoring="accuracy")
-strojenie.fit(X, y)
-
-wyniki_cv = strojenie.cv_results_
-bledy = 1 - wyniki_cv["mean_test_score"]
-bledy_std = wyniki_cv["std_test_score"] / np.sqrt(5)   # naiwny błąd standardowy
-print("  k   błąd CV   błąd std.")
-for k, b, s in zip(siatka_k["kneighborsclassifier__n_neighbors"], bledy, bledy_std):
-    print(f"{k:3d}   {b:7.4f}   {s:9.4f}")
-
-najlepszy = np.argmin(bledy)
-prog = bledy[najlepszy] + bledy_std[najlepszy]
-# Najprostszy model to największe k, czyli najsilniejsze wygładzanie.
-k_1se = max(k for k, b in zip(siatka_k["kneighborsclassifier__n_neighbors"], bledy)
-            if b <= prog)
-print(f"\nnajmniejszy błąd CV: k = {strojenie.best_params_['kneighborsclassifier__n_neighbors']},"
-      f" błąd {bledy[najlepszy]:.4f}")
-print(f"reguła jednego błędu standardowego: k = {k_1se}")
-
-# Ocena procedury wyboru: zagnieżdżona walidacja krzyżowa.
-zewnetrzna = StratifiedKFold(n_splits=5, shuffle=True, random_state=1)
-zagn = cross_validate(strojenie, X, y, cv=zewnetrzna, scoring="accuracy",
-                      return_estimator=True)
-print(f"\nzagnieżdżona walidacja krzyżowa: błąd {1 - zagn['test_score'].mean():.4f}")
-print("k wybrane w częściach zewnętrznych:",
-      [e.best_params_["kneighborsclassifier__n_neighbors"] for e in zagn["estimator"]])
-```
-
-Krzywa błędu walidacji krzyżowej jest w szerokim zakresie $k$ płaska:
-między $k = 3$ a $k = 15$ wyniki różnią się mniej więcej o jeden błąd
-standardowy. Najmniejszy wynik osiąga jedna z wartości z tego zakresu,
-ale reguła jednego błędu standardowego wskazuje większe $k$, czyli model
-gładszy, statystycznie nieodróżnialny od najlepszego. Zagnieżdżona
-walidacja krzyżowa daje tu, przy innym podziale na części, przypadkiem
-dokładnie ten sam błąd co najmniejszy wynik walidacji. Przy dziesięciu
-kandydatach i dość stabilnej metodzie optymizm wyboru okazał się więc
-mały w porównaniu z niepewnością oszacowania. Nie mogliśmy tego
-jednak wiedzieć bez zagnieżdżonej walidacji. Wartości $k$ wybrane
-w częściach zewnętrznych różnią się między sobą. Wybór konkretnego $k$
-jest niestabilny, bo kilka wartości jest prawie równie dobrych, a zagnieżdżona walidacja ocenia procedurę, która
-tę niestabilność obejmuje. Model do użytku otrzymujemy, dopasowując
-`strojenie` do wszystkich danych, co zrobiliśmy w pierwszym kroku.
-
 ## Uwagi bibliograficzne {.unnumbered}
 
 Zbiór walidacyjny, walidację krzyżową i bootstrap na poziomie tego
@@ -1440,16 +1790,18 @@ $K$, dają @arlot2010.
 Walidację krzyżową jako ogólną metodę wyboru i oceny predyktorów
 sformułował @stone1974. Pytanie, co właściwie szacuje, i jak budować dla
 niej poprawne przedziały ufności, analizują @bates2024. Brak
-nieobciążonego estymatora wariancji wykazali @bengio2004, a testy
+uniwersalnego nieobciążonego estymatora wariancji z pojedynczej CV wykazali @bengio2004, a testy
 statystyczne do porównywania klasyfikatorów, w tym test McNemara,
 omawia @dietterich1998.
 
 Optymizm wyniku walidacji krzyżowej po wyborze modelu i zagnieżdżoną
 walidację krzyżową opisali @varma2006, a skalę tego zjawiska przy
 porównywaniu metod -- @cawley2010. Klasycznym przykładem wycieku przez
-wybór cech jest praca @ambroise2002. Przewagę przeszukiwania losowego nad
-siatką uzasadnili @bergstra2012.
+wybór cech jest praca @ambroise2002. Korzyści z przeszukiwania losowego w porównaniu
+z siatką analizują @bergstra2012.
 
+Rozszerzenia tego rozdziału rozwijają rachunek porównań sparowanych,
+LOOCV i niepewności CV oraz bootstrapowych oszacowań ryzyka.
 Bootstrap wprowadził @efron1979. Estymator .632 zaproponował
 @efron1983 w pracy o szacowaniu błędu reguł predykcyjnych, a wersję .632+
 podali @efron1997. Systematyczny wykład metody, z przedziałami ufności
@@ -1457,23 +1809,43 @@ i wieloma przykładami, zawiera podręcznik @efron1993.
 
 ## Zadania {.unnumbered}
 
-::: {#exr-licznosc-testu}
-Klasyfikator ma ryzyko około $8\%$.
+Na początek wykonaj @exr-cv-recznie po sekcji [-@sec-walidacja-krzyzowa]
+oraz @exr-zagniezdzona-krok-po-kroku po sekcji [-@sec-selekcja-ocena].
+Następnie przejdź do oceny testowej, błędów procedury i bootstrapu.
+W zadaniach [-@exr-porownanie-sparowane] i [-@exr-bootstrap-poza-proba]
+można najpierw pominąć podpunkty oznaczone jako rozszerzenia.
+Zadania [-@exr-loo-knn] i [-@exr-minimum-oszacowan] są w całości
+rozszerzeniami. Dwa zadania laboratoryjne [-@exr-wyciek-selekcja]
+i [-@exr-wybor-k-cv] prowadzą od pojedynczej próby do powtarzanych
+symulacji.
 
-a) Ile obserwacji testowych potrzeba, aby połowa szerokości
-   przedziału ufności na poziomie $95\%$ wynosiła $0{,}01$? A $0{,}002$?
-b) Wykaż, że $\Risk(1 - \Risk) \le 1/4$, i podaj liczność zbioru
-   testowego wystarczającą dla zadanej szerokości przedziału niezależnie
-   od ryzyka. Ile razy jest ona większa od wyniku z punktu a)?
-c) Klasa $1$ stanowi $1\%$ populacji, a interesuje nas czułość, czyli
-   odsetek obserwacji klasy $1$ rozpoznanych poprawnie. Ile obserwacji
-   testowych trzeba, aby oszacować czułość rzędu $0{,}9$ z dokładnością
-   $\pm 0{,}02$?
+::: {#exr-licznosc-testu}
+Ustalony klasyfikator popełnił $16$ błędów na $200$ niezależnych
+obserwacjach testowych.
+
+a) Oblicz oszacowanie ryzyka i jego błąd standardowy. Podaj przybliżony
+   przedział ufności na poziomie $95\%$ i wyjaśnij, co oznacza ten poziom.
+b) Zakładając ryzyko około $8\%$, oszacuj, ile obserwacji testowych
+   potrzeba, aby połowa szerokości takiego przedziału wynosiła $0{,}01$.
+   A $0{,}002$? Dlaczego pięciokrotna poprawa dokładności wymaga
+   dwudziestopięciokrotnie większej próby?
+c) Wykaż, że $\Risk(1-\Risk)\le1/4$, i podaj liczność wystarczającą
+   w przybliżeniu normalnym dla zadanej szerokości niezależnie od ryzyka.
+   Ile razy jest ona większa od wyniku z punktu b)?
+d) Klasa $1$ stanowi $1\%$ populacji. Interesuje nas czułość, czyli
+   odsetek jej obserwacji rozpoznanych poprawnie. Najpierw oblicz,
+   **ile obserwacji klasy 1** potrzeba do oszacowania czułości około
+   $0{,}9$ z dokładnością $\pm0{,}02$ na poziomie $95\%$.
+   Jak dużą próbę z populacji trzeba zebrać, aby oczekiwana liczba
+   obserwacji tej klasy była taka? Czy gwarantuje to uzyskanie wymaganej
+   liczby przypadków klasy $1$?
 :::
 
 ::: {#exr-bledy-procedury}
 Każda z opisanych procedur zawiera błąd metodologiczny. Wskaż go,
-określ kierunek, w którym zniekształca on ocenę, i zaproponuj poprawkę.
+wyjaśnij, jak może zniekształcić ocenę, i zaproponuj poprawkę.
+Nie zakładaj, że każdy błąd daje widoczny efekt o tym samym kierunku
+w każdej próbie.
 
 a) Wszystkie cechy standaryzujemy na całej próbie, a następnie
    przeprowadzamy dziesięciokrotną walidację krzyżową klasyfikatora $k$-NN.
@@ -1496,39 +1868,51 @@ e) Klasa $1$ jest rzadka, więc przed walidacją krzyżową powielamy
 
 ::: {#exr-porownanie-sparowane}
 Dwa klasyfikatory oceniono na tym samym zbiorze testowym liczności
-$m = 1000$. Model $A$ pomylił się $100$ razy, model $B$ -- $120$ razy.
+$m=1000$. Model $A$ pomylił się $100$ razy, model $B$ -- $120$ razy.
 Na $70$ obserwacjach pomyliły się oba.
 
-a) Wyznacz liczby $n_{AB}$ i $n_{BA}$ obserwacji, na których myli się tylko
-   jeden z modeli.
-b) Oblicz błąd standardowy różnicy oszacowań ryzyka, traktując je jak
-   niezależne. Czy różnica jest wyraźna?
-c) Przy założeniu, że oba modele mają to samo ryzyko, wyznacz dokładnie
-   prawdopodobieństwo wyniku co najmniej tak skrajnego jak zaobserwowany
-   podział obserwacji spornych (w dowolną stronę). Porównaj z wynikiem
-   punktu b) i wyjaśnij różnicę, odwołując się do kowariancji strat.
-d) W przykładzie z sekcji [-@sec-zbior-testowy] liczby błędów były te
-   same, ale oba modele pomyliły się na $90$ obserwacjach. Dlaczego
-   przewaga modelu $A$ była tam lepiej udokumentowana?
-e) Wykaż, że dla straty 0--1 estymator wariancji różnicy strat
-   $\widehat{\Var}(L^A - L^B)$ zależy tylko od $n_{AB}$, $n_{BA}$ i $m$.
+a) Wyznacz liczby $n_{AB}$ i $n_{BA}$ obserwacji, na których myli się
+   tylko jeden model. Na ilu oba trafiły? Oblicz różnicę oszacowań ryzyka.
+b) Wyjaśnij, dlaczego przypadki, na których modele są zgodne,
+   nie wpływają na tę różnicę. Co zmieni się w liczbie sporów, gdy
+   oba modele pomylą się na $90$ obserwacjach, zachowując te same
+   łączne liczby błędów?
+c) **Rozszerzenie: test McNemara.** Wymagane są rozkład dwumianowy
+   i rozszerzenie [-@sec-porownania-sparowane]. Przy równych ryzykach
+   wyznacz prawdopodobieństwo wyniku co najmniej tak skrajnego jak
+   obserwowany podział sporów (w dowolną stronę). Powtórz dla wariantu
+   z punktu b). Dlaczego ta sama różnica odsetków daje inny wynik testu?
+d) **Rozszerzenie: wariancja porównania sparowanego.** Wymagane są
+   wariancja i kowariancja. Oblicz błąd standardowy różnicy ryzyk
+   z par strat i porównaj go z wynikiem otrzymanym przy potraktowaniu
+   ocen jako niezależnych. Wyprowadź estymator wariancji różnicy strat
+   wyrażony przez $n_{AB}$, $n_{BA}$ i $m$.
 :::
 
 ::: {#exr-bootstrap-poza-proba}
-Próbę bootstrapową tworzymy, losując $n$ razy ze zwracaniem z próby
-liczności $n$.
+Mamy pięć obserwacji o indeksach $1,2,3,4,5$. Wylosowane ze zwracaniem
+indeksy jednej próby bootstrapowej to $2,2,5,1,2$.
 
-a) Wykaż, że prawdopodobieństwo, że ustalona obserwacja nie znajdzie
-   się w próbie bootstrapowej, wynosi $(1 - 1/n)^n$, i że dąży ono do
-   $e^{-1}$. Oblicz je dla $n = 10, 50, 1000$.
-b) Wyznacz oczekiwaną liczbę różnych obserwacji w próbie bootstrapowej.
-c) Wyznacz prawdopodobieństwo, że ustalona obserwacja znajdzie się
-   w obu z dwóch niezależnie wylosowanych prób bootstrapowych. Odnieś
-   wynik do pytania c) zadania [-@exr-usrednianie-predyktorow].
-d) Sprawdź wyniki a) i b) symulacją.
+a) Ile różnych obserwacji zawiera ta próba? Które zostały pominięte?
+   Czy kolejne tysiąc replikacji zwiększa liczbę danych z populacji?
+b) Dla próby liczności $n$ wykaż, że prawdopodobieństwo pominięcia
+   ustalonej obserwacji wynosi $(1-1/n)^n$ i dąży do $e^{-1}$.
+   Oblicz je dla $n=10,50,1000$.
+c) Wyznacz oczekiwaną liczbę różnych obserwacji w próbie bootstrapowej.
+   Sprawdź wyniki b) i c) symulacją.
+d) **Rozszerzenie: wspólne obserwacje replikacji.** Wymagane są
+   niezależność warunkowa losowań przy ustalonej próbie i rachunek
+   prawdopodobieństwa. Wyznacz prawdopodobieństwo, że ustalona
+   obserwacja znajdzie się w obu z dwóch niezależnie wylosowanych
+   replikacji. Odnieś wynik do podpunktu c) w
+   @exr-usrednianie-predyktorow.
 :::
 
 ::: {#exr-loo-knn}
+**Rozszerzenie: LOOCV dla najbliższych sąsiadów.** Wymagane są
+rachunek algebraiczny, rozkład błędu kwadratowego i rozszerzenie
+[-@sec-loocv-wygladzanie].
+
 a) Wyprowadź ([-@eq-loo-knn]) i wywnioskuj z niego, że błąd LOOCV reguły
    $(k-1)$-NN jest równy błędowi uczącemu reguły $k$-NN pomnożonemu przez
    $\big(k/(k-1)\big)^2$. Gdzie korzystasz z założenia, że odległości są
@@ -1548,6 +1932,10 @@ d) W ustalonym układzie z zadania [-@exr-knn-ustalony-uklad], przy
 :::
 
 ::: {#exr-minimum-oszacowan}
+**Rozszerzenie: minimum losowych oszacowań.** Wymagane są rozkład
+normalny, wartość oczekiwana maksimum i całkowanie. Punktem wyjścia
+jest rachunek optymizmu w sekcji [-@sec-selekcja-ocena].
+
 Mamy $M$ kandydatów o tym samym ryzyku $\Risk$, a ich oszacowania
 $\widehat\Risk_1, \dots, \widehat\Risk_M$ są niezależne i mają rozkład
 normalny $\Nrozk(\Risk, s^2)$.
@@ -1561,18 +1949,21 @@ c) Oszacuj symulacyjnie $c_M$ dla $M = 5, 10, 100$. Przyjmując
    $s = 0{,}05$, porównaj otrzymany optymizm z rysunkiem
    [-@fig-klatwa-zwyciezcy].
 d) Powtórz symulację dla oszacowań skorelowanych: każde dwa mają
-   współczynnik korelacji $\rho$. (Wskazówka: $\widehat\Risk_j = \Risk
+   współczynnik korelacji $\rho\in[0,1]$. (Wskazówka: $\widehat\Risk_j = \Risk
    + s(\sqrt{\rho}\, Z_0 + \sqrt{1 - \rho}\, Z_j)$.) Jak optymizm zależy
    od $\rho$? Wyjaśnij, dlaczego krzywa na rysunku
    [-@fig-klatwa-zwyciezcy] opada wolniej niż w punkcie c).
 :::
 
 ::: {#exr-wyciek-selekcja}
-Rozwiń symulację z rysunku [-@fig-wyciek-selekcja].
+Rozwiń symulację z rysunku [-@fig-wyciek-selekcja]. Najpierw wykonaj
+oba sposoby na jednej próbie: wskaż, kiedy błędny sposób wykorzystuje
+klasy obserwacji oceniających, i porównaj wyniki. Następnie:
 
 a) Zbadaj, jak średnie oszacowanie przy złym sposobie zależy od liczby
    wybieranych cech $q \in \{1, 10, 100, 1000\}$ i od liczby cech
-   $p \in \{100, 1000, 5000\}$. Wyjaśnij obserwowane zależności.
+   $p \in \{100, 1000, 5000\}$, sprawdzając tylko kombinacje $q\le p$.
+   Wyjaśnij obserwowane zależności.
 b) Zbuduj poprawną procedurę w scikit-learn jako potok
    `make_pipeline(SelectKBest(f_classif, k=100), KNeighborsClassifier(n_neighbors=1))`
    i oceń ją funkcją `cross_val_score`. Sprawdź, że wynik zgadza się
@@ -1596,5 +1987,51 @@ b) Powtórz punkt a) dla $100$ prób. Narysuj histogram wybranych $k$.
    dla obu reguł wyboru.
 c) Oblicz średnią różnicę między najmniejszym wynikiem walidacji
    krzyżowej a ryzykiem wybranego modelu. Odnieś wynik do twierdzenia
-   [-@thm-optymizm-wyboru].
+   [-@thm-optymizm-wyboru]. Wskaż różnicę między założeniami twierdzenia
+   a tym eksperymentem: CV uczy na mniejszych próbach, a ryzyko mierzymy
+   po dopasowaniu do wszystkich danych.
+:::
+
+::: {#exr-cv-recznie}
+Dwanaście obserwacji podzielono na trzy części po cztery. Tabela
+podaje liczby błędów kandydatów w ocenianych częściach; każdy model
+uczono na pozostałych ośmiu obserwacjach.
+
+| Liczba sąsiadów $k$ | Część 1 | Część 2 | Część 3 |
+|---|---:|---:|---:|
+| 1 | 1 | 2 | 1 |
+| 3 | 1 | 0 | 2 |
+| 5 | 0 | 1 | 1 |
+
+a) Oblicz wynik CV każdego kandydata i wybierz $k$ według minimum.
+   Ile dopasowań wykonano łącznie? Co uśredniasz: predykcje czy straty?
+b) Dla wybranego $k$ wskaż, na ilu obserwacjach uczono model, który
+   przewidział klasę pierwszej obserwacji z części 2. Czy widział jej klasę?
+c) W innym podziale części liczą $3,4,5$ obserwacji, a ustalony kandydat
+   popełnia w nich $0,1,2$ błędy. Oblicz wynik CV po obserwacjach
+   i porównaj go z nieważoną średnią trzech odsetków. Który rachunek
+   odpowiada definicji [-@def-walidacja-krzyzowa]?
+d) Czy najmniejszy wynik tabeli jest niezależną końcową oceną wybranego
+   modelu? Na ilu obserwacjach dopasujesz go po zakończeniu wyboru?
+:::
+
+::: {#exr-zagniezdzona-krok-po-kroku}
+Mamy $200$ obserwacji, pięć części zewnętrznych i cztery wewnętrzne.
+Procedura wybiera minimum błędu CV spośród $k=3,9,21$ i dopasowuje
+potok ze standaryzacją.
+
+a) Przejdź przez jeden krok zewnętrzny. Ile obserwacji odkładasz do
+   oceny, ile zostaje do wyboru, na ilu uczysz pojedynczego kandydata
+   w części wewnętrznej, a na ilu go walidujesz?
+b) Wskaż dane używane do wyznaczenia parametrów standaryzacji
+   w jednym dopasowaniu wewnętrznym. Co dopasowujesz od nowa po wyborze
+   $k$ i na jakich danych, zanim ocenisz wynik zewnętrzny?
+c) W częściach zewnętrznych wybrano $k=9,21,9,3,21$ i popełniono
+   odpowiednio $4,5,3,6,2$ błędy. Oblicz ocenę procedury.
+   Dlaczego nie wybieramy $k$ z części o najmniejszym błędzie?
+d) Jak uzyskasz końcowy model na wszystkich $200$ obserwacjach?
+   Czy wynik z punktu c) jest niezależną oceną tego konkretnego modelu?
+e) Po obejrzeniu wyników zewnętrznych rozszerzasz listę kandydatów
+   i zachowujesz wariant z mniejszą oceną zewnętrzną. Co stało się
+   z rolą tych danych? Jak należałoby zaplanować ocenę takiej procedury?
 :::

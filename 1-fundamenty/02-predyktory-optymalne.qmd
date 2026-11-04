@@ -1,648 +1,804 @@
-# Predyktory optymalne i błąd nieredukowalny {#sec-predyktory-optymalne}
+# Ryzyko i predyktory optymalne {#sec-predyktory-optymalne}
 
-W sekcji [-@sec-predykcja-wnioskowanie] wyróżniliśmy dwa cele modelowania: predykcję
-i wnioskowanie. Ten rozdział dotyczy pierwszego z nich. W regresji
-predykcja polega na podaniu na podstawie wektora cech $\x$ wartości
-$\widehat y$, która ma być bliska nieznanemu $y$, w klasyfikacji -- na
-wskazaniu klasy. Jak wycenić taką predykcję, ustaliliśmy
-w sekcji [-@sec-strata-ryzyko]: funkcją straty, której wartość oczekiwana to ryzyko.
-Lepsza jest reguła o mniejszym ryzyku, a najlepsza -- ta, której ryzyko
-jest najmniejsze. Tam też postawiliśmy pytanie, na które ten rozdział
-odpowiada: **która funkcja $f$ minimalizuje $\Risk(f)$?**
+Model przypisuje obserwowanym cechom pewną odpowiedź. Skąd jednak
+wiadomo, która odpowiedź jest dobra? W poprzednim rozdziale
+wprowadziliśmy funkcję straty i ryzyko. Teraz wykorzystamy je do
+porównywania reguł przewidywania oraz do znalezienia najlepszej z nich.
 
-Gdy funkcja straty jest ustalona, optymalną regułę można
-**wyprowadzić**: wystarczy w każdym punkcie $\x$ zminimalizować
-oczekiwaną stratę. O tym, czego szukamy, decyduje więc strata, nie
-algorytm. Na przykład w regresji strata kwadratowa prowadzi do średniej
-warunkowej $Y$ przy danym $\X$, a strata absolutna -- do mediany
-warunkowej. Dla tego samego rozkładu są to na ogół różne funkcje.
+Zaczniemy od małego przykładu, w którym wszystkie możliwości można
+wypisać w tabeli. Policzymy ryzyko kilku reguł, a następnie zobaczymy,
+jak wybierać odpowiedzi, aby je zminimalizować. Ten sam sposób
+rozumowania posłuży do przewidywania wartości liczbowej i do wskazywania
+klasy. Regresja i klasyfikacja będą dwoma zastosowaniami jednej zasady.
 
-Wszystkie wyniki tego rozdziału zakładają, że rozkład łączny $(\X, Y)$
-jest znany. Wskazują więc, czego szukamy, ale nie mówią, jak to znaleźć:
-oszacowanie potrzebnych wielkości z danych to osobne zadanie. Jego
-ogólny schemat opisaliśmy w sekcji [-@sec-trening-modelu], a konkretnym
-metodom poświęcona jest dalsza część książki. W literaturze ten materiał nosi nazwę statystycznej
-teorii decyzji [@esl, rozdz. 2.4]. My słowa „decyzja" używamy w węższym
-znaczeniu z sekcji [-@sec-regresja-klasyfikacja]: jako wyboru działania na podstawie
-prawdopodobieństw klas, na przykład ustalenia progu albo odmowy odpowiedzi.
-Tym zajmujemy się w sekcji [-@sec-od-prawdopodobienstw-do-decyzji].
+Przez większą część rozdziału będziemy zakładać, że znamy rozkład danych.
+To założenie pozwoli nam dokładnie wskazać cel uczenia: regułę, której
+szukalibyśmy, mając pełną wiedzę o rozkładzie. Na końcu wrócimy do
+sytuacji, w której zamiast rozkładu mamy jedynie próbę.
 
-Rozdział buduje ten aparat od podstaw. Wynikiem będą fakty, do których
-wracamy przez całą książkę: funkcja regresji jako optymalny predyktor przy
-stracie kwadratowej i klasyfikator bayesowski przy stracie 0--1, a dla
-obu tych strat -- konkretna postać rozkładu ryzyka na błąd redukowalny
-i nieredukowalny, wprowadzonego ogólnie w sekcji [-@sec-strata-ryzyko].
+## Ile kosztuje reguła przewidywania?
 
-## Sformułowanie problemu
+Sklep chce przewidywać dzienny popyt na pewien produkt. Dla uproszczenia
+przyjmijmy, że popyt $Y$ może wynosić $0$, $2$ albo $4$ sztuki. Znamy
+też rodzaj dnia $X$: $A$ oznacza zwykły dzień, a $B$ -- dzień lokalnego
+wydarzenia, które przyciąga dodatkowych klientów. Rodzaj dnia znamy
+przed sporządzeniem prognozy.
 
-Przyjmujemy opis probabilistyczny z sekcji [-@sec-zaleznosc-i-szum]: para $(\X, Y)$
-ma nieznany rozkład łączny $P$, a jej wartości leżą w
-$\mathcal{X} \times \mathcal{Y}$. W regresji $\mathcal{Y} = \R$,
-w klasyfikacji $\mathcal{Y} = \{1, \dots, K\}$. Predyktor to dowolna
-(mierzalna) funkcja $f : \mathcal{X} \to \mathcal{Y}$, a strata
-$\Loss(y, \widehat y)$ i ryzyko są takie jak w @def-ryzyko-podstawowe:
+Przyjmujemy następujący model probabilistyczny:
+
+| Rodzaj dnia $x$ | $\Prob(X=x)$ | $\Prob(Y=0\mid X=x)$ | $\Prob(Y=2\mid X=x)$ | $\Prob(Y=4\mid X=x)$ |
+|:---|---:|---:|---:|---:|
+| $A$ | $0{,}75$ | $0{,}6$ | $0{,}3$ | $0{,}1$ |
+| $B$ | $0{,}25$ | $0{,}1$ | $0{,}3$ | $0{,}6$ |
+
+: Rozkład popytu w przykładzie sklepu. {#tbl-popyt-rozklad}
+
+Tabela opisuje **założony rozkład**, nie wyniki zebrane w sześciu dniach.
+Mówi na przykład, że zwykłe dni stanowią $75\%$ rozważanej populacji dni,
+a wśród nich zerowy popyt występuje z prawdopodobieństwem $0{,}6$.
+Prawdopodobieństwo pary obliczamy ze wzoru
 $$
-\Risk(f) = \E\big[\Loss(Y, f(\X))\big].
+\Prob(X=A,Y=y)=\Prob(X=A)\,\Prob(Y=y\mid X=A).
+$$
+Dla $y=0$ otrzymujemy zatem
+$0{,}75\cdot 0{,}6=0{,}45$.
+
+Predyktor $f$ przypisuje każdemu rodzajowi dnia prognozę liczbową.
+Zacznijmy od najprostszej reguły: **zawsze przewiduj $2$ sztuki**,
+czyli $f(A)=f(B)=2$. Oceńmy ją stratą kwadratową
+$\Loss(y,a)=(y-a)^2$, gdzie $a$ jest prognozą, a $y$ rzeczywistym popytem.
+Gdy popyt wyniesie $2$, strata będzie zerowa. Gdy wyniesie $0$ lub $4$,
+strata będzie równa $4$.
+
+Strata $(Y-f(X))^2=(Y-2)^2$ jest więc zmienną losową, której rozkład
+wynika z rozkładu pary $(X,Y)$. Poniższa tabela pokazuje, jaką wartość
+straty otrzymujemy dla każdej pary i z jakim prawdopodobieństwem:
+
+| $X$ | $Y$ | Prawdopodobieństwo pary | Strata $(Y-2)^2$ | Wkład do średniej straty |
+|:---|---:|---:|---:|---:|
+| $A$ | $0$ | $0{,}450$ | $4$ | $1{,}800$ |
+| $A$ | $2$ | $0{,}225$ | $0$ | $0$ |
+| $A$ | $4$ | $0{,}075$ | $4$ | $0{,}300$ |
+| $B$ | $0$ | $0{,}025$ | $4$ | $0{,}100$ |
+| $B$ | $2$ | $0{,}075$ | $0$ | $0$ |
+| $B$ | $4$ | $0{,}150$ | $4$ | $0{,}600$ |
+| Razem | | $1$ | | $2{,}800$ |
+
+Sumując prawdopodobieństwa par prowadzących do tej samej straty,
+otrzymujemy jej rozkład:
+$$
+\Prob\big((Y-2)^2=0\big)=0{,}3,\qquad
+\Prob\big((Y-2)^2=4\big)=0{,}7.
+$$
+Jej wartość oczekiwana wynosi zatem
+$0\cdot 0{,}3+4\cdot 0{,}7=2{,}8$ -- ten sam wynik daje suma
+ostatniej kolumny tabeli.
+Otrzymana średnia strata, $2{,}8$, to **ryzyko** reguły $f$.
+W pojedynczym dniu strata wynosi tu $0$ albo $4$. Ryzyko opisuje
+przeciętny wynik stosowania tej reguły w populacji dni określonej przez
+nasz model.
+
+W notacji z poprzedniego rozdziału zapisujemy to jako
+$$
+\Risk(f)=\E\big[\Loss(Y,f(X))\big].
 $$ {#eq-ryzyko}
-Ryzyko jest wielkością teoretyczną: liczymy je względem nieznanego
-rozkładu $P$, a nie na zbiorze uczącym.
+Strata $\Loss(Y,f(X))$ jest funkcją losowej pary $(X,Y)$, a więc sama
+jest zmienną losową. Ryzyko jest jej wartością oczekiwaną.
 
-Symbol $\E$ będzie w tym rozdziale oznaczał średnie po różnych rozkładach,
-dlatego ustalmy konwencję. Zapis $\E[\cdots]$ bez warunku to średnia
-względem rozkładu wszystkich zmiennych losowych występujących w nawiasie:
-we wzorze ([-@eq-ryzyko]) -- pary $(\X, Y)$, a gdy wyrażenie zależy tylko
-od $\X$ -- rozkładu cech. Zapis $\E[\cdots \mid \X = \x]$ to średnia
-względem rozkładu warunkowego $Y \mid \X = \x$, przy ustalonym $\x$.
+Ryzyko zależy więc od trzech rzeczy: rozkładu danych, funkcji straty
+oraz predyktora. Aby porównanie dwóch predyktorów miało sens,
+oceniamy je przy tym samym rozkładzie i tej samej stracie.
 
-## Redukcja do problemu punktowego
+Wartość $2{,}8$ nie oznacza ani $2{,}8\%$ pomyłek, ani przeciętnej
+pomyłki o $2{,}8$ sztuki. Jest to średni **kwadrat** pomyłki, mierzony
+w kwadratach jednostki popytu. Interpretacja ryzyka zależy od straty.
+Dopiero przy stracie $0$--$1$ ryzyko będzie prawdopodobieństwem błędu.
 
-Wzór ([-@eq-ryzyko]) wygląda na trudny do minimalizacji: szukamy funkcji, a nie
-liczby, i to w przestrzeni wszystkich funkcji mierzalnych. Poniższa
-obserwacja sprowadza go do zadania, które rozwiązujemy osobno w każdym
-punkcie $\x$ -- i to ona jest właściwym silnikiem tego rozdziału.
+## Ryzyko liczone w dwóch krokach
 
-Skorzystajmy z prawa iterowanej wartości oczekiwanej
-(@sec-zaleznosc-i-szum): średnią po parze $(\X, Y)$ można policzyć
-w dwóch krokach, najpierw uśredniając przy ustalonych cechach, potem
-po cechach. Dla ryzyka daje to
+Spróbujmy innej reguły stałej: $f(A)=f(B)=1{,}5$. Dlaczego właśnie
+$1{,}5$? Tyle wynosi średni popyt w całej populacji. Zsumowanie
+prawdopodobieństw par z poprzedniej tabeli daje
 $$
-\Risk(f) =
-\underbrace{\E\Big[\,
-\underbrace{\E\big[\Loss(Y, f(\X)) \,\big|\, \X \big]}_{\text{średnia po } Y \text{ przy ustalonym } \X}
-\,\Big]}_{\text{średnia po } \X}.
-$$ {#eq-ryzyko-warunkowe}
-Wewnętrzna średnia to przeciętna strata wśród obiektów o tych samych
-cechach. Zależy ona od cech, więc jest zmienną losową -- funkcją $\X$,
-tak jak $\E[Y \mid \X]$ w sekcji [-@sec-zaleznosc-i-szum]. Zewnętrzna średnia
-uśrednia ją po rozkładzie cech.
-
-Wprowadźmy **ryzyko warunkowe** w punkcie $\x$ dla wartości $a$, którą
-rozważamy jako predykcję w tym punkcie:
+\Prob(Y=0)=0{,}475,\qquad
+\Prob(Y=2)=0{,}300,\qquad
+\Prob(Y=4)=0{,}225,
 $$
-r(a \mid \x) = \E\big[\Loss(Y, a) \,\big|\, \X = \x\big].
+a zatem $\E[Y]=0\cdot0{,}475+2\cdot0{,}300+4\cdot0{,}225=1{,}5$.
+Ryzyko tej prognozy wynosi
+$$
+\Risk(f)=0{,}475\cdot(0-1{,}5)^2
++0{,}300\cdot(2-1{,}5)^2
++0{,}225\cdot(4-1{,}5)^2=2{,}55.
+$$
+Jest mniejsze niż ryzyko prognozy $2$.
+
+Przyjrzyjmy się teraz stracie prognozy $1{,}5$ **przy ustalonym rodzaju dnia**.
+Zaczniemy od zwykłych dni, czyli warunku $X=A$. Korzystamy wtedy
+z rozkładu warunkowego $Y\mid X=A$: wartości popytu mają
+prawdopodobieństwa podane w wierszu $A$ tabeli modelu. Każdej wartości
+popytu odpowiada określona strata:
+
+| Popyt $y$ | $\Prob(Y=y\mid X=A)$ | Strata $(y-1{,}5)^2$ |
+|---:|---:|---:|
+| $0$ | $0{,}6$ | $2{,}25$ |
+| $2$ | $0{,}3$ | $0{,}25$ |
+| $4$ | $0{,}1$ | $6{,}25$ |
+
+Wszystkie trzy wartości straty są różne, więc ostatnia kolumna wraz
+z prawdopodobieństwami opisuje rozkład straty pod warunkiem $X=A$.
+Jej warunkowa wartość oczekiwana wynosi
+$$
+\E\big[(Y-1{,}5)^2\mid X=A\big]
+=0{,}6\cdot2{,}25+0{,}3\cdot0{,}25+0{,}1\cdot6{,}25
+=2{,}05.
+$$
+
+Dla dni wydarzenia wartości straty pozostają takie same, ale zmieniają
+się ich prawdopodobieństwa. Korzystając z wiersza $B$ tabeli modelu,
+otrzymujemy
+$$
+\E\big[(Y-1{,}5)^2\mid X=B\big]
+=0{,}1\cdot2{,}25+0{,}3\cdot0{,}25+0{,}6\cdot6{,}25
+=4{,}05.
+$$
+
+Te dwie warunkowe wartości oczekiwane nazywamy **ryzykami warunkowymi**:
+opisują przeciętną stratę prognozy osobno dla każdego rodzaju dnia.
+
+Co otrzymamy, gdy uśrednimy je po rozkładzie $X$? Zwykłe dni mają
+prawdopodobieństwo $0{,}75$, a dni wydarzenia $0{,}25$, zatem
+$$
+0{,}75\cdot2{,}05+0{,}25\cdot4{,}05=2{,}55.
+$$
+Otrzymaliśmy ryzyko obliczone wcześniej bezpośrednio. Ta zgodność
+wynika ze **wzoru na iterowaną wartość oczekiwaną**:
+$$
+\E\big[(Y-1{,}5)^2\big]
+=\E\Big[\E\big[(Y-1{,}5)^2\mid X\big]\Big].
+$$
+Najpierw obliczamy wartość oczekiwaną straty przy ustalonym rodzaju
+dnia, a następnie uśredniamy otrzymane wartości po rozkładzie rodzajów dni.
+
+Wprowadźmy zapis, który pozwoli powtórzyć ten rachunek dla dowolnej
+prognozy $a$ i dowolnych cech $\x$:
+$$
+r(a\mid\x)=\E\big[\Loss(Y,a)\mid\X=\x\big].
 $$ {#eq-ryzyko-punktowe}
-Punkt $\x$ i wartość $a$ są tu ustalone, losowe jest tylko $Y$, a średnią
-liczymy względem rozkładu warunkowego $Y \mid \X = \x$:
+W tym wyrażeniu $\x$ i $a$ są ustalone. Uśredniamy po możliwych
+wynikach $Y$ wśród obiektów o cechach $\x$. Przy skończenie wielu
+wynikach jest to po prostu suma
 $$
-r(a \mid \x) = \sum_{y} \Loss(y, a)\, p(y \mid \x)
-\qquad\text{albo}\qquad
-r(a \mid \x) = \int \Loss(y, a)\, p(y \mid \x)\, dy .
+r(a\mid\x)=\sum_y\Loss(y,a)\Prob(Y=y\mid\X=\x).
 $$
-Ryzyko warunkowe jest więc **liczbą**: mówi, ile przeciętnie kosztuje
-predykcja $a$ dla obiektów o cechach $\x$. Wewnętrzna średnia
-w ([-@eq-ryzyko-warunkowe]) to ta sama wielkość z $a = f(\x)$,
-obliczona w wylosowanym punkcie: $\E\big[\Loss(Y, f(\X)) \mid \X\big] = r(f(\X) \mid \X)$.
+W przykładzie pojedynczą cechą jest rodzaj dnia, więc piszemy
+$r(a\mid A)$ i $r(a\mid B)$.
+
+Dla dowolnej reguły $f$ otrzymujemy
+$$
+\Risk(f)=0{,}75\,r(f(A)\mid A)+0{,}25\,r(f(B)\mid B).
+$$
+Ogólny zapis tej samej zasady to
+$$
+\Risk(f)=\E\big[r(f(\X)\mid\X)\big]
+=\E\Big[\E\big[\Loss(Y,f(\X))\mid\X\big]\Big].
+$$ {#eq-ryzyko-warunkowe}
+Jest to zastosowanie wzoru na iterowaną wartość oczekiwaną
+z rozdziału [-@sec-czym-jest-model].
+
+Gdy cechy i odpowiedź przyjmują skończenie wiele wartości, przejście
+to można zobaczyć bezpośrednio w sumach:
+$$
+\begin{aligned}
+\Risk(f)
+&=\sum_{\x}\sum_y \Loss(y,f(\x))\Prob(\X=\x,Y=y)\\
+&=\sum_{\x}\sum_y \Loss(y,f(\x))
+  \Prob(\X=\x)\Prob(Y=y\mid\X=\x)\\
+&=\sum_{\x}\Prob(\X=\x)
+  \underbrace{\sum_y\Loss(y,f(\x))\Prob(Y=y\mid\X=\x)}_{r(f(\x)\mid\x)}.
+\end{aligned}
+$$
+Sumujemy tu po wartościach $\x$ o dodatnim prawdopodobieństwie.
+W drugim wierszu rozpisaliśmy prawdopodobieństwo łączne jako iloczyn
+prawdopodobieństwa cech i prawdopodobieństwa warunkowego odpowiedzi.
+W trzecim wyłączyliśmy przed wewnętrzną sumę czynnik
+$\Prob(\X=\x)$, który nie zależy od $y$. Wewnętrzna suma jest ryzykiem
+warunkowym, a zewnętrzna uśrednia je po rozkładzie cech.
+
+## Minimalizacja punktowa
+
+Dotąd ocenialiśmy gotowe reguły. Teraz chcemy regułę wybrać.
+W przykładzie sklepu oznacza to wybór dwóch liczb: prognozy $a_A$
+na zwykły dzień i prognozy $a_B$ na dzień wydarzenia. Ich ryzyko wynosi
+$$
+0{,}75\,r(a_A\mid A)+0{,}25\,r(a_B\mid B).
+$$
+Ryzyko warunkowe $r(a_A\mid A)$ jest średnią straty prognozy $a_A$
+liczoną według rozkładu popytu w zwykłe dni. Ten rozkład nie zależy
+od naszych prognoz, więc pierwszy składnik zależy wyłącznie od $a_A$,
+a drugi z tego samego powodu wyłącznie od $a_B$. Wagi $0{,}75$
+i $0{,}25$ też są ustalone. Możemy więc wybrać najlepszą odpowiedź w każdej grupie osobno.
+Zmniejszenie straty w grupie $A$ nie wymaga pogorszenia prognozy
+w grupie $B$.
+
+To rozumowanie nie zależy od straty kwadratowej ani od liczby grup.
+Prowadzi do wspólnej zasady dla regresji i klasyfikacji.
 
 ::: {#thm-minimalizacja-punktowa}
 ## Zasada minimalizacji punktowej
-Jeżeli dla każdego $\x$ istnieje wartość $\fopt(\x)$ minimalizująca
-$r(\cdot \mid \x)$, to funkcja $\fopt$ minimalizuje ryzyko $\Risk$ w klasie
-**wszystkich** predyktorów.
+Jeżeli dla każdej rozważanej wartości cech $\x$ wybierzemy odpowiedź
+$\fopt(\x)$ minimalizującą ryzyko warunkowe $r(a\mid\x)$ i wybory te
+wyznaczają dopuszczalny predyktor, to $\fopt$ minimalizuje ryzyko
+$\Risk(f)$ wśród wszystkich predyktorów.
 :::
 
 ::: {.proof}
-Niech $f$ będzie dowolnym predyktorem. Z definicji $\fopt(\x)$ jako
-minimalizatora zachodzi $r(\fopt(\x) \mid \x) \le r(f(\x) \mid \x)$ dla
-każdego $\x$. Podstawiając $\X$ w miejsce $\x$, otrzymujemy nierówność
-między zmiennymi losowymi $r(\fopt(\X) \mid \X)$ i $r(f(\X) \mid \X)$.
-Nierówność ta zachowuje się przy uśrednianiu po rozkładzie $\X$, więc
-na mocy ([-@eq-ryzyko-warunkowe])
+Niech $f$ będzie dowolnym innym predyktorem. Dla każdej wartości cech
+mamy $r(\fopt(\x)\mid\x)\le r(f(\x)\mid\x)$.
+Uśrednienie tej nierówności po rozkładzie cech daje
 $$
-\Risk(\fopt) = \E\big[r(\fopt(\X) \mid \X)\big]
-\;\le\; \E\big[r(f(\X) \mid \X)\big] = \Risk(f). \qquad\square
+\Risk(\fopt)=\E\big[r(\fopt(\X)\mid\X)\big]
+\le\E\big[r(f(\X)\mid\X)\big]=\Risk(f).
 $$
+$\square$
 :::
 
-::: {.callout-tip}
-## Znaczenie minimalizacji punktowej
-Zasada mówi, co estymować -- średnią warunkową, medianę albo
-$\eta(\x)$ -- ale nie mówi, jak to zrobić. Wygląda na prostą, bo w każdym
-punkcie $\x$ wystarczy znać rozkład warunkowy $Y \mid \X = \x$ i nie trzeba
-patrzeć na inne punkty. Tego rozkładu jednak nie znamy, a przy cechach
-ciągłych $\Prob(\X = \x) = 0$, więc w próbie prawie na pewno nie ma ani
-jednej obserwacji o cechach dokładnie $\x$. Informację trzeba pożyczać
-z innych punktów: z otoczenia $\x$, jak w metodzie $k$ najbliższych sąsiadów
-z rozdziału [-@sec-knn], albo z całej próby naraz, jak w modelu
-parametrycznym, którego wszystkie parametry wyznaczamy jednocześnie.
+Słowo *punktowa* oznacza, że wybieramy odpowiedź osobno dla każdej
+wartości cech. Zamiast od razu szukać całej funkcji, rozwiązujemy
+prostszy problem: **przy tych cechach, którą odpowiedź opłaca się podać?**
+Jest to podstawowa zasada statystycznej teorii decyzji [@esl, rozdz. 2.4].
 
-Pożyczanie sprzęga predykcje w różnych punktach i stąd biorą się
-kompromisy. Prosta dopasowana do zakrzywionej funkcji regresji, jak na
-rysunku [-@fig-parametryczne-nieparametryczne], poprawia się w jednej części
-przestrzeni cech kosztem innej. Przy uśrednianiu lokalnym trzeba z kolei
-wybrać wielkość otoczenia: małe zawiera mało obserwacji, duże miesza punkty
-o różnych rozkładach warunkowych. Inaczej jest, gdy cechy przyjmują
-niewiele wartości i każdą z nich obserwujemy wiele razy -- wtedy
-optymalną predykcję można szacować w każdym punkcie osobno, na przykład
-średnią wyników w tym punkcie.
+Istotny jest zakres swobody. Jeśli wymagamy, aby prognoza była stała,
+to $a_A=a_B$ i nie możemy już wybierać tych liczb niezależnie.
+Podobnie, wymagając, aby prognozy leżały na jednej prostej, wiążemy
+odpowiedzi w różnych punktach. Najlepszy predyktor w ograniczonej
+klasie może zatem mieć większe ryzyko niż optimum punktowe.
 
-Widać tu też rolę obu czynników rozkładu łącznego
-([-@eq-rozklad-laczny]). Ryzyko warunkowe $r(a \mid \x)$ zależy wyłącznie
-od rozkładu warunkowego $Y \mid \X = \x$, więc optymalna predykcja w punkcie
-$\x$ nie zależy od rozkładu brzegowego cech $p(\x)$. Ten pojawia się
-dopiero w zewnętrznej wartości oczekiwanej we wzorze
-([-@eq-ryzyko-warunkowe]): waży punkty, decydując, ile wnosi do ryzyka
-błąd popełniony w danym obszarze przestrzeni cech -- tak jak zapowiedzieliśmy
-w sekcji [-@sec-zaleznosc-i-szum].
-:::
-
-Od tej chwili wystarczy więc odpowiadać na pytanie: *dla danej straty $\Loss$
-i danego rozkładu warunkowego $Y \mid \X = \x$, która wartość $a$ minimalizuje
-([-@eq-ryzyko-punktowe])?* Strata wyznacza, jaką charakterystykę rozkładu
-warunkowego zwraca optymalny predyktor, na przykład średnią, medianę albo
-najbardziej prawdopodobną klasę. Wybór straty jest więc częścią
-modelowania.
-
-## Regresja: strata kwadratowa i strata absolutna
-
-### Funkcja regresji
-
-::: {#thm-funkcja-regresji}
-## Optymalność funkcji regresji
-Niech $\mathcal{Y} = \R$, $\Loss(y, a) = (y - a)^2$ i niech
-$\E[Y^2] < \infty$. Wtedy ryzyko ([-@eq-ryzyko]) jest minimalizowane przez
-**funkcję regresji**
-$$
-\fopt(\x) = \E[Y \mid \X = \x].
-$$ {#eq-funkcja-regresji}
-:::
-
-::: {.proof}
-Na mocy @thm-minimalizacja-punktowa wystarczy dla ustalonego $\x$
-zminimalizować $r(a \mid \x) = \E[(Y - a)^2 \mid \X = \x]$ względem $a \in \R$.
-Oznaczmy $m = \E[Y \mid \X = \x]$ i rozłóżmy różnicę $Y - a = (Y - m) + (m - a)$:
-$$
-\E\big[(Y-a)^2 \mid \X = \x\big]
-= \E\big[(Y-m)^2 \mid \X=\x\big] + 2(m-a)\,\E\big[Y-m \mid \X=\x\big] + (m-a)^2 .
-$$
-Środkowy składnik znika, ponieważ $\E[Y - m \mid \X = \x] = m - m = 0$.
-Zostaje
-$$
-r(a \mid \x) = \Var(Y \mid \X = \x) + (m - a)^2 .
-$$ {#eq-rozklad-ryzyka-punktowego}
-Pierwszy składnik nie zależy od $a$, drugi jest nieujemny i zeruje się
-dokładnie dla $a = m$. Zatem $\fopt(\x) = m = \E[Y \mid \X = \x]$. $\qquad\square$
-:::
-
-Z równania ([-@eq-rozklad-ryzyka-punktowego]) dla $a = m$ wynika też,
-że ryzyko warunkowe optymalnego predyktora w punkcie $\x$ wynosi
-$\Var(Y \mid \X = \x)$. **Optymalny predyktor ma więc dodatnie ryzyko**,
-o ile $Y$ nie jest wyznaczone przez $\X$. Wrócimy do tego
-w sekcji [-@sec-blad-nieredukowalny].
-
-### Strata absolutna
-
-Zmieńmy jedno założenie -- stratę -- i zobaczmy, jak zmienia się odpowiedź.
-
-::: {#thm-mediana-warunkowa}
-## Optymalność mediany warunkowej
-Przy stracie $\Loss(y, a) = |y - a|$ ryzyko ([-@eq-ryzyko]) jest minimalizowane
-przez **medianę warunkową**
-$$
-\fopt(\x) = \med(Y \mid \X = \x).
-$$ {#eq-mediana-warunkowa}
-:::
+Warto też rozdzielić role prawdopodobieństw. O najlepszej odpowiedzi
+w grupie decyduje rozkład wyniku **w tej grupie**. Częstość grupy
+określa natomiast jej udział w całkowitym ryzyku. Przy niezmienionych
+rozkładach warunkowych zmiana proporcji grup nie zmienia ich punktowych
+optimów, ale może zmienić ryzyko oraz najlepszą regułę stałą.
 
 ::: {.callout-note collapse="true"}
-## Dowód (dla zainteresowanych)
-Ustalmy $\x$ i oznaczmy przez $F$ dystrybuantę rozkładu $Y \mid \X = \x$.
-Dla prostoty zakładamy, że $F$ jest ciągła. Rozbijając wartość oczekiwaną według znaku $Y - a$, mamy
-$$
-r(a \mid \x) = \int_{-\infty}^{a} (a - y)\,dF(y) + \int_{a}^{\infty} (y - a)\,dF(y).
-$$
-Różniczkując po $a$ (składniki brzegowe znoszą się, bo podcałkowa funkcja
-zeruje się w $y = a$):
-$$
-\frac{\partial r}{\partial a}(a \mid \x) = F(a) - \big(1 - F(a)\big) = 2F(a) - 1 .
-$$
-Pochodna jest ujemna dla $F(a) < \tfrac12$ i dodatnia dla $F(a) > \tfrac12$,
-a funkcja $r(\cdot \mid \x)$ jest wypukła jako suma funkcji wypukłych. Minimum
-przypada więc tam, gdzie $F(a) = \tfrac12$, czyli w medianie rozkładu
-warunkowego. $\qquad\square$
-
-Bez założenia ciągłości rozumowanie przenosi się na pochodne jednostronne:
-minimum osiąga każda mediana, czyli każde $a$ spełniające
-$F(a^-) \le \tfrac12 \le F(a)$ -- w ogólności nie jest ona jednoznaczna.
+## Uwaga o zakresie twierdzenia
+Dla cech dyskretnych wystarczy rozpatrywać wartości o dodatnim
+prawdopodobieństwie. W ogólnym przypadku rozkłady warunkowe i predyktory
+optymalne określamy z dokładnością do zbiorów cech o prawdopodobieństwie
+zero. Zakładamy też mierzalność wybranego predyktora, aby jego ryzyko
+było określone. Wystarczy więc, aby punktowa nierówność zachodziła
+prawie wszędzie względem rozkładu cech. W przykładach skończonych
+te zastrzeżenia nie wymagają dodatkowych rachunków.
 :::
 
-Symbol $\fopt$ oznacza więc predyktor optymalny **przy danej stracie** --
-zmiana straty zmienia to, co się pod nim kryje. Gdy strata nie jest
-wskazana, $\fopt$ oznacza, tak jak w sekcji [-@sec-zaleznosc-i-szum], funkcję
-regresji.
+## Regresja: najlepsza prognoza liczbowa
 
-::: {.callout-important}
-## Wybór straty jest wyborem merytorycznym
-Twierdzenia @thm-funkcja-regresji i @thm-mediana-warunkowa dają **różne**
-odpowiedzi na to samo pytanie o ten sam rozkład. Gdy rozkład warunkowy jest
-skośny, średnia i mediana potrafią leżeć daleko od siebie -- i wtedy pytanie
-„jaka jest najlepsza predykcja?" nie ma sensu, dopóki nie powiemy, co
-uznajemy za stratę.
-
-Strata kwadratowa karze duże błędy proporcjonalnie do kwadratu, więc jeden
-gruby błąd waży tyle co wiele drobnych: predyktor jest przyciągany
-w stronę ogona rozkładu. Strata absolutna waży wszystkie błędy liniowo
-i dlatego prowadzi do estymatora odpornego na obserwacje odstające.
-
-To nie jest wybór między „dokładniejszym" a „mniej dokładnym" narzędziem.
-Przy stracie kwadratowej jeden błąd o wartości 10 kosztuje tyle, co sto
-błędów o wartości 1 (por. @sec-strata-ryzyko), przy absolutnej -- tyle,
-co dziesięć. Wybór straty to rozstrzygnięcie, która z tych wycen lepiej
-oddaje koszty w Twoim zastosowaniu.
-:::
-
-Zilustrujmy to na konkretnym rozkładzie. Ustalmy punkt $\x$ i przyjmijmy,
-że rozkład warunkowy $Y \mid \X = \x$ jest mieszaniną dwóch rozkładów
-normalnych: z prawdopodobieństwem $0{,}85$ wynik pochodzi z rozkładu
-$\Nrozk(2,\, 0{,}6^2)$, a z prawdopodobieństwem $0{,}15$ -- z rozkładu
-$\Nrozk(9,\, 2^2)$. Większość masy skupia się więc wokół $2$, a niewielka jej
-część tworzy długi prawy ogon.
-
-Średnia mieszaniny jest średnią średnich składników ważoną ich
-prawdopodobieństwami: $0{,}85 \cdot 2 + 0{,}15 \cdot 9 = 3{,}05$. Mediana
-nie ma prostego wzoru -- wyznacza się ją numerycznie, rozwiązując równanie
-$F(a) = \tfrac12$, gdzie $F$ jest dystrybuantą mieszaniny (w kodzie poniżej
-robi to funkcja `brentq`). Wychodzi około $2{,}13$, blisko środka składnika
-głównego, który ma $85\%$ masy. Oba ryzyka warunkowe da się dla
-mieszaniny rozkładów normalnych policzyć dokładnie, bez symulacji.
+Wróćmy do straty kwadratowej. W zwykłym dniu średni popyt wynosi
+$$
+m_A=0\cdot0{,}6+2\cdot0{,}3+4\cdot0{,}1=1,
+$$
+a w dniu wydarzenia
+$$
+m_B=0\cdot0{,}1+2\cdot0{,}3+4\cdot0{,}6=3.
+$$
+Sprawdźmy, dlaczego właśnie te liczby są najlepszymi prognozami.
+Dla zwykłego dnia ryzyko warunkowe odpowiedzi $a$ jest równe
+$$
+\begin{aligned}
+r(a\mid A)&=0{,}6a^2+0{,}3(2-a)^2+0{,}1(4-a)^2\\
+&=a^2-2a+2{,}8=1{,}8+(a-1)^2.
+\end{aligned}
+$$
+Najmniejszą wartością jest $1{,}8$, osiąganą dla $a=1$.
+Analogicznie $r(a\mid B)=1{,}8+(a-3)^2$, z minimum przy $a=3$.
 
 ```{python}
-#| label: fig-strata-optima
-#| fig-cap: "Rozkład warunkowy $Y \\mid \\X = \\x$ i ryzyko warunkowe $r(a \\mid \\x)$ jako funkcja predykcji $a$. Po lewej: gęstość mieszaniny $0{,}85\\,\\Nrozk(2,\\, 0{,}6^2) + 0{,}15\\,\\Nrozk(9,\\, 2^2)$ z zaznaczoną średnią i medianą. W środku: ryzyko przy stracie kwadratowej, minimalizowane przez średnią warunkową. Po prawej: ryzyko przy stracie absolutnej, minimalizowane przez medianę warunkową. Oba ryzyka policzono dokładnie ze wzorów dla rozkładu normalnego."
-
+#| label: fig-ryzyko-popyt
+#| fig-cap: "Ryzyko warunkowe prognozy popytu przy stracie kwadratowej. W każdej grupie wybieramy minimum odpowiedniej krzywej. Oba minima są dodatnie."
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.optimize import brentq
-from scipy.stats import norm
 
-# Rozkład Y | X = x: mieszanina dwóch rozkładów normalnych.
-# Składnik j ma wagę w[j], średnią mu[j] i odchylenie standardowe sd[j].
-w = np.array([0.85, 0.15])
-mu = np.array([2.0, 9.0])
-sd = np.array([0.6, 2.0])
-
-def gestosc(y):
-    return (w * norm.pdf(y[:, None], mu, sd)).sum(axis=1)
-
-def dystrybuanta(y):
-    return (w * norm.cdf(y, mu, sd)).sum()
-
-srednia = (w * mu).sum()
-wariancja = (w * (sd**2 + mu**2)).sum() - srednia**2
-# Mediana: miejsce, w którym dystrybuanta przechodzi przez 1/2.
-mediana = brentq(lambda a: dystrybuanta(a) - 0.5, mu.min(), mu.max())
-
-siatka = np.linspace(0, 12, 500)
-
-# Strata kwadratowa: E[(Y - a)^2] = Var(Y) + (E[Y] - a)^2.
-ryzyko_kw = wariancja + (siatka - srednia) ** 2
-
-# Strata absolutna: dla Z ~ N(m, s^2) i z = (a - m)/s
-# E|Z - a| = s * (2*phi(z) + z*(2*Phi(z) - 1)); mieszaninę uśredniamy z wagami w.
-z = (siatka[:, None] - mu) / sd
-ryzyko_abs = (w * sd * (2 * norm.pdf(z) + z * (2 * norm.cdf(z) - 1))).sum(axis=1)
-
-fig, osie = plt.subplots(1, 3, figsize=(11, 3.4), sharex=True)
-
-osie[0].fill_between(siatka, gestosc(siatka), color="#BBBBBB")
-osie[0].axvline(srednia, color="#D7263D", ls="--", lw=1.5,
-                label=f"średnia = {srednia:.2f}")
-osie[0].axvline(mediana, color="#2E8B57", ls=":", lw=1.8,
-                label=f"mediana = {mediana:.2f}")
-osie[0].set_title(r"gęstość $Y \mid X = x$")
-osie[0].set_xlabel("$y$")
-osie[0].legend(loc="upper right", frameon=False)
-
-for ax, ryzyko, opt, kolor, styl, etykieta, tytul in [
-    (osie[1], ryzyko_kw, srednia, "#D7263D", "--", "średnia warunkowa",
-     r"strata kwadratowa $(y-a)^2$"),
-    (osie[2], ryzyko_abs, mediana, "#2E8B57", ":", "mediana warunkowa",
-     r"strata absolutna $|y-a|$"),
-]:
-    ax.plot(siatka, ryzyko, color="#1B6CA8", lw=2)
-    ax.axvline(opt, color=kolor, ls=styl, lw=1.5, label=etykieta)
-    ax.set_xlabel("predykcja $a$")
-    ax.set_title(tytul)
-    ax.legend(loc="upper center", frameon=False)
-
-osie[1].set_ylabel(r"ryzyko warunkowe $r(a \mid x)$")
+a = np.linspace(-0.5, 4.5, 301)
+fig, ax = plt.subplots(figsize=(6.5, 3.8))
+ax.plot(a, 1.8 + (a - 1)**2, label="zwykły dzień A", color="#1B6CA8")
+ax.plot(a, 1.8 + (a - 3)**2, label="dzień wydarzenia B", color="#D7263D")
+ax.scatter([1, 3], [1.8, 1.8], color=["#1B6CA8", "#D7263D"], zorder=3)
+ax.set(xlabel="prognoza a", ylabel="oczekiwana strata kwadratowa", ylim=(0, 15))
+ax.legend(frameon=False)
 plt.tight_layout()
 plt.show()
 ```
 
-Minima obu krzywych leżą w innych miejscach, choć rozkład warunkowy jest
-ten sam. Przy stracie kwadratowej długi prawy ogon przeciąga optymalną
-predykcję w prawo; przy stracie absolutnej ogon jest bez znaczenia, bo liczy
-się tylko to, po której stronie predykcji leży masa prawdopodobieństwa.
+### Dlaczego średnia?
 
-### Rozkład ryzyka przy stracie kwadratowej {#sec-blad-nieredukowalny}
-
-W sekcji [-@sec-strata-ryzyko] rozdzieliliśmy ryzyko na błąd redukowalny
-i nieredukowalny, nie podając ich postaci. Wróćmy do straty kwadratowej:
-dla niej możemy je teraz wyznaczyć. Zapytajmy, ile traci predyktor $f$,
-który nie jest optymalny. Uśredniając ([-@eq-rozklad-ryzyka-punktowego]) po rozkładzie
-$\X$, dostajemy
-
+Rachunek z przykładu można przeprowadzić dla dowolnego rozkładu
+wyniku. Ustalmy cechy $\x$ i oznaczmy średnią warunkową przez
+$m=\E[Y\mid\X=\x]$. Różnicę między wynikiem a prognozą rozpisujemy jako
 $$
-\underbrace{\E\big[(Y - f(\X))^2\big]}_{\text{ryzyko } f}
-=
-\underbrace{\E\Big[\big(\fopt(\X) - f(\X)\big)^2\Big]}_{\text{błąd redukowalny}}
-+
-\underbrace{\E\big[\Var(Y \mid \X)\big]}_{\text{błąd nieredukowalny}} .
-$$ {#eq-rozklad-bledu}
-Średnie po obu stronach liczymy po różnych rozkładach. Po lewej stronie
-występują $\X$ i $Y$, więc uśredniamy po parze $(\X, Y)$. Po prawej
-stronie $Y$ już nie ma: zniknęło przy uśrednianiu przy ustalonym $\X$
-w ([-@eq-rozklad-ryzyka-punktowego]). Oba składniki są funkcjami samego
-$\X$ i uśredniamy je po rozkładzie cech.
+Y-a=(Y-m)+(m-a).
+$$
+Po podniesieniu do kwadratu i uśrednieniu otrzymujemy
+$$
+\begin{aligned}
+\E[(Y-a)^2\mid\X=\x]
+&=\E[(Y-m)^2\mid\X=\x]\\
+&\quad+2(m-a)\E[Y-m\mid\X=\x]+(m-a)^2.
+\end{aligned}
+$$
+Środkowy składnik znika, bo średnie odchylenie od średniej wynosi zero.
+Pierwszy składnik to wariancja warunkowa. Zatem
+$$
+r(a\mid\x)=\Var(Y\mid\X=\x)+(m-a)^2.
+$$ {#eq-rozklad-ryzyka-punktowego}
+Wariancja nie zależy od naszej prognozy. Drugi składnik jest
+nieujemny i zeruje się dokładnie dla $a=m$. W każdej grupie najlepszą
+odpowiedzią jest więc jej średnia. Minimalizacja punktowa daje wynik
+dla całego predyktora.
 
-Błąd redukowalny okazuje się średnim kwadratem odległości predyktora od
-funkcji regresji, a nieredukowalny -- średnią wariancją warunkową wyniku,
-czyli średnią wariancją szumu $\varepsilon$ z ([-@eq-rozklad-addytywny]).
-Ten drugi zależy od rozkładu warunkowego $Y \mid \X$, a więc -- jak
-zauważyliśmy w sekcji [-@sec-strata-ryzyko] -- od zestawu cech, a nie od modelu.
+::: {#thm-funkcja-regresji}
+## Optymalność funkcji regresji
+Jeżeli $\E[Y^2]<\infty$, to przy stracie kwadratowej
+$\Loss(y,a)=(y-a)^2$ ryzyko minimalizuje **funkcja regresji**
+$$
+\fopt(\x)=\E[Y\mid\X=\x].
+$$ {#eq-funkcja-regresji}
+:::
 
-Rozkład ([-@eq-rozklad-bledu]) jest zalążkiem kompromisu
-obciążenie--wariancja. W rozdziale [-@sec-bias-wariancja] rozbijemy człon redukowalny
-dalej -- na część wynikającą ze zbyt ubogiej klasy modeli i część wynikającą
-ze skończoności próby.
+W naszym przykładzie jest to reguła $\fopt(A)=1$, $\fopt(B)=3$.
+Jej ryzyko wynosi $0{,}75\cdot1{,}8+0{,}25\cdot1{,}8=1{,}8$.
+Możemy ją teraz porównać z innymi regułami:
 
-## Klasyfikacja: strata 0--1 i klasyfikator bayesowski
+| Reguła | $f(A)$ | $f(B)$ | Ryzyko w $A$ | Ryzyko w $B$ | Ryzyko całkowite |
+|:---|---:|---:|---:|---:|---:|
+| Stała prognoza $2$ | $2$ | $2$ | $2{,}8$ | $2{,}8$ | $2{,}8$ |
+| Najlepsza stała | $1{,}5$ | $1{,}5$ | $2{,}05$ | $4{,}05$ | $2{,}55$ |
+| Prognozy skrajne | $0$ | $4$ | $2{,}8$ | $2{,}8$ | $2{,}8$ |
+| Predyktor optymalny | $1$ | $3$ | $1{,}8$ | $1{,}8$ | $1{,}8$ |
 
-Przejdźmy do $\mathcal{Y} = \{1, \dots, K\}$ i straty 0--1
-([-@eq-strata-01-wstep]), która karze każdą pomyłkę tak samo. Jak
-zauważyliśmy w sekcji [-@sec-strata-ryzyko], ryzyko jest przy niej
-prawdopodobieństwem błędnej klasyfikacji. Klasyfikatory, czyli predyktory
-o wartościach w zbiorze klas, oznaczamy literą $g$. Prawdopodobieństwa klas
-zapisujemy, jak w sekcji [-@sec-zaleznosc-i-szum], jako
-$\eta_k(\x) = \Prob(Y = k \mid \X = \x)$.
+Najlepszą prognozą stałą jest średnia całej populacji, $\E[Y]=1{,}5$.
+Dowód jest taki sam jak powyżej, tylko bez warunkowania. Znajomość
+rodzaju dnia pozwala zastąpić jedną średnią dwiema średnimi warunkowymi
+i obniżyć ryzyko z $2{,}55$ do $1{,}8$.
+
+Samo korzystanie z cechy nie gwarantuje poprawy: reguła $(0,4)$ jest
+gorsza od najlepszej stałej. Natomiast **najlepsza** reguła wykorzystująca
+cechę nie może być gorsza od najlepszej stałej, ponieważ zawsze może
+tę cechę zignorować.
+
+Popyt przyjmuje tu tylko trzy wartości, ale nadal mamy do czynienia
+z regresją: przewidujemy wielkość liczbową, a różnica między wynikiem
+i prognozą ma znaczenie. Prognoza średniej nie musi być możliwą
+realizacją popytu. Jeśli chcielibyśmy na jej podstawie ustalić całkowitą
+liczbę sztuk do zamówienia, potrzebowalibyśmy dodatkowo opisu kosztów
+niedoboru i nadmiaru zapasu.
+
+## Klasyfikacja: najlepsza odpowiedź tak lub nie
+
+Sklep może postawić inne pytanie: **czy popyt wyniesie co najmniej
+$2$ sztuki?** Zachowujemy ten sam rozkład danych, lecz przewidujemy teraz
+klasę
+$$
+Z=\ind(Y\ge2).
+$$
+Litera $Y$ nadal oznacza wielkość popytu, a $Z$ -- odpowiedź na nowe
+pytanie. Klasyfikator $g$ ma zwracać $0$ albo $1$. Każdą pomyłkę
+oceniamy stratą $1$, trafną odpowiedź stratą $0$.
+
+Z @tbl-popyt-rozklad odczytujemy
+$$
+\Prob(Z=1\mid X=A)=0{,}3+0{,}1=0{,}4,\qquad
+\Prob(Z=1\mid X=B)=0{,}3+0{,}6=0{,}9.
+$$
+Porównajmy obie odpowiedzi w każdej grupie:
+
+| Rodzaj dnia | Ryzyko odpowiedzi $0$ | Ryzyko odpowiedzi $1$ | Najlepsza odpowiedź |
+|:---|---:|---:|---:|
+| $A$ | $0{,}4$ | $0{,}6$ | $0$ |
+| $B$ | $0{,}9$ | $0{,}1$ | $1$ |
+
+Na przykład w grupie $A$ odpowiedź $0$ jest błędna wtedy, gdy $Z=1$,
+a więc z prawdopodobieństwem $0{,}4$. Odpowiedź $1$ jest błędna
+z prawdopodobieństwem $0{,}6$. Wybieramy pierwszą z nich.
+
+**Wykonaliśmy te same kroki co w regresji:** ustaliliśmy cechy,
+policzyliśmy oczekiwaną stratę możliwych odpowiedzi i wybraliśmy
+najlepszą. Minimalizacja punktowa mówi, że złożenie tych odpowiedzi
+w regułę $g(A)=0$, $g(B)=1$ daje minimum ryzyka całkowitego:
+$$
+\Risk(g)=0{,}75\cdot0{,}4+0{,}25\cdot0{,}1=0{,}325.
+$$
+Tym razem liczba ma interpretację prawdopodobieństwa: reguła myli się
+w $32{,}5\%$ przypadków według założonego rozkładu.
+
+### Najbardziej prawdopodobna klasa
+
+Uogólnijmy rachunek. W ogólnym problemie klasyfikacji wracamy do
+standardowego oznaczenia odpowiedzi przez $Y\in\{1,\ldots,K\}$.
+Niech $\eta_k(\x)=\Prob(Y=k\mid\X=\x)$. Ryzyko warunkowe wskazania
+klasy $a$ przy stracie $0$--$1$ wynosi
+$$
+r(a\mid\x)=\Prob(Y\ne a\mid\X=\x)=1-\eta_a(\x).
+$$
+Najmniejsze ryzyko daje zatem klasa o największym prawdopodobieństwie.
+Ponownie stosujemy zasadę minimalizacji punktowej.
 
 ::: {#thm-bayes-optymalny}
 ## Optymalność reguły Bayesa
-Spośród wszystkich klasyfikatorów $g : \mathcal{X} \to \{1, \dots, K\}$
-prawdopodobieństwo błędu $\Prob\big(g(\X) \neq Y\big)$ minimalizuje
-**klasyfikator bayesowski**
+Przy stracie $0$--$1$ ryzyko minimalizuje **klasyfikator bayesowski**
 $$
-\Bayes(\x) = \argmax_{k} \; \eta_k(\x).
+\Bayes(\x)=\argmax_k\eta_k(\x).
 $$ {#eq-klasyfikator-bayesa}
+Jeśli kilka klas ma takie samo największe prawdopodobieństwo,
+można wybrać dowolną z nich.
 :::
 
-::: {.proof}
-Zastosujmy @thm-minimalizacja-punktowa. Ryzyko warunkowe wskazania klasy $a$
-w punkcie $\x$ wynosi
+Nazwa nie oznacza, że przyjęliśmy rozkład na parametrach modelu.
+Opisuje regułę wybierającą najbardziej prawdopodobną klasę przy danych
+cechach. Jej ryzyko nazywamy **błędem bayesowskim**:
 $$
-r(a \mid \x) = \E\big[\ind(Y \neq a) \mid \X = \x\big]
-= \Prob(Y \neq a \mid \X = \x)
-= 1 - \eta_a(\x).
-$$
-Minimalizacja $r(\cdot \mid \x)$ jest więc równoważna maksymalizacji
-$\eta_a(\x)$ po $a$, co daje dokładnie
-([-@eq-klasyfikator-bayesa]). Ponieważ zachodzi to punktowo dla każdego $\x$,
-minimalizowane jest również ryzyko uśrednione po rozkładzie $\X$.
-$\qquad\square$
-:::
-
-Ryzyko klasyfikatora bayesowskiego nazywamy **błędem bayesowskim**:
-$$
-\Risk^{*} = \Prob\big(\Bayes(\X) \neq Y\big)
-= \E\Big[1 - \max_{k} \eta_k(\X)\Big].
+\Risk^*=\E\Big[1-\max_k\eta_k(\X)\Big].
 $$ {#eq-blad-bayesa}
-Ostatnie wyrażenie zależy już tylko od $\X$, więc średnią liczymy po
-rozkładzie cech: w każdym punkcie $\x$ pomyłka zdarza się
-z prawdopodobieństwem $1 - \max_k \eta_k(\x)$, a $\E$ uśrednia te
-prawdopodobieństwa po $\x$.
+W każdym punkcie wybieramy najlepszą klasę, a następnie uśredniamy
+jej prawdopodobieństwo pomyłki po rozkładzie cech.
 
-Błąd bayesowski jest więc błędem nieredukowalnym z sekcji [-@sec-strata-ryzyko],
-wyznaczonym dla straty 0--1. Tak jak dla straty kwadratowej, możemy
-wyznaczyć również część redukowalną. Ryzyko warunkowe wskazania klasy $a$
-rozkłada się na
-$$
-r(a \mid \x) = 1 - \eta_a(\x)
-= \big(1 - \max_k \eta_k(\x)\big) + \big(\max_k \eta_k(\x) - \eta_a(\x)\big).
-$$
-Pierwszy składnik to ryzyko warunkowe klasyfikatora bayesowskiego. Drugi
-jest nieujemny i zeruje się dokładnie wtedy, gdy $a$ jest klasą
-o największym prawdopodobieństwie. Uśredniając po rozkładzie $\X$,
-dostajemy odpowiednik ([-@eq-rozklad-bledu]):
-$$
-\underbrace{\Prob\big(g(\X) \neq Y\big)}_{\text{ryzyko } g}
-=
-\underbrace{\E\Big[\max_k \eta_k(\X) - \eta_{g(\X)}(\X)\Big]}_{\text{błąd redukowalny}}
-+
-\underbrace{\Risk^{*}}_{\text{błąd nieredukowalny}} .
-$$ {#eq-rozklad-bledu-01}
+W przykładzie sklepu $\Prob(Z=1)=0{,}525$, więc najlepszy klasyfikator
+stały zawsze wskazuje $1$. Jego błąd to $0{,}475$. Dla porównania
+możemy wypisać wszystkie cztery reguły:
 
-Dla dwóch klas różnica $\max_k \eta_k(\x) - \eta_{g(\x)}(\x)$ wynosi
-$0$, gdy $g(\x) = \Bayes(\x)$, a w przeciwnym razie
-$|\eta_1(\x) - \eta_2(\x)| = |2\eta_1(\x) - 1|$. Błąd redukowalny jest
-więc równy
+| $g(A)$ | $g(B)$ | Ryzyko | Interpretacja |
+|---:|---:|---:|:---|
+| $0$ | $0$ | $0{,}525$ | zawsze przewidujemy niski popyt |
+| $1$ | $1$ | $0{,}475$ | najlepsza reguła stała |
+| $0$ | $1$ | $0{,}325$ | reguła Bayesa |
+| $1$ | $0$ | $0{,}675$ | reguła odwrotna |
+
+Informacja o rodzaju dnia obniża najmniejsze możliwe prawdopodobieństwo
+błędu o $0{,}15$, czyli o $15$ punktów procentowych.
+
+### Jeden schemat, dwa zastosowania
+
+| Krok | Regresja ze stratą kwadratową | Klasyfikacja ze stratą $0$--$1$ |
+|:---|:---|:---|
+| Ustalamy cechy | $\X=\x$ | $\X=\x$ |
+| Rozważamy odpowiedź | liczba $a$ | klasa $a$ |
+| Liczymy przeciętną stratę | $\E[(Y-a)^2\mid\X=\x]$ | $1-\eta_a(\x)$ |
+| Wybieramy minimum | średnia warunkowa | najbardziej prawdopodobna klasa |
+| Liczymy ryzyko optimum | uśredniamy wariancje warunkowe | uśredniamy najmniejsze prawdopodobieństwa pomyłki |
+
+W obu zadaniach potrzebujemy opisu rozkładu odpowiedzi przy danych
+cechach. Różnią się możliwe odpowiedzi i sposób mierzenia pomyłek.
+Z tego powodu wartości $1{,}8$ i $0{,}325$ nie służą do porównania,
+które z tych dwóch zadań rozwiązaliśmy „lepiej”: mają inne znaczenie
+oraz inną jednostkę.
+
+## Dlaczego optimum ma dodatnie ryzyko? {#sec-blad-nieredukowalny}
+
+Najlepsza prognoza popytu w zwykłym dniu wynosi $1$, choć rzeczywisty
+popyt przyjmuje wartości $0$, $2$ i $4$. Żadna pojedyncza liczba nie
+może jednocześnie trafić we wszystkie te wyniki. Podobnie najlepsza
+klasyfikacja zwykłego dnia to „popyt poniżej $2$”, ale w $40\%$ takich
+dni popyt wynosi co najmniej $2$.
+
+Pozostaje więc niepewność, której nie usunie zmiana reguły opartej
+wyłącznie na rodzaju dnia. W sekcji [-@sec-strata-ryzyko] nazwaliśmy
+najmniejsze ryzyko osiągalne przy danych cechach i danej stracie
+**błędem nieredukowalnym**, a nadwyżkę ryzyka predyktora ponad to
+minimum -- **błędem redukowalnym**. Teraz możemy oba składniki obliczyć.
+
+Dla straty kwadratowej podstawiamy $a=f(\x)$ do
+([-@eq-rozklad-ryzyka-punktowego]) i uśredniając po cechach, otrzymujemy
 $$
-\E\Big[\,|2\eta_1(\X) - 1| \cdot \ind\big(g(\X) \neq \Bayes(\X)\big)\Big].
+\Risk(f)=
+\underbrace{\E\big[(f(\X)-\fopt(\X))^2\big]}_{\text{błąd redukowalny}}
++\underbrace{\E\big[\Var(Y\mid\X)\big]}_{\text{błąd nieredukowalny}}.
+$$ {#eq-rozklad-bledu}
+Drugi składnik jest ryzykiem funkcji regresji. Pierwszy mierzy,
+jak daleko nasza reguła odbiega od niej w średnim kwadracie.
+
+W przykładzie sklepu dla dowolnych prognoz $a_A,a_B$:
 $$
-Nie liczy on po prostu, jak często $g$ nie zgadza się z regułą Bayesa,
-lecz waży każdą niezgodność tym, jak wyraźnie jedna klasa przeważa w danym
-punkcie. Niezgodność blisko granicy decyzyjnej, gdzie
-$\eta_1(\x) \approx \tfrac12$, prawie nic nie kosztuje. W obszarze, gdzie
-$\eta_1(\x)$ jest bliskie $0$ lub $1$, kosztuje niemal całą pomyłkę.
-Ten wzór na nadwyżkę ryzyka nad błędem bayesowskim jest punktem wyjścia
-teorii klasyfikacji w monografii @devroye1996 [rozdz. 2].
+\Risk(f)=1{,}8+0{,}75(a_A-1)^2+0{,}25(a_B-3)^2.
+$$
+Stała prognoza $1{,}5$ ma nadwyżkę ryzyka
+$0{,}75\cdot0{,}5^2+0{,}25\cdot(-1{,}5)^2=0{,}75$.
+Jej ryzyko $2{,}55$ składa się więc z $1{,}8$ nieusuwalnej zmienności
+oraz $0{,}75$, które tracimy przez nieuwzględnienie rodzaju dnia.
 
-Oba rozkłady, ([-@eq-rozklad-bledu]) i ([-@eq-rozklad-bledu-01]), mają tę
-samą budowę: ryzyko dowolnego predyktora to ryzyko predyktora optymalnego
-plus nieujemna nadwyżka, mierząca odległość od optimum. Przy stracie
-kwadratowej jest nią średni kwadrat odległości od funkcji regresji, przy
-stracie 0--1 -- średnie prawdopodobieństwo trafienia utracone przez wybór
-gorszej klasy.
+W klasyfikacji rolę dolnej granicy pełni błąd bayesowski. W naszym
+przykładzie wynosi $0{,}325$. Żadna reguła korzystająca wyłącznie z $X$
+nie obniży go, ponieważ w każdej grupie już wybraliśmy najmniejsze
+prawdopodobieństwo pomyłki. Odpowiednik rozkładu ([-@eq-rozklad-bledu])
+dla straty 0--1 podajemy w sekcji [-@sec-rozszerzenia-predykcji].
 
-::: {.callout-note}
-## Błąd bayesowski to nie jest wada modelu
-$\Risk^{*}$ jest zwykle dodatni i przy ustalonych cechach nie da się go
-zmniejszyć **żadnym** modelem, żadną ilością danych ani żadną mocą
-obliczeniową. Jest dodatni zawsze, gdy istnieje obszar przestrzeni cech
-o dodatnim prawdopodobieństwie, w którym $\eta_k(\x)$ nie koncentruje się
-na jednej klasie -- czyli gdy te same cechy występują u obiektów o różnych
-etykietach.
+Jak zaznaczyliśmy w rozdziale [-@sec-czym-jest-model], przymiotnik
+„nieredukowalny” odnosi się do ustalonego zestawu cech. W przykładzie
+sklepu dodatkowa cecha, na przykład liczba wcześniejszych rezerwacji
+produktu, mogłaby rozróżnić dni, które dotąd traktowaliśmy jednakowo,
+i obniżyć optimum. Większa liczba dni
+w próbie uczącej pomaga natomiast dokładniej oszacować rozkład przy
+obecnych cechach; sama nie usuwa jego zmienności.
 
-Praktyczna konsekwencja: gdyby błąd bayesowski problemu wynosił 7%, to
-klasyfikator z błędem 7,2% mógłby zyskać na dalszym strojeniu co najwyżej
-0,2 punktu procentowego. Większej poprawy trzeba by szukać nie w modelu,
-lecz w cechach -- w informacji, której obecne cechy nie zawierają.
-Wartości $\Risk^{*}$ zwykle nie znamy, ale już sama świadomość, że taki
-próg istnieje, chroni przed oczekiwaniem, że dość dobry model osiągnie
-błąd bliski zera.
+W rzeczywistym zastosowaniu nie znamy na ogół ani predyktora
+optymalnego, ani jego ryzyka. Samo wypłaszczenie poprawy wyników nie
+wystarcza więc do stwierdzenia, że osiągnęliśmy granicę możliwości.
+Może też świadczyć o ograniczeniach wybranej metody.
+
+## Inna strata, inna najlepsza prognoza
+
+Dotąd w regresji używaliśmy straty kwadratowej, a w klasyfikacji
+straty $0$--$1$. Wybór straty jest częścią sformułowania zadania:
+określa, jakie pomyłki uznajemy za szczególnie dotkliwe. Sprawdźmy,
+co się stanie po jego zmianie.
+
+### Strata absolutna i mediana
+
+Strata absolutna $\Loss(y,a)=|y-a|$ mierzy wielkość pomyłki w jednostce
+wyniku. Pomyłka o $4$ sztuki jest przy niej dwa razy kosztowniejsza
+niż pomyłka o $2$; przy stracie kwadratowej była cztery razy kosztowniejsza.
+Przy stracie kwadratowej jedna pomyłka o $10$ sztuk kosztuje tyle co sto
+pomyłek o jedną sztukę, a przy stracie absolutnej -- tyle co dziesięć.
+
+W zwykłym dniu prognoza $0$ ma przeciętną stratę absolutną
+$$
+0{,}6\cdot0+0{,}3\cdot2+0{,}1\cdot4=1.
+$$
+Prognoza równa średniej, czyli $1$, daje natomiast
+$$
+0{,}6\cdot1+0{,}3\cdot1+0{,}1\cdot3=1{,}2.
+$$
+Średnia przestała być najlepszą odpowiedzią. W grupie $A$ najlepsza
+jest mediana $0$, a w grupie $B$ mediana $4$.
+
+Przypomnijmy: mediana to liczba $m$, dla której co najmniej połowa
+prawdopodobieństwa leży na lewo od $m$ lub w $m$ i co najmniej połowa
+na prawo od $m$ lub w $m$. Mediana nie musi być jedyna.
+Jej związek ze stratą absolutną można zrozumieć przez przesuwanie
+prognozy. Gdy przesuwamy ją w prawo, oddalamy się od wyników po lewej
+stronie, a zbliżamy do wyników po prawej. Przy stracie absolutnej
+liczy się ich prawdopodobieństwo, a nie to, jak daleko już się znajdują.
+Dopóki po prawej jest więcej niż połowa prawdopodobieństwa,
+przesunięcie w tę stronę zmniejsza przeciętną stratę. Minimum osiągamy
+w medianie.
+
+::: {#thm-mediana-warunkowa}
+## Optymalność mediany warunkowej
+Jeżeli $\E[|Y|]<\infty$, to przy stracie absolutnej
+$\Loss(y,a)=|y-a|$ ryzyko minimalizuje predyktor wybierający medianę
+rozkładu warunkowego:
+$$
+\fopt(\x)=\med(Y\mid\X=\x).
+$$ {#eq-mediana-warunkowa}
 :::
+
+W przykładzie sklepu porównanie wygląda następująco:
+
+| Reguła | Prognozy dla $(A,B)$ | Ryzyko kwadratowe | Ryzyko absolutne |
+|:---|:---|---:|---:|
+| Średnie warunkowe | $(1,3)$ | $1{,}8$ | $1{,}2$ |
+| Mediany warunkowe | $(0,4)$ | $2{,}8$ | $1{,}0$ |
+
+W każdej kolumnie inna reguła jest lepsza. Porównujemy reguły
+**w obrębie jednej kolumny**, ponieważ każda kolumna odpowiada innemu
+kryterium. Symbol $\fopt$ zawsze oznacza optimum przy określonej
+stracie. Gdy w dalszych rozdziałach mówimy o funkcji regresji, mamy
+na myśli średnią warunkową, niezależnie od tego, jaką inną stratę
+można rozważać.
+
+### Którą stratę wybrać?
+
+Średnia i mediana różnią się najbardziej wtedy, gdy rozkład wyniku ma
+długi ogon. Zmieńmy w zwykłym dniu jedną wartość: zamiast popytu $4$
+z prawdopodobieństwem $0{,}1$ niech zdarza się duże zamówienie
+na $20$ sztuk. Średnia warunkowa rośnie wtedy z $1$ do
+$$
+0\cdot0{,}6+2\cdot0{,}3+20\cdot0{,}1=2{,}6,
+$$
+choć w $90\%$ zwykłych dni popyt nadal wynosi $0$ albo $2$. Mediana
+pozostaje równa $0$. Optimum przy stracie absolutnej zależy od tego,
+ile prawdopodobieństwa leży po każdej stronie prognozy, a nie od tego,
+jak daleko leżą wyniki. Przy stracie kwadratowej rzadkie zamówienie
+waży bardzo dużo: pomyłka o $18$ sztuk kosztuje $324$.
+
+Ta sama różnica dotyczy oszacowań z próby. Kilka nietypowych obserwacji
+potrafi mocno przesunąć średnią, a medianę -- niewiele. Mediana jest
+**odporna** na obserwacje odstające.
+
+Żadna z tych strat nie jest „dokładniejsza”. Wybór zależy od tego, ile
+kosztują pomyłki w zastosowaniu. Wróćmy do kosztów niedoboru i nadmiaru
+zapasu. Jeśli każda brakująca i każda nadmiarowa sztuka kosztuje tyle
+samo, koszt pomyłki rośnie liniowo z jej wielkością i dobrze opisuje
+go strata absolutna. Jeśli duże pomyłki są nieproporcjonalnie dotkliwe,
+bo na przykład niedobór kilkunastu sztuk oznacza utratę stałego klienta,
+bliższa jest strata kwadratowa. Gdy niedobór kosztuje inaczej niż
+nadmiar, optimum przesuwa się od mediany do innego kwantyla rozkładu
+warunkowego (@exr-strata-pinball).
 
 ## Od prawdopodobieństw do decyzji {#sec-od-prawdopodobienstw-do-decyzji}
 
-W sekcji [-@sec-regresja-klasyfikacja] rozdzieliliśmy w klasyfikacji dwa etapy:
-oszacowanie prawdopodobieństw klas $\eta_k(\x)$ i wybór klasy za pomocą
-reguły decyzyjnej. Klasyfikator bayesowski jest jedną z takich reguł --
-optymalną przy stracie 0--1. Ta sekcja odpowiada na dwa pytania: dlaczego
-model powinien zwracać właśnie $\eta_k(\x)$ i jak wybrać regułę
-decyzyjną, gdy strata 0--1 nie opisuje dobrze kosztów zastosowania.
-Oba pytania rozstrzyga ta sama zasada minimalizacji punktowej.
+W klasyfikacji zmiana straty może być potrzebna, gdy dwa rodzaje
+pomyłek mają różne konsekwencje. W przykładzie sklepu nadal
+$Z=1$ oznacza popyt co najmniej $2$ sztuk. Załóżmy, że przeoczenie
+takiego dnia kosztuje $3$ jednostki, a fałszywy alarm kosztuje $1$.
+Trafne decyzje mają koszt zerowy.
 
-### Predykcja probabilistyczna
+Dla grupy, w której prawdopodobieństwo $Z=1$ wynosi $p$, koszt
+oczekiwany odpowiedzi $0$ jest równy $3p$, a odpowiedzi $1$ -- $1-p$.
+Dostajemy więc:
 
-Niech $\mathcal{Y} = \{0, 1\}$ i $\eta(\x) = \Prob(Y = 1 \mid \X = \x)$.
-Model zamiast etykiety zwraca liczbę $p \in [0, 1]$, która ma być
-prawdopodobieństwem klasy $1$. Taka predykcja ma inną postać niż $y$ i nie
-da się jej „trafić": $Y$ przyjmuje tylko wartości $0$ i $1$, więc strata
-$\Loss(y, p)$ musi nagradzać coś innego niż zgodność $p$ z $y$.
+| Rodzaj dnia | $p$ | Koszt odpowiedzi $0$ | Koszt odpowiedzi $1$ | Najlepsza odpowiedź |
+|:---|---:|---:|---:|---:|
+| $A$ | $0{,}4$ | $1{,}2$ | $0{,}6$ | $1$ |
+| $B$ | $0{,}9$ | $2{,}7$ | $0{,}1$ | $1$ |
 
-Pierwszy pomysł to traktować $p$ jak zwykłą predykcję liczbową i karać
-kwadrat odchylenia od zaobserwowanej wartości. Tak powstaje **strata
-Briera** [@brier1950]
-$$
-\Loss_{\mathrm{B}}(y, p) = (y - p)^2 .
-$$
-Drugi pomysł to patrzeć, jakie prawdopodobieństwo model przypisał temu,
-co faktycznie zaszło. Gdy $y = 1$, model przypisał mu $p$, gdy $y = 0$ --
-prawdopodobieństwo $1 - p$. Im mniejsze to prawdopodobieństwo, tym model
-bardziej się pomylił, więc za stratę bierzemy jego ujemny logarytm.
-Tak powstaje **strata logarytmiczna**
-$$
-\Loss_{\log}(y, p) =
-\begin{cases}
--\ln p, & y = 1,\\
--\ln(1 - p), & y = 0,
-\end{cases}
-\qquad\text{czyli}\qquad
-\Loss_{\log}(y, p) = -y \ln p - (1 - y) \ln(1 - p),
-$$
-bo dla $y \in \{0, 1\}$ jeden z dwóch składników zawsze się zeruje.
-Strata ta wynosi $0$, gdy model przypisał zaobserwowanej klasie
-prawdopodobieństwo $1$, i rośnie do nieskończoności, gdy przypisał jej
-prawdopodobieństwo bliskie $0$. Strata Briera nie przekracza natomiast $1$,
-więc pewne siebie pomyłki karze znacznie łagodniej. Stratę logarytmiczną
-minimalizowaliśmy w sekcji [-@sec-trening-modelu], dopasowując model
-prawdopodobieństw klas.
+Teraz w obu grupach wybieramy $1$. W zwykłym dniu wysoki popyt
+jest mniej prawdopodobny niż niski, ale koszt jego przeoczenia
+przeważa nad częstszym, mniej kosztownym fałszywym alarmem.
 
-Ta minimalizacja ma interpretację probabilistyczną. Model zwracający
-$p(\x)$ zakłada, że $Y \mid \X = \x$ ma rozkład Bernoulliego z parametrem
-$p(\x)$, a prawdopodobieństwo, jakie przypisuje obserwacji $y$, to
-$p(\x)^{y}\big(1 - p(\x)\big)^{1 - y}$. Dla niezależnych obserwacji
-$(\x_1, y_1), \dots, (\x_n, y_n)$ prawdopodobieństwo całej próby jest
-iloczynem takich czynników -- jest to **funkcja wiarygodności** modelu.
-Jej ujemny logarytm to suma strat logarytmicznych,
-$$
--\ln \Bigg( \prod_{i=1}^{n} p(\x_i)^{y_i}\big(1 - p(\x_i)\big)^{1 - y_i} \Bigg)
-= \sum_{i=1}^{n} \Loss_{\log}\big(y_i, p(\x_i)\big),
-$$
-więc minimalizacja średniej straty logarytmicznej na próbie to to samo co
-**metoda największej wiarygodności**.
+Ryzyko nowej reguły wynosi $0{,}75\cdot0{,}6+0{,}25\cdot0{,}1=0{,}475$.
+Poprzednia reguła $(0,1)$ ma przy tych kosztach ryzyko
+$0{,}75\cdot1{,}2+0{,}25\cdot0{,}1=0{,}925$.
+Zmiana zwiększa prawdopodobieństwo błędu z $32{,}5\%$ do $47{,}5\%$,
+a jednocześnie zmniejsza oczekiwany koszt z $0{,}925$ do $0{,}475$.
+To dwie różne miary jakości tej samej decyzji.
 
-Dla straty Briera nie trzeba nic liczyć. $Y$ jest zmienną liczbową
-o wartościach $0$ i $1$, więc $\E[Y \mid \X = \x] = \eta(\x)$
-i @thm-funkcja-regresji daje od razu $\fopt(\x) = \eta(\x)$. Dla straty
-logarytmicznej ryzyko warunkowe wynosi
-$$
-r(p \mid \x) = -\eta(\x) \ln p - \big(1 - \eta(\x)\big) \ln(1 - p).
-$$
-Jest to funkcja wypukła zmiennej $p$, a jej pochodna
-$-\eta(\x)/p + \big(1 - \eta(\x)\big)/(1 - p)$ zeruje się dokładnie dla
-$p = \eta(\x)$. Obie straty prowadzą więc do tego samego optimum:
-**najlepiej jest podać prawdziwe prawdopodobieństwo warunkowe**. Straty
-o tej własności nazywamy **właściwymi** (ang. *proper scoring rules*)
-[@gneiting2007].
+### Próg decyzyjny
 
-Nie każda strata ją ma. Dla straty absolutnej $|y - p|$ ryzyko warunkowe
+Odpowiedź $1$ opłaca się, gdy $1-p\le3p$, czyli gdy $p\ge1/4$.
+Zmiana kosztów przesunęła próg z $1/2$ do $1/4$.
+Ogólniej, jeśli koszt fałszywie ujemnej decyzji to $c_{10}>0$, a koszt
+fałszywie dodatniej to $c_{01}>0$, przy zerowych kosztach trafnych
+decyzji wybieramy klasę $1$, gdy
 $$
-r(p \mid \x) = \eta(\x)\,(1 - p) + \big(1 - \eta(\x)\big)\, p
+p\ge\frac{c_{01}}{c_{01}+c_{10}}.
 $$
-jest liniowe w $p$, więc minimum leży na końcu przedziału: $p = 1$, gdy
-$\eta(\x) > \tfrac12$, i $p = 0$ w przeciwnym razie. Model oceniany tą
-stratą zwraca zatem etykietę klasyfikatora bayesowskiego zamiast
-prawdopodobieństwa i traci informację o tym, jak pewna jest ta etykieta.
-Tymczasem właśnie tej informacji potrzebują obie reguły decyzyjne
-omówione poniżej.
+Jest to próg minimalizujący oczekiwany koszt [@elkan2001].
+Przy równości obie decyzje kosztują przeciętnie tyle samo.
 
-### Straty niesymetryczne i próg decyzyjny
-
-Strata 0--1 zakłada, że wszystkie pomyłki kosztują tyle samo. W diagnostyce
-medycznej, wykrywaniu oszustw czy filtrowaniu spamu założenie to jest
-fałszywe i zwykle kosztowne. Ogólniej, dla macierzy kosztów
-$\Loss(y, a) = c_{y a}$ ryzyko warunkowe wynosi
+Dla wielu klas ten sam rachunek można zapisać za pomocą tabeli
+kosztów $c_{ka}$: kosztu odpowiedzi $a$, gdy prawdziwa klasa to $k$.
+Ryzyko warunkowe odpowiedzi $a$ wynosi $\sum_k c_{ka}\eta_k(\x)$.
+Zasada minimalizacji punktowej daje więc
 $$
-r(a \mid \x) = \sum_{k=1}^{K} c_{k a} \,\eta_k(\x),
-$$
-a @thm-minimalizacja-punktowa daje regułę optymalną
-$$
-\fopt(\x) = \argmin_{a} \sum_{k=1}^{K} c_{k a} \,\eta_k(\x).
+\fopt(\x)=\argmin_a\sum_k c_{ka}\eta_k(\x).
 $$ {#eq-regula-kosztowa}
-
-W przypadku dwuklasowym z kosztami $c_{10}$ (fałszywie ujemny) i $c_{01}$
-(fałszywie dodatni), przy zerowym koszcie trafnych decyzji
-($c_{00} = c_{11} = 0$), reguła ([-@eq-regula-kosztowa]) redukuje się do progowania
-prawdopodobieństwa warunkowego na poziomie $c_{01}/(c_{01} + c_{10})$ zamiast
-na $\tfrac12$ [@elkan2001].
+To ta sama zasada, którą stosowaliśmy wcześniej; zmienił się sposób
+wyceniania odpowiedzi.
 
 ::: {.callout-tip}
 ## Dobry model, zły próg
-W regule ([-@eq-regula-kosztowa]) spotykają się dwa niezależne składniki:
-prawdopodobieństwa $\eta_k(\x)$ zależą wyłącznie od zjawiska, koszty
-$c_{ya}$ -- wyłącznie od zastosowania. Dlatego model powinien estymować
-prawdopodobieństwa, a próg decyzyjny dobiera się osobno, na etapie
-wdrożenia.
-
-Model zwracający twardą etykietę zamiast prawdopodobieństwa zamyka tę drogę:
-przy zmianie kosztów trzeba go uczyć od nowa.
+Prawdopodobieństwa wynikają z rozkładu danych, a koszty z zastosowania.
+W naszym przykładzie prawdopodobieństwa $0{,}4$ i $0{,}9$ nie zmieniły
+się po zmianie kosztów. Zmieniły się decyzje podejmowane na ich podstawie.
+Dlatego warto rozdzielać oszacowanie prawdopodobieństwa od wyboru
+progu. Sama etykieta klasy nie zawiera informacji wystarczającej do
+ponownego wyboru decyzji przy innych kosztach.
 :::
 
+## Od znanego rozkładu do uczenia z danych
 
-Predykcja probabilistyczna i reguła kosztowa składają się na dwa etapy
-z sekcji [-@sec-regresja-klasyfikacja]. Pierwszy etap oceniamy stratą właściwą, a jego
-optimum $\eta(\x)$ nie zależy od kosztów zastosowania. W drugim
-podstawiamy to oszacowanie do reguły ([-@eq-regula-kosztowa]).
+W przykładzie sklepu potrafiliśmy wyznaczyć optymalne prognozy,
+ponieważ podaliśmy cały rozkład w tabeli. W zastosowaniu rzeczywistym
+mamy obserwacje $(x_i,y_i)$, a prawdopodobieństwa i średnie są nieznane.
+Wyprowadzone reguły mówią jednak, **czego szukać w danych**.
 
-### Opcja odmowy
+Jeżeli każda grupa występuje wielokrotnie, średni popyt możemy
+oszacować średnią zaobserwowanych wyników w tej grupie. Prawdopodobieństwo
+wysokiego popytu oszacujemy odsetkiem dni, w których wystąpił.
+Otrzymamy predyktor $\widehat f$ lub klasyfikator $\widehat g$.
+Daszek przypomina, że zależą od konkretnej próby. Inna próba może dać
+inne oszacowania.
 
-Wróćmy do $K$ klas i dopuśćmy dodatkową decyzję: model może odmówić
-odpowiedzi i przekazać przypadek człowiekowi. Decyzji jest wtedy więcej
-niż etykiet: do klas $1, \dots, K$ dochodzi odmowa. Stratę rozszerzamy
-na nową decyzję tak, że wskazanie klasy oceniamy jak
-w stracie 0--1, a odmowa kosztuje stałą kwotę $d \in (0, 1)$, niezależnie
-od prawdziwej klasy:
+Przy cechach ciągłych, takich jak temperatura, powierzchnia mieszkania
+czy dochód, dokładne powtórzenia całego zestawu cech zwykle nie
+występują. Nie możemy po prostu utworzyć licznej grupy dla każdej
+wartości $\x$. Musimy korzystać z innych obserwacji: na przykład
+z podobnych obiektów albo z zależności opisanej wspólnym wzorem.
+Pierwszą możliwość rozwiniemy w rozdziale [-@sec-knn].
+
+Także ryzyka nie obliczymy zazwyczaj dokładnie, bo nie znamy rozkładu.
+Dla ustalonej reguły $f$ możemy je oszacować na niezależnych nowych
+przypadkach, obliczając średnią strat
 $$
-\Loss(y, k) = \ind(y \neq k), \qquad \Loss(y, \text{odmowa}) = d.
+\frac1N\sum_{i=1}^N\Loss(y_i,f(\x_i)).
 $$
-Ryzyko warunkowe wskazania klasy $k$ znamy z dowodu @thm-bayes-optymalny:
-$r(k \mid \x) = 1 - \eta_k(\x)$. Ryzyko warunkowe odmowy wynosi po prostu
-$d$. Najlepszą klasą jest $\Bayes(\x)$, a jej ryzyko warunkowe to
-$1 - \max_k \eta_k(\x)$. Reguła optymalna ma więc postać
+Ta liczba zmienia się między próbami. Nawet dla optymalnej reguły
+zaobserwowany odsetek błędów może być niższy lub wyższy od błędu
+bayesowskiego. Nie przeczy to optymalności: dolna granica dotyczy
+ryzyka, a nie każdego wyniku skończonego eksperymentu.
+
+Jeśli do oceny używamy danych, na których regułę dobrano, powstaje
+jeszcze inny problem: reguła mogła dopasować się do przypadkowych
+własności tych danych. Dlatego trzeba odróżniać ryzyko, jego ocenę
+na nowych przypadkach i błąd treningowy. Wrócimy do tego w rozdziałach
+[-@sec-bias-wariancja] i [-@sec-ocena-modeli].
+
+Wspólny cel pozostaje prosty: przy danych cechach wybierać odpowiedź
+o najmniejszej oczekiwanej stracie. Poznane metody będą różnić się
+przede wszystkim sposobem, w jaki odtwarzają potrzebne informacje
+z ograniczonej próby.
+
+## Rozszerzenia: inne decyzje i ciągłe cechy {#sec-rozszerzenia-predykcji}
+
+::: {.callout-note appearance="simple" icon="false"}
+## Materiał nieobowiązkowy
+Poniższe ramki nie są wymagane w tekście głównym ani w zadaniach
+podstawowych. Narzędzia potrzebne w każdej z nich podano na jej początku.
+:::
+
+Uzupełnienia rozwijają wspólny schemat w kilku kierunkach.
+
+::: {.callout-note collapse="true"}
+## Ocena prawdopodobieństw
+Model może zwracać prawdopodobieństwo klasy, zamiast od razu wybierać
+etykietę. Dla klas $Y\in\{0,1\}$ prognozę $p\in[0,1]$ można oceniać
+**stratą Briera** $\Loss_{\mathrm B}(y,p)=(y-p)^2$ [@brier1950].
+Ponieważ $\E[Y\mid\X=\x]=\eta(\x)$, optymalność średniej daje od razu
+najlepszą prognozę $p=\eta(\x)$.
+
+Innym kryterium jest strata logarytmiczna:
 $$
-\fopt(\x) =
+\Loss_{\log}(y,p)=
+\begin{cases}-\ln p,&y=1,\\-\ln(1-p),&y=0.\end{cases}
+$$
+Jej ryzyko warunkowe dla $0<p<1$ wynosi
+$-\eta\ln p-(1-\eta)\ln(1-p)$. Jeśli $0<\eta<1$, pochodna
+jest równa $(p-\eta)/(p(1-p))$, więc minimum przypada przy $p=\eta$.
+Dla $\eta=0$ lub $1$ minimum osiągamy na odpowiednim końcu przedziału,
+przyjmując zerową stratę dla pewnej, trafnej prognozy.
+Pewna błędna prognoza daje stratę nieskończoną.
+
+Obie straty nagradzają podanie prawdziwego prawdopodobieństwa.
+Są przykładami **strat właściwych** [@gneiting2007]. Ocena
+prawdopodobieństw i ocena decyzji przy określonych kosztach to dwa
+różne zadania. Dobre oszacowanie prawdopodobieństwa można następnie
+wykorzystać przy różnych progach.
+:::
+
+::: {.callout-note collapse="true"}
+## Odmowa odpowiedzi
+Możemy dopuścić dodatkowe działanie: odmowę, na przykład przekazanie
+przypadku do dodatkowej oceny. Niech trafna klasyfikacja kosztuje $0$,
+pomyłka $1$, a odmowa stałą kwotę $d\in(0,1)$.
+
+Najlepsza klasa ma ryzyko warunkowe $1-\max_k\eta_k(\x)$, odmowa
+ma ryzyko $d$. Wystarczy porównać te dwie liczby:
+$$
+\fopt(\x)=
 \begin{cases}
-\Bayes(\x), & \text{gdy } 1 - \max_k \eta_k(\x) \le d, \\
-\text{odmowa}, & \text{w przeciwnym razie}.
+\Bayes(\x),&1-\max_k\eta_k(\x)\le d,\\
+\text{odmowa},&1-\max_k\eta_k(\x)>d.
 \end{cases}
 $$ {#eq-regula-chowa}
-Jest to **reguła Chowa** [@chow1970]: odmawiamy, gdy nawet najbardziej
-prawdopodobna klasa daje szansę pomyłki większą niż koszt odmowy.
-Przypadki skrajne potwierdzają intuicję. Ponieważ
-$\max_k \eta_k(\x) \ge 1/K$, przy $d \ge (K-1)/K$ odmowa nigdy się nie
-opłaca i wracamy do klasyfikatora bayesowskiego. Przy $d$ bliskim zeru
-model odpowiada tylko tam, gdzie jest niemal pewny.
+Jest to **reguła Chowa** [@chow1970]. W przykładzie sklepu przy
+$d=0{,}2$ odmawiamy w zwykłe dni, a w dni wydarzenia odpowiadamy $1$.
+Ryzyko wynosi $0{,}75\cdot0{,}2+0{,}25\cdot0{,}1=0{,}175$.
+Nie jest to odsetek pomyłek: uwzględnia też koszt odmowy w $75\%$ dni.
+Zmiana zbioru działań i straty zmieniła problem optymalizacji.
+:::
 
-Minimalne ryzyko wynosi teraz
-$\E\big[\min\big(1 - \max_k \eta_k(\X),\, d\big)\big]$, ze średnią
-po rozkładzie cech, i nie przekracza
-błędu bayesowskiego ([-@eq-blad-bayesa]). Opcja odmowy nie usuwa
-niepewności. Pozwala jedynie wymienić pomyłki w najtrudniejszych
-obszarach przestrzeni cech na stały, znany z góry koszt. Podobnie jak
-reguła kosztowa, reguła Chowa wymaga prawdopodobieństw
-$\eta_k(\x)$, a nie samej etykiety.
+::: {.callout-note collapse="true"}
+## Nadwyżka ryzyka w klasyfikacji
+Dla dowolnego klasyfikatora $g$ przy stracie $0$--$1$:
+$$
+\Risk(g)=\Risk^*+
+\E\Big[\max_k\eta_k(\X)-\eta_{g(\X)}(\X)\Big].
+$$ {#eq-rozklad-bledu-01}
+Wynika to z dodania i odjęcia $\max_k\eta_k(\x)$ w wyrażeniu
+$1-\eta_{g(\x)}(\x)$, a następnie uśrednienia po cechach.
+Nadwyżka mierzy prawdopodobieństwo trafienia utracone wskutek
+wyboru klasy innej niż najbardziej prawdopodobna. Jest nieujemna.
+Dla dwóch klas wynosi
+$\E[|2\eta(\X)-1|\ind(g(\X)\ne\Bayes(\X))]$:
+wybór gorszej klasy jest mniej kosztowny tam, gdzie obie klasy
+są prawie równie prawdopodobne.
+:::
 
-## Nieosiągalność optimum
+:::: {.callout-note collapse="true"}
+## Przykład z ciągłą cechą: dwie klasy normalne
 
-Wszystkie twierdzenia tego rozdziału mają tę samą wadę: ich teza odwołuje
-się do rozkładu $P$, którego nie znamy. $\E[Y \mid \X = \x]$ i
-$\eta_k(\x)$ to wielkości teoretyczne. Reguła bayesowska nie
-jest algorytmem, który można uruchomić -- jest **wzorcem, do którego
-algorytmy się zbliżają**.
-
-Wartość tego wzorca jest jednak praktyczna: pozwala oceniać algorytmy przez
-pytanie, jak dobrze estymują $\eta_k(\x)$, i pozwala wiedzieć,
-kiedy przestać. Poniższy eksperyment pokazuje jedno i drugie na przykładzie,
-w którym błąd bayesowski znamy dokładnie.
+Wymagane są gęstość i dystrybuanta rozkładu normalnego. Eksperyment z metodą najbliższych sąsiadów można przeczytać
+po rozdziale [-@sec-knn]. Zachowujemy go jako punkt odniesienia
+dla analizy tej metody i zaawansowanych zadań.
 
 Rozważmy dwie równoliczne klasy, $\pi_0 = \pi_1 = \tfrac12$, i jedną
 cechę $X$, która w klasie $0$ ma rozkład $\Nrozk(-\mu, 1)$, a w klasie $1$
@@ -664,7 +820,7 @@ $$
 
 ```{python}
 #| label: fig-blad-bayesa
-#| fig-cap: "Ryzyko klasyfikatora $k$-NN w zależności od liczności próby uczącej; cecha ma w klasach rozkłady $\\Nrozk(-1, 1)$ i $\\Nrozk(1, 1)$. Punkty to średnie z 25 niezależnych prób uczących, wąsy -- kwantyle rzędu $0{,}1$ i $0{,}9$. Błąd bayesowski $\\Phi(-1) \\approx 0{,}1587$ wyznacza poziom, poniżej którego nie schodzi żaden klasyfikator, niezależnie od liczby obserwacji."
+#| fig-cap: "Ryzyko klasyfikatora $k$-NN przybliżone całkowaniem numerycznym, w zależności od liczności próby uczącej; cecha ma w klasach rozkłady $\\Nrozk(-1, 1)$ i $\\Nrozk(1, 1)$. Punkty to średnie z 25 niezależnych prób uczących, wąsy -- kwantyle rzędu $0{,}1$ i $0{,}9$. Błąd bayesowski $\\Phi(-1) \\approx 0{,}1587$ wyznacza poziom, poniżej którego nie schodzi żaden klasyfikator, niezależnie od liczby obserwacji."
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -681,20 +837,20 @@ def probka(n, rng):
     x = rng.normal(np.where(y == 1, mu, -mu), 1.0)
     return x.reshape(-1, 1), y
 
-# Ryzyko liczymy DOKŁADNIE, a nie na zbiorze testowym. Rozkład jest nam znany,
+# Ryzyko przybliżamy całkowaniem numerycznym, a nie na zbiorze testowym. Rozkład jest nam znany,
 # więc zamiast losować dane testowe całkujemy definicję ryzyka:
 #
 #   R(g) = 0.5 * P(g(X)=0, klasa 1) + 0.5 * P(g(X)=1, klasa 0)
 #        = 0.5 * \int phi(x-mu) 1{g(x)=0} dx  +  0.5 * \int phi(x+mu) 1{g(x)=1} dx
 #
-# Zaleta jest zasadnicza: wynik nie ma szumu Monte Carlo, więc krzywa nie
-# przecina błędu bayesowskiego przypadkiem. Uboczna: jest szybciej.
+# Zaleta jest zasadnicza: wynik nie ma szumu Monte Carlo ze zbioru testowego.
+# Pozostaje błąd numeryczny całkowania na skończonej siatce.
 siatka = np.linspace(-7, 7, 4001)
 gestosc_klasy1 = norm.pdf(siatka - mu)
 gestosc_klasy0 = norm.pdf(siatka + mu)
 
-def ryzyko_dokladne(klasyfikator):
-    """Prawdopodobieństwo błędu klasyfikatora, liczone całkowaniem."""
+def ryzyko_calkowaniem(klasyfikator):
+    """Przybliżenie prawdopodobieństwa błędu przez całkowanie na siatce."""
     etykiety = klasyfikator.predict(siatka.reshape(-1, 1))
     calka = 0.5 * np.trapezoid(np.where(etykiety == 0, gestosc_klasy1, 0.0), siatka) \
           + 0.5 * np.trapezoid(np.where(etykiety == 1, gestosc_klasy0, 0.0), siatka)
@@ -711,7 +867,7 @@ for i, n in enumerate(licznosci):
         # (k -> oo oraz k/n -> 0); szczegóły w rozdziale [-@sec-knn].
         k = max(1, int(round(np.sqrt(n))))
         klf = KNeighborsClassifier(n_neighbors=k).fit(X_tr, y_tr)
-        bledy[i, j] = ryzyko_dokladne(klf)
+        bledy[i, j] = ryzyko_calkowaniem(klf)
 
 srednie = bledy.mean(axis=1)
 # Rozkład ryzyka po próbach uczących jest skośny i ograniczony z dołu przez
@@ -733,138 +889,146 @@ plt.tight_layout()
 plt.show()
 ```
 
-Krzywa opada i wypłaszcza się tuż nad czerwoną linią, nigdy jej nie
-przecinając -- nie może, bo @thm-bayes-optymalny tego zabrania, a ryzyko
-policzyliśmy dokładnie, bez szumu losowania. Zachowanie jest typowe:
-zwiększanie próby przybliża nas do optimum coraz wolniej, a ostatnie punkty
-procentowe błędu są po prostu niedostępne.
-
-::: {.callout-note}
-## Dlaczego całkujemy zamiast losować zbiór testowy
-Gdybyśmy oszacowali ryzyko na losowym zbiorze testowym, oszacowanie miałoby
-własny błąd standardowy. Gdybyśmy użyli np. 20 tys. obserwacji testowych,
-wynosiłby on około
-$0{,}0026$ -- czyli **więcej niż cała różnica**, którą chcemy pokazać w prawej
-części wykresu. Krzywa co jakiś czas schodziłaby przypadkiem pod czerwoną
-linię, sugerując coś, co jest niemożliwe.
-
-Ponieważ w tym sztucznym przykładzie rozkład $P$ znamy, ryzyko liczymy wprost
-z definicji ([-@eq-ryzyko]) -- całkując. W realnym problemie tej możliwości nie ma
-i pozostaje zbiór testowy wraz z jego niepewnością; jak sobie z nią radzić,
-mówi @sec-ocena-modeli.
-:::
-
-::: {.callout-tip}
-## Jak czytać taki wykres w praktyce
-W realnym problemie czerwonej linii nie znamy -- i to jest główna trudność
-diagnostyczna w uczeniu maszynowym. Widzimy tylko krzywą niebieską i musimy
-zgadnąć, czy jej wypłaszczenie oznacza „dotarliśmy do granicy zjawiska", czy
-„model jest za słaby".
-
-Rozróżnienie tych dwóch sytuacji wymaga narzędzi z rozdziałów [-@sec-bias-wariancja]
-i [-@sec-ocena-modeli]. Sygnał ostrzegawczy jest jednak prosty: jeśli podwojenie
-liczby danych nie poprawia wyniku, problemem prawie na pewno nie jest
-liczba danych. Może to oznaczać, że ryzyko jest już bliskie błędowi
-nieredukowalnemu, ale równie dobrze -- że ogranicza nas wybrana metoda lub
-sposób jej dopasowania. Rozstrzygnięcie wymaga porównania różnych modeli.
-:::
+Wykres porównuje ryzyko reguł wyuczonych z różnych prób ze znanym
+błędem bayesowskim. Uśrednienie dotyczy tutaj także losowości próby
+uczącej. Ryzyko każdej dopasowanej reguły przybliżamy całkowaniem
+numerycznym; unikamy szumu zbioru testowego, ale pozostaje błąd
+numeryczny. Teoretyczna dolna granica dotyczy dokładnego ryzyka.
+W przykładzie wzrost liczności próby przybliża wyniki do optimum.
+Tempo tej poprawy zależy od rozkładu i metody.
+::::
 
 ## Uwagi bibliograficzne {.unnumbered}
 
-Statystyczną teorię decyzji w ujęciu bliskim temu rozdziałowi przedstawiają
-@esl [rozdz. 2.4], a łagodniej, z przykładami, @islp [rozdz. 2].
-@bishop2006 [rozdz. 1.5] omawia te same zagadnienia od strony
-probabilistycznej: minimalizację oczekiwanej straty, opcję odmowy
-i rozdzielenie wnioskowania od decyzji. Rozważa tam też stratę
-$|y - a|^q$, która dla $q = 1$ prowadzi do mediany warunkowej.
-Nowsze ujęcie, obejmujące również straty dla predykcji
-probabilistycznej, zawiera @murphy2022 [rozdz. 5].
+Przystępne wprowadzenie do predykcji, funkcji regresji i błędu
+bayesowskiego przedstawiają @islp. Szersze ujęcie wspólnego schematu
+minimalizacji oczekiwanej straty zawiera podręcznik @esl.
+Statystyczną teorię decyzji, z rozróżnieniem przewidywania wyniku
+oraz wyboru działania, rozwijają także @bishop2006 i @murphy2022.
 
-Ścisłą teorię klasyfikacji, zbudowaną wokół błędu bayesowskiego i nadwyżki
-ryzyka nad nim, wykładają @devroye1996, a analogiczną teorię regresji, z funkcją
-regresji jako optimum przy stracie kwadratowej, @gyorfi2002 [rozdz. 1].
+Czytelnik zainteresowany ścisłą teorią klasyfikacji znajdzie ją
+w monografii @devroye1996, a teorię regresji nieparametrycznej
+w książce @gyorfi2002. Są to lektury wymagające większego przygotowania
+probabilistycznego niż główny tekst tego rozdziału.
 
-Straty właściwe i ich związek z estymacją prawdopodobieństw omawiają
-w pracy przeglądowej @gneiting2007. @elkan2001 wyprowadza próg dla
-niesymetrycznych kosztów i pokazuje, że zamiast przesuwać próg, można
-zmienić proporcje klas w zbiorze uczącym. @chow1970 bada, jak przy
-zmianie kosztu odmowy $d$ zmieniają się jednocześnie częstość błędów
-i częstość odmów.
+Koszty niesymetryczne i ich wpływ na próg klasyfikacji omawia
+@elkan2001. Straty do oceny prognoz probabilistycznych systematycznie
+przedstawiają @gneiting2007; źródłową pracą dotyczącą straty
+kwadratowej dla prawdopodobieństw jest @brier1950. Regułę klasyfikacji
+z możliwością odmowy bada @chow1970.
 
 ## Zadania {.unnumbered}
 
-::: {#exr-ryzyko-wazone}
-Rozważ ryzyko ważone $\E\big[w(\X)\,(Y - f(\X))^2\big]$ dla pewnej wagi
-$w(\x) > 0$ zależnej od punktu. Wykaż, że optymalny predyktor nadal jest równy
-$\E[Y \mid \X = \x]$. Wyjaśnij, dlaczego ważenie nie zmienia rozwiązania,
-choć zmienia wartość ryzyka. Porównaj tę sytuację ze zmianą rozkładu
-brzegowego cech $p(\x)$ przy niezmienionym rozkładzie warunkowym
-(@sec-zaleznosc-i-szum).
+Pierwsze zadania prowadzą od obliczenia ryzyka do samodzielnego wyboru
+reguły. Następnie pojawiają się zmiana kosztów, wnioskowanie z informacji
+pośredniej i własności ogólne. Zadania oznaczone **Rozszerzenie**
+można pominąć przy pierwszej lekturze; wskazujemy w nich dodatkowe
+potrzebne narzędzia.
+
+::: {#exr-ryzyko-tabela}
+**Od straty do ryzyka.** Zespół wsparcia technicznego przewiduje liczbę
+zgłoszeń podczas wieczornego dyżuru. Przed rozpoczęciem dyżuru wiadomo,
+czy będzie to zwykły wieczór ($X=A$), czy wieczór po wdrożeniu nowej
+wersji systemu ($X=B$). W uproszczonym modelu liczba zgłoszeń $Y$
+przyjmuje tylko wartości $0$, $1$ i $3$. Rozkład opisuje poniższa tabela.
+
+| $x$ | $\Prob(X=x)$ | $\Prob(Y=0\mid X=x)$ | $\Prob(Y=1\mid X=x)$ | $\Prob(Y=3\mid X=x)$ |
+|:---|---:|---:|---:|---:|
+| $A$ | $0{,}6$ | $0{,}5$ | $0{,}4$ | $0{,}1$ |
+| $B$ | $0{,}4$ | $0{,}1$ | $0{,}2$ | $0{,}7$ |
+
+W kolejnych zadaniach będziemy wracać do tego rozkładu.
+
+a) Wypisz sześć prawdopodobieństw łącznych $\Prob(X=x,Y=y)$.
+   Sprawdź, że sumują się do $1$.
+b) Pierwsza reguła przewiduje zawsze jedno zgłoszenie: $f(A)=f(B)=1$.
+   Wypisz stratę kwadratową przy każdej parze $(x,y)$ i oblicz ryzyko.
+c) Druga reguła przewiduje zero zgłoszeń w zwykły wieczór, a trzy
+   po wdrożeniu: $h(A)=0$, $h(B)=3$. Powtórz dla niej rachunek.
+   Która reguła ma mniejsze ryzyko kwadratowe?
+d) Wyjaśnij różnicę między stratą w pojedynczym wieczorze a ryzykiem.
+   Co ryzyko mówi o błędach prognoz w wielu takich wieczorach?
+   W jakiej jednostce wyrażone są obie wielkości?
 :::
 
-::: {#exr-strata-pinball}
-Rozważ **stratę pinball** (kwantylową) o parametrze $\tau \in (0,1)$:
-$$
-\Loss_\tau(y, a) = \begin{cases}
-  \tau (y - a), & y \ge a, \\
-  (1-\tau)(a - y), & y < a.
-\end{cases}
-$$
-Powtarzając rozumowanie z dowodu @thm-mediana-warunkowa wykaż, że
-optymalny predyktor to kwantyl rzędu $\tau$ rozkładu warunkowego.
-Sprawdź, że dla $\tau = \tfrac12$ odzyskujesz @thm-mediana-warunkowa.
+::: {#exr-ryzyko-grupami}
+**Dwa etapy uśredniania.** Dla obu reguł z @exr-ryzyko-tabela:
+
+a) Oblicz ryzyko warunkowe osobno w grupach $A$ i $B$.
+b) Odzyskaj ryzyko całkowite jako średnią ważoną. Dlaczego zwykła
+   średnia arytmetyczna ryzyk grup byłaby tu niewłaściwa?
+c) Zmień proporcje grup na $\Prob(X=A)=0{,}2$, $\Prob(X=B)=0{,}8$,
+   pozostawiając rozkłady warunkowe bez zmian. Oblicz nowe ryzyka.
+d) Wskaż, które elementy rachunku zmieniły się w punkcie c), a które
+   pozostały takie same. Czy ranking reguł się zmienił?
 :::
 
-::: {#exr-blad-bayesa-gaussy}
-Dla dwóch klas o rozkładach $\Nrozk(-\mu, \sigma^2)$ i $\Nrozk(\mu, \sigma^2)$
-z równymi prawdopodobieństwami a priori wyprowadź wzór na błąd bayesowski
-w zależności od $\mu$ i $\sigma$. Dla jakiej wartości $\mu/\sigma$ błąd
-bayesowski spada poniżej 1%?
+::: {#exr-optimum-tabela}
+**Najlepsza prognoza liczbowa.** Korzystaj z rozkładu z @exr-ryzyko-tabela
+z pierwotnymi proporcjami grup.
+
+a) Oblicz średnią i wariancję warunkową w każdej grupie.
+b) Podaj predyktor optymalny przy stracie kwadratowej i jego ryzyko.
+c) Znajdź najlepszą regułę stałą i oblicz jej ryzyko. Ile zyskujemy
+   dzięki informacji o rodzaju dyżuru?
+d) Zapisz ryzyko dowolnej reguły $(a_A,a_B)$ jako sumę ryzyka
+   optymalnego i dwóch nieujemnych składników. Wykorzystaj ten zapis
+   do sprawdzenia wyników @exr-ryzyko-tabela.
 :::
 
-::: {#exr-niezrownowazone-klasy}
-Zmodyfikuj eksperyment z @fig-blad-bayesa tak, aby klasy miały
-prawdopodobieństwa a priori $\pi_0 = 0{,}9$ i $\pi_1 = 0{,}1$
-(klasa $0$ to ta, w której $X \sim \Nrozk(-\mu, 1)$). Wyznacz nowy błąd
-bayesowski i porównaj go z błędem klasyfikatora trywialnego, który zawsze
-wskazuje klasę częstszą. Kiedy $k$-NN zaczyna być od niego lepszy?
+::: {#exr-klasyfikacja-tabela}
+**To samo zjawisko, inne pytanie.** W rozkładzie z @exr-ryzyko-tabela
+niech $Z=\ind(Y\ge1)$.
+
+a) Oblicz prawdopodobieństwo klasy $1$ w obu grupach.
+b) W każdej grupie porównaj ryzyka odpowiedzi $0$ i $1$ przy stracie
+   $0$--$1$. Czy optimum jest w obu grupach jednoznaczne?
+c) Znajdź najmniejsze ryzyko całkowite i porównaj je z ryzykiem
+   najlepszego klasyfikatora stałego.
+d) Czy informacja o $X$ zmienia prawdopodobieństwa klas? Czy musi
+   dzięki temu poprawiać najlepszą decyzję przy stracie $0$--$1$?
+   Porównaj z jej rolą w regresji w @exr-optimum-tabela.
+:::
+
+::: {#exr-mediana-tabela}
+**Zmiana kryterium.** Korzystaj z rozkładu z @exr-ryzyko-tabela.
+
+a) Znajdź wszystkie mediany warunkowe. W grupie $A$ sprawdź również
+   liczby między $0$ a $1$.
+b) Wybierz po jednej medianie w każdej grupie i oblicz ryzyko
+   absolutne otrzymanej reguły.
+c) Oblicz ryzyko absolutne reguły średnich warunkowych.
+d) Wybierz mediany $0$ i $3$, oblicz też ich ryzyko kwadratowe
+   i zestaw obie reguły pod obiema stratami. Czy jedna z nich
+   jest najlepsza niezależnie od sposobu oceny?
+:::
+
+::: {#exr-symulacja-ryzyka}
+**Symulacja: od ryzyka do wyniku eksperymentu.** Wykorzystaj rozkład i optymalny
+predyktor kwadratowy z @exr-optimum-tabela.
+
+a) Wylosuj $N=100$ niezależnych przypadków: najpierw rodzaj dyżuru,
+   potem liczbę zgłoszeń z właściwego rozkładu warunkowego. Ustal
+   ziarno generatora, aby wynik dało się odtworzyć.
+b) Oblicz średnią strat ustalonego predyktora i porównaj z jego
+   dokładnym ryzykiem. Nie ucz predyktora na wylosowanych danych.
+c) Powtórz eksperyment $200$ razy, a następnie wykonaj go dla
+   $N=1000$. Porównaj rozrzut otrzymanych średnich strat.
+d) Czy średnia strata na próbie może spaść poniżej ryzyka optimum?
+   Wyjaśnij, dlaczego nie narusza to zasady minimalizacji punktowej.
 :::
 
 ::: {#exr-prog-kosztowy}
-Wykorzystując ([-@eq-regula-kosztowa]) wyznacz próg decyzyjny dla problemu
-dwuklasowego, w którym pominięcie przypadku pozytywnego kosztuje
-dziesięciokrotnie więcej niż fałszywy alarm. Zilustruj numerycznie, jak
-przesunięcie progu zmienia liczbę błędów obu typów.
-:::
+**Koszt a częstość pomyłek.** W przykładzie sklepu pominięcie wysokiego
+popytu kosztuje dziesięć razy więcej niż fałszywy alarm. Trafne decyzje
+mają koszt zerowy, fałszywy alarm kosztuje $1$.
 
-::: {#exr-korekta-apriori}
-**Korekta prawdopodobieństw a priori.** Model klasyfikacyjny uczono na
-próbie, w której klasy występowały z częstościami $\pi'_k$, na przykład
-na próbie zbalansowanej. Model zwraca więc oszacowania
-$\eta'_k(\x) = \Prob'(Y = k \mid \X = \x)$. W populacji, w której model
-będzie stosowany, klasy występują z częstościami $\pi_k$, a rozkłady
-cech w obrębie klas $p(\x \mid Y = k)$ są takie same jak w próbie.
-Korzystając ze wzoru Bayesa, wykaż, że
-$$
-\eta_k(\x) = \frac{\eta'_k(\x)\, \pi_k / \pi'_k}
-{\sum_{j=1}^{K} \eta'_j(\x)\, \pi_j / \pi'_j} .
-$$
-Pokaż, że w przypadku dwuklasowym korekta sprowadza się do pomnożenia
-szans $\eta(\x) / (1 - \eta(\x))$ przez stałą, i wyznacz tę stałą.
-Model wykrywania oszustw uczono na próbie zbalansowanej, a w populacji
-oszustwa stanowią 1% transakcji. Dla pewnej transakcji model zwrócił
-$0{,}8$. Jakie jest prawdopodobieństwo oszustwa po korekcie? Wyjaśnij,
-dlaczego tej korekty nie da się przeprowadzić dla modelu zwracającego
-wyłącznie etykiety (por. ramka „Dobry model, zły próg").
-:::
-
-::: {#exr-srednia-mediana}
-Wykaż, że dla dowolnego rozkładu o skończonej wariancji średnia $\mu$
-i mediana $m$ spełniają $|\mu - m| \le \sigma$. (Wskazówka: skorzystaj
-z @thm-mediana-warunkowa i nierówności Jensena.) Podaj rozkład, dla którego
-ta różnica jest bliska $\sigma$. Następnie pokaż, że przy ustalonym
-rozstępie międzykwartylowym różnica $|\mu - m|$ może być dowolnie duża.
-Co to mówi o odporności obu predyktorów?
+a) Oblicz oczekiwany koszt obu odpowiedzi w każdej grupie.
+b) Wyznacz próg decyzyjny i optymalną regułę.
+c) Porównaj tę regułę z regułą Bayesa dla straty $0$--$1$: podaj
+   prawdopodobieństwa obu typów błędu i całkowite ryzyko kosztowe.
+d) Zilustruj wyniki symulacją na niezależnych dniach. Co tracimy,
+   oceniając obie reguły wyłącznie odsetkiem pomyłek?
 :::
 
 ::: {#exr-taksowki}
@@ -894,4 +1058,92 @@ d) Załóżmy, że niesłuszne oczyszczenie spółki Niebieski kosztuje $c$ razy
    z ([-@eq-regula-kosztowa]), wyznacz najmniejsze $c$, przy którym
    zeznanie „niebieska” prowadzi do decyzji Niebieski. Odnieś wynik do
    ramki „Dobry model, zły próg”.
+:::
+
+::: {#exr-ryzyko-wazone}
+**Zmiana wag.** W przykładzie sklepu zachowaj rozkłady warunkowe,
+ale zastąp proporcje dni przez $\Prob(X=A)=q$, $\Prob(X=B)=1-q$,
+gdzie $0<q<1$.
+
+a) Znajdź optymalny predyktor kwadratowy, jego ryzyko oraz najlepszą
+   prognozę stałą w zależności od $q$.
+b) Powtórz analizę dla klasyfikacji wysokiego popytu przy stracie
+   $0$--$1$. Które wielkości zależą od proporcji dni?
+c) **Rozszerzenie.** Wykaż, że przy ryzyku ważonym
+   $\E[w(\X)(Y-f(\X))^2]$, gdzie $w(\x)>0$ i
+   $\E[w(\X)Y^2]<\infty$, średnia warunkowa nadal jest optymalna
+   (zakładamy też $\E[|Y|]<\infty$).
+   Skorzystaj z minimalizacji punktowej. Wyjaśnij, dlaczego wagi
+   mogą zmieniać wartość ryzyka, nie zmieniając optimum punktowego.
+:::
+
+::: {#exr-strata-pinball}
+**Rozszerzenie: kwantyle.** Potrzebna jest znajomość dystrybuanty
+i pochodnych. Rozważ **stratę pinball** (kwantylową) o parametrze $\tau \in (0,1)$:
+$$
+\Loss_\tau(y, a) = \begin{cases}
+  \tau (y - a), & y \ge a, \\
+  (1-\tau)(a - y), & y < a.
+\end{cases}
+$$
+Załóż, że przy ustalonych cechach rozkład wyniku ma ciągłą
+dystrybuantę $F$ i skończony pierwszy moment. Wykaż, że pochodna
+ryzyka warunkowego względem $a$ wynosi $F(a)-\tau$. Wywnioskuj,
+że minimum osiąga kwantyl rzędu $\tau$. Wskazówka: rozpatrz osobno
+wyniki mniejsze i większe od $a$. Dla $\tau=1/2$ strata pinball
+jest połową straty absolutnej; sprawdź zgodność optimum
+z @thm-mediana-warunkowa.
+:::
+
+::: {#exr-blad-bayesa-gaussy}
+**Rozszerzenie: rozkłady normalne. Wymagane są gęstość, dystrybuanta i wzór Bayesa.**
+
+Dla dwóch klas o rozkładach $\Nrozk(-\mu, \sigma^2)$ i $\Nrozk(\mu, \sigma^2)$
+z równymi prawdopodobieństwami a priori wyprowadź wzór na błąd bayesowski
+w zależności od $\mu$ i $\sigma$. Dla jakiej wartości $\mu/\sigma$ błąd
+bayesowski spada poniżej 1%?
+:::
+
+::: {#exr-niezrownowazone-klasy}
+**Rozszerzenie: klasy niezrównoważone. Wymagane są rozkłady normalne oraz metoda k-NN z rozdziału [-@sec-knn].**
+
+Zmodyfikuj eksperyment z @fig-blad-bayesa tak, aby klasy miały
+prawdopodobieństwa a priori $\pi_0 = 0{,}9$ i $\pi_1 = 0{,}1$
+(klasa $0$ to ta, w której $X \sim \Nrozk(-\mu, 1)$). Wyznacz nowy błąd
+bayesowski i porównaj go z błędem klasyfikatora trywialnego, który zawsze
+wskazuje klasę częstszą. Kiedy $k$-NN zaczyna być od niego lepszy?
+:::
+
+::: {#exr-korekta-apriori}
+**Rozszerzenie: zmiana populacji. Wymagane są wzór Bayesa i rachunek na szansach.**
+
+**Korekta prawdopodobieństw a priori.** Model klasyfikacyjny uczono na
+próbie, w której klasy występowały z częstościami $\pi'_k$, na przykład
+na próbie zbalansowanej. Model zwraca więc oszacowania
+$\eta'_k(\x) = \Prob'(Y = k \mid \X = \x)$. W populacji, w której model
+będzie stosowany, klasy występują z częstościami $\pi_k$, a rozkłady
+cech w obrębie klas $p(\x \mid Y = k)$ są takie same jak w próbie.
+Korzystając ze wzoru Bayesa, wykaż, że
+$$
+\eta_k(\x) = \frac{\eta'_k(\x)\, \pi_k / \pi'_k}
+{\sum_{j=1}^{K} \eta'_j(\x)\, \pi_j / \pi'_j} .
+$$
+Pokaż, że w przypadku dwuklasowym korekta sprowadza się do pomnożenia
+szans $\eta(\x) / (1 - \eta(\x))$ przez stałą, i wyznacz tę stałą.
+Model wykrywania oszustw uczono na próbie zbalansowanej, a w populacji
+oszustwa stanowią 1% transakcji. Dla pewnej transakcji model zwrócił
+$0{,}8$. Jakie jest prawdopodobieństwo oszustwa po korekcie? Wyjaśnij,
+dlaczego tej korekty nie da się przeprowadzić dla modelu zwracającego
+wyłącznie etykiety (por. ramka „Dobry model, zły próg").
+:::
+
+::: {#exr-srednia-mediana}
+**Rozszerzenie: własności średniej i mediany. Wymagane są nierówność Jensena i pojęcie rozstępu międzykwartylowego.**
+
+Wykaż, że dla dowolnego rozkładu o skończonej wariancji średnia $\mu$
+i mediana $m$ spełniają $|\mu - m| \le \sigma$. (Wskazówka: skorzystaj
+z @thm-mediana-warunkowa i nierówności Jensena.) Podaj rozkład, dla którego
+ta różnica jest bliska $\sigma$. Następnie pokaż, że przy ustalonym
+rozstępie międzykwartylowym różnica $|\mu - m|$ może być dowolnie duża.
+Co to mówi o odporności obu predyktorów?
 :::

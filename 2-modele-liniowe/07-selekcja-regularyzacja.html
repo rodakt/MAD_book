@@ -20,10 +20,64 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -70,6 +124,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Szukaj"
   }
 }</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -161,7 +218,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../1-fundamenty/02-predyktory-optymalne.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Predyktory optymalne i błąd nieredukowalny</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Ryzyko i predyktory optymalne</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -299,8 +356,52 @@ window.Quarto = {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Spis treści</h2>
+   
+  <ul>
+  <li><a href="#sec-mniej-predyktorow" id="toc-sec-mniej-predyktorow" class="nav-link active" data-scroll-target="#sec-mniej-predyktorow"><span class="header-section-number">7.1</span> Dlaczego mniej predyktorów bywa lepiej</a></li>
+  <li><a href="#sec-selekcja-podzbiorow" id="toc-sec-selekcja-podzbiorow" class="nav-link" data-scroll-target="#sec-selekcja-podzbiorow"><span class="header-section-number">7.2</span> Selekcja podzbioru predyktorów</a>
+  <ul class="collapse">
+  <li><a href="#przegląd-zupełny" id="toc-przegląd-zupełny" class="nav-link" data-scroll-target="#przegląd-zupełny"><span class="header-section-number">7.2.1</span> Przegląd zupełny</a></li>
+  <li><a href="#metoda-schodów-w-przód-i-wstecz" id="toc-metoda-schodów-w-przód-i-wstecz" class="nav-link" data-scroll-target="#metoda-schodów-w-przód-i-wstecz"><span class="header-section-number">7.2.2</span> Metoda schodów w przód i wstecz</a></li>
+  </ul></li>
+  <li><a href="#sec-kryteria-selekcji" id="toc-sec-kryteria-selekcji" class="nav-link" data-scroll-target="#sec-kryteria-selekcji"><span class="header-section-number">7.3</span> Kryteria wyboru modelu</a>
+  <ul class="collapse">
+  <li><a href="#skorygowany-współczynnik-determinacji" id="toc-skorygowany-współczynnik-determinacji" class="nav-link" data-scroll-target="#skorygowany-współczynnik-determinacji"><span class="header-section-number">7.3.1</span> Skorygowany współczynnik determinacji</a></li>
+  <li><a href="#kryterium-cp-mallowsa" id="toc-kryterium-cp-mallowsa" class="nav-link" data-scroll-target="#kryterium-cp-mallowsa"><span class="header-section-number">7.3.2</span> Kryterium Cp Mallowsa</a></li>
+  <li><a href="#aic-i-bic" id="toc-aic-i-bic" class="nav-link" data-scroll-target="#aic-i-bic"><span class="header-section-number">7.3.3</span> AIC i BIC</a></li>
+  <li><a href="#walidacja-krzyżowa-i-cel-wyboru" id="toc-walidacja-krzyżowa-i-cel-wyboru" class="nav-link" data-scroll-target="#walidacja-krzyżowa-i-cel-wyboru"><span class="header-section-number">7.3.4</span> Walidacja krzyżowa i cel wyboru</a></li>
+  </ul></li>
+  <li><a href="#sec-ridge" id="toc-sec-ridge" class="nav-link" data-scroll-target="#sec-ridge"><span class="header-section-number">7.4</span> Regresja grzbietowa</a>
+  <ul class="collapse">
+  <li><a href="#dlaczego-skala-ma-znaczenie" id="toc-dlaczego-skala-ma-znaczenie" class="nav-link" data-scroll-target="#dlaczego-skala-ma-znaczenie"><span class="header-section-number">7.4.1</span> Dlaczego skala ma znaczenie</a></li>
+  <li><a href="#rozwiązanie-i-mechanizm-ściągania" id="toc-rozwiązanie-i-mechanizm-ściągania" class="nav-link" data-scroll-target="#rozwiązanie-i-mechanizm-ściągania"><span class="header-section-number">7.4.2</span> Rozwiązanie i mechanizm ściągania</a></li>
+  </ul></li>
+  <li><a href="#sec-lasso" id="toc-sec-lasso" class="nav-link" data-scroll-target="#sec-lasso"><span class="header-section-number">7.5</span> LASSO i geometria regularyzacji</a>
+  <ul class="collapse">
+  <li><a href="#kara-bezwzględna-i-dokładne-zera" id="toc-kara-bezwzględna-i-dokładne-zera" class="nav-link" data-scroll-target="#kara-bezwzględna-i-dokładne-zera"><span class="header-section-number">7.5.1</span> Kara bezwzględna i dokładne zera</a></li>
+  <li><a href="#ścieżki-współczynników-na-credit" id="toc-ścieżki-współczynników-na-credit" class="nav-link" data-scroll-target="#ścieżki-współczynników-na-credit"><span class="header-section-number">7.5.2</span> Ścieżki współczynników na Credit</a></li>
+  <li><a href="#kara-jako-budżet" id="toc-kara-jako-budżet" class="nav-link" data-scroll-target="#kara-jako-budżet"><span class="header-section-number">7.5.3</span> Kara jako budżet</a></li>
+  <li><a href="#co-oznacza-wybranie-cechy" id="toc-co-oznacza-wybranie-cechy" class="nav-link" data-scroll-target="#co-oznacza-wybranie-cechy"><span class="header-section-number">7.5.4</span> Co oznacza wybranie cechy</a></li>
+  </ul></li>
+  <li><a href="#sec-regularyzacja-praktyka" id="toc-sec-regularyzacja-praktyka" class="nav-link" data-scroll-target="#sec-regularyzacja-praktyka"><span class="header-section-number">7.6</span> Dobór regularyzacji i porównanie metod</a>
+  <ul class="collapse">
+  <li><a href="#kandydaci-i-role-danych" id="toc-kandydaci-i-role-danych" class="nav-link" data-scroll-target="#kandydaci-i-role-danych"><span class="header-section-number">7.6.1</span> Kandydaci i role danych</a></li>
+  <li><a href="#krzywe-błędu-i-reguła-jednego-błędu-standardowego" id="toc-krzywe-błędu-i-reguła-jednego-błędu-standardowego" class="nav-link" data-scroll-target="#krzywe-błędu-i-reguła-jednego-błędu-standardowego"><span class="header-section-number">7.6.2</span> Krzywe błędu i reguła jednego błędu standardowego</a></li>
+  <li><a href="#końcowa-ocena-i-model-do-używania" id="toc-końcowa-ocena-i-model-do-używania" class="nav-link" data-scroll-target="#końcowa-ocena-i-model-do-używania"><span class="header-section-number">7.6.3</span> Końcowa ocena i model do używania</a></li>
+  </ul></li>
+  <li><a href="#sec-ridge-geometria" id="toc-sec-ridge-geometria" class="nav-link" data-scroll-target="#sec-ridge-geometria"><span class="header-section-number">7.7</span> Rozszerzenie: geometria ściągania i efektywne stopnie swobody</a>
+  <ul class="collapse">
+  <li><a href="#kierunki-o-różnej-dokładności" id="toc-kierunki-o-różnej-dokładności" class="nav-link" data-scroll-target="#kierunki-o-różnej-dokładności"><span class="header-section-number">7.7.1</span> Kierunki o różnej dokładności</a></li>
+  <li><a href="#macierz-wygładzania-i-stopnie-swobody" id="toc-macierz-wygładzania-i-stopnie-swobody" class="nav-link" data-scroll-target="#macierz-wygładzania-i-stopnie-swobody"><span class="header-section-number">7.7.2</span> Macierz wygładzania i stopnie swobody</a></li>
+  </ul></li>
+  <li><a href="#sec-lasso-wspolrzedne" id="toc-sec-lasso-wspolrzedne" class="nav-link" data-scroll-target="#sec-lasso-wspolrzedne"><span class="header-section-number">7.8</span> Rozszerzenie: obliczanie LASSO przez aktualizację współrzędnych</a></li>
+  <li><a href="#uwagi-bibliograficzne" id="toc-uwagi-bibliograficzne" class="nav-link" data-scroll-target="#uwagi-bibliograficzne">Uwagi bibliograficzne</a></li>
+  <li><a href="#zadania" id="toc-zadania" class="nav-link" data-scroll-target="#zadania">Zadania</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -336,7 +437,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../2-modele-liniowe/06-regresja-liniowa.html">Modele liniowe</a></li><li class="breadcrumb-item"><a href="../2-modele-liniowe/07-selekcja-regularyzacja.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Selekcja i regularyzacja</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-selekcja-regularyzacja" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Selekcja i regularyzacja</span></span></h1>
+<div class="quarto-title-block"><div><h1 class="title"><span id="sec-selekcja-regularyzacja" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Selekcja i regularyzacja</span></span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Kod</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Pokaż cały kod</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Ukryj cały kod</a></li></ul></div></div>
 </div>
 
 
@@ -353,9 +454,1285 @@ window.Quarto = {
 </header>
 
 
-<p><em>Rozdział w przygotowaniu.</em></p>
+<p>W danych <em>Credit</em> z rozdziału <a href="06-regresja-liniowa.html" class="quarto-xref"><span>6</span></a> limit kredytu (<code>Limit</code>) i ocena zdolności kredytowej (<code>Rating</code>) niosą bardzo podobną informację. Gdy uwzględniamy obie cechy, ich współczynniki są znacznie mniej dokładnie wyznaczone niż przy każdej z nich osobno. Czy powinniśmy usunąć jedną z tych cech? A może zachować obie, ale ograniczyć wielkość ich współczynników?</p>
+<p>To dwa sposoby zmniejszenia swobody modelu. <strong>Selekcja predyktorów</strong> wybiera podzbiór cech, a pozostałym przypisuje współczynniki równe zero. <strong>Regularyzacja</strong> ogranicza dopasowanie przez karę za wielkość współczynników. W obu przypadkach możemy pogorszyć dopasowanie do próby, a poprawić przewidywanie nowych wyników. Mechanizm znamy z rozdziału <a href="../1-fundamenty/04-bias-wariancja.html" class="quarto-xref"><span>4</span></a>: godzimy się na obciążenie, jeśli zmniejszenie wariancji daje większą korzyść.</p>
+<p>W tym rozdziale najpierw nauczymy się wybierać podzbiory cech, potem przejdziemy do płynnego ściągania współczynników w regresji grzbietowej i LASSO. Na końcu porównamy całe procedury na danych <em>Credit</em>. Prostszy opis i dobra predykcja są dwoma celami: zbiór cech wygodny w interpretacji może dawać inne przewidywania niż model wybrany wyłącznie według błędu.</p>
+<section id="sec-mniej-predyktorow" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="sec-mniej-predyktorow"><span class="header-section-number">7.1</span> Dlaczego mniej predyktorów bywa lepiej</h2>
+<p>Rozważmy dodanie jednej cechy do regresji liniowej. Każda funkcja ze starego modelu nadal jest dostępna: wystarczy nadać nowemu współczynnikowi wartość zero. Dlatego najmniejsza osiągalna suma kwadratów reszt <span class="math inline">\(\mathrm{RSS}\)</span> nie rośnie. W konsekwencji zwykłe <span class="math inline">\(R^2\)</span> nie maleje. To własność dopasowania do tych samych danych, na których szukaliśmy współczynników (sekcja <a href="06-regresja-liniowa.html#sec-jakosc-dopasowania" class="quarto-xref"><span>6.4</span></a>).</p>
+<p>Nowa cecha wymaga jednak oszacowania kolejnego współczynnika. Jeśli niesie mało dodatkowej informacji o wyniku, jej dopasowanie może przede wszystkim odtwarzać szum. W kolejnej próbie uzyskamy inny współczynnik i inne predykcje. Dodawanie cech może więc zmniejszać błąd uczący i jednocześnie zwiększać błąd na nowych obserwacjach.</p>
+<p>Pokazuje to kontrolowany eksperyment na rysunku <a href="#fig-selekcja-szum" class="quarto-xref"><span>7.1</span></a>. Losujemy <span class="math inline">\(n=60\)</span> obserwacji i <span class="math inline">\(p=30\)</span> cech. Wynik zależy tylko od pierwszej: <span class="math inline">\(Y=3X_1+\varepsilon\)</span>, gdzie <span class="math inline">\(\varepsilon\sim\Nrozk(0,2^2)\)</span>. Pierwsza i druga cecha są silnie skorelowane; pozostałe są niezależnym szumem. Porównujemy OLS z wszystkimi cechami, OLS z pierwszą cechą oraz ridge z ustaloną z góry karą. Model z jedną cechą zna tutaj właściwy podzbiór dzięki konstrukcji eksperymentu; w zastosowaniu musielibyśmy go dopiero wybrać.</p>
+<div id="cell-fig-selekcja-szum" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display, Markdown</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> itertools <span class="im">import</span> combinations</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.base <span class="im">import</span> BaseEstimator, RegressorMixin</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression, Ridge, Lasso</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline, make_pipeline</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split, KFold, GridSearchCV</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>kolory <span class="op">=</span> [<span class="st">"#1B6CA8"</span>, <span class="st">"#D7263D"</span>, <span class="st">"#33865B"</span>]</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">707</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> proba_liniowa(rng, n, p<span class="op">=</span><span class="dv">30</span>):</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> rng.normal(size<span class="op">=</span>(n, p))</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    X[:, <span class="dv">1</span>] <span class="op">=</span> <span class="fl">0.98</span> <span class="op">*</span> X[:, <span class="dv">0</span>] <span class="op">+</span> np.sqrt(<span class="dv">1</span> <span class="op">-</span> <span class="fl">0.98</span><span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> X[:, <span class="dv">1</span>]</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> <span class="dv">3</span> <span class="op">*</span> X[:, <span class="dv">0</span>] <span class="op">+</span> rng.normal(scale<span class="op">=</span><span class="dv">2</span>, size<span class="op">=</span>n)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> X, y</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>bledy <span class="op">=</span> []</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">200</span>):</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    X, y <span class="op">=</span> proba_liniowa(rng, <span class="dv">60</span>)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    Xt, yt <span class="op">=</span> proba_liniowa(rng, <span class="dv">2000</span>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    modele <span class="op">=</span> [LinearRegression().fit(X, y),</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>              LinearRegression().fit(X[:, :<span class="dv">1</span>], y),</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>              make_pipeline(StandardScaler(), Ridge(alpha<span class="op">=</span><span class="dv">30</span>)).fit(X, y)]</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j, model <span class="kw">in</span> <span class="bu">enumerate</span>(modele):</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>        Xu, Xv <span class="op">=</span> (X[:, :<span class="dv">1</span>], Xt[:, :<span class="dv">1</span>]) <span class="cf">if</span> j <span class="op">==</span> <span class="dv">1</span> <span class="cf">else</span> (X, Xt)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>        bledy.append([j, mean_squared_error(y, model.predict(Xu)),</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>                      mean_squared_error(yt, model.predict(Xv))])</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>srednie_bledy <span class="op">=</span> pd.DataFrame(bledy, columns<span class="op">=</span>[<span class="st">"model"</span>, <span class="st">"uczący"</span>, <span class="st">"nowe"</span>]).groupby(<span class="st">"model"</span>).mean()</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="fl">3.8</span>))</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>srednie_bledy.plot.bar(ax<span class="op">=</span>ax, color<span class="op">=</span>kolory[:<span class="dv">2</span>], rot<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>ax.set_xticklabels([<span class="st">"OLS: 30 cech"</span>, <span class="st">"OLS: właściwa cecha"</span>, <span class="st">"ridge: 30 cech"</span>])</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>ax.axhline(<span class="dv">4</span>, color<span class="op">=</span><span class="st">"0.4"</span>, ls<span class="op">=</span><span class="st">"--"</span>)</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">""</span>, ylabel<span class="op">=</span><span class="st">"średni kwadrat błędu"</span>)</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>ax.legend(title<span class="op">=</span><span class="st">"dane"</span>)</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-selekcja-szum" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-selekcja-szum-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="07-selekcja-regularyzacja_files/figure-html/fig-selekcja-szum-output-1.png" width="759" height="355" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-selekcja-szum-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Rysunek&nbsp;7.1: Cechy szumowe i ściąganie: średni błąd uczący oraz błąd na niezależnych obserwacjach w 200 próbach. Model z jedną cechą otrzymuje właściwą cechę z konstrukcji eksperymentu. Przerywana linia oznacza wariancję błędu 4.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Pełny model osiąga najmniejszy błąd uczący, lecz płaci za szacowanie wielu zbędnych współczynników. Ridge częściowo ogranicza ten koszt, a model z właściwą cechą unika go prawie w całości. Gdy wiele cech niesie informację, ich usuwanie może kosztować więcej, niż oszczędza na wariancji.</p>
+<p>Współliniowość dodatkowo utrudnia rozdzielenie efektów cech. Duże zmiany ich współczynników nie muszą jednak oznaczać równie dużych zmian predykcji w obszarze danych: wzrost jednego współczynnika może być równoważony spadkiem drugiego.</p>
+<p>Przy wielu kolumnach pojawia się także problem jednoznaczności MNK. Jeśli macierz projektu z wyrazem wolnym ma więcej kolumn niż wierszy, nie ma pełnego rzędu kolumnowego. Współczynniki nie są wtedy wyznaczone jednoznacznie. Zerowy RSS wymaga dodatkowo, aby <span class="math inline">\(\y\)</span> należał do przestrzeni kolumn tej macierzy. Pełny rząd wierszowy zapewnia to dla każdego <span class="math inline">\(\y\)</span>, ale sama duża liczba cech nie wystarcza: wielokrotne kopie tej samej kolumny nie pozwalają odtworzyć dowolnych wyników.</p>
+</section>
+<section id="sec-selekcja-podzbiorow" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="sec-selekcja-podzbiorow"><span class="header-section-number">7.2</span> Selekcja podzbioru predyktorów</h2>
+<section id="przegląd-zupełny" class="level3" data-number="7.2.1">
+<h3 data-number="7.2.1" class="anchored" data-anchor-id="przegląd-zupełny"><span class="header-section-number">7.2.1</span> Przegląd zupełny</h3>
+<p>Zacznijmy od trzech cech <em>Credit</em>: <code>Income</code>, <code>Limit</code>, <code>Rating</code>. Przewidujemy <code>Balance</code>, czyli saldo zadłużenia w dolarach. Dla każdej cechy decydujemy, czy ją włączyć, zatem mamy <span class="math inline">\(2^3=8\)</span> podzbiorów. <strong>Model pusty</strong> ma wyraz wolny i przewiduje średnią wyników uczących. W tabeli <a href="#tbl-credit-podzbiory" class="quarto-xref"><span>7.1</span></a> dopasowujemy wszystkie modele.</p>
+<p>Aby później niezależnie ocenić wybraną procedurę, już teraz odkładamy <span class="math inline">\(100\)</span> z <span class="math inline">\(400\)</span> obserwacji jako test. Wszystkie dalsze ilustracje ścieżek i kryteriów na <em>Credit</em> wykorzystują wyłącznie pozostałe <span class="math inline">\(300\)</span>.</p>
+<div class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>credit <span class="op">=</span> pd.read_csv(<span class="st">"../dane/Credit.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>ind_ucz, ind_test <span class="op">=</span> train_test_split(np.arange(<span class="bu">len</span>(credit)), test_size<span class="op">=</span><span class="dv">100</span>, random_state<span class="op">=</span><span class="dv">707</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>ucz <span class="op">=</span> credit.iloc[ind_ucz].copy()</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>cechy_male <span class="op">=</span> [<span class="st">"Income"</span>, <span class="st">"Limit"</span>, <span class="st">"Rating"</span>]</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>y_ucz <span class="op">=</span> ucz[<span class="st">"Balance"</span>].to_numpy()</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rss_podzbior(dane, y, cechy):</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    A <span class="op">=</span> np.column_stack([np.ones(<span class="bu">len</span>(y)), dane[<span class="bu">list</span>(cechy)].to_numpy()])</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    beta <span class="op">=</span> np.linalg.lstsq(A, y, rcond<span class="op">=</span><span class="va">None</span>)[<span class="dv">0</span>]</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.<span class="bu">sum</span>((y <span class="op">-</span> A <span class="op">@</span> beta)<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>wiersze <span class="op">=</span> []</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>):</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> cechy <span class="kw">in</span> combinations(cechy_male, k):</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        wiersze.append({<span class="st">"cechy"</span>: <span class="st">", "</span>.join(cechy) <span class="kw">or</span> <span class="st">"tylko średnia"</span>,</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"k"</span>: k, <span class="st">"d"</span>: k <span class="op">+</span> <span class="dv">1</span>, <span class="st">"RSS"</span>: rss_podzbior(ucz, y_ucz, cechy)})</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>podzbiory <span class="op">=</span> pd.DataFrame(wiersze)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>display(podzbiory.assign(<span class="op">**</span>{<span class="st">"RSS / 1000"</span>: podzbiory[<span class="st">"RSS"</span>] <span class="op">/</span> <span class="dv">1000</span>})</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>        [[<span class="st">"cechy"</span>, <span class="st">"d"</span>, <span class="st">"RSS / 1000"</span>]].<span class="bu">round</span>(<span class="dv">2</span>))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-credit-podzbiory" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="3">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-credit-podzbiory-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;7.1: Wszystkie podzbiory trzech cech Credit, dopasowane na 300 obserwacjach uczących. Liczba d obejmuje wyraz wolny. RSS podano w tysiącach dolarów kwadratowych.
+</figcaption>
+<div aria-describedby="tbl-credit-podzbiory-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display">
+<div>
 
 
+<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">cechy</th>
+<th data-quarto-table-cell-role="th">d</th>
+<th data-quarto-table-cell-role="th">RSS / 1000</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>tylko średnia</td>
+<td>1</td>
+<td>62840.13</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>Income</td>
+<td>2</td>
+<td>48947.16</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Limit</td>
+<td>2</td>
+<td>15953.25</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>Rating</td>
+<td>2</td>
+<td>15840.31</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>Income, Limit</td>
+<td>3</td>
+<td>7885.97</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>Income, Rating</td>
+<td>3</td>
+<td>7710.39</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">6</th>
+<td>Limit, Rating</td>
+<td>3</td>
+<td>15812.82</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">7</th>
+<td>Income, Limit, Rating</td>
+<td>4</td>
+<td>7612.20</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><strong>Przegląd zupełny</strong> (ang. <em>best subset selection</em>) rozdziela dwa pytania. Najpierw, dla każdej liczby <span class="math inline">\(k\)</span> cech, wybieramy podzbiór o najmniejszym RSS. Potem spośród otrzymanych <span class="math inline">\(p+1\)</span> kandydatów wybieramy wielkość modelu według kryterium uwzględniającego jego złożoność lub według walidacji. Sam RSS wybrałby pełny model.</p>
+<p>W każdym rozmiarze <span class="math inline">\(k\)</span> mamy <span class="math inline">\(\binom pk\)</span> podzbiorów, a łącznie <span class="math inline">\(2^p\)</span>. Dla <span class="math inline">\(p=20\)</span> to ponad milion modeli; dla <span class="math inline">\(p=40\)</span> – ponad bilion. Przegląd znajduje najlepszy podzbiór według kryterium na przeszukanej liście. Nie zapewnia najmniejszego nieznanego ryzyka ani odkrycia właściwych zmiennych w populacji.</p>
+</section>
+<section id="metoda-schodów-w-przód-i-wstecz" class="level3" data-number="7.2.2">
+<h3 data-number="7.2.2" class="anchored" data-anchor-id="metoda-schodów-w-przód-i-wstecz"><span class="header-section-number">7.2.2</span> Metoda schodów w przód i wstecz</h3>
+<p>Przy większej liczbie cech można zbudować krótszą listę kandydatów. <strong>Selekcja w przód</strong> (ang. <em>forward stepwise selection</em>) zaczyna od modelu pustego. W pierwszym kroku dodaje cechę dającą najmniejszy RSS. W kolejnym wybiera najlepsze rozszerzenie tego właśnie modelu o jedną cechę. Cech już wybranych nie usuwa. Buduje w ten sposób zagnieżdżoną ścieżkę modeli o <span class="math inline">\(0,1,\ldots,p\)</span> cechach.</p>
+<p><strong>Selekcja wstecz</strong> (ang. <em>backward stepwise selection</em>) zaczyna od pełnego modelu. Usuwa cechę, której usunięcie najmniej zwiększa RSS, i powtarza ten krok aż do modelu pustego. W klasycznej wersji wymagamy pełnego rzędu kolumnowego dopasowywanych modeli, więc start z pełnego modelu jest problematyczny, gdy cech jest zbyt wiele względem <span class="math inline">\(n\)</span>.</p>
+<p>W przód sprawdzamy najwyżej <span class="math inline">\(p+(p-1)+\cdots+1=p(p+1)/2\)</span> rozszerzeń. Oszczędność ma cenę: najlepsza para cech nie musi zawierać cechy, która osobno była najlepsza. Pierwszy krok może więc zamknąć drogę do najlepszego podzbioru danej wielkości. Podobnie jest wstecz. Krok wyboru przećwiczymy w <a href="#exr-selekcja-schody" class="quarto-xref">Zadanie&nbsp;<span>7.2</span></a>.</p>
+<p>Liczba cech na ścieżce jest ustawieniem procedury. Gdy wybieramy ją przez CV, <strong>całą ścieżkę budujemy ponownie w części uczącej każdego podziału</strong>. Wybranie podzbiorów na całej próbie, a dopiero potem ocenianie tych ustalonych podzbiorów przez CV ujawnia procedurze wyniki z przyszłych części walidacyjnych (sekcja <a href="../1-fundamenty/05-ocena-modeli.html#sec-wyciek" class="quarto-xref"><span>5.5</span></a>).</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Zmienna a kolumna modelu
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Zmienna jakościowa o czterech poziomach daje zwykle trzy kolumny kodowania. Przy selekcji całych zmiennych włączamy lub usuwamy ten blok razem; w karach za liczbę parametrów liczymy trzy współczynniki. Dla interakcji zwykle zachowujemy odpowiadające im efekty główne, aby model miał interpretację zgodną z rozdziałem <a href="06-regresja-liniowa.html" class="quarto-xref"><span>6</span></a>. Zwykłe LASSO opisane dalej wybiera pojedyncze kolumny, więc nie wymusza ani wyboru całego bloku, ani tej zasady dla interakcji.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-kryteria-selekcji" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="sec-kryteria-selekcji"><span class="header-section-number">7.3</span> Kryteria wyboru modelu</h2>
+<p>Ile musi zmaleć RSS, aby warto było dodać parametr? Jedną odpowiedzią jest dopisanie kary za złożoność. Inną – pomiar błędu na danych niewykorzystanych przy dopasowaniu. Najpierw rozważymy pierwszą drogę.</p>
+<p>We wzorach tej sekcji <span class="math inline">\(d\)</span> oznacza liczbę współczynników <strong>łącznie z wyrazem wolnym</strong>, a <span class="math inline">\(n\)</span> – liczbę obserwacji użytych w dopasowaniu. Porównujemy OLS na tych samych obserwacjach i dla tego samego wyniku, przy pełnym rzędzie kolumnowym macierzy projektu, a więc <span class="math inline">\(d\leq n\)</span>. Zakładamy ponadto <span class="math inline">\(d&lt;n\)</span> i dodatni RSS; przy <span class="math inline">\(d=n\)</span> model odtwarza wyniki uczące dokładnie. Liczby parametrów nie należy tu zastępować liczbą nazw zmiennych.</p>
+<section id="skorygowany-współczynnik-determinacji" class="level3" data-number="7.3.1">
+<h3 data-number="7.3.1" class="anchored" data-anchor-id="skorygowany-współczynnik-determinacji"><span class="header-section-number">7.3.1</span> Skorygowany współczynnik determinacji</h3>
+<p>Skorygowany <span class="math inline">\(R^2\)</span> z sekcji <a href="06-regresja-liniowa.html#sec-jakosc-dopasowania" class="quarto-xref"><span>6.4</span></a> ma postać <span id="eq-skorygowany-r2-selekcja"><span class="math display">\[
+\overline R^2=1-\frac{\mathrm{RSS}/(n-d)}{\mathrm{TSS}/(n-1)}.
+\tag{7.1}\]</span></span> Zwiększenie <span class="math inline">\(d\)</span> zmniejsza mianownik <span class="math inline">\(n-d\)</span>. RSS musi więc odpowiednio spaść, aby poprawił się cały wynik. Wybieramy <strong>największy</strong> <span class="math inline">\(\overline R^2\)</span>. Korekta osłabia nagradzanie rozbudowy modelu, ale nadal wykorzystuje te same dane do dopasowania i wyboru.</p>
+</section>
+<section id="kryterium-cp-mallowsa" class="level3" data-number="7.3.2">
+<h3 data-number="7.3.2" class="anchored" data-anchor-id="kryterium-cp-mallowsa"><span class="header-section-number">7.3.2</span> Kryterium Cp Mallowsa</h3>
+<p>Kryterium <span class="math inline">\(C_p\)</span> <span class="citation" data-cites="mallows1973">(<a href="../references.html#ref-mallows1973" role="doc-biblioref">Mallows 1973</a>)</span> porównuje RSS z oszacowaniem wariancji błędu <span class="math inline">\(\widehat\sigma^2\)</span>: <span id="eq-cp-selekcja"><span class="math display">\[
+C_p=\frac{\mathrm{RSS}}{\widehat\sigma^2}-n+2d.
+\tag{7.2}\]</span></span> Mimo historycznego indeksu <span class="math inline">\(p\)</span> we wzorze liczymy parametry przez <span class="math inline">\(d\)</span>, zgodnie z przyjętą konwencją. Wybieramy <strong>najmniejsze</strong> <span class="math inline">\(C_p\)</span>. Wspólną estymatę <span class="math inline">\(\widehat\sigma^2\)</span> zwykle wyznaczamy z dostatecznie bogatego modelu, dzieląc jego RSS przez resztowe stopnie swobody.</p>
+<p>Skąd kara <span class="math inline">\(2d\)</span>? Porównajmy w tych samych punktach <span class="math inline">\(\x_1,\dots,\x_n\)</span> błąd na wynikach uczących z błędem dla nowych wyników <span class="math inline">\(Y_i^{\mathrm{nowe}}\)</span>, których błędy są niezależne od uczących i mają tę samą wariancję <span class="math inline">\(\sigma^2\)</span>. Oznaczmy przez <span class="math inline">\(b_i=\fopt(\x_i)-\E\widehat y_i\)</span> obciążenie predykcji w punkcie <span class="math inline">\(i\)</span>; nie zakładamy, że jest zerem. Predykcja <span class="math inline">\(\widehat y_i\)</span> ma wariancję <span class="math inline">\(\sigma^2h_{ii}\)</span> (sekcja <a href="06-regresja-liniowa.html#sec-wlasnosci-mnk" class="quarto-xref"><span>6.3</span></a>), a reszta <span class="math inline">\(y_i-\widehat y_i\)</span> – wariancję <span class="math inline">\(\sigma^2(1-h_{ii})\)</span> (sekcja <a href="06-regresja-liniowa.html#sec-diagnostyka" class="quarto-xref"><span>6.8</span></a>). Stąd <span class="math display">\[
+\E(y_i-\widehat y_i)^2=\sigma^2(1-h_{ii})+b_i^2,
+\qquad
+\E(Y_i^{\mathrm{nowe}}-\widehat y_i)^2=\sigma^2+\sigma^2h_{ii}+b_i^2 .
+\]</span> Nowy wynik jest niezależny od <span class="math inline">\(\widehat y_i\)</span>, więc wariancje się dodają. Wynik uczący wchodzi natomiast do <span class="math inline">\(\widehat y_i\)</span> z wagą <span class="math inline">\(h_{ii}\)</span> i predykcja częściowo za nim podąża. Różnica wynosi <span class="math inline">\(2\sigma^2h_{ii}\)</span>, a po zsumowaniu, z (<a href="06-regresja-liniowa.html#eq-suma-dzwigni" class="quarto-xref"><span>6.10</span></a>), <span class="math inline">\(2\sigma^2 d\)</span>. Zatem <span class="math inline">\(\mathrm{RSS}+2d\sigma^2\)</span> ma tę samą wartość oczekiwaną co suma kwadratów błędów dla nowych wyników. <span class="math inline">\(C_p\)</span> to ta wielkość podzielona przez <span class="math inline">\(\sigma^2\)</span> i pomniejszona o stałą <span class="math inline">\(n\)</span>; nieznane <span class="math inline">\(\sigma^2\)</span> zastępujemy oszacowaniem.</p>
+<p>Gdy model służący do wyznaczenia <span class="math inline">\(\widehat\sigma^2\)</span> pomija ważną strukturę średniej, reszty zawierają także niedopasowanie i oszacowanie może być zawyżone. Gdy brak resztowych stopni swobody, ten sposób jego uzyskania w ogóle nie działa. Rachunek dotyczy ustalonego modelu; kara nie usuwa optymizmu wynikającego z przeszukiwania wielu modeli (twierdzenie <a href="../1-fundamenty/05-ocena-modeli.html#thm-optymizm-wyboru" class="quarto-xref"><span>5.2</span></a>).</p>
+</section>
+<section id="aic-i-bic" class="level3" data-number="7.3.3">
+<h3 data-number="7.3.3" class="anchored" data-anchor-id="aic-i-bic"><span class="header-section-number">7.3.3</span> AIC i BIC</h3>
+<p>Kryterium informacyjne Akaikego, <strong>AIC</strong> <span class="citation" data-cites="akaike1974">(<a href="../references.html#ref-akaike1974" role="doc-biblioref">Akaike 1974</a>)</span>, opiera się na maksimum logarytmu wiarygodności <span class="math inline">\(\ell(\widehat\theta)\)</span>: <span class="math display">\[
+\mathrm{AIC}=-2\ell(\widehat\theta)+2q,
+\]</span> gdzie <span class="math inline">\(q\)</span> jest liczbą wszystkich szacowanych parametrów modelu probabilistycznego. Logarytm wiarygodności mierzy, jak dobrze model przypisuje prawdopodobieństwo obserwowanym danym. Dla regresji z niezależnymi normalnymi błędami i nieznaną wspólną wariancją mamy <span class="math inline">\(q=d+1\)</span>: <span class="math inline">\(d\)</span> współczynników i wariancję. Po oszacowaniu wariancji przez RSS/<span class="math inline">\(n\)</span> i pominięciu składników wspólnych wszystkim porównywanym modelom otrzymujemy <span id="eq-aic-selekcja"><span class="math display">\[
+\mathrm{AIC}_{\mathrm{por}}=n\log(\mathrm{RSS}/n)+2d.
+\tag{7.3}\]</span></span> Możemy używać tej postaci do wyboru: minimum jest takie samo. To nie jest wersja dla znanej wariancji; przy znanej <span class="math inline">\(\sigma^2\)</span> składnik dopasowania jest proporcjonalny do <span class="math inline">\(\mathrm{RSS}/\sigma^2\)</span>.</p>
+<p>Kryterium Schwarza, <strong>BIC</strong> <span class="citation" data-cites="schwarz1978">(<a href="../references.html#ref-schwarz1978" role="doc-biblioref">Schwarz 1978</a>)</span>, zastępuje karę <span class="math inline">\(2q\)</span> karą <span class="math inline">\(q\log n\)</span>. W tej samej rodzinie normalnych modeli liniowych porównujemy <span id="eq-bic-selekcja"><span class="math display">\[
+\mathrm{BIC}_{\mathrm{por}}=n\log(\mathrm{RSS}/n)+d\log n.
+\tag{7.4}\]</span></span> Oba kryteria <strong>minimalizujemy</strong>. Dla <span class="math inline">\(n\geq8\)</span> kara za parametr w BIC jest większa niż w AIC. AIC służy przybliżaniu jakości modelu jako opisu nowych wyników przez logarytm wiarygodności; BIC wywodzi się z porównania probabilistycznych modeli przy innych założeniach. Różne kary i cele mogą dawać różne wybory. Żadne z tych kryteriów nie zapewnia w każdej próbie najmniejszego błędu kwadratowego predykcji.</p>
+<p>Na <em>Credit</em> możemy policzyć wszystkie kryteria dla tych samych ośmiu podzbiorów. Wariancję do <span class="math inline">\(C_p\)</span> szacujemy tu z modelu trzech cech; jest to założenie ilustracji, które może być nietrafne: nie uwzględniamy jeszcze choćby statusu studenta.</p>
+<div class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">len</span>(ucz)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>tss <span class="op">=</span> np.<span class="bu">sum</span>((y_ucz <span class="op">-</span> y_ucz.mean())<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>sigma2 <span class="op">=</span> podzbiory.iloc[<span class="op">-</span><span class="dv">1</span>][<span class="st">"RSS"</span>] <span class="op">/</span> (n <span class="op">-</span> <span class="dv">4</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>kryteria <span class="op">=</span> podzbiory.copy()</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>d, rss <span class="op">=</span> kryteria[<span class="st">"d"</span>], kryteria[<span class="st">"RSS"</span>]</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>kryteria[<span class="st">"skorygowany R²"</span>] <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> (rss <span class="op">/</span> (n <span class="op">-</span> d)) <span class="op">/</span> (tss <span class="op">/</span> (n <span class="op">-</span> <span class="dv">1</span>))</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>kryteria[<span class="st">"Cp"</span>] <span class="op">=</span> rss <span class="op">/</span> sigma2 <span class="op">-</span> n <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> d</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>kryteria[<span class="st">"AIC"</span>] <span class="op">=</span> n <span class="op">*</span> np.log(rss <span class="op">/</span> n) <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> d</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>kryteria[<span class="st">"BIC"</span>] <span class="op">=</span> n <span class="op">*</span> np.log(rss <span class="op">/</span> n) <span class="op">+</span> d <span class="op">*</span> np.log(n)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>display(kryteria[[<span class="st">"cechy"</span>, <span class="st">"skorygowany R²"</span>, <span class="st">"Cp"</span>, <span class="st">"AIC"</span>, <span class="st">"BIC"</span>]].<span class="bu">round</span>(<span class="dv">3</span>))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-credit-kryteria" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="4">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-credit-kryteria-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;7.2: Kryteria dla podzbiorów trzech cech. AIC i BIC pomijają wspólne stałe. Do Cp użyto wariancji resztowej modelu trzech cech.
+</figcaption>
+<div aria-describedby="tbl-credit-kryteria-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">cechy</th>
+<th data-quarto-table-cell-role="th">skorygowany R²</th>
+<th data-quarto-table-cell-role="th">Cp</th>
+<th data-quarto-table-cell-role="th">AIC</th>
+<th data-quarto-table-cell-role="th">BIC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>tylko średnia</td>
+<td>0.000</td>
+<td>2145.534</td>
+<td>3677.697</td>
+<td>3681.400</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>Income</td>
+<td>0.218</td>
+<td>1607.307</td>
+<td>3604.741</td>
+<td>3612.148</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Limit</td>
+<td>0.745</td>
+<td>324.341</td>
+<td>3268.417</td>
+<td>3275.825</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>Rating</td>
+<td>0.747</td>
+<td>319.949</td>
+<td>3266.286</td>
+<td>3273.693</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>Income, Limit</td>
+<td>0.874</td>
+<td>12.646</td>
+<td>3059.044</td>
+<td>3070.155</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>Income, Rating</td>
+<td>0.876</td>
+<td>5.818</td>
+<td>3052.289</td>
+<td>3063.400</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">6</th>
+<td>Limit, Rating</td>
+<td>0.747</td>
+<td>320.880</td>
+<td>3267.765</td>
+<td>3278.876</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">7</th>
+<td>Income, Limit, Rating</td>
+<td>0.878</td>
+<td>4.000</td>
+<td>3050.444</td>
+<td>3065.259</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Skorygowany <span class="math inline">\(R^2\)</span>, <span class="math inline">\(C_p\)</span> i AIC wybierają wszystkie trzy cechy. BIC wskazuje <code>Income</code> i <code>Rating</code>: dodanie <code>Limit</code> obniża RSS z około <span class="math inline">\(7{,}71\)</span> do <span class="math inline">\(7{,}61\)</span> miliona, lecz poprawa nie rekompensuje większej kary BIC.</p>
+</section>
+<section id="walidacja-krzyżowa-i-cel-wyboru" class="level3" data-number="7.3.4">
+<h3 data-number="7.3.4" class="anchored" data-anchor-id="walidacja-krzyżowa-i-cel-wyboru"><span class="header-section-number">7.3.4</span> Walidacja krzyżowa i cel wyboru</h3>
+<p>CV porównuje średnie straty poza częścią uczącą, powtarzając dopasowanie w kolejnych podziałach. Pozwala tym samym językiem ocenić selekcję, ridge i LASSO. Przepis znamy z sekcji <a href="../1-fundamenty/05-ocena-modeli.html#sec-walidacja-krzyzowa" class="quarto-xref"><span>5.4</span></a>; zastosujemy go w sekcji <a href="#sec-regularyzacja-praktyka" class="quarto-xref"><span>7.6</span></a>. Liczba cech na ścieżce, siła kary i wybór samej metody są ustawieniami procedury. Ich ustalanie wymaga danych do wyboru, a końcowa ocena – osobnych danych lub zagnieżdżenia (sekcja <a href="../1-fundamenty/05-ocena-modeli.html#sec-selekcja-ocena" class="quarto-xref"><span>5.6</span></a>).</p>
+<p>Wybór podzbioru nie jest jeszcze wnioskowaniem o jego współczynnikach. Klasyczne testy i przedziały z rozdziału <a href="06-regresja-liniowa.html" class="quarto-xref"><span>6</span></a> traktują postać modelu jako ustaloną. Jeśli najpierw na tym samym wyniku wybieramy cechy, a potem stosujemy te wzory jak dla z góry określonego modelu, nie uwzględniamy etapu selekcji. Zwykła p-wartość po takim postępowaniu nie ma automatycznie deklarowanej interpretacji <span class="citation" data-cites="berk2013">(<a href="../references.html#ref-berk2013" role="doc-biblioref">Berk i in. 2013</a>)</span>.</p>
+</section>
+</section>
+<section id="sec-ridge" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="sec-ridge"><span class="header-section-number">7.4</span> Regresja grzbietowa</h2>
+<p>Selekcja podejmuje decyzję: współczynnik może być dopasowany swobodnie albo musi być zerem. <strong>Regresja grzbietowa</strong> (ang. <em>ridge regression</em>) <span class="citation" data-cites="hoerl1970">(<a href="../references.html#ref-hoerl1970" role="doc-biblioref">Hoerl i Kennard 1970</a>)</span> pozwala go stopniowo zmniejszać. Do RSS dodajemy karę kwadratową: <span id="eq-ridge-cel"><span class="math display">\[
+(\widehat\beta_{0,\lambda},\widehat\bbeta_\lambda)
+\in\argmin_{\beta_0,\bbeta}
+\left\{\sum_{i=1}^n(y_i-\beta_0-\x_i^\top\bbeta)^2
++\lambda\sum_{j=1}^p\beta_j^2\right\},\qquad\lambda\geq0.
+\tag{7.5}\]</span></span></p>
+<p>Kara zniechęca do dużych współczynników. Dla <span class="math inline">\(\lambda=0\)</span> jest to zadanie MNK; zwiększając <span class="math inline">\(\lambda\)</span>, mocniej ograniczamy dopasowanie. <strong>Wyrazu wolnego nie karzemy</strong>: poziom wyniku zależy od umownego początku skali i nie chcemy ściągać go do zera.</p>
+<section id="dlaczego-skala-ma-znaczenie" class="level3" data-number="7.4.1">
+<h3 data-number="7.4.1" class="anchored" data-anchor-id="dlaczego-skala-ma-znaczenie"><span class="header-section-number">7.4.1</span> Dlaczego skala ma znaczenie</h3>
+<p>Niech <code>Income</code> oznacza dochód w tysiącach dolarów. Po przeliczeniu go na dolary wartości cechy rosną tysiąckrotnie, a współczynnik tej samej funkcji predykcji maleje tysiąckrotnie. Jego kwadrat maleje milion razy. Przy tych samych predykcjach kara zależy więc od jednostki. OLS nie ma tego problemu, bo minimalizuje tylko RSS.</p>
+<p>Przed regularyzacją zwykle standaryzujemy kolumny: odejmujemy średnią i dzielimy przez odchylenie standardowe wyznaczone <strong>na danych uczących</strong>. Współczynnik opisuje wtedy zmianę predykcji na jedno odchylenie cechy, a kary nie zależą od pierwotnych jednostek. Dla stałej kolumny trzeba zrezygnować ze skalowania lub ją usunąć. Te same wyuczone przekształcenia stosujemy do nowych obserwacji; nie wyznaczamy dla nich nowych średnich.</p>
+<p>Skalowanie nie rozwiązuje wszystkich decyzji dotyczących reprezentacji. Dla cech jakościowych trzeba ustalić kodowanie i sposób traktowania kolumn zero-jedynkowych. Po ich standaryzacji kara dotyczy zmiany o jedno odchylenie kolumny; dla rzadkiego poziomu odpowiada to innej zmianie w jednostkach oryginalnych. Wybór poziomu odniesienia przy wielu kategoriach również może zmienić karę. Reprezentacja jest częścią metody.</p>
+</section>
+<section id="rozwiązanie-i-mechanizm-ściągania" class="level3" data-number="7.4.2">
+<h3 data-number="7.4.2" class="anchored" data-anchor-id="rozwiązanie-i-mechanizm-ściągania"><span class="header-section-number">7.4.2</span> Rozwiązanie i mechanizm ściągania</h3>
+<p>Oznaczmy średnie uczące przez <span class="math inline">\(\bar y\)</span> i <span class="math inline">\(\bar\x\)</span>. Dla ustalonego <span class="math inline">\(\bbeta\)</span> najlepszy niekarany wyraz wolny wynosi <span id="eq-regularyzacja-intercept"><span class="math display">\[
+\widehat\beta_0=\bar y-\bar\x^\top\bbeta.
+\tag{7.6}\]</span></span> Możemy więc odjąć średnie od <span class="math inline">\(\y\)</span> i każdej kolumny <span class="math inline">\(\X\)</span>, rozwiązać zadanie bez wyrazu wolnego, a następnie odzyskać go z tego wzoru. W kolejnych rachunkach <span class="math inline">\(\X\)</span> i <span class="math inline">\(\y\)</span> oznaczają właśnie wycentrowane dane; macierz <span class="math inline">\(\X\)</span> ma <span class="math inline">\(p\)</span> kolumn i nie zawiera kolumny jedynek.</p>
+<p>Pochodna funkcji <span class="math inline">\(\|\y-\X\bbeta\|^2+\lambda\bbeta^\top\bbeta\)</span> względem <span class="math inline">\(\bbeta\)</span> to <span class="math inline">\(-2\X^\top(\y-\X\bbeta)+2\lambda\bbeta\)</span>. Przyrównując ją do zera, otrzymujemy układ <span class="math inline">\((\X^\top\X+\lambda\mathbf I)\bbeta=\X^\top\y\)</span>.</p>
+<div id="thm-ridge" class="theorem">
+<p><span class="theorem-title"><strong>Twierdzenie 7.1 (Rozwiązanie regresji grzbietowej)</strong></span> Dla wycentrowanych danych i <span class="math inline">\(\lambda&gt;0\)</span> zadanie (<a href="#eq-ridge-cel" class="quarto-xref"><span>7.5</span></a>) ma dokładnie jedno rozwiązanie <span id="eq-ridge-rozwiazanie"><span class="math display">\[
+\widehat\bbeta_\lambda=(\X^\top\X+\lambda\mathbf I)^{-1}\X^\top\y,
+\tag{7.7}\]</span></span> także wtedy, gdy kolumny <span class="math inline">\(\X\)</span> są liniowo zależne.</p>
+</div>
+<p>Dla <span class="math inline">\(\lambda&gt;0\)</span> macierz układu jest dodatnio określona: <span class="math inline">\(\mathbf v^\top(\X^\top\X+\lambda\mathbf I)\mathbf v=\|\X\mathbf v\|^2+\lambda\|\mathbf v\|^2&gt;0\)</span> dla <span class="math inline">\(\mathbf v\ne\mathbf 0\)</span>. Jest więc odwracalna, a funkcja celu jest ściśle wypukła, zatem punkt zerowania gradientu jest jedynym minimum. W obliczeniach rozwiązujemy układ równań, zamiast jawnie liczyć odwrotność. Dla <span class="math inline">\(\lambda=0\)</span> pozostaje zadanie MNK, które może mieć wiele rozwiązań.</p>
+<p>W jednej wycentrowanej cesze oznaczmy <span class="math inline">\(s=\sum_i x_i^2&gt;0\)</span> oraz <span class="math inline">\(z=\sum_i x_i y_i\)</span>. OLS daje <span class="math inline">\(\widehat\beta_{\mathrm{OLS}}=z/s\)</span>, a ridge <span id="eq-ridge-jedna-cecha"><span class="math display">\[
+\widehat\beta_\lambda=\frac{z}{s+\lambda}
+=\frac{s}{s+\lambda}\widehat\beta_{\mathrm{OLS}}.
+\tag{7.8}\]</span></span> Mnożymy oszacowanie OLS przez liczbę między zerem a jednością. Gdy <span class="math inline">\(s=10\)</span> i OLS daje <span class="math inline">\(3\)</span>, kary <span class="math inline">\(\lambda=0,10,30\)</span> dają odpowiednio <span class="math inline">\(3\)</span>, <span class="math inline">\(1{,}5\)</span> i <span class="math inline">\(0{,}75\)</span>. Większa kara oznacza mocniejsze <strong>ściąganie</strong>. Po ponownym losowaniu błędów cały rozrzut oszacowań jest mnożony przez ten sam czynnik, więc wariancja jest mnożona przez jego kwadrat. Przy niezerowym prawdziwym współczynniku pojawia się za to obciążenie.</p>
+<p>Przy wielu skorelowanych cechach mechanizm działa wspólnie na wektor współczynników. Pojedynczy współczynnik nie musi maleć monotonicznie co do modułu (rysunek <a href="#fig-sciezki-kar" class="quarto-xref"><span>7.2</span></a>). Ridge nie ma jednak mechanizmu progowania do zera: zwykle zachowuje wszystkie cechy. Dokładne zero może wystąpić np. przez szczególną strukturę danych. Gdy <span class="math inline">\(\lambda\to\infty\)</span>, wszystkie nachylenia dążą do zera, a model przewiduje <span class="math inline">\(\bar y\)</span>.</p>
+<p>Liczba kolumn nie opisuje już całej swobody modelu: te same kolumny przy małej i dużej karze dają bardzo różne dopasowania. Dlatego kar za liczbę parametrów z sekcji <a href="#sec-kryteria-selekcji" class="quarto-xref"><span>7.3</span></a>, podanych dla OLS, nie przenosimy do ridge przez mechaniczne wpisanie liczby kolumn. Rachunek efektywnych stopni swobody rozwija sekcja <a href="#sec-ridge-geometria" class="quarto-xref"><span>7.7</span></a>.</p>
+</section>
+</section>
+<section id="sec-lasso" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="sec-lasso"><span class="header-section-number">7.5</span> LASSO i geometria regularyzacji</h2>
+<section id="kara-bezwzględna-i-dokładne-zera" class="level3" data-number="7.5.1">
+<h3 data-number="7.5.1" class="anchored" data-anchor-id="kara-bezwzględna-i-dokładne-zera"><span class="header-section-number">7.5.1</span> Kara bezwzględna i dokładne zera</h3>
+<p><strong>LASSO</strong> (ang. <em>least absolute shrinkage and selection operator</em>) <span class="citation" data-cites="tibshirani1996">(<a href="../references.html#ref-tibshirani1996" role="doc-biblioref">Tibshirani 1996</a>)</span> zastępuje sumę kwadratów sumą modułów: <span id="eq-lasso-cel"><span class="math display">\[
+(\widehat\beta_{0,\lambda},\widehat\bbeta_\lambda)
+\in\argmin_{\beta_0,\bbeta}
+\left\{\sum_{i=1}^n(y_i-\beta_0-\x_i^\top\bbeta)^2
++\lambda\sum_{j=1}^p|\beta_j|\right\}.
+\tag{7.9}\]</span></span> Wyraz wolny pozostaje niekarany, a reguły skalowania i centrowania są takie jak w ridge. Zmiana kary ma duży skutek: część współczynników może być <strong>dokładnie równa zero</strong>. LASSO łączy zatem ściąganie z selekcją.</p>
+<p>Zobaczmy to dla jednej wycentrowanej cechy, przy oznaczeniach <span class="math inline">\(s,z\)</span> z sekcji <a href="#sec-ridge" class="quarto-xref"><span>7.4</span></a>. Pomijając składnik niezależny od <span class="math inline">\(\beta\)</span>, minimalizujemy <span class="math display">\[
+s\beta^2-2z\beta+\lambda|\beta|.
+\]</span> Dla <span class="math inline">\(\beta&gt;0\)</span> pochodna wynosi <span class="math inline">\(2s\beta-2z+\lambda\)</span>, więc kandydatem jest <span class="math inline">\((z-\lambda/2)/s\)</span>, o ile jest dodatni. Dla <span class="math inline">\(\beta&lt;0\)</span> dostajemy <span class="math inline">\((z+\lambda/2)/s\)</span>, o ile jest ujemny. Jeśli <span class="math inline">\(|z|\leq\lambda/2\)</span>, funkcja maleje do zera od lewej i rośnie od zera w prawo; minimum wypada w zerze. Razem:</p>
+<div id="thm-miekkie-progowanie" class="theorem">
+<p><span class="theorem-title"><strong>Twierdzenie 7.2 (Miękkie progowanie)</strong></span> Dla jednej wycentrowanej cechy z <span class="math inline">\(s=\sum_i x_i^2&gt;0\)</span> i <span class="math inline">\(z=\sum_i x_iy_i\)</span> zadanie (<a href="#eq-lasso-cel" class="quarto-xref"><span>7.9</span></a>) ma rozwiązanie <span id="eq-lasso-prog"><span class="math display">\[
+\widehat\beta_\lambda=
+\frac{\operatorname{sign}(z)(|z|-\lambda/2)_+}{s},
+\qquad (a)_+=\max(a,0).
+\tag{7.10}\]</span></span></p>
+</div>
+<p>To <strong>miękkie progowanie</strong>: zmniejszamy moduł <span class="math inline">\(z\)</span> o <span class="math inline">\(\lambda/2\)</span>, a wartości niewiększe od progu zastępujemy zerem. Liczba <span class="math inline">\(1/2\)</span> wynika z naszej konwencji RSS plus kara. Gdy <span class="math inline">\(s=10\)</span> i <span class="math inline">\(z=30\)</span>, OLS daje <span class="math inline">\(3\)</span>; LASSO dla <span class="math inline">\(\lambda=10,30,60\)</span> daje <span class="math inline">\(2{,}5\)</span>, <span class="math inline">\(1{,}5\)</span> i <span class="math inline">\(0\)</span>. Porównaj z ridge w <a href="#exr-sciaganie-jedna-cecha" class="quarto-xref">Zadanie&nbsp;<span>7.5</span></a>.</p>
+</section>
+<section id="ścieżki-współczynników-na-credit" class="level3" data-number="7.5.2">
+<h3 data-number="7.5.2" class="anchored" data-anchor-id="ścieżki-współczynników-na-credit"><span class="header-section-number">7.5.2</span> Ścieżki współczynników na Credit</h3>
+<p>Wróćmy do <em>Credit</em>. Na rysunku <a href="#fig-sciezki-kar" class="quarto-xref"><span>7.2</span></a> uwzględniamy <code>Income</code>, <code>Limit</code>, <code>Rating</code> oraz status studenta zapisany jako <span class="math inline">\(0/1\)</span>. Po skalowaniu współczynniki są wyrażone w dolarach salda na jedno odchylenie standardowe cechy. Zwiększanie kary w LASSO kolejno zeruje część współczynników; w ridge zmiana jest płynna bez takiego progu.</p>
+<p>W kodzie trzeba uważać na definicję kary. Według dokumentacji <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html"><code>Ridge</code></a> minimalizuje RSS <span class="math inline">\(+\alpha\|\beta\|_2^2\)</span>, natomiast <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lasso.html"><code>Lasso</code></a> minimalizuje RSS<span class="math inline">\(/\,(2n)+\alpha\|\beta\|_1\)</span>. Dlatego w naszej konwencji <span id="eq-alpha-lambda"><span class="math display">\[
+\lambda_{\mathrm{ridge}}=\alpha_{\mathrm{Ridge}},
+\qquad \lambda_{\mathrm{LASSO}}=2n\alpha_{\mathrm{Lasso}}.
+\tag{7.11}\]</span></span> Te same liczby <code>alpha</code> w obu klasach nie oznaczają tych samych współczynników przy RSS. Również same kary kwadratowa i bezwzględna mają inne skale, więc na rysunku każda rodzina ma własną oś.</p>
+<div id="cell-fig-sciezki-kar" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cechy_sciezki <span class="op">=</span> [<span class="st">"Income"</span>, <span class="st">"Limit"</span>, <span class="st">"Rating"</span>, <span class="st">"Student"</span>]</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>X_sciezki <span class="op">=</span> ucz[cechy_sciezki].copy()</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>X_sciezki[<span class="st">"Student"</span>] <span class="op">=</span> X_sciezki[<span class="st">"Student"</span>].<span class="bu">map</span>({<span class="st">"No"</span>: <span class="dv">0</span>, <span class="st">"Yes"</span>: <span class="dv">1</span>})</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>Z <span class="op">=</span> StandardScaler().fit_transform(X_sciezki)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>fig, osie <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="fl">3.8</span>))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, nazwa, siatka <span class="kw">in</span> <span class="bu">zip</span>(osie, [<span class="st">"ridge"</span>, <span class="st">"LASSO"</span>],</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                            [np.geomspace(<span class="fl">0.01</span>, <span class="fl">1e6</span>, <span class="dv">100</span>), np.geomspace(<span class="dv">10</span>, <span class="fl">1e6</span>, <span class="dv">100</span>)]):</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    wsp <span class="op">=</span> []</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> lam <span class="kw">in</span> siatka:</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        est <span class="op">=</span> Ridge(alpha<span class="op">=</span>lam) <span class="cf">if</span> nazwa <span class="op">==</span> <span class="st">"ridge"</span> <span class="cf">else</span> Lasso(</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>            alpha<span class="op">=</span>lam <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> <span class="bu">len</span>(y_ucz)), max_iter<span class="op">=</span><span class="dv">100000</span>, tol<span class="op">=</span><span class="fl">1e-8</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        wsp.append(est.fit(Z, y_ucz).coef_)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j, cecha <span class="kw">in</span> <span class="bu">enumerate</span>(cechy_sciezki):</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>        ax.plot(siatka, np.array(wsp)[:, j], label<span class="op">=</span>cecha)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    ax.<span class="bu">set</span>(xscale<span class="op">=</span><span class="st">"log"</span>, xlabel<span class="op">=</span><span class="vs">r"kara </span><span class="dv">$</span><span class="er">\</span><span class="vs">lambda</span><span class="dv">$</span><span class="vs">"</span>, ylabel<span class="op">=</span><span class="st">"współczynnik (USD)"</span>, title<span class="op">=</span>nazwa)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    ax.axhline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">"0.6"</span>, lw<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">1</span>].legend(fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-sciezki-kar" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sciezki-kar-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="07-selekcja-regularyzacja_files/figure-html/fig-sciezki-kar-output-1.png" width="952" height="354" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sciezki-kar-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Rysunek&nbsp;7.2: Ścieżki współczynników na uczącej części Credit, po standaryzacji czterech cech. Każda rodzina ma własny zakres lambda w konwencji RSS plus kara.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Przy znikomej karze ridge daje współczynniki bliskie OLS: <span class="math inline">\(308\)</span> przy <code>Limit</code> i <span class="math inline">\(316\)</span> przy <code>Rating</code>. Już przy <span class="math inline">\(\lambda\approx10\)</span> oba są praktycznie równe i dalej maleją razem. Kara <span class="math inline">\(\beta_L^2+\beta_R^2\)</span> przy ustalonej sumie <span class="math inline">\(\beta_L+\beta_R\)</span> jest najmniejsza dla równych składników, a dla dwóch prawie identycznych cech predykcje zależą niemal wyłącznie od sumy.</p>
+<p>Współczynnik <code>Income</code> zmienia znak przy <span class="math inline">\(\lambda\approx280\)</span>: z <span class="math inline">\(-281\)</span> do około <span class="math inline">\(+24\)</span> przy <span class="math inline">\(\lambda=1000\)</span>. Gdy <span class="math inline">\(\lambda\)</span> jest duże w porównaniu z elementami <span class="math inline">\(\X^\top\X\)</span>, wzór (<a href="#eq-ridge-rozwiazanie" class="quarto-xref"><span>7.7</span></a>) daje <span class="math inline">\(\widehat\bbeta_\lambda\approx\X^\top\y/\lambda\)</span>. Każdy współczynnik jest wtedy proporcjonalny do zwykłej korelacji cechy z wynikiem, a dla <code>Income</code> wynosi ona <span class="math inline">\(0{,}47\)</span>. Przy małej karze współczynnik opisuje natomiast związek przy ustalonych pozostałych cechach: przy tym samym limicie i ocenie wyższy dochód idzie w parze z niższym saldem.</p>
+<p>LASSO zeruje kolejno <code>Income</code> (<span class="math inline">\(\lambda\approx3{,}4\cdot10^4\)</span>), <code>Student</code> (<span class="math inline">\(7\cdot10^4\)</span>), <code>Limit</code> (<span class="math inline">\(1{,}5\cdot10^5\)</span>) i <code>Rating</code>. Ostatni próg wynika z (<a href="#eq-lasso-prog" class="quarto-xref"><span>7.10</span></a>). Gdy pozostałe współczynniki są zerami, cecha <span class="math inline">\(j\)</span> widzi wycentrowane wyniki i pozostaje zerem, dopóki <span class="math inline">\(|\sum_i x_{ij}y_i|\leq\lambda/2\)</span>. Wszystkie współczynniki znikają więc od <span class="math inline">\(\lambda=2\max_j|\sum_i x_{ij}y_i|\approx2{,}37\cdot10^5\)</span>. <code>Rating</code> wygrywa z <code>Limit</code> minimalnie: suma <span class="math inline">\(\sum_i x_{ij}y_i\)</span> wynosi <span class="math inline">\(118\,743\)</span> wobec <span class="math inline">\(118\,600\)</span>. Wybór między prawie identycznymi cechami rozstrzyga tu niewielka różnica w próbie.</p>
+</section>
+<section id="kara-jako-budżet" class="level3" data-number="7.5.3">
+<h3 data-number="7.5.3" class="anchored" data-anchor-id="kara-jako-budżet"><span class="header-section-number">7.5.3</span> Kara jako budżet</h3>
+<p>Można też minimalizować RSS przy ograniczeniu wielkości wektora: <span id="eq-budzety-kar"><span class="math display">\[
+\sum_{j=1}^p\beta_j^2\leq t\quad\text{(ridge)},
+\qquad
+\sum_{j=1}^p|\beta_j|\leq t\quad\text{(LASSO)}.
+\tag{7.12}\]</span></span> Liczba <span class="math inline">\(t\)</span> to <strong>budżet</strong> na współczynniki. Duży budżet dopuszcza rozwiązanie MNK; mniejszy wymusza lepszy pod względem RSS punkt w ograniczonym zbiorze. Kara i budżet są dwoma sposobami opisu regularyzacji: rozwiązaniu dla danej dodatniej kary odpowiada budżet równy osiągniętej wielkości wektora. Dla dodatnich budżetów można dobrać odpowiadającą karę; nie jest to ogólnie relacja jeden do jednego. Budżet zerowy może wymagać granicy <span class="math inline">\(\lambda\to\infty\)</span>, jak w ridge.</p>
+<p>Dla dwóch współczynników budżet ridge wyznacza koło, a LASSO – romb. Poziomice RSS są elipsami wokół rozwiązania OLS (w tym przykładzie okręgami). Szukamy najmniejszej poziomicy, która spotyka zbiór dopuszczalny. Na rysunku <a href="#fig-geometria-kar" class="quarto-xref"><span>7.3</span></a> kontakt z rombem wypada na osi, zatem jeden współczynnik jest zerem. Załamanie granicy daje cały zakres kierunków poziomic, dla których zachodzi taki kontakt. Przy gładkim brzegu koła kontakt na osi wymaga szczególnego ułożenia danych.</p>
+<div id="cell-fig-geometria-kar" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>b_ols <span class="op">=</span> np.array([<span class="fl">2.0</span>, <span class="fl">0.6</span>])</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>q1, q2 <span class="op">=</span> np.meshgrid(np.linspace(<span class="op">-</span><span class="fl">1.5</span>, <span class="dv">3</span>, <span class="dv">300</span>), np.linspace(<span class="op">-</span><span class="fl">1.5</span>, <span class="dv">2</span>, <span class="dv">240</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>poziomy_rss <span class="op">=</span> (q1 <span class="op">-</span> b_ols[<span class="dv">0</span>])<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> (q2 <span class="op">-</span> b_ols[<span class="dv">1</span>])<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>fig, osie <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="fl">3.8</span>))</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>theta <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">2</span><span class="op">*</span>np.pi, <span class="dv">400</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, minimum <span class="kw">in</span> <span class="bu">zip</span>(osie, [(np.linalg.norm(b_ols) <span class="op">-</span> <span class="dv">1</span>)<span class="op">**</span><span class="dv">2</span>, <span class="fl">1.36</span>]):</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    ax.contour(q1, q2, poziomy_rss, levels<span class="op">=</span>[<span class="fl">0.15</span>, <span class="fl">0.5</span>, minimum, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">8</span>], colors<span class="op">=</span><span class="st">"0.65"</span>, linewidths<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    ax.axhline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">"0.3"</span>, lw<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    ax.axvline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">"0.3"</span>, lw<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    ax.plot(<span class="op">*</span>b_ols, <span class="st">"ko"</span>, label<span class="op">=</span><span class="st">"OLS"</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="vs">r"</span><span class="dv">$\b</span><span class="vs">eta_1</span><span class="dv">$</span><span class="vs">"</span>, ylabel<span class="op">=</span><span class="vs">r"</span><span class="dv">$\b</span><span class="vs">eta_2</span><span class="dv">$</span><span class="vs">"</span>, aspect<span class="op">=</span><span class="st">"equal"</span>, xlim<span class="op">=</span>(<span class="op">-</span><span class="fl">1.5</span>, <span class="dv">3</span>), ylim<span class="op">=</span>(<span class="op">-</span><span class="fl">1.5</span>, <span class="dv">2</span>))</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].fill(np.cos(theta), np.sin(theta), color<span class="op">=</span>kolory[<span class="dv">0</span>], alpha<span class="op">=</span><span class="fl">0.18</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].plot(np.cos(theta), np.sin(theta), color<span class="op">=</span>kolory[<span class="dv">0</span>])</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>b_ridge <span class="op">=</span> b_ols <span class="op">/</span> np.linalg.norm(b_ols)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].plot(<span class="op">*</span>b_ridge, <span class="st">"o"</span>, color<span class="op">=</span>kolory[<span class="dv">1</span>], label<span class="op">=</span><span class="st">"minimum z ograniczeniem"</span>)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].set_title(<span class="vs">r"ridge: </span><span class="dv">$\b</span><span class="vs">eta_1</span><span class="dv">^</span><span class="vs">2</span><span class="op">+</span><span class="dv">\b</span><span class="vs">eta_2</span><span class="dv">^</span><span class="vs">2</span><span class="er">\</span><span class="vs">leq1</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">1</span>].fill([<span class="dv">1</span>, <span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>], color<span class="op">=</span>kolory[<span class="dv">0</span>], alpha<span class="op">=</span><span class="fl">0.18</span>)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">1</span>].plot([<span class="dv">1</span>, <span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>], color<span class="op">=</span>kolory[<span class="dv">0</span>])</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">1</span>].plot(<span class="dv">1</span>, <span class="dv">0</span>, <span class="st">"o"</span>, color<span class="op">=</span>kolory[<span class="dv">1</span>])</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">1</span>].set_title(<span class="vs">r"LASSO: </span><span class="dv">$</span><span class="cf">|</span><span class="dv">\b</span><span class="vs">eta_1</span><span class="cf">|</span><span class="op">+</span><span class="cf">|</span><span class="dv">\b</span><span class="vs">eta_2</span><span class="cf">|</span><span class="er">\</span><span class="vs">leq1</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>osie[<span class="dv">0</span>].legend(fontsize<span class="op">=</span><span class="dv">7</span>, loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-geometria-kar" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-geometria-kar-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="07-selekcja-regularyzacja_files/figure-html/fig-geometria-kar-output-1.png" width="856" height="354" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-geometria-kar-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Rysunek&nbsp;7.3: Minimalizacja tej samej funkcji RSS przy dwóch ograniczeniach. Punkt czarny oznacza minimum bez ograniczeń (OLS), a czerwony – minimum w dopuszczalnym zbiorze. Budżety dobrano dla czytelności mechanizmu.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="co-oznacza-wybranie-cechy" class="level3" data-number="7.5.4">
+<h3 data-number="7.5.4" class="anchored" data-anchor-id="co-oznacza-wybranie-cechy"><span class="header-section-number">7.5.4</span> Co oznacza wybranie cechy</h3>
+<p>Zerowy współczynnik LASSO oznacza, że przy danej próbie, reprezentacji i karze procedura nie wykorzystuje tej kolumny. Nie dowodzi braku związku cechy z wynikiem. Dwie cechy mogą zastępować się informacyjnie, a niewielka zmiana próby może zmienić wybraną reprezentantkę. Dlatego warto osobno badać stabilność wyboru i stabilność predykcji (<a href="#exr-stabilnosc-selekcji" class="quarto-xref">Zadanie&nbsp;<span>7.8</span></a>).</p>
+<p>Przy zależnych kolumnach współczynniki LASSO mogą być niejednoznaczne. Na przykład dla dwóch identycznych kolumn rozdzielenie dodatniego współczynnika między nie nie zmienia ani RSS, ani sumy modułów. Liczba niezerowych współczynników nie musi też zmieniać się monotonicznie na całej ścieżce kar. Selekcja do predykcji nie identyfikuje przyczyn zjawiska, podobnie jak zwykła regresja.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Rozszerzenie: elastic net
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Wymagane są wyłącznie pojęcia ridge i LASSO z tego rozdziału. Można połączyć obie kary, dodając do RSS <span class="math inline">\(\lambda_1\sum_j|\beta_j|+\lambda_2\sum_j\beta_j^2\)</span>. Dodatnia kara kwadratowa zapewnia jednoznaczność wektora współczynników, a kara bezwzględna zachowuje możliwość zerowania. Taka metoda nazywa się <em>elastic net</em> <span class="citation" data-cites="zou2005">(<a href="../references.html#ref-zou2005" role="doc-biblioref">Zou i Hastie 2005</a>)</span>. Dwa parametry wymagają ustalonej procedury strojenia; nie włączamy ich do poniższego porównania.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-regularyzacja-praktyka" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="sec-regularyzacja-praktyka"><span class="header-section-number">7.6</span> Dobór regularyzacji i porównanie metod</h2>
+<section id="kandydaci-i-role-danych" class="level3" data-number="7.6.1">
+<h3 data-number="7.6.1" class="anchored" data-anchor-id="kandydaci-i-role-danych"><span class="header-section-number">7.6.1</span> Kandydaci i role danych</h3>
+<p>Pozostaje dobrać siłę kary. Błąd uczący skłaniałby do jej osłabiania, więc do wyboru użyjemy pięciokrotnej CV. Test odłożony na początku rozdziału posłuży dopiero do końcowej oceny. Wybór metody – tak samo jak wybór jej ustawień – zostanie zamknięty przed obejrzeniem testu. Przy małej próbie odpowiednikiem tego postępowania jest zagnieżdżenie opisane w sekcji <a href="../1-fundamenty/05-ocena-modeli.html#sec-selekcja-ocena" class="quarto-xref"><span>5.6</span></a>.</p>
+<p>Porównamy OLS, selekcję w przód, ridge i LASSO. Z góry ograniczamy listę kandydatów do siedmiu cech: sześciu liczbowych oraz <code>Student</code>, kodowanego jako <span class="math inline">\(0/1\)</span>. Pozostałych cech jakościowych nie wykorzystujemy w tym przykładzie. Pozwala to skupić się na regularyzacji bez rozbudowy kodu wybierającego całe bloki kategorii.</p>
+<p>Selekcję w przód zdefiniujemy dokładnie tak jak w sekcji <a href="#sec-selekcja-podzbiorow" class="quarto-xref"><span>7.2</span></a>: w każdym kroku wybieramy najmniejszy <strong>uczący RSS</strong>, a liczba kroków jest ustawieniem wybieranym przez CV. Poniższa klasa dopasowuje całą ścieżkę do żądanej długości przy każdym wywołaniu <code>fit</code>. Dzięki temu wewnątrz CV wybiera cechy wyłącznie z aktualnej części uczącej.</p>
+<div id="e3827ce2" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>Kod: selekcja w przód według uczącego RSS</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SelekcjaWPrzod(RegressorMixin, BaseEstimator):</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, n_features<span class="op">=</span><span class="dv">1</span>):</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.n_features <span class="op">=</span> n_features</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> fit(<span class="va">self</span>, X, y):</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        X, y <span class="op">=</span> np.asarray(X), np.asarray(y)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.n_features_in_ <span class="op">=</span> X.shape[<span class="dv">1</span>]</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> <span class="dv">1</span> <span class="op">&lt;=</span> <span class="va">self</span>.n_features <span class="op">&lt;=</span> X.shape[<span class="dv">1</span>]:</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">"Liczba cech musi należeć do zakresu 1,...,p."</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        wybrane <span class="op">=</span> []</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="va">self</span>.n_features):</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>            kandydaci <span class="op">=</span> []</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(X.shape[<span class="dv">1</span>]):</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> j <span class="kw">not</span> <span class="kw">in</span> wybrane:</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>                    cechy <span class="op">=</span> wybrane <span class="op">+</span> [j]</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>                    model <span class="op">=</span> LinearRegression().fit(X[:, cechy], y)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>                    rss <span class="op">=</span> np.<span class="bu">sum</span>((y <span class="op">-</span> model.predict(X[:, cechy]))<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>                    kandydaci.append((rss, j))</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>            wybrane.append(<span class="bu">min</span>(kandydaci)[<span class="dv">1</span>])</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.wybrane_ <span class="op">=</span> wybrane</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.model_ <span class="op">=</span> LinearRegression().fit(X[:, wybrane], y)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> predict(<span class="va">self</span>, X):</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.model_.predict(np.asarray(X)[:, <span class="va">self</span>.wybrane_])</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>Dla modelu pustego użyjemy osobno <code>DummyRegressor</code>; pozwala to wybrać również zero cech. Wszystkie przekształcenia wymagające uczenia, w tym standaryzacja, są częścią potoku poddanego CV. Zapisanie mapowania <code>No</code>/<code>Yes</code> jako <span class="math inline">\(0/1\)</span> nie wymaga wyznaczania parametrów na danych.</p>
+<div id="066f5971" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.dummy <span class="im">import</span> DummyRegressor</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>cechy_praktyka <span class="op">=</span> [<span class="st">"Income"</span>, <span class="st">"Limit"</span>, <span class="st">"Rating"</span>, <span class="st">"Cards"</span>, <span class="st">"Age"</span>, <span class="st">"Education"</span>, <span class="st">"Student"</span>]</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>X_calosc <span class="op">=</span> credit[cechy_praktyka].copy()</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>X_calosc[<span class="st">"Student"</span>] <span class="op">=</span> X_calosc[<span class="st">"Student"</span>].<span class="bu">map</span>({<span class="st">"No"</span>: <span class="dv">0</span>, <span class="st">"Yes"</span>: <span class="dv">1</span>})</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> X_calosc.iloc[ind_ucz].to_numpy()</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>Y_train <span class="op">=</span> credit.iloc[ind_ucz][<span class="st">"Balance"</span>].to_numpy()</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Dane testowe nie uczestniczą w żadnym dopasowaniu ani wyborze.</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>X_test <span class="op">=</span> X_calosc.iloc[ind_test].to_numpy()</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>Y_test <span class="op">=</span> credit.iloc[ind_test][<span class="st">"Balance"</span>].to_numpy()</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>cv <span class="op">=</span> <span class="bu">list</span>(KFold(n_splits<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">708</span>).split(X_train))</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>alfa_ridge <span class="op">=</span> np.geomspace(<span class="fl">1e-4</span>, <span class="fl">1e5</span>, <span class="dv">46</span>)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>alfa_lasso <span class="op">=</span> np.geomspace(<span class="fl">1e-6</span>, <span class="fl">1e3</span>, <span class="dv">55</span>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>procedury <span class="op">=</span> {</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"OLS"</span>: (LinearRegression(), {}),</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"selekcja w przód"</span>: (SelekcjaWPrzod(), {<span class="st">"model__n_features"</span>: <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">8</span>))}),</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ridge"</span>: (Ridge(), {<span class="st">"model__alpha"</span>: alfa_ridge}),</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">"LASSO"</span>: (Lasso(max_iter<span class="op">=</span><span class="dv">100000</span>, tol<span class="op">=</span><span class="fl">1e-8</span>), {<span class="st">"model__alpha"</span>: alfa_lasso}),</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">"średnia"</span>: (DummyRegressor(strategy<span class="op">=</span><span class="st">"mean"</span>), {}),</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>wyszukiwania <span class="op">=</span> {}</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> nazwa, (estymator, siatka) <span class="kw">in</span> procedury.items():</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    potok <span class="op">=</span> Pipeline([(<span class="st">"skala"</span>, StandardScaler()), (<span class="st">"model"</span>, estymator)])</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    szukaj <span class="op">=</span> GridSearchCV(potok, siatka, scoring<span class="op">=</span><span class="st">"neg_mean_squared_error"</span>,</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>                         cv<span class="op">=</span>cv, refit<span class="op">=</span><span class="va">True</span>, error_score<span class="op">=</span><span class="st">"raise"</span>)</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    szukaj.fit(X_train, Y_train)</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    wyszukiwania[nazwa] <span class="op">=</span> szukaj</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Większy wynik scoring jest lepszy, zatem zmieniamy znak, aby dostać MSE.</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>wyniki_cv <span class="op">=</span> pd.DataFrame([</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"metoda"</span>: nazwa, <span class="st">"MSE CV"</span>: <span class="op">-</span>szukaj.best_score_,</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>     <span class="st">"ustawienie"</span>: (<span class="ss">f"alpha = </span><span class="sc">{</span>szukaj<span class="sc">.</span>best_params_[<span class="st">'model__alpha'</span>]<span class="sc">:.3g}</span><span class="ss">"</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>                     <span class="cf">if</span> <span class="st">"model__alpha"</span> <span class="kw">in</span> szukaj.best_params_ <span class="cf">else</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>                     <span class="ss">f"liczba cech = </span><span class="sc">{</span>szukaj<span class="sc">.</span>best_params_[<span class="st">'model__n_features'</span>]<span class="sc">}</span><span class="ss">"</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>                     <span class="cf">if</span> <span class="st">"model__n_features"</span> <span class="kw">in</span> szukaj.best_params_ <span class="cf">else</span> <span class="st">"bez strojenia"</span>)}</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> nazwa, szukaj <span class="kw">in</span> wyszukiwania.items()</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>]).sort_values(<span class="st">"MSE CV"</span>)</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>wybrana_metoda <span class="op">=</span> wyniki_cv.iloc[<span class="dv">0</span>][<span class="st">"metoda"</span>]</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>display(wyniki_cv.reset_index(drop<span class="op">=</span><span class="va">True</span>).<span class="bu">round</span>(<span class="dv">2</span>))</span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> nazwa <span class="kw">in</span> [<span class="st">"ridge"</span>, <span class="st">"LASSO"</span>]:</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>    szukaj <span class="op">=</span> wyszukiwania[nazwa]</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> szukaj.best_index_ <span class="op">==</span> <span class="bu">len</span>(szukaj.cv_results_[<span class="st">"params"</span>]) <span class="op">-</span> <span class="dv">1</span>:</span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">RuntimeError</span>(<span class="ss">f"Minimum </span><span class="sc">{</span>nazwa<span class="sc">}</span><span class="ss"> na brzegu: poszerz siatkę przed oceną testową."</span>)</span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> szukaj.best_index_ <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>        display(Markdown(<span class="ss">f"**</span><span class="sc">{</span>nazwa<span class="sc">}</span><span class="ss">:** minimum przy najmniejszej karze. "</span></span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"Porównaj wynik z OLS i sprawdź granicę słabej regularyzacji."</span>))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">metoda</th>
+<th data-quarto-table-cell-role="th">MSE CV</th>
+<th data-quarto-table-cell-role="th">ustawienie</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>ridge</td>
+<td>10001.63</td>
+<td>alpha = 1</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>LASSO</td>
+<td>10120.03</td>
+<td>alpha = 1.47e-05</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>selekcja w przód</td>
+<td>10120.03</td>
+<td>liczba cech = 7</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>OLS</td>
+<td>10120.03</td>
+<td>bez strojenia</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>średnia</td>
+<td>211356.25</td>
+<td>bez strojenia</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Wspólny podział daje każdej metodzie te same łatwe i trudne przypadki. Poszukiwanie kar odbywa się na skali logarytmicznej: interesują nas zmiany rzędu wielkości, a nie stały krok. Gdy minimum wypada na brzegu, przed oceną testową trzeba sprawdzić szerszy zakres.</p>
+<p>Krzywa CV dla LASSO jest płaska dla <span class="math inline">\(\alpha\)</span> poniżej około <span class="math inline">\(1\)</span> (rysunek <a href="#fig-kary-cv" class="quarto-xref"><span>7.4</span></a>). W tym zakresie MSE CV pokrywa się z wynikiem OLS do dwóch miejsc po przecinku, więc położenie minimum na tym odcinku wynika z dokładności obliczeń i nie niesie informacji o danych. LASSO z karą wybraną przez CV jest tu praktycznie modelem OLS: dane nie wskazują korzyści z wyraźnego progowania.</p>
+<p>W LASSO stroimy biblioteczne <code>alpha</code>, czyli współczynnik kary przy <strong>średniej</strong> stracie, zgodnie z dokumentacją i wzorem (<a href="#eq-alpha-lambda" class="quarto-xref"><span>7.11</span></a>). Po ponownym dopasowaniu na większym zbiorze zachowujemy to samo <code>alpha</code>; odpowiadające mu <span class="math inline">\(\lambda=2n\alpha\)</span> w konwencji RSS rośnie z <span class="math inline">\(n\)</span>. W <code>Ridge</code> jest odwrotnie: <code>alpha</code> jest samym <span class="math inline">\(\lambda\)</span>, a sumy <span class="math inline">\(s_j=\sum_i x_{ij}^2\)</span> rosną z <span class="math inline">\(n\)</span>. Czynnik <span class="math inline">\(s_j/(s_j+\lambda)\)</span> jest więc po dopasowaniu na <span class="math inline">\(300\)</span> obserwacjach bliższy jedności niż w częściach uczących CV liczących <span class="math inline">\(240\)</span> obserwacji: ta sama wartość <code>alpha</code> ściąga słabiej.</p>
+<p>Nie wystarczyłoby dopasować skaler na wszystkich <span class="math inline">\(300\)</span> obserwacjach, a dopiero potem przekazać przeskalowane dane do CV. Potok musi być przekazany <strong>do procedury strojenia</strong>, tak jak powyżej. Ta sama uwaga dotyczy połączenia skalera z estymatorem, który ma własną wewnętrzną CV: skaler umieszczony przed nim nie jest automatycznie uczony od nowa w jego wewnętrznych podziałach.</p>
+</section>
+<section id="krzywe-błędu-i-reguła-jednego-błędu-standardowego" class="level3" data-number="7.6.2">
+<h3 data-number="7.6.2" class="anchored" data-anchor-id="krzywe-błędu-i-reguła-jednego-błędu-standardowego"><span class="header-section-number">7.6.2</span> Krzywe błędu i reguła jednego błędu standardowego</h3>
+<div id="cell-fig-kary-cv" class="cell" data-execution_count="9">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fig, osie <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="fl">3.8</span>))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>wybory_1se <span class="op">=</span> {}</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, nazwa <span class="kw">in</span> <span class="bu">zip</span>(osie, [<span class="st">"ridge"</span>, <span class="st">"LASSO"</span>]):</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    szukaj <span class="op">=</span> wyszukiwania[nazwa]</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    wynik <span class="op">=</span> szukaj.cv_results_</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    alfa <span class="op">=</span> np.array([p[<span class="st">"model__alpha"</span>] <span class="cf">for</span> p <span class="kw">in</span> wynik[<span class="st">"params"</span>]])</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    mse <span class="op">=</span> <span class="op">-</span>wynik[<span class="st">"mean_test_score"</span>]</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Pięć części nie jest niezależnymi powtórzeniami badania.</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Ten błąd standardowy jest tylko roboczą skalą dla heurystyki 1 SE.</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    fold_mse <span class="op">=</span> np.array([<span class="op">-</span>wynik[<span class="ss">f"split</span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">_test_score"</span>] <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>)])</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    se <span class="op">=</span> fold_mse.std(axis<span class="op">=</span><span class="dv">0</span>, ddof<span class="op">=</span><span class="dv">1</span>) <span class="op">/</span> np.sqrt(<span class="dv">5</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    j <span class="op">=</span> szukaj.best_index_</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    dopuszczone <span class="op">=</span> np.flatnonzero(mse <span class="op">&lt;=</span> mse[j] <span class="op">+</span> se[j])</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    j1se <span class="op">=</span> dopuszczone[np.argmax(alfa[dopuszczone])]</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    wybory_1se[nazwa] <span class="op">=</span> alfa[j1se]</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    ax.errorbar(alfa, mse, yerr<span class="op">=</span>se, color<span class="op">=</span>kolory[<span class="dv">0</span>], marker<span class="op">=</span><span class="st">"."</span>, lw<span class="op">=</span><span class="fl">0.8</span>, elinewidth<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    ax.axvline(alfa[j], color<span class="op">=</span>kolory[<span class="dv">1</span>], ls<span class="op">=</span><span class="st">"--"</span>, label<span class="op">=</span><span class="st">"minimum"</span>)</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    ax.axvline(alfa[j1se], color<span class="op">=</span>kolory[<span class="dv">2</span>], ls<span class="op">=</span><span class="st">":"</span>, label<span class="op">=</span><span class="st">"1 SE"</span>)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    ax.<span class="bu">set</span>(xscale<span class="op">=</span><span class="st">"log"</span>, yscale<span class="op">=</span><span class="st">"log"</span>, xlabel<span class="op">=</span><span class="vs">r"</span><span class="dv">$</span><span class="ch">\a</span><span class="vs">lpha</span><span class="dv">$</span><span class="vs"> biblioteki"</span>, ylabel<span class="op">=</span><span class="vs">r"MSE </span><span class="kw">(</span><span class="vs">USD</span><span class="dv">$^</span><span class="vs">2</span><span class="dv">$</span><span class="kw">)</span><span class="vs">"</span>, title<span class="op">=</span>nazwa)</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    ax.legend(fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-kary-cv" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-kary-cv-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="07-selekcja-regularyzacja_files/figure-html/fig-kary-cv-output-1.png" width="949" height="354" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-kary-cv-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Rysunek&nbsp;7.4: Wybór kary na uczącej części Credit. Punkty oznaczają średnie MSE z pięciu części, a pionowe kreski przybliżony błąd standardowy liczony z rozrzutu wyników części. Linia przerywana wskazuje minimum, kropkowana – wybór reguły 1 SE. Oś kary podaje biblioteczne alpha, o różnych normalizacjach dla obu rodzin.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="10">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>display(pd.DataFrame([{<span class="st">"rodzina"</span>: nazwa,</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"alpha minimum"</span>: <span class="ss">f"</span><span class="sc">{</span>wyszukiwania[nazwa]<span class="sc">.</span>best_params_[<span class="st">'model__alpha'</span>]<span class="sc">:.3g}</span><span class="ss">"</span>,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"alpha 1 SE"</span>: <span class="ss">f"</span><span class="sc">{</span>wybory_1se[nazwa]<span class="sc">:.3g}</span><span class="ss">"</span>}</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                      <span class="cf">for</span> nazwa <span class="kw">in</span> wybory_1se]).set_index(<span class="st">"rodzina"</span>))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-kary-1se" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="10">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-kary-1se-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;7.3: Biblioteczne alpha wybrane przez minimum CV i przez regułę 1 SE (rysunek <a href="#fig-kary-cv" class="quarto-xref"><span>7.4</span></a>).
+</figcaption>
+<div aria-describedby="tbl-kary-1se-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">alpha minimum</th>
+<th data-quarto-table-cell-role="th">alpha 1 SE</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">rodzina</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">ridge</th>
+<td>1</td>
+<td>6.31</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">LASSO</th>
+<td>1.47e-05</td>
+<td>6.81</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Reguła jednego błędu standardowego z sekcji <a href="../1-fundamenty/05-ocena-modeli.html#sec-walidacja-krzyzowa" class="quarto-xref"><span>5.4</span></a> pozwala wybrać mocniejszą karę, jeżeli jej wynik mieści się w ustalonym zakresie ponad minimum. Tutaj roboczo użyliśmy odchylenia wyników części podzielonego przez <span class="math inline">\(\sqrt5\)</span>. Części nie są niezależnymi powtórzeniami, ponieważ ich zbiory uczące się nakładają. Ta skala nie daje gwarantowanego przedziału ufności, a reguła pozostaje heurystyką, nie testem równoważności. W podstawowym porównaniu stosujemy ustaloną wcześniej regułę minimum. Wariant 1 SE ilustrujemy osobno; do jego użycia trzeba ponownie dopasować potok z wybraną karą.</p>
+</section>
+<section id="końcowa-ocena-i-model-do-używania" class="level3" data-number="7.6.3">
+<h3 data-number="7.6.3" class="anchored" data-anchor-id="końcowa-ocena-i-model-do-używania"><span class="header-section-number">7.6.3</span> Końcowa ocena i model do używania</h3>
+<p><code>GridSearchCV</code> z <code>refit=True</code> dopasował każdą wybraną konfigurację na wszystkich <span class="math inline">\(300\)</span> obserwacjach uczących. Możemy teraz wykorzystać test. MSE mierzymy w dolarach kwadratowych, a RMSE, jego pierwiastek, w dolarach. Dla ustalonego dopasowania przybliżony błąd standardowy testowego MSE wyznaczamy z rozrzutu <span class="math inline">\(100\)</span> indywidualnych strat kwadratowych: <span class="math inline">\(\operatorname{sd}(L_i)/\sqrt{100}\)</span>. Nie jest to niepewność minimum CV.</p>
+<div class="cell" data-execution_count="11">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>wiersze_test <span class="op">=</span> []</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> nazwa, szukaj <span class="kw">in</span> wyszukiwania.items():</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    straty <span class="op">=</span> (Y_test <span class="op">-</span> szukaj.predict(X_test))<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    wiersze_test.append({<span class="st">"metoda"</span>: nazwa, <span class="st">"MSE"</span>: straty.mean(),</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"SE MSE"</span>: straty.std(ddof<span class="op">=</span><span class="dv">1</span>) <span class="op">/</span> np.sqrt(<span class="bu">len</span>(straty)),</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"RMSE (USD)"</span>: np.sqrt(straty.mean())})</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>wyniki_test <span class="op">=</span> pd.DataFrame(wiersze_test).set_index(<span class="st">"metoda"</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>display(wyniki_test.<span class="bu">round</span>(<span class="dv">2</span>))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-regularyzacja-test" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="11">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-regularyzacja-test-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;7.4: Ocena pięciu wcześniej ustalonych procedur na 100 odłożonych obserwacjach. Ustawienia i wybór głównej metody pochodzą wyłącznie z CV na części uczącej. SE dotyczy testowego MSE przy ustalonym dopasowaniu.
+</figcaption>
+<div aria-describedby="tbl-regularyzacja-test-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">MSE</th>
+<th data-quarto-table-cell-role="th">SE MSE</th>
+<th data-quarto-table-cell-role="th">RMSE (USD)</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">metoda</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">OLS</th>
+<td>10968.85</td>
+<td>1471.82</td>
+<td>104.73</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">selekcja w przód</th>
+<td>10968.85</td>
+<td>1471.82</td>
+<td>104.73</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">ridge</th>
+<td>11069.12</td>
+<td>1409.60</td>
+<td>105.21</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">LASSO</th>
+<td>10968.85</td>
+<td>1471.82</td>
+<td>104.73</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">średnia</th>
+<td>215219.36</td>
+<td>25728.30</td>
+<td>463.92</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div id="86b17cdf" class="cell" data-execution_count="12">
+<div class="cell-output cell-output-display cell-output-markdown">
+<p>CV wybrała metodę <strong>ridge</strong>. Jej testowe RMSE wynosi <strong>105,2 USD</strong>, a MSE <strong>11069,1 USD²</strong> z przybliżonym błędem standardowym <strong>1409,6 USD²</strong>.</p>
+</div>
+</div>
+<p>Selekcja w przód zachowała wszystkie siedem cech, a LASSO przy wybranej bardzo małej karze nie wyzerowało żadnego współczynnika. OLS, wybrany model selekcji i LASSO dają więc niemal identyczne predykcje. Ridge wybrany przez CV z <span class="math inline">\(\alpha=1\)</span> ma na teście nieco większe MSE: około <span class="math inline">\(11069\)</span> wobec <span class="math inline">\(10969\)</span> dla OLS. Tabeli testowej nie używamy do zmiany wyboru: CV wskazała ridge i ten wybór pozostaje.</p>
+<div id="024a0249" class="cell" data-execution_count="13">
+<div class="cell-output cell-output-display cell-output-markdown">
+<p>Średnia różnica strat ridge i OLS wynosi <strong>100,3 USD²</strong>, a jej błąd standardowy <strong>174,0 USD²</strong>.</p>
+</div>
+</div>
+<p>Obie metody oceniamy na tych samych <span class="math inline">\(100\)</span> obserwacjach, więc niepewność różnicy szacujemy z różnic strat <span class="math inline">\(L_i^{\mathrm{ridge}}-L_i^{\mathrm{OLS}}\)</span> (sekcja <a href="../1-fundamenty/05-ocena-modeli.html#sec-zbior-testowy" class="quarto-xref"><span>5.2</span></a>). Błąd standardowy różnicy jest ponad ośmiokrotnie mniejszy niż błąd standardowy pojedynczego MSE (około <span class="math inline">\(1400\)</span>): obserwacje trudne dla jednej metody są trudne i dla drugiej, więc ich rozrzut w dużej części się znosi. Mimo to różnica nie odróżnia się od zera.</p>
+<div class="cell" data-execution_count="14">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>model_do_uzywania <span class="op">=</span> wyszukiwania[wybrana_metoda].best_estimator_</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>wsp <span class="op">=</span> pd.DataFrame({nazwa: wyszukiwania[nazwa].best_estimator_.named_steps[<span class="st">"model"</span>].coef_</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">for</span> nazwa <span class="kw">in</span> [<span class="st">"OLS"</span>, <span class="st">"ridge"</span>]}, index<span class="op">=</span>cechy_praktyka)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>display(wsp.<span class="bu">round</span>(<span class="dv">1</span>))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-credit-wspolczynniki" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="14">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-credit-wspolczynniki-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;7.5: Współczynniki OLS i ridge wybranego przez CV, na skali standaryzowanych cech: dolary salda na jedno odchylenie standardowe cechy.
+</figcaption>
+<div aria-describedby="tbl-credit-wspolczynniki-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">OLS</th>
+<th data-quarto-table-cell-role="th">ridge</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Income</th>
+<td>-279.2</td>
+<td>-274.5</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Limit</th>
+<td>451.7</td>
+<td>363.7</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Rating</th>
+<td>170.9</td>
+<td>254.3</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Cards</th>
+<td>19.1</td>
+<td>15.4</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Age</th>
+<td>-5.4</td>
+<td>-5.4</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Education</th>
+<td>-7.9</td>
+<td>-7.2</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Student</th>
+<td>127.7</td>
+<td>126.7</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Możemy teraz odpowiedzieć na pytanie z początku rozdziału. Ridge z <span class="math inline">\(\alpha=1\)</span> prawie nie zmienia większości współczynników, za to wyraźnie przesuwa wagę między <code>Limit</code> a <code>Rating</code>: z <span class="math inline">\(452\)</span> i <span class="math inline">\(171\)</span> do <span class="math inline">\(364\)</span> i <span class="math inline">\(254\)</span>. Suma obu współczynników prawie się nie zmienia (<span class="math inline">\(623\)</span> i <span class="math inline">\(618\)</span>), a ich różnica maleje z <span class="math inline">\(281\)</span> do <span class="math inline">\(109\)</span>.</p>
+<p>W części uczącej korelacja <code>Limit</code> i <code>Rating</code> wynosi <span class="math inline">\(0{,}997\)</span>. Predykcje zależą więc głównie od sumy współczynników, a różnica odpowiada kombinacji cech, która w próbie prawie się nie zmienia. Dane słabo ją wyznaczają; to ta sama niedokładność, którą w rozdziale <a href="06-regresja-liniowa.html" class="quarto-xref"><span>6</span></a> mierzył VIF. Kara <span class="math inline">\(\beta_L^2+\beta_R^2=\tfrac12\big[(\beta_L+\beta_R)^2+(\beta_L-\beta_R)^2\big]\)</span> obciąża różnicę tak samo jak sumę, ale zmiana różnicy prawie nie zwiększa RSS. Ridge ściąga więc przede wszystkim różnicę. Na pytanie, czy usunąć jedną z cech, CV odpowiada: nie usuwać, tylko ściągnąć ich różnicę. W rachunku rozszerzenia <a href="#sec-ridge-geometria" class="quarto-xref"><span>7.7</span></a> ta różnica odpowiada kierunkowi o <span class="math inline">\(s\approx0{,}64\)</span>, z czynnikiem <span class="math inline">\(0{,}64/1{,}64\approx0{,}39\)</span>, i rzeczywiście <span class="math inline">\(281\cdot0{,}39\approx109\)</span>. Dla następnego kierunku czynnik wynosi już <span class="math inline">\(0{,}99\)</span>.</p>
+<p>Na tych danych kilka metod może działać podobnie: mamy umiarkowaną liczbę cech względem <span class="math inline">\(300\)</span> obserwacji, a silna kara może usuwać użyteczną informację. Symulacja z początku rozdziału pokazywała trudniejszą sytuację pod względem liczby parametrów. Regularyzacja jest narzędziem kontroli dopasowania, a jej przydatność trzeba sprawdzić dla konkretnego problemu.</p>
+<p>Obiekt <code>model_do_uzywania</code> zawiera również wyuczone skalowanie i może przewidywać nowe wiersze z tym samym porządkiem i kodowaniem cech. Jeśli po zamknięciu oceny dołączymy test i ponownie dobierzemy ustawienia lub dopasujemy model, otrzymamy inne dopasowanie. Dotychczasowy wynik testowy nie jest niezależną oceną tego nowego modelu.</p>
+</section>
+</section>
+<section id="sec-ridge-geometria" class="level2" data-number="7.7">
+<h2 data-number="7.7" class="anchored" data-anchor-id="sec-ridge-geometria"><span class="header-section-number">7.7</span> Rozszerzenie: geometria ściągania i efektywne stopnie swobody</h2>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Materiał nieobowiązkowy
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Wymagane są algebra macierzowa, wartości własne i ślad macierzy. Tekst główny i zadania podstawowe z tej sekcji nie korzystają.</p>
+</div>
+</div>
+<section id="kierunki-o-różnej-dokładności" class="level3" data-number="7.7.1">
+<h3 data-number="7.7.1" class="anchored" data-anchor-id="kierunki-o-różnej-dokładności"><span class="header-section-number">7.7.1</span> Kierunki o różnej dokładności</h3>
+<p>Dla wycentrowanego <span class="math inline">\(\X\)</span> zapiszmy <span class="math inline">\(\X^\top\X=\mathbf V\operatorname{diag}(s_1,\ldots,s_p)\mathbf V^\top\)</span>, gdzie <span class="math inline">\(\mathbf V\)</span> jest ortogonalna, a <span class="math inline">\(s_j\geq0\)</span>. Obrót przez <span class="math inline">\(\mathbf V\)</span> zamienia skorelowane współczynniki na współrzędne związane z ortogonalnymi kierunkami. We współrzędnej o <span class="math inline">\(s_j&gt;0\)</span> ridge mnoży rozwiązanie OLS przez <span class="math display">\[
+\frac{s_j}{s_j+\lambda}.
+\]</span> Małe <span class="math inline">\(s_j\)</span> oznacza mało informacji o odpowiadającej kombinacji współczynników. Właśnie te kierunki są tłumione mocniej. Na standaryzowanych siedmiu cechach <em>Credit</em> najmniejsze <span class="math inline">\(s_j\)</span> wynosi <span class="math inline">\(0{,}64\)</span>, a odpowiadający mu kierunek to prawie dokładnie <span class="math inline">\((\text{Limit}-\text{Rating})/\sqrt2\)</span>; następne <span class="math inline">\(s_j\)</span> to już <span class="math inline">\(79\)</span>. Przy <span class="math inline">\(\lambda=1\)</span> czynnik ściągania wynosi więc <span class="math inline">\(0{,}39\)</span> dla różnicy tych cech i co najmniej <span class="math inline">\(0{,}99\)</span> dla pozostałych kierunków. Współczynnik przy oryginalnej cesze jest mieszaniną obróconych współrzędnych, co wyjaśnia brak monotonicznego zmniejszania każdego jego modułu. Przy <span class="math inline">\(s_j=0\)</span> ridge wybiera współrzędną równą zero.</p>
+<p>Przy modelu liniowym z wariancją błędów <span class="math inline">\(\sigma^2\mathbf I\)</span> i ustalonym <span class="math inline">\(\X\)</span> wariancja współrzędnej OLS wynosi <span class="math inline">\(\sigma^2/s_j\)</span>, natomiast ridge <span class="math inline">\(\sigma^2s_j/(s_j+\lambda)^2\)</span>. Jeśli prawdziwa współrzędna to <span class="math inline">\(b_j\)</span>, obciążenie ridge wynosi <span class="math inline">\(-\lambda b_j/(s_j+\lambda)\)</span>. Zmniejszenie wariancji ma zatem konkretną cenę; korzystny wybór kary zależy od nieznanych <span class="math inline">\(b_j\)</span>, poziomu szumu i celu predykcji.</p>
+</section>
+<section id="macierz-wygładzania-i-stopnie-swobody" class="level3" data-number="7.7.2">
+<h3 data-number="7.7.2" class="anchored" data-anchor-id="macierz-wygładzania-i-stopnie-swobody"><span class="header-section-number">7.7.2</span> Macierz wygładzania i stopnie swobody</h3>
+<p>Zapis <span class="math inline">\(\widehat\y=\mathbf S\y\)</span> i ślad <span class="math inline">\(\mathbf S\)</span> jako miarę elastyczności metody liniowej poznaliśmy w rozszerzeniu <a href="06-regresja-liniowa.html#sec-mnk-geometria" class="quarto-xref"><span>6.9</span></a>: dla OLS ślad wynosi <span class="math inline">\(p+1\)</span>, a dla <span class="math inline">\(k\)</span>-NN <span class="math inline">\(n/k\)</span>. Niech <span class="math inline">\(\X\)</span> nadal ma wycentrowane kolumny, a <span class="math inline">\(\mathbf J=\mathbf1\mathbf1^\top/n\)</span>. Predykcje na próbie, z uwzględnieniem niekaranego wyrazu wolnego, wynoszą <span id="eq-ridge-wygladzanie"><span class="math display">\[
+\widehat\y=\mathbf S_\lambda\y,\qquad
+\mathbf S_\lambda=\mathbf J+\X(\X^\top\X+\lambda\mathbf I)^{-1}\X^\top.
+\tag{7.13}\]</span></span> Efektywne stopnie swobody tej liniowej procedury to <span id="eq-ridge-df"><span class="math display">\[
+\operatorname{df}(\lambda)=\operatorname{tr}(\mathbf S_\lambda)
+=1+\sum_{j=1}^p\frac{s_j}{s_j+\lambda},\qquad\lambda&gt;0.
+\tag{7.14}\]</span></span> Jedynka pochodzi z wyrazu wolnego. Dla pełnego rzędu kolumnowego granica przy <span class="math inline">\(\lambda\downarrow0\)</span> wynosi <span class="math inline">\(p+1\)</span>, a przy <span class="math inline">\(\lambda\to\infty\)</span> – <span class="math inline">\(1\)</span>. Przy niepełnym rzędzie pierwsza granica to <span class="math inline">\(1+\operatorname{rank}(\X)\)</span>. Wymiar pośredni nie musi być całkowity: każda dodatnia kara ogranicza swobodę dopasowania bez usuwania kolumn.</p>
+<p>Dla ustalonej kary, przy niezależnych błędach o wariancji <span class="math inline">\(\sigma^2\)</span>, średni optymizm RSS wobec predykcji niezależnego wektora odpowiedzi w tych samych punktach wynosi <span class="math inline">\(2\sigma^2\operatorname{tr}(\mathbf S_\lambda)\)</span>. Dlatego liczba kolumn nie jest właściwym zamiennikiem złożoności ridge w rachunku kar typu <span class="math inline">\(C_p\)</span>. Gdy wybieramy samą karę z danych, pojawia się ponadto koszt tego wyboru.</p>
+<p>Dla ustalonych <span class="math inline">\(\lambda\)</span> i skali kolumn wzór na LOOCV liniowego wygładzania z sekcji <a href="../1-fundamenty/05-ocena-modeli.html#sec-loocv-wygladzanie" class="quarto-xref"><span>5.12</span></a> daje <span class="math display">\[
+\mathrm{CV}_{\mathrm{LOO}}=\frac1n\sum_{i=1}^n
+\left(\frac{y_i-\widehat y_i}{1-(\mathbf S_\lambda)_{ii}}\right)^2.
+\]</span> Skala musi tu być z góry ustalona: jeśli każde usunięcie obserwacji zmienia standaryzację, zmienia się również kara w oryginalnych współrzędnych i prosty wzór nie opisuje już takiej procedury.</p>
+</section>
+</section>
+<section id="sec-lasso-wspolrzedne" class="level2" data-number="7.8">
+<h2 data-number="7.8" class="anchored" data-anchor-id="sec-lasso-wspolrzedne"><span class="header-section-number">7.8</span> Rozszerzenie: obliczanie LASSO przez aktualizację współrzędnych</h2>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Materiał nieobowiązkowy
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Wymagane są różniczkowanie i zapis macierzowy. Tekst główny i zadania podstawowe z tej sekcji nie korzystają.</p>
+</div>
+</div>
+<p>Wzór (<a href="#eq-lasso-prog" class="quarto-xref"><span>7.10</span></a>) można wykorzystać wielokrotnie. Przy ustalonych pozostałych współczynnikach zdefiniujmy <strong>resztę częściową</strong> <span class="math display">\[
+r_i^{(j)}=y_i-\sum_{k\ne j}x_{ik}\beta_k.
+\]</span> Dla wycentrowanych danych wyraz wolny pomijamy. Minimalizacja względem samego <span class="math inline">\(\beta_j\)</span> ma postać jednowymiarowego zadania z <span class="math inline">\(s_j=\sum_i x_{ij}^2\)</span> i <span class="math inline">\(z_j=\sum_i x_{ij}r_i^{(j)}\)</span>. Aktualizujemy <span id="eq-lasso-aktualizacja"><span class="math display">\[
+\beta_j\leftarrow
+\frac{\operatorname{sign}(z_j)(|z_j|-\lambda/2)_+}{s_j}.
+\tag{7.15}\]</span></span> Przechodzimy kolejno przez wszystkie kolumny i powtarzamy cykle <span class="citation" data-cites="friedman2007">(<a href="../references.html#ref-friedman2007" role="doc-biblioref">Friedman i in. 2007</a>)</span>. Kolumny o zerowej zmienności usuwamy. Każda aktualizacja minimalizuje funkcję celu po jednej współrzędnej; nie zwiększa więc wartości celu. W przeciwieństwie do niezależnego zastosowania progu do oszacowań OLS, reszta częściowa uwzględnia aktualne współczynniki pozostałych cech.</p>
+<p>Poniższy kod ilustruje cykle dla małego zadania. Przechowuje wartości celu i zatrzymuje się przy małej zmianie współczynników. Jest narzędziem dydaktycznym; biblioteczne solvery dodatkowo kontrolują dokładność warunków optymalności, m.in. przez lukę dualną.</p>
+<div class="cell" data-execution_count="15">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Z_cd <span class="op">=</span> Z[:, :<span class="dv">3</span>].copy()</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>y_cd <span class="op">=</span> y_ucz <span class="op">-</span> y_ucz.mean()</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>lam_cd <span class="op">=</span> <span class="dv">20</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>beta_cd <span class="op">=</span> np.zeros(Z_cd.shape[<span class="dv">1</span>])</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>cele_cd <span class="op">=</span> []</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> cykl <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">100000</span>):</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    poprzednie <span class="op">=</span> beta_cd.copy()</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(Z_cd.shape[<span class="dv">1</span>]):</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>        r <span class="op">=</span> y_cd <span class="op">-</span> Z_cd <span class="op">@</span> beta_cd <span class="op">+</span> Z_cd[:, j] <span class="op">*</span> beta_cd[j]</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> Z_cd[:, j] <span class="op">@</span> r</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>        s <span class="op">=</span> Z_cd[:, j] <span class="op">@</span> Z_cd[:, j]</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>        beta_cd[j] <span class="op">=</span> np.sign(z) <span class="op">*</span> <span class="bu">max</span>(<span class="bu">abs</span>(z) <span class="op">-</span> lam_cd<span class="op">/</span><span class="dv">2</span>, <span class="dv">0</span>) <span class="op">/</span> s</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    cele_cd.append(np.<span class="bu">sum</span>((y_cd <span class="op">-</span> Z_cd <span class="op">@</span> beta_cd)<span class="op">**</span><span class="dv">2</span>) <span class="op">+</span> lam_cd <span class="op">*</span> np.<span class="bu">abs</span>(beta_cd).<span class="bu">sum</span>())</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> np.<span class="bu">max</span>(np.<span class="bu">abs</span>(beta_cd <span class="op">-</span> poprzednie)) <span class="op">&lt;</span> <span class="fl">1e-9</span>:</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">raise</span> <span class="pp">RuntimeError</span>(<span class="st">"Aktualizacje nie osiągnęły założonej dokładności."</span>)</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>lasso_cd <span class="op">=</span> Lasso(alpha<span class="op">=</span>lam_cd <span class="op">/</span> (<span class="dv">2</span><span class="op">*</span><span class="bu">len</span>(y_cd)), fit_intercept<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>                 max_iter<span class="op">=</span><span class="dv">100000</span>, tol<span class="op">=</span><span class="fl">1e-11</span>).fit(Z_cd, y_cd)</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.<span class="bu">all</span>(np.diff(cele_cd) <span class="op">&lt;=</span> <span class="fl">1e-7</span> <span class="op">*</span> <span class="bu">max</span>(<span class="dv">1</span>, cele_cd[<span class="dv">0</span>]))</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(beta_cd, lasso_cd.coef_, atol<span class="op">=</span><span class="fl">1e-5</span>)</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>display(pd.DataFrame({<span class="st">"cecha"</span>: cechy_sciezki[:<span class="dv">3</span>], <span class="st">"aktualizacje"</span>: beta_cd,</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Lasso"</span>: lasso_cd.coef_}).<span class="bu">round</span>(<span class="dv">5</span>))</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Liczba cykli: </span><span class="sc">{</span>cykl <span class="op">+</span> <span class="dv">1</span><span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Liczba cykli: 3464</code></pre>
+</div>
+<div id="tbl-lasso-iteracje" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="15">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-lasso-iteracje-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;7.6: Aktualizacja współrzędnych i biblioteczne LASSO dla tego samego zadania. Kolumny danych są wycentrowane; lambda wynosi 20.
+</figcaption>
+<div aria-describedby="tbl-lasso-iteracje-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">cecha</th>
+<th data-quarto-table-cell-role="th">aktualizacje</th>
+<th data-quarto-table-cell-role="th">Lasso</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>Income</td>
+<td>-273.12912</td>
+<td>-273.12912</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>Limit</td>
+<td>229.88159</td>
+<td>229.88159</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Rating</td>
+<td>383.92089</td>
+<td>383.92089</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Warunek małych zmian współczynników sam w sobie nie jest uniwersalnym certyfikatem dokładności. W przykładzie porównujemy także rozwiązanie z biblioteką przy zgodnej normalizacji kary. Dla silnie skorelowanych cech zbieżność może wymagać wielu cykli; to inny problem niż statystyczny wybór siły regularyzacji.</p>
+</section>
+<section id="uwagi-bibliograficzne" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="uwagi-bibliograficzne">Uwagi bibliograficzne</h2>
+<p>Selekcję podzbiorów, metody schodów i kryteria <span class="math inline">\(C_p\)</span>, AIC i BIC przedstawiają <span class="citation" data-cites="islp">James i in. (<a href="../references.html#ref-islp" role="doc-biblioref">2023, rozdz. 6.1</a>)</span>, a ridge i LASSO – <span class="citation" data-cites="islp">James i in. (<a href="../references.html#ref-islp" role="doc-biblioref">2023, rozdz. 6.2</a>)</span>. Ten sam rozdział podręcznika zawiera przykłady obliczeniowe. Pełniejszy wykład dają <span class="citation" data-cites="esl">Hastie i in. (<a href="../references.html#ref-esl" role="doc-biblioref">2009</a>)</span>: selekcję podzbiorów w rozdz. 3.3, ridge, LASSO i ich geometrię w rozdz. 3.4, a aktualizację współrzędnych w rozdz. 3.8. Kryteria <span class="math inline">\(C_p\)</span> i AIC wyprowadzają jako oszacowania błędu predykcji w rozdz. 7.5, efektywną liczbę parametrów omawiają w rozdz. 7.6, a BIC w rozdz. 7.7.</p>
+<p>Kryterium <span class="math inline">\(C_p\)</span> omawia <span class="citation" data-cites="mallows1973">Mallows (<a href="../references.html#ref-mallows1973" role="doc-biblioref">1973</a>)</span>. AIC wprowadził <span class="citation" data-cites="akaike1974">Akaike (<a href="../references.html#ref-akaike1974" role="doc-biblioref">1974</a>)</span>, a kryterium BIC – <span class="citation" data-cites="schwarz1978">Schwarz (<a href="../references.html#ref-schwarz1978" role="doc-biblioref">1978</a>)</span>. Kryteria te wynikają z różnych sposobów porównywania modeli probabilistycznych; ich wzory dla regresji normalnej wymagają konsekwentnego liczenia parametrów i tej samej próby danych. Nie zastępują oddzielenia wyboru od końcowej oceny procedury z rozdziału <a href="../1-fundamenty/05-ocena-modeli.html" class="quarto-xref"><span>5</span></a>. Problem wnioskowania o współczynnikach modelu wybranego na tych samych danych oraz konstrukcję przedziałów, które uwzględniają etap selekcji, opisują <span class="citation" data-cites="berk2013">Berk i in. (<a href="../references.html#ref-berk2013" role="doc-biblioref">2013</a>)</span>.</p>
+<p>Klasyczna praca o regresji grzbietowej to artykuł <span class="citation" data-cites="hoerl1970">Hoerl i Kennard (<a href="../references.html#ref-hoerl1970" role="doc-biblioref">1970</a>)</span>, a metodę LASSO zaproponował <span class="citation" data-cites="tibshirani1996">Tibshirani (<a href="../references.html#ref-tibshirani1996" role="doc-biblioref">1996</a>)</span>. Zależność wyników od skali cech i stabilność wyboru przy podobnych predyktorach są częścią interpretacji tych metod, a nie tylko szczegółami obliczeń. W praktyce trzeba też sprawdzić normalizację funkcji celu w używanym oprogramowaniu, jak w porównaniu klas <code>Ridge</code> i <code>Lasso</code> powyżej. Połączenie obu kar, czyli elastic net, zaproponowali <span class="citation" data-cites="zou2005">Zou i Hastie (<a href="../references.html#ref-zou2005" role="doc-biblioref">2005</a>)</span>. Algorytm aktualizacji współrzędnych dla LASSO opisują <span class="citation" data-cites="friedman2007">Friedman i in. (<a href="../references.html#ref-friedman2007" role="doc-biblioref">2007</a>)</span>.</p>
+</section>
+<section id="zadania" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="zadania">Zadania</h2>
+<p>Zadania od <a href="#exr-podzbiory-predyktorow" class="quarto-xref">Zadanie&nbsp;<span>7.1</span></a> do <a href="#exr-stabilnosc-selekcji" class="quarto-xref">Zadanie&nbsp;<span>7.8</span></a> korzystają z tekstu głównego. Dwa ostatnie zadania rozwijają materiał rozszerzeń.</p>
+<div id="exr-podzbiory-predyktorow" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 7.1</strong></span> Rozważ trzy cechy <span class="math inline">\(A,B,C\)</span>. Poniższa tabela jest przykładem dydaktycznym; RSS dotyczy dopasowania na jednej próbie, a MSE CV obliczono przez powtarzanie całej selekcji wewnątrz części uczących.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Podzbiór</th>
+<th style="text-align: right;">RSS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>pusty</td>
+<td style="text-align: right;">200</td>
+</tr>
+<tr class="even">
+<td>A</td>
+<td style="text-align: right;">140</td>
+</tr>
+<tr class="odd">
+<td>B</td>
+<td style="text-align: right;">150</td>
+</tr>
+<tr class="even">
+<td>C</td>
+<td style="text-align: right;">170</td>
+</tr>
+<tr class="odd">
+<td>A, B</td>
+<td style="text-align: right;">120</td>
+</tr>
+<tr class="even">
+<td>A, C</td>
+<td style="text-align: right;">125</td>
+</tr>
+<tr class="odd">
+<td>B, C</td>
+<td style="text-align: right;">110</td>
+</tr>
+<tr class="even">
+<td>A, B, C</td>
+<td style="text-align: right;">100</td>
+</tr>
+</tbody>
+</table>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Liczba cech</th>
+<th style="text-align: right;">MSE CV procedury przeglądu zupełnego</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td style="text-align: right;">10</td>
+</tr>
+</tbody>
+</table>
+<ol type="a">
+<li>Dla każdej liczby cech wskaż podzbiór o najmniejszym RSS.</li>
+<li>Wybierz wielkość modelu według CV. Jaki podzbiór zostanie dopasowany na całej próbie po tym wyborze?</li>
+<li>Dlaczego najmniejszy RSS nie prowadzi do tego samego wyboru?</li>
+<li>Wyjaśnij, dlaczego nie wolno wybrać podzbiorów z pierwszej tabeli na całej próbie, a dopiero potem traktować ich jako ustalonych kandydatów przy wyznaczaniu CV.</li>
+</ol>
+</div>
+<div id="exr-selekcja-schody" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 7.2</strong></span> Korzystając z tabeli RSS w <a href="#exr-podzbiory-predyktorow" class="quarto-xref">Zadanie&nbsp;<span>7.1</span></a>:</p>
+<ol type="a">
+<li>Wypisz ścieżkę selekcji w przód, od modelu pustego do pełnego.</li>
+<li>Wypisz ścieżkę selekcji wstecz.</li>
+<li>Czy obie ścieżki zawierają najlepszy podzbiór dwóch cech?</li>
+<li>Ile modeli trzeba dopasować w przeglądzie zupełnym przy <span class="math inline">\(p=10\)</span>, a ile rozszerzeń ocenić w pełnej ścieżce w przód? Model początkowy policz osobno.</li>
+</ol>
+</div>
+<div id="exr-kary-za-zlozonosc" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 7.3</strong></span> Na tych samych <span class="math inline">\(n=100\)</span> obserwacjach porównujemy dwa ustalone modele OLS. Pierwszy ma <span class="math inline">\(d=3\)</span> parametry i RSS równy <span class="math inline">\(100\)</span>, drugi ma <span class="math inline">\(d=4\)</span> parametry oraz RSS równy <span class="math inline">\(97\)</span>. Dane mają TSS równy <span class="math inline">\(200\)</span>, a wspólna estymata wariancji do <span class="math inline">\(C_p\)</span> wynosi <span class="math inline">\(1\)</span>.</p>
+<ol type="a">
+<li>Oblicz skorygowany <span class="math inline">\(R^2\)</span> i <span class="math inline">\(C_p\)</span> dla obu modeli.</li>
+<li>Oblicz AIC i BIC w postaciach do porównania (<a href="#eq-aic-selekcja" class="quarto-xref"><span>7.3</span></a>) i (<a href="#eq-bic-selekcja" class="quarto-xref"><span>7.4</span></a>).</li>
+<li>Wyjaśnij ewentualną różnicę wyboru AIC i BIC. Jak duży spadek RSS kompensuje koszt jednego parametru w każdym z nich?</li>
+<li>Dlaczego do obliczania tych kryteriów nie można bez zmiany rachunku użyć modelu ridge i wpisać za <span class="math inline">\(d\)</span> liczby jego kolumn?</li>
+</ol>
+</div>
+<div id="exr-skala-kara" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 7.4</strong></span> Model z cechą <span class="math inline">\(X\)</span> wyrażoną w tysiącach dolarów ma współczynnik <span class="math inline">\(\beta=2\)</span>. Wprowadzamy cechę <span class="math inline">\(X'=1000X\)</span> wyrażoną w dolarach.</p>
+<ol type="a">
+<li>Jaki współczynnik przy <span class="math inline">\(X'\)</span> daje tę samą funkcję predykcji?</li>
+<li>Jak zmieniają się kary <span class="math inline">\(\lambda\beta^2\)</span> i <span class="math inline">\(\lambda|\beta|\)</span> przy tym samym <span class="math inline">\(\lambda\)</span>?</li>
+<li>Pokaż, że standaryzacja <span class="math inline">\(X\)</span> i <span class="math inline">\(X'\)</span> na tej samej próbie daje identyczne wartości, gdy odchylenie standardowe jest dodatnie.</li>
+<li>Które obserwacje wyznaczają średnią i odchylenie w jednym kroku CV? Jak przekształcamy obserwacje walidacyjne?</li>
+</ol>
+</div>
+<div id="exr-sciaganie-jedna-cecha" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 7.5</strong></span> Dla jednej wycentrowanej cechy mamy <span class="math inline">\(s=\sum_i x_i^2=10\)</span> oraz <span class="math inline">\(z=\sum_i x_i y_i=30\)</span>.</p>
+<ol type="a">
+<li>Oblicz OLS oraz ridge i LASSO dla <span class="math inline">\(\lambda=0,10,30,60\)</span>.</li>
+<li>Od jakiej wartości kary współczynnik LASSO jest zerem? Czy ridge osiąga zero dla skończonej kary w tych danych?</li>
+<li>Jeżeli wariancja OLS przy ustalonej cesze wynosi <span class="math inline">\(v\)</span>, jaka jest wariancja ridge dla <span class="math inline">\(\lambda=10\)</span>? Wyjaśnij koszt takiej redukcji, gdy prawdziwy współczynnik wynosi <span class="math inline">\(3\)</span>.</li>
+<li>Jakie <code>alpha</code> trzeba przekazać do <code>Ridge</code> i <code>Lasso</code>, aby przy <span class="math inline">\(n=100\)</span> uzyskać <span class="math inline">\(\lambda=30\)</span> w konwencji rozdziału?</li>
+</ol>
+</div>
+<div id="exr-geometria-kar" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 7.6</strong></span> Dla dwóch współczynników nieograniczona funkcja RSS, po pominięciu stałej, wynosi <span class="math inline">\((\beta_1-2)^2+(\beta_2-0{,}6)^2\)</span>.</p>
+<ol type="a">
+<li>Narysuj jej poziomice oraz zbiory <span class="math inline">\(\beta_1^2+\beta_2^2\leq1\)</span> i <span class="math inline">\(|\beta_1|+|\beta_2|\leq1\)</span>.</li>
+<li>Wskaż na rysunku rozwiązania obu zadań. Które ma zerową współrzędną?</li>
+<li>Co stanie się, gdy ograniczenie przestanie wykluczać punkt OLS?</li>
+<li>Wyjaśnij, dlaczego interpretacja rombu nie oznacza, że LASSO zawsze usuwa co najmniej jedną cechę.</li>
+</ol>
+</div>
+<div id="exr-regularyzacja-cv" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 7.7</strong></span> Powtórz porównanie na <em>Credit</em> z sekcji <a href="#sec-regularyzacja-praktyka" class="quarto-xref"><span>7.6</span></a>, zachowując ten sam zbiór testowy i tę samą listę cech.</p>
+<ol type="a">
+<li>Wyjaśnij role każdej części danych w jednym kroku CV dla selekcji w przód i dla LASSO. Co jest wybierane, a co dopasowywane?</li>
+<li>Na danych uczących wyznacz dla ridge i LASSO minimum CV i wariant reguły 1 SE. Dopasuj warianty na całej części uczącej i porównaj współczynniki oraz liczbę zer. Test pozostaw do końca.</li>
+<li>Oceń wcześniej ustalone warianty na teście; podaj MSE, jego błąd standardowy i RMSE. Wyjaśnij, dlaczego wybranie zwycięzcy po obejrzeniu tej tabeli zmieniłoby rolę testu.</li>
+<li>Wskaż błąd w postępowaniu: „najpierw wybieram trzy cechy najlepiej związane z saldem na wszystkich danych, potem używam potoku skalowanie plus LASSO w CV”. Czy sam potok naprawia ten błąd?</li>
+</ol>
+</div>
+<div id="exr-stabilnosc-selekcji" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 7.8</strong></span> Wykorzystaj generator <code>proba_liniowa</code> z rysunku <a href="#fig-selekcja-szum" class="quarto-xref"><span>7.1</span></a>. Z góry ustal liczbę obserwacji <span class="math inline">\(n=60\)</span> i kary: <code>Ridge(alpha=30)</code> oraz <code>Lasso(alpha=0.5)</code>, każdorazowo po standaryzacji na próbie uczącej.</p>
+<ol type="a">
+<li>Wygeneruj <span class="math inline">\(200\)</span> niezależnych prób uczących. Dla każdej dopasuj ridge i LASSO; zapisz współczynniki w oryginalnych jednostkach (podziel współczynniki po skalowaniu przez wyuczone odchylenia).</li>
+<li>Jak często LASSO wybiera pierwszą, drugą i każdą z pozostałych cech? Jak często wybiera co najmniej jedną z pierwszych dwóch?</li>
+<li>Na jednym dużym niezależnym zbiorze cech porównaj zmienność predykcji obu metod po próbach oraz ich średni błąd wobec prawdziwej funkcji <span class="math inline">\(3X_1\)</span>. Odróżnij to od błędu wobec nowego <span class="math inline">\(Y\)</span>.</li>
+<li>Powtórz eksperyment dla korelacji pierwszej pary równej <span class="math inline">\(0\)</span> oraz <span class="math inline">\(0{,}999\)</span>. Czy niestabilność współczynników i listy cech zawsze idzie w parze z równie dużą niestabilnością predykcji?</li>
+</ol>
+</div>
+<div id="exr-ridge-stopnie-swobody" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 7.9</strong></span> <strong>Rozszerzenie: efektywne stopnie swobody ridge.</strong> Wymagane są algebra macierzowa, wartości własne i ślad macierzy.</p>
+<p>Dla wycentrowanego <span class="math inline">\(\X\)</span> dodatnie wartości własne <span class="math inline">\(\X^\top\X\)</span> wynoszą <span class="math inline">\(1,10,100\)</span>, a pozostałe są zerowe. Wyraz wolny nie podlega karze.</p>
+<ol type="a">
+<li>Oblicz efektywne stopnie swobody dla <span class="math inline">\(\lambda=1,10,100\)</span>.</li>
+<li>Wyznacz granice przy <span class="math inline">\(\lambda\downarrow0\)</span> i <span class="math inline">\(\lambda\to\infty\)</span>.</li>
+<li>Który kierunek jest najmocniej tłumiony przy <span class="math inline">\(\lambda=10\)</span>?</li>
+<li>Dla ogólnego <span class="math inline">\(\X\)</span> uzasadnij wzór (<a href="#eq-ridge-df" class="quarto-xref"><span>7.14</span></a>) przez własność <span class="math inline">\(\operatorname{tr}(AB)=\operatorname{tr}(BA)\)</span>.</li>
+</ol>
+</div>
+<div id="exr-lasso-wspolrzedne" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 7.10</strong></span> <strong>Rozszerzenie: aktualizacja współrzędnych LASSO.</strong> Wymagane są różniczkowanie i zapis macierzowy.</p>
+<p>Wycentrowane dane spełniają <span class="math display">\[
+\X^\top\X=\begin{pmatrix}2&amp;1\\1&amp;2\end{pmatrix},\qquad
+\X^\top\y=\begin{pmatrix}4\\3\end{pmatrix},\qquad\lambda=2.
+\]</span></p>
+<ol type="a">
+<li>Zacznij od <span class="math inline">\((0,0)\)</span> i wykonaj dwa cykle aktualizacji, najpierw pierwszej, potem drugiej współrzędnej.</li>
+<li>Jak obliczysz <span class="math inline">\(z_j\)</span> z samych <span class="math inline">\(\X^\top\X\)</span>, <span class="math inline">\(\X^\top\y\)</span> i aktualnych współczynników, bez odtwarzania całego wektora reszt?</li>
+<li>Sprawdź, że każda aktualizacja nie zwiększa funkcji celu; pomiń nieznaną stałą <span class="math inline">\(\y^\top\y\)</span>.</li>
+<li>Wyjaśnij, dlaczego niezależne progowanie współczynników OLS nie zastępuje tych aktualizacji dla skorelowanych kolumn.</li>
+</ol>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-akaike1974" class="csl-entry" role="listitem">
+Akaike, H. 1974. <span>„A new look at the statistical model identification”</span>. <em>IEEE Transactions on Automatic Control</em> 19 (6): 716–23. <a href="https://doi.org/10.1109/tac.1974.1100705">https://doi.org/10.1109/tac.1974.1100705</a>.
+</div>
+<div id="ref-berk2013" class="csl-entry" role="listitem">
+Berk, Richard, Lawrence Brown, Andreas Buja, Kai Zhang i Linda Zhao. 2013. <span>„Valid Post-Selection Inference”</span>. <em>The Annals of Statistics</em> 41 (2): 802–37. <a href="https://doi.org/10.1214/12-AOS1077">https://doi.org/10.1214/12-AOS1077</a>.
+</div>
+<div id="ref-friedman2007" class="csl-entry" role="listitem">
+Friedman, Jerome, Trevor Hastie, Holger Höfling i Robert Tibshirani. 2007. <span>„Pathwise Coordinate Optimization”</span>. <em>The Annals of Applied Statistics</em> 1 (2): 302–32. <a href="https://doi.org/10.1214/07-AOAS131">https://doi.org/10.1214/07-AOAS131</a>.
+</div>
+<div id="ref-esl" class="csl-entry" role="listitem">
+Hastie, Trevor, Robert Tibshirani i Jerome Friedman. 2009. <em>The Elements of Statistical Learning: Data Mining, Inference, and Prediction</em>. 2. wyd. Springer.
+</div>
+<div id="ref-hoerl1970" class="csl-entry" role="listitem">
+Hoerl, Arthur E. i Robert W. Kennard. 1970. <span>„Ridge Regression: Biased Estimation for Nonorthogonal Problems”</span>. <em>Technometrics</em> 12 (1): 55–67. <a href="https://doi.org/10.1080/00401706.1970.10488634">https://doi.org/10.1080/00401706.1970.10488634</a>.
+</div>
+<div id="ref-islp" class="csl-entry" role="listitem">
+James, Gareth, Daniela Witten, Trevor Hastie, Robert Tibshirani i Jonathan Taylor. 2023. <em>An Introduction to Statistical Learning with Applications in Python</em>. <span>Springer Texts in Statistics</span>. Springer.
+</div>
+<div id="ref-mallows1973" class="csl-entry" role="listitem">
+Mallows, C. L. 1973. <span>„Some Comments on <span><span class="math inline">\(C_p\)</span></span>”</span>. <em>Technometrics</em> 15 (4): 661–75. <a href="https://doi.org/10.1080/00401706.1973.10489103">https://doi.org/10.1080/00401706.1973.10489103</a>.
+</div>
+<div id="ref-schwarz1978" class="csl-entry" role="listitem">
+Schwarz, Gideon. 1978. <span>„Estimating the Dimension of a Model”</span>. <em>The Annals of Statistics</em> 6 (2): 461–64. <a href="https://doi.org/10.1214/aos/1176344136">https://doi.org/10.1214/aos/1176344136</a>.
+</div>
+<div id="ref-tibshirani1996" class="csl-entry" role="listitem">
+Tibshirani, Robert. 1996. <span>„Regression Shrinkage and Selection Via the Lasso”</span>. <em>Journal of the Royal Statistical Society Series B: Statistical Methodology</em> 58 (1): 267–88. <a href="https://doi.org/10.1111/j.2517-6161.1996.tb02080.x">https://doi.org/10.1111/j.2517-6161.1996.tb02080.x</a>.
+</div>
+<div id="ref-zou2005" class="csl-entry" role="listitem">
+Zou, Hui i Trevor Hastie. 2005. <span>„Regularization and Variable Selection Via the Elastic Net”</span>. <em>Journal of the Royal Statistical Society Series B: Statistical Methodology</em> 67 (2): 301–20. <a href="https://doi.org/10.1111/j.1467-9868.2005.00503.x">https://doi.org/10.1111/j.1467-9868.2005.00503.x</a>.
+</div>
+</div>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
