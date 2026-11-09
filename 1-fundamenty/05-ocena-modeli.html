@@ -1288,7 +1288,7 @@ Rysunek&nbsp;5.5: Optymizm wyboru. Dane bez informacji o klasie (<span class="ma
 <section id="przygotowanie-potoku" class="level3" data-number="5.8.1">
 <h3 data-number="5.8.1" class="anchored" data-anchor-id="przygotowanie-potoku"><span class="header-section-number">5.8.1</span> Przygotowanie potoku</h3>
 <p>Standaryzacja należy do potoku, więc w każdym dopasowaniu wykorzysta tylko dostępne w nim dane uczące. Wewnętrzna CV ma cztery części, zewnętrzna – pięć, tak jak w przykładzie z poprzedniej sekcji.</p>
-<div id="a14f32d7" class="cell" data-execution_count="7">
+<div id="b84afbfe" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> load_breast_cancer</span>
@@ -1310,7 +1310,7 @@ Rysunek&nbsp;5.5: Optymizm wyboru. Dane bez informacji o klasie (<span class="ma
 <section id="ocena-procedury-wyboru" class="level3" data-number="5.8.2">
 <h3 data-number="5.8.2" class="anchored" data-anchor-id="ocena-procedury-wyboru"><span class="header-section-number">5.8.2</span> Ocena procedury wyboru</h3>
 <p><code>cross_validate</code> dopasuje od nowa całe <code>strojenie</code> wewnątrz każdej części zewnętrznej. <code>GridSearchCV</code> domyślnie ponownie dopasowuje zwycięski potok do wszystkich danych dostępnych w danym kroku. Zwracany wynik dotyczy zewnętrznych obserwacji, które nie brały udziału w tym wyborze.</p>
-<div id="6e83a08c" class="cell" data-execution_count="8">
+<div id="f0ac4c75" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>zagn <span class="op">=</span> cross_validate(strojenie, X, y, cv<span class="op">=</span>zewnetrzna, return_estimator<span class="op">=</span><span class="va">True</span>)</span>
@@ -1332,7 +1332,7 @@ k wybrane w częściach zewnętrznych: [7, 11, 5, 7, 3]</code></pre>
 <section id="końcowy-wybór-i-dopasowanie" class="level3" data-number="5.8.3">
 <h3 data-number="5.8.3" class="anchored" data-anchor-id="końcowy-wybór-i-dopasowanie"><span class="header-section-number">5.8.3</span> Końcowy wybór i dopasowanie</h3>
 <p>Po ocenie uruchamiamy tę samą procedurę na wszystkich danych.</p>
-<div id="84892e95" class="cell" data-execution_count="9">
+<div id="8b5a9897" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>strojenie.fit(X, y)</span>
@@ -1365,7 +1365,7 @@ Końcowe k: 7</code></pre>
 <section id="osobny-wariant-reguła-jednego-błędu-standardowego" class="level3" data-number="5.8.4">
 <h3 data-number="5.8.4" class="anchored" data-anchor-id="osobny-wariant-reguła-jednego-błędu-standardowego"><span class="header-section-number">5.8.4</span> Osobny wariant: reguła jednego błędu standardowego</h3>
 <p>Na tej samej tabeli można zilustrować inną regułę wyboru. Błąd standardowy przy minimalnym wyniku <span class="math inline">\(b\)</span> liczymy jak w podsekcji o błędzie standardowym walidacji krzyżowej: <span class="math inline">\(\sqrt{b(1-b)/n}\)</span>, gdzie <span class="math inline">\(n\)</span> to liczba wszystkich obserwacji.</p>
-<div id="a83f1c82" class="cell" data-execution_count="10">
+<div id="59a637ab" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>b_min <span class="op">=</span> bledy.<span class="bu">min</span>()</span>
@@ -1646,7 +1646,7 @@ y_i - \widehat f(\x_i) = \frac{k - 1}{k}\, \big( y_i - \widehat f^{(-i)}(\x_i) \
 </div>
 </div>
 <p>Wariancja CV zależy zarówno od nakładania się zbiorów uczących, jak i od stabilności metody. Przy dużym <span class="math inline">\(K\)</span> zbiory te pokrywają się prawie całkowicie. Predyktory <span class="math inline">\(\widehat f^{(-r)}\)</span> korzystają więc z podobnych danych, a straty z różnych części mogą być zależne. Przy dodatnich kowariancjach średnia ma większą wariancję niż średnia niezależnych wielkości o tych samych wariancjach (1). Z tego powodu często mówi się, że LOOCV ma dużą wariancję. Z drugiej strony przy dużym <span class="math inline">\(K\)</span> każdy predyktor dostaje więcej danych, a przy <span class="math inline">\(K=n\)</span> wynik nie zależy od losowania podziału. Który efekt przeważa, zależy od metody. Sprawdźmy to na naszym przykładzie: dla wielomianu stopnia <span class="math inline">\(3\)</span> i <span class="math inline">\(n = 50\)</span> wylosowaliśmy <span class="math inline">\(500\)</span> prób i w każdej policzyliśmy <span class="math inline">\(\mathrm{CV}_K\)</span> dla <span class="math inline">\(K = 2, 5, 10, 50\)</span> oraz, całkowaniem, prawdziwe ryzyko dopasowanego modelu.</p>
-<div id="f43bb46b" class="cell" data-execution_count="13">
+<div id="33f90e11" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">5</span>)</span>
@@ -1747,7 +1747,7 @@ korelacja:                 -0.022</code></pre>
 <section id="ograniczenia-prostych-oszacowań-niepewności" class="level3" data-number="5.13.2">
 <h3 data-number="5.13.2" class="anchored" data-anchor-id="ograniczenia-prostych-oszacowań-niepewności"><span class="header-section-number">5.13.2</span> Ograniczenia prostych oszacowań niepewności</h3>
 <p>Wynik walidacji krzyżowej podaje się zwykle z błędem standardowym. Najprostszy przepis traktuje <span class="math inline">\(n\)</span> strat z (<a href="#eq-cv" class="quarto-xref"><span>5.3</span></a>) jak straty na zbiorze testowym i dzieli ich odchylenie standardowe przez <span class="math inline">\(\sqrt{n}\)</span>. Te straty nie są jednak niezależne: każda para obserwacji z różnych części ma wspólną większość zbioru uczącego. <span class="citation" data-cites="bengio2004">Bengio i Grandvalet (<a href="../references.html#ref-bengio2004" role="doc-biblioref">2004</a>)</span> wykazali, że na podstawie jednego wyniku <span class="math inline">\(K\)</span>-krotnej walidacji nie da się zbudować uniwersalnego estymatora jej wariancji, nieobciążonego dla wszystkich rozkładów. Wynik ten nie wyklucza estymacji przy dodatkowych założeniach. Naiwny błąd standardowy jest zwykle zaniżony. W symulacji z rysunku <a href="#fig-cv-ryzyko" class="quarto-xref"><span>5.8</span></a> wygląda to tak:</p>
-<div id="8978c213" class="cell" data-execution_count="15">
+<div id="5a03632f" class="cell" data-execution_count="15">
 <details class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>pokrycie <span class="op">=</span> np.mean(np.<span class="bu">abs</span>(cv[:, j10] <span class="op">-</span> ryzyko_modelu.mean())</span>
@@ -1792,7 +1792,7 @@ pokrycie przedziału +- 1,96 se:    0.890</code></pre>
 + \widehat w\, \widehat\Risk^{(1)} .
 \]</span> Bez nadmiernego dopasowania (<span class="math inline">\(\widehat R = 0\)</span>) jest to estymator .632, przy skrajnym (<span class="math inline">\(\widehat R = 1\)</span>) – sam <span class="math inline">\(\widehat\Risk^{(1)}\)</span>.</p>
 <p>Porównajmy te estymatory z dziesięciokrotną walidacją krzyżową na zbiorze dwóch półksiężyców z rozdziału <a href="03-knn.html" class="quarto-xref"><span>3</span></a>, dla klasyfikatorów <span class="math inline">\(1\)</span>-NN i <span class="math inline">\(15\)</span>-NN uczonych na <span class="math inline">\(n = 100\)</span> obserwacjach. Prawdziwe ryzyko dopasowanego modelu szacujemy na <span class="math inline">\(20\,000\)</span> obserwacjach testowych; jego błąd standardowy jest rzędu <span class="math inline">\(0{,}002\)</span>.</p>
-<div id="a8fe2b22" class="cell" data-execution_count="16">
+<div id="5e47eb29" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_moons</span>

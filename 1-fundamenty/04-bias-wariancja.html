@@ -959,7 +959,7 @@ Rysunek&nbsp;4.4: Krzywe uczenia regresji wielomianowej stopnia <span class="mat
 = (\fD - \bar f) + (\bar f - f_{\mathcal{F}})\)</span> tak jak w (<a href="#eq-mse-obciazenie-wariancja" class="quarto-xref"><span>4.2</span></a>), dostajemy (<a href="#eq-estymacja-wariancja" class="quarto-xref"><span>4.11</span></a>), bo <span class="math inline">\(\E_{\mathcal{D}}\big[\|\fD - \bar f\|^2\big] = \E\big[v(\X)\big]\)</span>. <span class="math inline">\(\square\)</span></p>
 </div>
 <p>Twierdzenie uzasadnia dwie równości podane w sekcji <a href="#sec-aproksymacja-estymacja" class="quarto-xref"><span>4.6</span></a>. Poniższe zestawienie sprawdza je dla wielomianów z rysunku <a href="#fig-dekompozycja" class="quarto-xref"><span>4.3</span></a>. Najlepszy wielomian <span class="math inline">\(f_{\mathcal{F}_d}\)</span> wyznaczyliśmy, dopasowując wielomian metodą najmniejszych kwadratów do samej funkcji <span class="math inline">\(\fopt\)</span> na gęstej siatce.</p>
-<div id="a174d8aa" class="cell" data-execution_count="6">
+<div id="672d1fcf" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Najlepszy wielomian stopnia d w normie E[g(X)^2] dla X ~ U[0, 1]:</span></span>

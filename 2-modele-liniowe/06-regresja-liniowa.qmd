@@ -347,7 +347,7 @@ $\widehat y_i$ przypisuje własnemu wynikowi $y_i$; nazywa się go
 **dźwignią** obserwacji $i$. Dźwignia leży między $0$ a $1$. Gdy jest
 bliska $1$, predykcja w punkcie $\x_i$ zależy głównie od samego $y_i$.
 Dużą dźwignię mają obserwacje o nietypowych cechach, położone daleko od
-środka chmury punktów uczących (@exr-macierz-daszkowa).
+środka chmury punktów uczących (@exr-dzwignia-jednej-cechy).
 Dźwignie sumują się do liczby współczynników,
 $$
 \sum_{i=1}^n h_{ii} = p + 1 ,
@@ -1322,7 +1322,7 @@ odstająca** ma nietypowy wynik: leży daleko od dopasowania, czyli ma dużą
 resztę. **Obserwacja o dużej dźwigni** ma nietypowe cechy: leży daleko od
 pozostałych w przestrzeni cech. Dla jednej cechy
 $h_{ii} = 1/n + (x_i - \bar x)^2/\sum_k (x_k - \bar x)^2$
-(@exr-macierz-daszkowa), więc dźwignia rośnie z odległością od średniej.
+(@exr-dzwignia-jednej-cechy), więc dźwignia rośnie z odległością od średniej.
 Średnia dźwignia wynosi $(p+1)/n$ ([-@eq-suma-dzwigni]); według częstej
 reguły kciuka za dużą uznaje się dźwignię przekraczającą dwukrotność
 średniej [@belsley1980]. Obserwacja jest **wpływowa**, jeśli jej usunięcie
@@ -2077,27 +2077,28 @@ f) Przy założeniach (Z1)--(Z2) wykaż, że
    a $\beta_1$ i $\sigma$ są ustalone?
 :::
 
-::: {#exr-macierz-daszkowa}
-Niech $\mathbf H$ będzie macierzą daszkową o elementach $h_{ij}$
-z ([-@eq-dzwignia]).
+::: {#exr-dzwignia-jednej-cechy}
+Niech $h_{ii}$ będzie dźwignią obserwacji $i$ z ([-@eq-dzwignia]).
+Dla jednej cechy wykaż, że
+$h_{ii} = \frac1n + \frac{(x_i - \bar x)^2}{\sum_k (x_k - \bar x)^2}$.
+Które obserwacje mają największy wpływ na własne dopasowanie?
+:::
 
-a) **Rozszerzenie: macierz rzutu.** Wymagany jest zapis
-   ([-@eq-macierz-daszkowa]) z rozszerzenia [-@sec-mnk-geometria].
-   Wykaż, że $\mathbf H^\top = \mathbf H$, $\mathbf H^2 = \mathbf H$
+::: {#exr-macierz-daszkowa}
+**Rozszerzenie: macierz daszkowa.** Wymagany jest zapis
+([-@eq-macierz-daszkowa]) i $\widehat\y = \mathbf S\y$ z rozszerzenia
+[-@sec-mnk-geometria]. Niech $\mathbf H$ będzie macierzą daszkową
+o elementach $h_{ij}$ z ([-@eq-dzwignia]).
+
+a) Wykaż, że $\mathbf H^\top = \mathbf H$, $\mathbf H^2 = \mathbf H$
    i $\mathbf H\X = \X$. Wywnioskuj, że $\mathbf H\mathbf 1 = \mathbf 1$,
    czyli że każda predykcja $\widehat y_i$ jest kombinacją wyników
    $y_1, \dots, y_n$ o wagach sumujących się do jedynki. Czy wagi te
    muszą być nieujemne?
-b) **Rozszerzenie: zakres dźwigni.** Wymagane są własności $\mathbf H$
-   z punktu a). Wykaż, że $0 \le h_{ii} \le 1$. (Wskazówka: z $\mathbf H =
-   \mathbf H^2 = \mathbf H^\top\mathbf H$ wynika
+b) Korzystając z punktu a), wykaż, że $0 \le h_{ii} \le 1$. (Wskazówka:
+   z $\mathbf H = \mathbf H^2 = \mathbf H^\top\mathbf H$ wynika
    $h_{ii} = \sum_j h_{ij}^2$.)
-c) Dla jednej cechy wykaż, że
-   $h_{ii} = \frac1n + \frac{(x_i - \bar x)^2}{\sum_k (x_k - \bar x)^2}$.
-   Które obserwacje mają największy wpływ na własne dopasowanie?
-d) **Rozszerzenie: macierz wygładzająca.** Wymagane są punkty a)--b)
-   i zapis $\widehat\y = \mathbf S\y$ z rozszerzenia
-   [-@sec-mnk-geometria]. Porównaj własności z punktów a)--b) z macierzą
+c) Porównaj własności z punktów a)--b) z macierzą
    $\mathbf S$ regresji $k$-NN: $S_{ij}=1/k$, gdy punkt $j$ należy do $k$
    najbliższych sąsiadów punktu $i$ (włącznie z nim samym), a poza tym
    $S_{ij}=0$. Czym różnią się wagi w obu metodach? Zapis ten omawia
@@ -2105,7 +2106,8 @@ d) **Rozszerzenie: macierz wygładzająca.** Wymagane są punkty a)--b)
 :::
 
 ::: {#exr-loocv-mnk}
-Niech $\widehat{\bbeta}^{(-i)}$ będzie estymatorem OLS wyznaczonym bez
+**Rozszerzenie: reszta „pozostaw jeden”.** Wymagane są wzór
+Shermana--Morrisona i zapis macierzowy MNK. Niech $\widehat{\bbeta}^{(-i)}$ będzie estymatorem OLS wyznaczonym bez
 obserwacji $i$, a $\tilde\x_i^\top$ -- $i$-tym wierszem $\X$.
 
 a) Korzystając ze wzoru Shermana--Morrisona
@@ -2129,7 +2131,9 @@ d) Które obserwacje mają resztę „pozostaw jeden” najbardziej różną od
 
 ::: {#exr-optymizm-mnk}
 Przy założeniach (Z1)--(Z2) niech $Y'_i$ będzie nową obserwacją wyniku
-w punkcie $\x_i$, niezależną od próby i o tym samym rozkładzie co $Y_i$.
+w punkcie $\x_i$, niezależną od próby i o tym samym rozkładzie co $Y_i$. Predykcję
+$\widehat y_i = \sum_{j=1}^n h_{ij}\,Y_j$ traktujemy tu jako zmienną
+losową, funkcję $Y_1, \dots, Y_n$.
 
 a) Wykaż, że $\sum_{i=1}^n \Cov(Y_i, \widehat y_i) = \sigma^2(p + 1)$.
 b) Wykaż, że
@@ -2256,36 +2260,44 @@ c) Dopasuj model z interakcją dla danych *Advertising* z wyśrodkowanymi
    z modelem bez wyśrodkowania. Które wielkości się zmieniły, a które nie?
 :::
 
-::: {#exr-reszty-studentyzowane}
-a) **Rozszerzenie: kowariancja reszt.** Wymagana jest macierz daszkowa
-   z rozszerzenia [-@sec-mnk-geometria].
-   Wyprowadź ([-@eq-kowariancja-reszt]). Dlaczego reszta obserwacji
-   o dźwigni bliskiej $1$ jest bliska zera bez względu na jej wynik?
-b) Korzystając z zadania [-@exr-loocv-mnk], wykaż, że wariancja reszty
-   „pozostaw jeden” $y_i - \tilde\x_i^\top\widehat{\bbeta}^{(-i)}$ wynosi
-   $\sigma^2/(1 - h_{ii})$. Wywnioskuj, że reszta „pozostaw jeden”
-   podzielona przez swoje odchylenie standardowe to
-   $e_i/(\sigma\sqrt{1 - h_{ii}})$.
-c) Dlaczego reszta studentyzowana używa $\widehat\sigma_{(-i)}$, a nie
+::: {#exr-reszty-studentyzowane-symulacja}
+a) Dlaczego reszta studentyzowana używa $\widehat\sigma_{(-i)}$, a nie
    $\widehat\sigma$? Rozważ próbę z jedną bardzo odległą obserwacją
    odstającą.
-d) Wylosuj $n = 50$ obserwacji z modelu spełniającego (Z1)--(Z3)
+b) Wylosuj $n = 50$ obserwacji z modelu spełniającego (Z1)--(Z3)
    i policz reszty studentyzowane. Ile z nich przekracza co do modułu $2$,
    a ile powinno przekraczać przeciętnie?
 :::
 
+::: {#exr-reszty-studentyzowane}
+**Rozszerzenie: wariancja reszt.** Wymagane są macierz daszkowa
+z rozszerzenia [-@sec-mnk-geometria] i wynik zadania [-@exr-loocv-mnk].
+
+a) Wyprowadź ([-@eq-kowariancja-reszt]). Dlaczego reszta obserwacji
+   o dźwigni bliskiej $1$ jest bliska zera bez względu na jej wynik?
+b) Wykaż, że wariancja reszty
+   „pozostaw jeden” $y_i - \tilde\x_i^\top\widehat{\bbeta}^{(-i)}$ wynosi
+   $\sigma^2/(1 - h_{ii})$. Wywnioskuj, że reszta „pozostaw jeden”
+   podzielona przez swoje odchylenie standardowe to
+   $e_i/(\sigma\sqrt{1 - h_{ii}})$.
+:::
+
+::: {#exr-cook-credit}
+Dla regresji salda względem dochodu, limitu i statusu studenta
+w danych *Credit* policz odległości Cooka ze wzoru z sekcji
+[-@sec-diagnostyka] i porównaj z `get_influence().cooks_distance`
+z pakietu `statsmodels`. Obejrzyj pięć najbardziej wpływowych
+obserwacji. Co je łączy?
+:::
+
 ::: {#exr-odleglosc-cooka}
-a) **Rozszerzenie: wzór na odległość Cooka.** Wymagana jest definicja
-   ([-@eq-odleglosc-cooka]) z rozszerzenia [-@sec-rachunek-diagnostyki].
-   Wyprowadź drugą równość w ([-@eq-odleglosc-cooka]) ze wzoru
-   z zadania [-@exr-loocv-mnk].
-b) **Rozszerzenie: odległość Cooka a reszta standaryzowana.** Wymagany
-   jest punkt a). Wykaż, że $D_i = \frac{r_i^2}{p + 1}\cdot\frac{h_{ii}}{1 - h_{ii}}$,
+**Rozszerzenie: wzór na odległość Cooka.** Wymagane są definicja
+([-@eq-odleglosc-cooka]) z rozszerzenia [-@sec-rachunek-diagnostyki]
+i wynik zadania [-@exr-loocv-mnk].
+
+a) Wyprowadź drugą równość w ([-@eq-odleglosc-cooka]).
+b) Wykaż, że $D_i = \frac{r_i^2}{p + 1}\cdot\frac{h_{ii}}{1 - h_{ii}}$,
    gdzie $r_i$ jest resztą standaryzowaną.
-c) Dla regresji salda względem dochodu, limitu i statusu studenta
-   w danych *Credit* policz odległości Cooka ze wzoru i porównaj
-   z `get_influence().cooks_distance` z pakietu `statsmodels`. Obejrzyj
-   pięć najbardziej wpływowych obserwacji. Co je łączy?
 :::
 
 ::: {#exr-vif}

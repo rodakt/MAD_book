@@ -807,7 +807,7 @@ Tabela&nbsp;7.2: Kryteria dla podzbiorów trzech cech. AIC i BIC pomijają wspó
 <section id="sec-ridge" class="level2" data-number="7.4">
 <h2 data-number="7.4" class="anchored" data-anchor-id="sec-ridge"><span class="header-section-number">7.4</span> Regresja grzbietowa</h2>
 <p>Selekcja podejmuje decyzję: współczynnik może być dopasowany swobodnie albo musi być zerem. <strong>Regresja grzbietowa</strong> (ang. <em>ridge regression</em>) <span class="citation" data-cites="hoerl1970">(<a href="../references.html#ref-hoerl1970" role="doc-biblioref">Hoerl i Kennard 1970</a>)</span> pozwala go stopniowo zmniejszać. Do RSS dodajemy karę kwadratową: <span id="eq-ridge-cel"><span class="math display">\[
-(\widehat\beta_{0,\lambda},\widehat\bbeta_\lambda)
+(\widehat\beta_{0,\lambda},\widehat{\bbeta}_\lambda)
 \in\argmin_{\beta_0,\bbeta}
 \left\{\sum_{i=1}^n(y_i-\beta_0-\x_i^\top\bbeta)^2
 +\lambda\sum_{j=1}^p\beta_j^2\right\},\qquad\lambda\geq0.
@@ -827,7 +827,7 @@ Tabela&nbsp;7.2: Kryteria dla podzbiorów trzech cech. AIC i BIC pomijają wspó
 <p>Pochodna funkcji <span class="math inline">\(\|\y-\X\bbeta\|^2+\lambda\bbeta^\top\bbeta\)</span> względem <span class="math inline">\(\bbeta\)</span> to <span class="math inline">\(-2\X^\top(\y-\X\bbeta)+2\lambda\bbeta\)</span>. Przyrównując ją do zera, otrzymujemy układ <span class="math inline">\((\X^\top\X+\lambda\mathbf I)\bbeta=\X^\top\y\)</span>.</p>
 <div id="thm-ridge" class="theorem">
 <p><span class="theorem-title"><strong>Twierdzenie 7.1 (Rozwiązanie regresji grzbietowej)</strong></span> Dla wycentrowanych danych i <span class="math inline">\(\lambda&gt;0\)</span> zadanie (<a href="#eq-ridge-cel" class="quarto-xref"><span>7.5</span></a>) ma dokładnie jedno rozwiązanie <span id="eq-ridge-rozwiazanie"><span class="math display">\[
-\widehat\bbeta_\lambda=(\X^\top\X+\lambda\mathbf I)^{-1}\X^\top\y,
+\widehat{\bbeta}_\lambda=(\X^\top\X+\lambda\mathbf I)^{-1}\X^\top\y,
 \tag{7.7}\]</span></span> także wtedy, gdy kolumny <span class="math inline">\(\X\)</span> są liniowo zależne.</p>
 </div>
 <p>Dla <span class="math inline">\(\lambda&gt;0\)</span> macierz układu jest dodatnio określona: <span class="math inline">\(\mathbf v^\top(\X^\top\X+\lambda\mathbf I)\mathbf v=\|\X\mathbf v\|^2+\lambda\|\mathbf v\|^2&gt;0\)</span> dla <span class="math inline">\(\mathbf v\ne\mathbf 0\)</span>. Jest więc odwracalna, a funkcja celu jest ściśle wypukła, zatem punkt zerowania gradientu jest jedynym minimum. W obliczeniach rozwiązujemy układ równań, zamiast jawnie liczyć odwrotność. Dla <span class="math inline">\(\lambda=0\)</span> pozostaje zadanie MNK, które może mieć wiele rozwiązań.</p>
@@ -844,7 +844,7 @@ Tabela&nbsp;7.2: Kryteria dla podzbiorów trzech cech. AIC i BIC pomijają wspó
 <section id="kara-bezwzględna-i-dokładne-zera" class="level3" data-number="7.5.1">
 <h3 data-number="7.5.1" class="anchored" data-anchor-id="kara-bezwzględna-i-dokładne-zera"><span class="header-section-number">7.5.1</span> Kara bezwzględna i dokładne zera</h3>
 <p><strong>LASSO</strong> (ang. <em>least absolute shrinkage and selection operator</em>) <span class="citation" data-cites="tibshirani1996">(<a href="../references.html#ref-tibshirani1996" role="doc-biblioref">Tibshirani 1996</a>)</span> zastępuje sumę kwadratów sumą modułów: <span id="eq-lasso-cel"><span class="math display">\[
-(\widehat\beta_{0,\lambda},\widehat\bbeta_\lambda)
+(\widehat\beta_{0,\lambda},\widehat{\bbeta}_\lambda)
 \in\argmin_{\beta_0,\bbeta}
 \left\{\sum_{i=1}^n(y_i-\beta_0-\x_i^\top\bbeta)^2
 +\lambda\sum_{j=1}^p|\beta_j|\right\}.
@@ -905,7 +905,7 @@ Rysunek&nbsp;7.2: Ścieżki współczynników na uczącej części Credit, po st
 </div>
 </div>
 <p>Przy znikomej karze ridge daje współczynniki bliskie OLS: <span class="math inline">\(308\)</span> przy <code>Limit</code> i <span class="math inline">\(316\)</span> przy <code>Rating</code>. Już przy <span class="math inline">\(\lambda\approx10\)</span> oba są praktycznie równe i dalej maleją razem. Kara <span class="math inline">\(\beta_L^2+\beta_R^2\)</span> przy ustalonej sumie <span class="math inline">\(\beta_L+\beta_R\)</span> jest najmniejsza dla równych składników, a dla dwóch prawie identycznych cech predykcje zależą niemal wyłącznie od sumy.</p>
-<p>Współczynnik <code>Income</code> zmienia znak przy <span class="math inline">\(\lambda\approx280\)</span>: z <span class="math inline">\(-281\)</span> do około <span class="math inline">\(+24\)</span> przy <span class="math inline">\(\lambda=1000\)</span>. Gdy <span class="math inline">\(\lambda\)</span> jest duże w porównaniu z elementami <span class="math inline">\(\X^\top\X\)</span>, wzór (<a href="#eq-ridge-rozwiazanie" class="quarto-xref"><span>7.7</span></a>) daje <span class="math inline">\(\widehat\bbeta_\lambda\approx\X^\top\y/\lambda\)</span>. Każdy współczynnik jest wtedy proporcjonalny do zwykłej korelacji cechy z wynikiem, a dla <code>Income</code> wynosi ona <span class="math inline">\(0{,}47\)</span>. Przy małej karze współczynnik opisuje natomiast związek przy ustalonych pozostałych cechach: przy tym samym limicie i ocenie wyższy dochód idzie w parze z niższym saldem.</p>
+<p>Współczynnik <code>Income</code> zmienia znak przy <span class="math inline">\(\lambda\approx280\)</span>: z <span class="math inline">\(-281\)</span> do około <span class="math inline">\(+24\)</span> przy <span class="math inline">\(\lambda=1000\)</span>. Gdy <span class="math inline">\(\lambda\)</span> jest duże w porównaniu z elementami <span class="math inline">\(\X^\top\X\)</span>, wzór (<a href="#eq-ridge-rozwiazanie" class="quarto-xref"><span>7.7</span></a>) daje <span class="math inline">\(\widehat{\bbeta}_\lambda\approx\X^\top\y/\lambda\)</span>. Każdy współczynnik jest wtedy proporcjonalny do zwykłej korelacji cechy z wynikiem, a dla <code>Income</code> wynosi ona <span class="math inline">\(0{,}47\)</span>. Przy małej karze współczynnik opisuje natomiast związek przy ustalonych pozostałych cechach: przy tym samym limicie i ocenie wyższy dochód idzie w parze z niższym saldem.</p>
 <p>LASSO zeruje kolejno <code>Income</code> (<span class="math inline">\(\lambda\approx3{,}4\cdot10^4\)</span>), <code>Student</code> (<span class="math inline">\(7\cdot10^4\)</span>), <code>Limit</code> (<span class="math inline">\(1{,}5\cdot10^5\)</span>) i <code>Rating</code>. Ostatni próg wynika z (<a href="#eq-lasso-prog" class="quarto-xref"><span>7.10</span></a>). Gdy pozostałe współczynniki są zerami, cecha <span class="math inline">\(j\)</span> widzi wycentrowane wyniki i pozostaje zerem, dopóki <span class="math inline">\(|\sum_i x_{ij}y_i|\leq\lambda/2\)</span>. Wszystkie współczynniki znikają więc od <span class="math inline">\(\lambda=2\max_j|\sum_i x_{ij}y_i|\approx2{,}37\cdot10^5\)</span>. <code>Rating</code> wygrywa z <code>Limit</code> minimalnie: suma <span class="math inline">\(\sum_i x_{ij}y_i\)</span> wynosi <span class="math inline">\(118\,743\)</span> wobec <span class="math inline">\(118\,600\)</span>. Wybór między prawie identycznymi cechami rozstrzyga tu niewielka różnica w próbie.</p>
 </section>
 <section id="kara-jako-budżet" class="level3" data-number="7.5.3">

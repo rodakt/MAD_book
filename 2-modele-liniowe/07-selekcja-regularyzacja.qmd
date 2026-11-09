@@ -346,7 +346,7 @@ albo musi być zerem. **Regresja grzbietowa** (ang. *ridge regression*)
 [@hoerl1970] pozwala go stopniowo zmniejszać. Do RSS dodajemy karę
 kwadratową:
 $$
-(\widehat\beta_{0,\lambda},\widehat\bbeta_\lambda)
+(\widehat\beta_{0,\lambda},\widehat{\bbeta}_\lambda)
 \in\argmin_{\beta_0,\bbeta}
 \left\{\sum_{i=1}^n(y_i-\beta_0-\x_i^\top\bbeta)^2
 +\lambda\sum_{j=1}^p\beta_j^2\right\},\qquad\lambda\geq0.
@@ -400,7 +400,7 @@ do zera, otrzymujemy układ $(\X^\top\X+\lambda\mathbf I)\bbeta=\X^\top\y$.
 Dla wycentrowanych danych i $\lambda>0$ zadanie ([-@eq-ridge-cel]) ma
 dokładnie jedno rozwiązanie
 $$
-\widehat\bbeta_\lambda=(\X^\top\X+\lambda\mathbf I)^{-1}\X^\top\y,
+\widehat{\bbeta}_\lambda=(\X^\top\X+\lambda\mathbf I)^{-1}\X^\top\y,
 $$ {#eq-ridge-rozwiazanie}
 także wtedy, gdy kolumny $\X$ są liniowo zależne.
 :::
@@ -446,7 +446,7 @@ Rachunek efektywnych stopni swobody rozwija sekcja [-@sec-ridge-geometria].
 **LASSO** (ang. *least absolute shrinkage and selection operator*)
 [@tibshirani1996] zastępuje sumę kwadratów sumą modułów:
 $$
-(\widehat\beta_{0,\lambda},\widehat\bbeta_\lambda)
+(\widehat\beta_{0,\lambda},\widehat{\bbeta}_\lambda)
 \in\argmin_{\beta_0,\bbeta}
 \left\{\sum_{i=1}^n(y_i-\beta_0-\x_i^\top\bbeta)^2
 +\lambda\sum_{j=1}^p|\beta_j|\right\}.
@@ -539,7 +539,7 @@ niemal wyłącznie od sumy.
 Współczynnik `Income` zmienia znak przy $\lambda\approx280$: z $-281$
 do około $+24$ przy $\lambda=1000$. Gdy $\lambda$ jest duże w porównaniu
 z elementami $\X^\top\X$, wzór ([-@eq-ridge-rozwiazanie]) daje
-$\widehat\bbeta_\lambda\approx\X^\top\y/\lambda$. Każdy współczynnik
+$\widehat{\bbeta}_\lambda\approx\X^\top\y/\lambda$. Każdy współczynnik
 jest wtedy proporcjonalny do zwykłej korelacji cechy z wynikiem, a dla
 `Income` wynosi ona $0{,}47$. Przy małej karze współczynnik opisuje
 natomiast związek przy ustalonych pozostałych cechach: przy tym samym
