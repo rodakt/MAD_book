@@ -102,7 +102,7 @@ ich współczynników nie muszą jednak oznaczać równie dużych zmian
 predykcji w obszarze danych: wzrost jednego współczynnika może być
 równoważony spadkiem drugiego.
 
-Przy wielu kolumnach pojawia się także problem jednoznaczności MNK.
+Przy wielu kolumnach pojawia się także problem jednoznaczności OLS.
 Jeśli macierz projektu z wyrazem wolnym ma więcej kolumn niż wierszy,
 nie ma pełnego rzędu kolumnowego. Współczynniki nie są wtedy wyznaczone
 jednoznacznie. Zerowy RSS wymaga dodatkowo, aby $\y$ należał do przestrzeni
@@ -154,6 +154,18 @@ RSS. Potem spośród otrzymanych $p+1$ kandydatów wybieramy wielkość modelu
 według kryterium uwzględniającego jego złożoność lub według walidacji.
 Sam RSS wybrałby pełny model.
 
+::: {.callout-note appearance="simple" icon="false"}
+## Algorytm: przegląd zupełny
+
+1. Niech $\mathcal M_0$ oznacza model pusty.
+2. Dla $k=1,\ldots,p$:
+   a) dopasuj metodą OLS wszystkie $\binom pk$ modele z dokładnie $k$ cechami;
+   b) jako $\mathcal M_k$ przyjmij ten z nich, który ma najmniejszy RSS.
+3. Spośród $\mathcal M_0,\ldots,\mathcal M_p$ wybierz jeden model
+   według kryterium z sekcji [-@sec-kryteria-selekcji] lub według
+   walidacji krzyżowej.
+:::
+
 W każdym rozmiarze $k$ mamy $\binom pk$ podzbiorów, a łącznie $2^p$.
 Dla $p=20$ to ponad milion modeli; dla $p=40$ -- ponad bilion.
 Przegląd znajduje najlepszy podzbiór według kryterium na przeszukanej
@@ -169,11 +181,37 @@ W kolejnym wybiera najlepsze rozszerzenie tego właśnie modelu o jedną
 cechę. Cech już wybranych nie usuwa. Buduje w ten sposób zagnieżdżoną
 ścieżkę modeli o $0,1,\ldots,p$ cechach.
 
+::: {.callout-note appearance="simple" icon="false"}
+## Algorytm: selekcja w przód
+
+1. Niech $\mathcal M_0$ oznacza model pusty.
+2. Dla $k=0,\ldots,p-1$:
+   a) dopasuj metodą OLS wszystkie $p-k$ modele powstałe przez dodanie
+      do $\mathcal M_k$ jednej cechy, której w nim nie ma;
+   b) jako $\mathcal M_{k+1}$ przyjmij ten z nich, który ma najmniejszy RSS.
+3. Spośród $\mathcal M_0,\ldots,\mathcal M_p$ wybierz jeden model
+   według kryterium z sekcji [-@sec-kryteria-selekcji] lub według
+   walidacji krzyżowej.
+:::
+
 **Selekcja wstecz** (ang. *backward stepwise selection*) zaczyna od
 pełnego modelu. Usuwa cechę, której usunięcie najmniej zwiększa RSS,
 i powtarza ten krok aż do modelu pustego. W klasycznej wersji wymagamy
 pełnego rzędu kolumnowego dopasowywanych modeli, więc start z pełnego
 modelu jest problematyczny, gdy cech jest zbyt wiele względem $n$.
+
+::: {.callout-note appearance="simple" icon="false"}
+## Algorytm: selekcja wstecz
+
+1. Niech $\mathcal M_p$ oznacza pełny model ze wszystkimi $p$ cechami.
+2. Dla $k=p,p-1,\ldots,1$:
+   a) dopasuj metodą OLS wszystkie $k$ modele powstałe przez usunięcie
+      z $\mathcal M_k$ jednej cechy;
+   b) jako $\mathcal M_{k-1}$ przyjmij ten z nich, który ma najmniejszy RSS.
+3. Spośród $\mathcal M_0,\ldots,\mathcal M_p$ wybierz jeden model
+   według kryterium z sekcji [-@sec-kryteria-selekcji] lub według
+   walidacji krzyżowej.
+:::
 
 W przód sprawdzamy najwyżej $p+(p-1)+\cdots+1=p(p+1)/2$ rozszerzeń.
 Oszczędność ma cenę: najlepsza para cech nie musi zawierać cechy,
@@ -353,7 +391,7 @@ $$
 $$ {#eq-ridge-cel}
 
 Kara zniechęca do dużych współczynników. Dla $\lambda=0$ jest to
-zadanie MNK; zwiększając $\lambda$, mocniej ograniczamy dopasowanie.
+zadanie OLS; zwiększając $\lambda$, mocniej ograniczamy dopasowanie.
 **Wyrazu wolnego nie karzemy**: poziom wyniku zależy od umownego
 początku skali i nie chcemy ściągać go do zera.
 
@@ -409,7 +447,7 @@ Dla $\lambda>0$ macierz układu jest dodatnio określona:
 $\mathbf v^\top(\X^\top\X+\lambda\mathbf I)\mathbf v=\|\X\mathbf v\|^2+\lambda\|\mathbf v\|^2>0$
 dla $\mathbf v\ne\mathbf 0$. Jest więc odwracalna, a funkcja celu jest ściśle wypukła,
 zatem punkt zerowania gradientu jest jedynym minimum. W obliczeniach rozwiązujemy układ równań, zamiast jawnie
-liczyć odwrotność. Dla $\lambda=0$ pozostaje zadanie MNK, które może
+liczyć odwrotność. Dla $\lambda=0$ pozostaje zadanie OLS, które może
 mieć wiele rozwiązań.
 
 W jednej wycentrowanej cesze oznaczmy $s=\sum_i x_i^2>0$ oraz
@@ -564,7 +602,7 @@ $$
 \sum_{j=1}^p|\beta_j|\leq t\quad\text{(LASSO)}.
 $$ {#eq-budzety-kar}
 Liczba $t$ to **budżet** na współczynniki. Duży budżet dopuszcza
-rozwiązanie MNK; mniejszy wymusza lepszy pod względem RSS punkt
+rozwiązanie OLS; mniejszy wymusza lepszy pod względem RSS punkt
 w ograniczonym zbiorze. Kara i budżet są dwoma sposobami opisu
 regularyzacji: rozwiązaniu dla danej dodatniej kary odpowiada budżet
 równy osiągniętej wielkości wektora. Dla dodatnich budżetów można

@@ -392,7 +392,7 @@ window.Quarto = {
   <li><a href="#obserwacje-odstające-i-wpływowe" id="toc-obserwacje-odstające-i-wpływowe" class="nav-link" data-scroll-target="#obserwacje-odstające-i-wpływowe"><span class="header-section-number">6.8.4</span> Obserwacje odstające i wpływowe</a></li>
   <li><a href="#współliniowość" id="toc-współliniowość" class="nav-link" data-scroll-target="#współliniowość"><span class="header-section-number">6.8.5</span> Współliniowość</a></li>
   </ul></li>
-  <li><a href="#sec-mnk-geometria" id="toc-sec-mnk-geometria" class="nav-link" data-scroll-target="#sec-mnk-geometria"><span class="header-section-number">6.9</span> Rozszerzenie: geometria i obliczanie MNK</a>
+  <li><a href="#sec-mnk-geometria" id="toc-sec-mnk-geometria" class="nav-link" data-scroll-target="#sec-mnk-geometria"><span class="header-section-number">6.9</span> Rozszerzenie: geometria i obliczanie OLS</a>
   <ul class="collapse">
   <li><a href="#rzut-ortogonalny" id="toc-rzut-ortogonalny" class="nav-link" data-scroll-target="#rzut-ortogonalny"><span class="header-section-number">6.9.1</span> Rzut ortogonalny</a></li>
   <li><a href="#macierz-daszkowa" id="toc-macierz-daszkowa" class="nav-link" data-scroll-target="#macierz-daszkowa"><span class="header-section-number">6.9.2</span> Macierz daszkowa</a></li>
@@ -1670,7 +1670,7 @@ Name: VIF, dtype: float64</code></pre>
 </section>
 </section>
 <section id="sec-mnk-geometria" class="level2" data-number="6.9">
-<h2 data-number="6.9" class="anchored" data-anchor-id="sec-mnk-geometria"><span class="header-section-number">6.9</span> Rozszerzenie: geometria i obliczanie MNK</h2>
+<h2 data-number="6.9" class="anchored" data-anchor-id="sec-mnk-geometria"><span class="header-section-number">6.9</span> Rozszerzenie: geometria i obliczanie OLS</h2>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1955,7 +1955,7 @@ pokrycie przedziału 95%:         0.475</code></pre>
 </ol>
 </div>
 <div id="exr-loocv-mnk" class="theorem exercise">
-<p><span class="theorem-title"><strong>Zadanie 6.4</strong></span> <strong>Rozszerzenie: reszta „pozostaw jeden”.</strong> Wymagane są wzór Shermana–Morrisona i zapis macierzowy MNK. Niech <span class="math inline">\(\widehat{\bbeta}^{(-i)}\)</span> będzie estymatorem OLS wyznaczonym bez obserwacji <span class="math inline">\(i\)</span>, a <span class="math inline">\(\tilde\x_i^\top\)</span> – <span class="math inline">\(i\)</span>-tym wierszem <span class="math inline">\(\X\)</span>.</p>
+<p><span class="theorem-title"><strong>Zadanie 6.4</strong></span> <strong>Rozszerzenie: reszta „pozostaw jeden”.</strong> Wymagane są wzór Shermana–Morrisona i zapis macierzowy OLS. Niech <span class="math inline">\(\widehat{\bbeta}^{(-i)}\)</span> będzie estymatorem OLS wyznaczonym bez obserwacji <span class="math inline">\(i\)</span>, a <span class="math inline">\(\tilde\x_i^\top\)</span> – <span class="math inline">\(i\)</span>-tym wierszem <span class="math inline">\(\X\)</span>.</p>
 <ol type="a">
 <li>Korzystając ze wzoru Shermana–Morrisona <span class="math inline">\((\mathbf M - \mathbf u\mathbf u^\top)^{-1} = \mathbf M^{-1}
 + \frac{\mathbf M^{-1}\mathbf u\mathbf u^\top\mathbf M^{-1}}

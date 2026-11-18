@@ -1,3 +1,709 @@
 # Regresja logistyczna {#sec-regresja-logistyczna}
 
-*Rozdział w przygotowaniu.*
+Czy klient nie spłaci zadłużenia? Odpowiedź jest binarna, ale przed
+podjęciem decyzji chcielibyśmy znać prawdopodobieństwo zdarzenia.
+Dwie osoby mogą otrzymać tę samą prognozę klasy i mieć bardzo różne
+prawdopodobieństwa. Co więcej, ta sama prognoza prawdopodobieństwa może
+prowadzić do różnych decyzji, jeśli zmienią się koszty pomyłek.
+
+W rozdziale [-@sec-predyktory-optymalne] rozdzieliliśmy prawdopodobieństwo
+warunkowe od reguły decyzyjnej. Teraz nauczymy się szacować to
+prawdopodobieństwo w modelu parametrycznym. Regresja logistyczna łączy
+liniowy opis zależności z rozkładem Bernoulliego. Jej dopasowanie prowadzi
+do nowej funkcji straty, lecz selekcja, regularyzacja i ocena poza próbą
+zachowują znaczenie znane z poprzednich rozdziałów.
+
+## Od odpowiedzi binarnej do prawdopodobieństwa
+
+Kodujemy zdarzenie przez $Y=1$, a jego brak przez $Y=0$. Wtedy
+$$
+\eta(\x)=\Prob(Y=1\mid\X=\x)=\E[Y\mid\X=\x].
+$$
+To nadal funkcja regresji. Można ją przybliżać metodą najmniejszych
+kwadratów; problemem nie jest samo kodowanie zerem i jedynką. Problemem
+jest zakres wartości liniowej funkcji: nie ma gwarancji, że jej prognozy
+pozostaną w przedziale $[0,1]$. Ponadto wariancja warunkowa wynosi
+$\eta(\x)(1-\eta(\x))$, więc zwykle nie jest stała.
+
+Przykłady oprzemy na *Default*, symulowanym zbiorze używanym w podręczniku
+@islp. Zawiera on informację o zaleganiu ze spłatą (`default`), statusie
+studenta (`student`), saldzie zadłużenia na karcie (`balance`) i rocznym
+dochodzie (`income`). To dane dydaktyczne, a nie badanie pozwalające
+formułować wnioski o rzeczywistym rynku kredytowym.
+
+Od początku odkładamy 25% obserwacji do końcowej oceny. Wszystkie
+wcześniejsze wykresy i interpretacje wykorzystują tylko część uczącą.
+Stratyfikacja zachowuje w przybliżeniu częstości obu klas.
+
+```{python}
+#| label: przygotowanie-default
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from pathlib import Path
+from IPython.display import display, Markdown
+from scipy.special import expit
+from sklearn.model_selection import train_test_split, StratifiedKFold, GridSearchCV
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.metrics import log_loss, roc_auc_score, roc_curve, confusion_matrix
+import statsmodels.api as sm
+
+sciezka = Path('dane/Default.csv')
+if not sciezka.exists():
+    sciezka = Path('../dane/Default.csv')
+default = pd.read_csv(sciezka, index_col=0)
+assert default.shape == (10000, 4)
+assert not default.isna().any().any()
+X = pd.DataFrame({'balance': default.balance,
+                  'income': default.income,
+                  'student': (default.student == 'Yes').astype(int)})
+y = (default.default == 'Yes').astype(int)
+Xu, Xt, yu, yt = train_test_split(X, y, test_size=0.25,
+                                  stratify=y, random_state=2026)
+kolory = ['#0072B2', '#D55E00', '#009E73']
+
+def tabela(df):
+    display(Markdown(df.to_markdown(index=False, floatfmt='.4g')))
+
+tabela(pd.DataFrame({'część': ['ucząca', 'testowa'],
+                    'liczba obserwacji': [len(yu), len(yt)],
+                    'liczba zdarzeń': [yu.sum(), yt.sum()]}))
+```
+
+Na razie dopasujemy oba modele tylko do salda zadłużenia. Kod regresji
+logistycznej potraktujmy jako zapowiedź: poniżej wyprowadzimy jej model
+i metodę estymacji. `C=np.inf` wyłącza regularyzację.
+
+```{python}
+#| label: fig-default-liniowa-logistyczna
+#| fig-cap: "Prognozy dla salda zadłużenia: prosta może dawać ujemne prawdopodobieństwa; sigmoida pozostaje między zerem a jedynką. Punkty przedstawiają częstości w dziesięciu grupach o zbliżonej liczebności, wyznaczonych na danych uczących."
+prosty = make_pipeline(StandardScaler(),
+                       LogisticRegression(C=np.inf, tol=1e-10, max_iter=2000))
+prosty.fit(Xu[['balance']], yu)
+liniowy = LinearRegression().fit(Xu[['balance']], yu)
+siatka = pd.DataFrame({'balance': np.linspace(0, Xu.balance.max(), 300)})
+grupy = pd.DataFrame({'balance': Xu.balance, 'y': yu})
+grupy['grupa'] = pd.qcut(grupy.balance, 10, duplicates='drop')
+srednie = grupy.groupby('grupa', observed=True)[['balance', 'y']].mean()
+fig, ax = plt.subplots(figsize=(7, 4))
+ax.plot(siatka.balance, liniowy.predict(siatka), label='OLS', color=kolory[0])
+ax.plot(siatka.balance, prosty.predict_proba(siatka)[:, 1],
+        label='regresja logistyczna', color=kolory[1])
+ax.scatter(srednie.balance, srednie.y, color='black', label='częstości w grupach')
+ax.axhline(0, color='0.7', lw=1)
+ax.set(xlabel='saldo zadłużenia', ylabel='prawdopodobieństwo zdarzenia')
+ax.legend()
+plt.tight_layout()
+plt.show()
+```
+
+Obcięcie prognoz OLS do $[0,1]$ usuwa naruszenie zakresu, ale samo w sobie
+nie tworzy modelu logistycznego. Zmieniamy zarówno klasę funkcji, jak
+i kryterium dopasowania.
+
+## Model, szanse i współczynniki {#sec-model-logistyczny}
+
+Dla prawdopodobieństwa $q\in(0,1)$ **szansa** zdarzenia wynosi
+$q/(1-q)$. Przy $q=0.2$ szansa jest równa $1/4$: na jedno zdarzenie
+przypadają przeciętnie cztery przypadki jego braku. Logarytm szans,
+zwany **logitem**, przyjmuje dowolną wartość rzeczywistą.
+
+Model logistyczny zakłada
+$$
+Y\mid\X=\x\sim\operatorname{Bernoulli}(q_{\boldsymbol\beta}(\x)),
+\qquad
+\log\frac{q_{\boldsymbol\beta}(\x)}{1-q_{\boldsymbol\beta}(\x)}
+=\beta_0+\sum_{j=1}^p\beta_jx_j.
+$$
+Oznaczmy prawą stronę przez $s_{\boldsymbol\beta}(\x)$. Odwracając logit,
+otrzymujemy **funkcję logistyczną**, czyli sigmoidę:
+$$
+q_{\boldsymbol\beta}(\x)=\sigma(s_{\boldsymbol\beta}(\x)),
+\qquad \sigma(s)=\frac{1}{1+e^{-s}}.
+$$
+Liniowy jest logit, nie prawdopodobieństwo. Dla skończonych parametrów
+model zawsze daje wartości ściśle między zerem a jedynką. Symbol $\eta$
+rezerwujemy dla prawdziwego prawdopodobieństwa warunkowego; modelowe $q$
+nie musi być mu równe.
+
+Modelujemy bezpośrednio rozkład $Y$ przy danych cechach, nie określając
+rozkładu samych cech. Jest to podejście **dyskryminacyjne**. Nie wymaga
+normalności `balance` ani `income`. W rozdziale
+[-@sec-modele-generatywne] poznamy drugą drogę: modelowanie rozkładów cech
+w klasach i wyznaczanie prawdopodobieństw klas ze wzoru Bayesa.
+
+### Co oznacza jednostkowa zmiana cechy?
+
+Jeśli zwiększymy $x_j$ o $\Delta$, pozostawiając inne cechy bez zmian,
+to logit wzrośnie o $\beta_j\Delta$, a szansa zostanie pomnożona przez
+$e^{\beta_j\Delta}$. Jest to **iloraz szans**, a nie iloraz
+prawdopodobieństw. Przy ilorazie szans równym 2 prawdopodobieństwo
+$0.1$ zmienia się na $2/11\approx0.182$, a $0.5$ na $2/3$.
+
+Ogólnie, gdy wyjściowe prawdopodobieństwo wynosi $q$, nowe jest równe
+$$
+q'=\frac{e^{\beta_j\Delta}q}{1-q+e^{\beta_j\Delta}q}.
+$$
+Dla cechy ciągłej w modelu bez interakcji
+$$
+\frac{\partial q_{\boldsymbol\beta}(\x)}{\partial x_j}
+=\beta_j q_{\boldsymbol\beta}(\x)(1-q_{\boldsymbol\beta}(\x)).
+$$
+Ta sama zmiana logitu najmocniej zmienia prawdopodobieństwo w okolicy
+$1/2$. Dlatego współczynnik nie jest stałą zmianą prawdopodobieństwa.
+
+Cechy jakościowe kodujemy jak w regresji liniowej. Dla `student=1`
+współczynnik opisuje porównanie ze statusem `student=0` przy tych samych
+wartościach pozostałych cech. Nie jest to efekt przyczynowy podjęcia studiów.
+Przy interakcji `balance * student` zmiana logitu na jednostkę salda
+wynosi $\beta_{\mathrm{balance}}$ dla niestudenta i sumę tego
+współczynnika oraz współczynnika interakcji dla studenta.
+
+### Liniowa granica decyzji
+
+Dla progu $t\in(0,1)$ przewidujemy klasę 1, gdy $q_{\boldsymbol\beta}(\x)\ge t$.
+Monotoniczność sigmoidy daje równoważny warunek
+$$
+\beta_0+\sum_{j=1}^p\beta_jx_j\ge\log\frac{t}{1-t}.
+$$
+Przy niezerowym wektorze współczynników granicą jest hiperpłaszczyzna;
+zmiana progu przesuwa ją równolegle. Nie oznacza to, że regresja
+logistyczna potrafi opisywać wyłącznie proste granice w oryginalnych
+zmiennych: dodanie kwadratów lub interakcji daje granice nieliniowe,
+choć model pozostaje liniowy względem współczynników.
+
+## Dopasowanie przez największą wiarygodność {#sec-logistyczna-wiarygodnosc}
+
+Dla niezależnych obserwacji rozpatrujemy warunkową wiarygodność etykiet
+przy ustalonych cechach. Niech $q_i=q_{\boldsymbol\beta}(\x_i)$. Wtedy
+$$
+L(\boldsymbol\beta)=\prod_{i=1}^n q_i^{y_i}(1-q_i)^{1-y_i}.
+$$
+Każdy czynnik jest prawdopodobieństwem rzeczywiście zaobserwowanej
+etykiety. **Metoda największej wiarygodności** wybiera parametry, dla
+których iloczyn jest największy. Logarytm jest rosnący, więc można
+równoważnie maksymalizować sumę logarytmów. Zmieniając znak i dzieląc
+przez $n$, otrzymujemy minimalizację średniej straty:
+$$
+J(\boldsymbol\beta)=\frac1n\sum_{i=1}^n
+\left[-y_i\log q_i-(1-y_i)\log(1-q_i)\right].
+$$ {#eq-logistyczna-strata}
+
+Wyrażenie w nawiasie to **strata logarytmiczna** (*log-loss*, binarna
+entropia krzyżowa). Dla $y=1$ wynosi $-\log q$, a dla $y=0$:
+$-\log(1-q)$. Zdecydowanie błędna prognoza otrzymuje dużą karę.
+Przykładowo dla zdarzenia $y=1$ prognozy $q=0.5$ i $q=0.01$ dają
+straty około $0.693$ i $4.605$.
+
+### Dlaczego uczymy prawdopodobieństwa?
+
+Przy ustalonym $\x$ i prawdziwym prawdopodobieństwie $\eta=\eta(\x)$
+oczekiwana strata prognozy $q$ wynosi
+$$
+r(q)=-\eta\log q-(1-\eta)\log(1-q).
+$$
+Dla $0<\eta<1$ mamy
+$$
+r'(q)=\frac{q-\eta}{q(1-q)}.
+$$
+Pochodna jest ujemna przed $\eta$ i dodatnia za $\eta$, więc minimum
+przypada dokładnie w $q=\eta$. Dla $\eta=0$ lub $1$ minimum leży
+na odpowiednim brzegu, z naturalnym rozszerzeniem definicji straty.
+To własność ściśle właściwej reguły oceny [@gneiting2007].
+
+Własność dotyczy wyboru spośród wszystkich prawdopodobieństw. Jeśli
+prawdziwy logit nie ma założonej postaci, model logistyczny może go tylko
+przybliżać. Dopasowanie w próbie nie gwarantuje ani małego błędu poza
+próbą, ani poprawnej kalibracji.
+
+### Jak minimalizujemy stratę?
+
+Do wektora cech dołączamy jedynkę: $\widetilde{\x}_i=(1,\x_i^\top)^\top$,
+a przez $Z$ oznaczamy macierz tych wierszy. Wektor parametrów obejmuje
+teraz wyraz wolny. Dla $s_i=\widetilde{\x}_i^\top\boldsymbol\beta$
+pojedynczą stratę można zapisać jako
+$$
+\log(1+e^{s_i})-y_i s_i.
+$$
+Jej pochodna względem $s_i$ jest równa $\sigma(s_i)-y_i$, stąd
+$$
+\nabla J(\boldsymbol\beta)=\frac1n Z^\top(\boldsymbol q-\boldsymbol y).
+$$
+To ważny związek z regresją liniową: aktualizacja zależy od różnic
+między prognozami a obserwacjami. Tutaj prognozy zależą jednak nieliniowo
+od parametrów. Nie otrzymujemy jednego układu równań liniowych, który
+rozwiązywałby całe zadanie. Stosujemy algorytm iteracyjny, na przykład
+metodę gradientową lub Newtona.
+
+Macierz drugich pochodnych wynosi
+$$
+\nabla^2J(\boldsymbol\beta)=\frac1n Z^\top WZ,
+\qquad W=\operatorname{diag}(q_i(1-q_i)).
+$$
+Jest dodatnio półokreślona, ponieważ dla każdego wektora $v$
+$v^\top Z^\top WZv=\sum_i q_i(1-q_i)(\widetilde{\x}_i^\top v)^2\ge0$.
+Strata jest więc wypukła: nie ma różnych izolowanych minimów lokalnych.
+Przy pełnym rzędzie kolumnowym $Z$ jest ściśle wypukła dla skończonych
+parametrów. Nie zapewnia to jeszcze istnienia minimum.
+
+W obliczeniach warto używać `np.logaddexp(0, s)` zamiast dosłownego
+`np.log(1 + np.exp(s))`: duży dodatni wynik liniowy może spowodować
+przepełnienie funkcji wykładniczej. Biblioteki rozwiązują również
+problemy stabilnego obliczania sigmoidy.
+
+## Separacja i regularyzacja {#sec-logistyczna-separacja}
+
+Rozważmy cztery obserwacje z cechami $-2,-1,1,2$ i etykietami $0,0,1,1$.
+Model $q(x)=\sigma(bx)$ dla każdego $b>0$ klasyfikuje je bezbłędnie
+przy progu $1/2$. Gdy $b$ rośnie, prawdopodobieństwa obserwowanych klas
+zbliżają się do jedności, a strata do zera. Dla żadnego skończonego $b$
+nie osiąga zera. **Nie istnieje skończony estymator największej
+wiarygodności**, mimo że problem jest wypukły.
+
+Ogólnie pełna separacja zachodzi, gdy istnieje wektor $v$ taki, że
+$(2y_i-1)\widetilde{\x}_i^\top v>0$ dla wszystkich obserwacji.
+Wzdłuż parametrów $av$, przy $a\to\infty$, strata dąży do zera.
+Występuje też separacja częściowa (quasi-separacja), z nierównościami
+nieostrymi i co najmniej jedną ostrą, która również może uniemożliwić
+skończoną estymację. Sam komunikat o zbieżności programu nie zastępuje
+sprawdzenia wielkości współczynników i struktury danych.
+
+```{python}
+#| label: fig-logistyczna-separacja
+#| fig-cap: "Przy separacji strata bez kary maleje w kierunku nieskończonego współczynnika. Kara kwadratowa zapewnia skończone minimum."
+xs = np.array([-2., -1., 1., 2.])
+ys = np.array([0., 0., 1., 1.])
+b = np.linspace(0, 10, 300)
+s = b[:, None] * xs
+strata = (np.logaddexp(0, s) - ys * s).mean(axis=1)
+fig, ax = plt.subplots(figsize=(7, 3.7))
+ax.plot(b, strata, label='bez kary', color=kolory[0])
+ax.plot(b, strata + 0.05 * b**2 / 2,
+        label=r'z karą $\lambda=0.05$', color=kolory[1])
+ax.set(xlabel='współczynnik b', ylabel='funkcja celu', ylim=(0, 1))
+ax.legend()
+plt.tight_layout()
+plt.show()
+```
+
+Przenosimy teraz pomysł z rozdziału [-@sec-selekcja-regularyzacja]:
+$$
+J_\lambda(\boldsymbol\beta)=J(\boldsymbol\beta)
++\frac\lambda2\sum_{j=1}^p\beta_j^2.
+$$ {#eq-logistyczna-kara}
+
+Nie karzemy wyrazu wolnego. Przy $\lambda>0$ i obecności obu klas
+kara kwadratowa daje skończone, jednoznaczne rozwiązanie także przy
+separacji i współliniowości. Gdy wszystkie etykiety są jednakowe,
+niekarany wyraz wolny nadal może uciekać do nieskończoności.
+Alternatywą jest kara $\lambda\sum_{j=1}^p|\beta_j|$, sprzyjająca
+zerowym współczynnikom. Jej geometria jest taka sama jak dla LASSO,
+ale część opisująca dopasowanie jest teraz stratą logarytmiczną.
+
+Skala cech wpływa na karę, więc standaryzujemy je wewnątrz każdej części
+uczącej CV. Siłę regularyzacji wybieramy według straty odpowiadającej
+celowi analizy. Do przewidywania prawdopodobieństw naturalny jest
+log-loss; trafność przy progu $1/2$ ignoruje wiele różnic między nimi.
+
+W użytej implementacji `LogisticRegression` z karą $L_2$ parametr `C`
+kontroluje odwrotność siły regularyzacji. Bez wag obserwacji konwencji
+@eq-logistyczna-kara odpowiada $\lambda=1/(nC)$, gdzie $n$ jest liczbą
+obserwacji użytych w danym dopasowaniu. Większe `C` oznacza słabszą karę;
+nie jest to parametr `alpha` z regresji grzbietowej. Szczegóły tej
+normalizacji podaje [dokumentacja scikit-learn](https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression).
+
+## Prawdopodobieństwo, ranking i decyzja {#sec-logistyczna-ocena}
+
+Dobry model prawdopodobieństw, dobry ranking i dobra decyzja przy ustalonym
+progu to trzy powiązane, ale różne cele.
+
+**Prawdopodobieństwa** oceniamy na nowych danych przez średnią stratę
+logarytmiczną. Możemy też sprawdzić **kalibrację**: czy wśród przypadków
+z prognozą bliską $q$ zdarzenie występuje z częstością bliską $q$?
+Wykres częstości w grupach jest przybliżeniem takiej oceny. Zależy od
+podziału na grupy i przy małej liczbie zdarzeń może silnie się wahać.
+Stała prognoza częstości populacyjnej może być skalibrowana, choć
+nie rozróżnia osób o różnym ryzyku.
+
+**Decyzje** wymagają progu. Przy zerowych kosztach poprawnych odpowiedzi,
+koszcie $c_{\mathrm{FP}}>0$ fałszywego alarmu i koszcie
+$c_{\mathrm{FN}}>0$ przeoczenia zdarzenia, warunkowe koszty decyzji
+1 i 0 wynoszą odpowiednio $c_{\mathrm{FP}}(1-q)$ oraz
+$c_{\mathrm{FN}}q$. Wybieramy klasę 1, gdy
+$$
+q\ge t=\frac{c_{\mathrm{FP}}}{c_{\mathrm{FP}}+c_{\mathrm{FN}}}.
+$$
+To reguła z sekcji [-@sec-od-prawdopodobienstw-do-decyzji]
+[@elkan2001]. Jest optymalna dla prawdziwego prawdopodobieństwa;
+podstawienie oszacowania tworzy regułę przybliżoną. Sam niski udział
+klasy 1 nie uzasadnia konkretnego progu ani automatycznego ważenia klas.
+Wagi klas zmieniają kryterium dopasowania i mogą zmienić interpretację
+otrzymanych prawdopodobieństw.
+
+Dla ustalonego progu zapisujemy wyniki w macierzy pomyłek:
+
+| Rzeczywista klasa | Decyzja 0 | Decyzja 1 |
+|---|---:|---:|
+| 0 | TN: poprawne odrzucenie | FP: fałszywy alarm |
+| 1 | FN: przeoczenie | TP: wykryte zdarzenie |
+
+Stąd **czułość** wynosi $\mathrm{TP}/(\mathrm{TP}+\mathrm{FN})$,
+**swoistość** $\mathrm{TN}/(\mathrm{TN}+\mathrm{FP})$,
+**precyzja** $\mathrm{TP}/(\mathrm{TP}+\mathrm{FP})$, a **trafność**
+$(\mathrm{TP}+\mathrm{TN})/n$. Przy zerowym mianowniku dana miara jest
+nieokreślona. Jeśli zdarzenie jest rzadkie, reguła zawsze wybierająca
+0 ma wysoką trafność i zerową czułość.
+
+**Ranking** ocenia krzywa ROC: wraz ze zmianą progu wykreślamy czułość
+w funkcji odsetka fałszywych alarmów $1-\text{swoistość}$. Pole pod tą
+krzywą, AUC, ma interpretację prawdopodobieństwa, że losowy przypadek
+klasy 1 otrzyma wyższy wynik niż losowy przypadek klasy 0; remis liczymy
+z wagą $1/2$. Ściśle rosnące przekształcenie wyniku nie zmienia AUC,
+ale może zepsuć kalibrację i decyzje przy ustalonym progu.
+
+ROC nie uwzględnia kosztów ani częstości klas w ocenie konkretnej
+decyzji. Przy rzadkich zdarzeniach warto równolegle oglądać precyzję
+i czułość. Nie wybieramy progu na końcowym zbiorze testowym: jeśli ma
+wynikać z danych, staje się kolejnym elementem strojenia.
+
+## Analiza danych Default {#sec-logistyczna-default}
+
+### Model prosty i wieloraki
+
+Najpierw oszacujemy współczynniki bez kary na części uczącej. Saldo
+wyrazimy w setkach jednostek pieniężnych, a dochód w dziesiątkach tysięcy.
+To zmiana jednostek, która ułatwia interpretację, nie zmiana klasy
+nieregularyzowanych modeli. `statsmodels` wymaga jawnego dodania wyrazu
+wolnego.
+
+```{python}
+#| label: tbl-default-wspolczynniki
+#| tbl-cap: "Współczynniki modeli bez kary na danych uczących. Wiersze oznaczają przyrost logitu na wskazaną jednostkę cechy."
+Xi = pd.DataFrame({'saldo / 100': Xu.balance / 100,
+                   'dochód / 10000': Xu.income / 10000,
+                   'student': Xu.student})
+modele_opisowe = {
+    'tylko student': sm.Logit(yu, sm.add_constant(Xi[['student']])).fit(disp=False),
+    'wieloraki': sm.Logit(yu, sm.add_constant(Xi)).fit(disp=False)
+}
+wsp = []
+for nazwa, model in modele_opisowe.items():
+    for cecha, wartosc in model.params.items():
+        wsp.append([nazwa, cecha, wartosc, np.exp(wartosc)])
+tabela(pd.DataFrame(wsp, columns=['model', 'parametr', 'współczynnik', 'exp(współczynnik)']))
+```
+
+W modelu wielorakim wzrost salda o 100 jednostek mnoży szansę zdarzenia
+przez około 1.75 przy ustalonym dochodzie i statusie studenta. Iloraz
+szans studentów względem niestudentów wynosi około 0.54, podczas gdy
+w modelu z samym statusem studenta wynosi około 1.60.
+
+Porównanie współczynnika `student` w obu modelach ilustruje różnicę
+między porównaniem grup a porównaniem przy ustalonych innych cechach.
+Zmiana znaku nie jest sprzecznością: modele odpowiadają na inne pytania.
+Studentów i niestudentów mogą różnić również rozkłady salda i dochodu.
+Samo porównanie tych współczynników nie identyfikuje mechanizmu przyczynowego.
+
+Wartości `exp(współczynnik)` przy wyrazie wolnym są szansami dla zerowych
+wartości wszystkich cech. Nie zawsze jest to interesujący profil osoby;
+centrowanie cech pozwala nadać wyrazowi wolnemu dogodniejszą interpretację.
+
+### Wybór modelu na części uczącej
+
+Porównamy model z samym saldem i model ze wszystkimi trzema cechami,
+w obu przypadkach dla tej samej siatki siły regularyzacji, obejmującej
+brak kary. Kryterium wyboru ustalamy przed oceną: średni log-loss
+w pięcioczęściowej stratyfikowanej CV. Modelem odniesienia jest stała
+prognoza częstości zdarzenia na części uczącej.
+
+```{python}
+#| label: tbl-default-cv
+#| tbl-cap: "Wybór siły regularyzacji i zestawu cech według log-loss w CV."
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=2027)
+cechy = {'saldo': ['balance'], 'wszystkie': ['balance', 'income', 'student']}
+siatka_C = [0.001, 0.01, 0.1, 1., 10., 100., np.inf]
+wyszukiwania = {}
+wiersze = []
+for nazwa, kolumny in cechy.items():
+    procedura = make_pipeline(StandardScaler(),
+        LogisticRegression(max_iter=2000, tol=1e-9))
+    szukanie = GridSearchCV(procedura, {'logisticregression__C': siatka_C},
+                           scoring='neg_log_loss', cv=cv, n_jobs=1)
+    szukanie.fit(Xu[kolumny], yu)
+    wyszukiwania[nazwa] = szukanie
+    wiersze.append([nazwa, szukanie.best_params_['logisticregression__C'],
+                    -szukanie.best_score_])
+tabela(pd.DataFrame(wiersze, columns=['cechy', 'wybrane C', 'log-loss CV']))
+wybrany = max(wyszukiwania, key=lambda k: wyszukiwania[k].best_score_)
+model_koncowy = wyszukiwania[wybrany].best_estimator_
+kolumny_koncowe = cechy[wybrany]
+display(Markdown(f'Według ustalonego kryterium wybieramy zestaw **{wybrany}**.'))
+```
+
+CV wybiera wszystkie trzy cechy i `C=1`. Różnica względem najlepszego
+modelu z samym saldem jest niewielka (około 0.0007 jednostki log-loss);
+nie traktujemy jej jako dowodu istotnej przewagi.
+
+Skaler jest częścią procedury, więc w każdej iteracji CV dopasowuje się
+wyłącznie do jej części uczącej. `GridSearchCV` po wyborze `C` dopasowuje
+wybrany wariant ponownie do wszystkich 7500 obserwacji uczących. Wynik
+CV służy do wyboru, a nie jako niezależna końcowa ocena zwycięzcy.
+
+### Końcowa ocena i dwa zastosowania
+
+Przyjmijmy dwa z góry określone zastosowania: jednakowe koszty pomyłek
+oraz przeoczenie dziewięć razy droższe od fałszywego alarmu. Dają one
+progi $0.5$ i $0.1$. Są to dydaktyczne założenia, nie oszacowania
+rzeczywistych kosztów kredytowych. Nie wybieramy lepszego zastosowania
+na podstawie wyników testu.
+
+```{python}
+#| label: tbl-default-test
+#| tbl-cap: "Końcowa ocena prawdopodobieństw na odłożonym zbiorze testowym. Mniejszy log-loss i większe AUC oznaczają lepszy wynik danej miary."
+q_test = model_koncowy.predict_proba(Xt[kolumny_koncowe])[:, 1]
+q_stale = np.full(len(yt), yu.mean())
+tabela(pd.DataFrame({
+    'model': ['stała częstość', 'wybrany logistyczny'],
+    'log-loss': [log_loss(yt, q_stale), log_loss(yt, q_test)],
+    'AUC': [roc_auc_score(yt, q_stale), roc_auc_score(yt, q_test)]}))
+```
+
+```{python}
+#| label: tbl-default-progi
+#| tbl-cap: "Decyzje tego samego modelu dla dwóch z góry ustalonych progów. Ostatnia kolumna odpowiada kosztom FP = 1, FN = 9."
+wyniki_progow = []
+for prog in [0.5, 0.1]:
+    tn, fp, fn, tp = confusion_matrix(yt, q_test >= prog, labels=[0, 1]).ravel()
+    wyniki_progow.append([prog, tn, fp, fn, tp, (tn+tp)/len(yt),
+                           tp/(tp+fn), tn/(tn+fp), tp/(tp+fp),
+                           (fp+9*fn)/len(yt)])
+tabela(pd.DataFrame(wyniki_progow, columns=[
+    'próg', 'TN', 'FP', 'FN', 'TP', 'trafność', 'czułość',
+    'swoistość', 'precyzja', 'średni koszt 1:9']))
+display(Markdown(f'Reguła zawsze wybierająca 0 ma trafność **{1-yt.mean():.3%}** '
+                 'i czułość równą zero.'))
+```
+
+Przy progu 0.5 wykrywamy 29 z 83 zdarzeń, a przy progu 0.1 -- 61.
+Liczba fałszywych alarmów rośnie przy tym z 6 do 109. Dla kosztów
+1:9 średni koszt maleje z 0.1968 do 0.1228, mimo spadku trafności.
+
+Niższy próg zwiększa zbiór osób zaklasyfikowanych do klasy 1: nie może
+zmniejszyć czułości ani zwiększyć swoistości na tej samej próbie.
+Trafność może przy tym spaść. Ocena powinna więc odpowiadać kosztom
+konkretnej decyzji, a nie jednej uniwersalnej liczbie.
+
+```{python}
+#| label: fig-default-roc-kalibracja
+#| fig-cap: "Dwie oceny prognoz na zbiorze testowym: ranking (ROC) i kalibracja w grupach równych kwantylowo. Każda grupa kalibracji zawiera 312 lub 313 obserwacji."
+fpr, tpr, _ = roc_curve(yt, q_test)
+kal = pd.DataFrame({'q': q_test, 'y': np.asarray(yt)})
+kal['grupa'] = pd.qcut(kal.q, 8, duplicates='drop')
+kal = kal.groupby('grupa', observed=True).agg(q=('q', 'mean'),
+                                           czestosc=('y', 'mean'), n=('y', 'size'))
+fig, axes = plt.subplots(1, 2, figsize=(10, 4))
+axes[0].plot(fpr, tpr, color=kolory[0])
+axes[0].plot([0, 1], [0, 1], '--', color='0.6')
+axes[0].set(xlabel='odsetek fałszywych alarmów', ylabel='czułość', title='ROC')
+granica = max(kal.q.max(), kal.czestosc.max()) * 1.15
+axes[1].plot([0, granica], [0, granica], '--', color='0.6')
+axes[1].scatter(kal.q, kal.czestosc, color=kolory[1])
+axes[1].set(xlabel='średnia prognoza w grupie', ylabel='częstość zdarzenia',
+            title='Kalibracja w grupach')
+plt.tight_layout()
+plt.show()
+```
+
+Punkty kalibracji opisują średnie w grupach, nie weryfikują poprawności
+każdej indywidualnej prognozy. Zwłaszcza górna grupa może obejmować szeroki
+zakres ryzyka. Wykres służy tu końcowej diagnozie. Gdyby skłonił nas do
+zmiany modelu lub dodatkowej kalibracji, potrzebowalibyśmy nowych danych
+do niezależnej oceny zmienionej procedury.
+
+## Rozszerzenie: Newton i wnioskowanie o współczynnikach {#sec-logistyczna-newton}
+
+::: {.callout-note appearance="simple" icon="false"}
+## Materiał nieobowiązkowy
+Wymagane są rachunek macierzowy, drugie pochodne i przybliżenie normalne estymatorów.
+Tekst główny i zadania podstawowe z tej sekcji nie korzystają.
+:::
+
+Dla modelu bez kary krok Newtona rozwiązuje układ
+$$
+Z^\top WZ\,\Delta=Z^\top(\boldsymbol y-\boldsymbol q),
+\qquad \boldsymbol\beta_{\mathrm{nowa}}=\boldsymbol\beta+\Delta.
+$$
+Nie trzeba obliczać jawnej macierzy odwrotnej. Definiując roboczą
+odpowiedź $\boldsymbol z=Z\boldsymbol\beta+W^{-1}(\boldsymbol y-\boldsymbol q)$,
+możemy ten sam krok zapisać jako ważone najmniejsze kwadraty:
+$$
+Z^\top WZ\,\boldsymbol\beta_{\mathrm{nowa}}=Z^\top W\boldsymbol z.
+$$
+Ponieważ zarówno odpowiedź robocza, jak i wagi zależą od aktualnych
+parametrów, powtarzamy dopasowanie. Stąd nazwa **iteracyjnie ważone
+najmniejsze kwadraty** (IRLS). W praktyce tłumienie kroku może zapobiegać
+wzrostowi straty; bardzo małe wagi i separacja utrudniają obliczenia.
+
+Przy poprawnym modelu, niezależnych obserwacjach, identyfikowalności
+i warunkach regularności estymator największej wiarygodności ma
+asymptotycznie rozkład normalny. Szacujemy jego macierz kowariancji przez
+$(Z^\top\widehat W Z)^{-1}$. Nie dzielimy jej ponownie przez $n$:
+macierz $Z^\top\widehat W Z$ jest informacją dla całej próby.
+Przybliżony przedział Walda dla współczynnika ma postać
+$\widehat\beta_j\pm1.96\,\mathrm{SE}(\widehat\beta_j)$; końce przedziału
+ilorazu szans otrzymujemy przez potęgowanie podstawy $e$.
+
+```{python}
+#| label: tbl-default-przedzialy
+#| tbl-cap: "Przybliżone przedziały 95% ilorazów szans w z góry określonym modelu wielorakim bez kary."
+m = modele_opisowe['wieloraki']
+przedzialy = m.conf_int()
+tabela(pd.DataFrame({'cecha': m.params.index[1:],
+                     'iloraz szans': np.exp(m.params.iloc[1:]),
+                     'dolny koniec': np.exp(przedzialy.iloc[1:, 0]),
+                     'górny koniec': np.exp(przedzialy.iloc[1:, 1])}))
+```
+
+To przedziały dla modelu ustalonego przed dopasowaniem, nie dla
+współczynników zwycięzcy CV. Automatyczne przeniesienie tych wzorów
+na estymator z karą lub po selekcji pomija wpływ procedury wyboru.
+Przy separacji, niewielkiej liczbie zdarzeń lub bardzo dużych
+współczynnikach przybliżenie Walda może być szczególnie zawodne.
+
+## Rozszerzenie: więcej niż dwie klasy {#sec-logistyczna-softmax}
+
+::: {.callout-note appearance="simple" icon="false"}
+## Materiał nieobowiązkowy
+Wymagane są rachunek prawdopodobieństwa dla rozkładu dyskretnego i własności logarytmu.
+Tekst główny i zadania podstawowe z tej sekcji nie korzystają.
+:::
+
+Dla klas $1,\ldots,K$ przypisujemy każdej wynik liniowy
+$s_k(\x)=\beta_{k0}+\sum_j\beta_{kj}x_j$ i definiujemy **softmax**:
+$$
+q_k(\x)=\frac{e^{s_k(\x)}}{\sum_{l=1}^K e^{s_l(\x)}}.
+$$
+Prawdopodobieństwa są dodatnie i sumują się do jedności. Dodanie tej
+samej funkcji liniowej do wszystkich wyników niczego nie zmienia,
+więc pełna parametryzacja nie jest identyfikowalna. Możemy ustalić
+$s_K=0$ i interpretować pozostałe wyniki jako
+$\log(q_k/q_K)$. Dla dwóch klas otrzymujemy model logistyczny.
+
+Minimalizujemy $-n^{-1}\sum_i\log q_{y_i}(\x_i)$. Przy stracie 0--1
+wybieramy klasę o największym prawdopodobieństwie. Przy ogólnej macierzy
+kosztów $C_{ka}$ (prawdziwa klasa $k$, decyzja $a$) minimalizujemy
+$\sum_k C_{ka}q_k(\x)$. Nie ma wtedy jednego wspólnego progu binarnego.
+
+Osobne modele „jedna klasa przeciw reszcie” są inną konstrukcją:
+ich surowe prognozy nie muszą sumować się do jedności. Nie należy
+utożsamiać ich z jednym modelem softmax. W implementacji softmax
+odejmujemy od wszystkich wyników ich maksimum przed potęgowaniem,
+co zachowuje prawdopodobieństwa i ogranicza ryzyko przepełnienia.
+
+## Uwagi bibliograficzne {.unnumbered}
+
+Przystępne omówienie regresji logistycznej, interpretacji współczynników
+i danych Default przedstawiają @islp. Szersze ujęcie klasyfikacji liniowej,
+estymacji i regularyzacji dają @esl. Przy lekturze warto porównywać
+konwencje normalizacji funkcji celu: suma i średnia strat wymagają
+innej skali współczynnika kary.
+
+Ujęcie przez warunkowy rozkład Bernoulliego, entropię krzyżową i model
+wieloklasowy rozwijają @bishop2006 oraz @murphy2022. Ta perspektywa
+prowadzi do uogólnionych modeli liniowych w następnym rozdziale,
+a później do sieci neuronowych: sigmoida zastosowana do wyniku liniowego
+będzie punktem wyjścia do budowania kolejnych warstw.
+
+Własności reguł oceny prawdopodobieństw analizują @gneiting2007.
+Rozróżnienie estymacji prawdopodobieństw i decyzji przy różnych kosztach
+omawia @elkan2001. Wspólny wniosek metodologiczny jest istotny dla
+praktyki: wybór progu i ocena rankingu nie zastępują sprawdzenia jakości
+samych prawdopodobieństw.
+
+## Zadania {.unnumbered}
+
+::: {#exr-logistyczne-szanse}
+Model ma postać $q(x)=\sigma(-3+0.8x)$.
+
+a) Oblicz prawdopodobieństwo i szansę zdarzenia dla $x=0,2,4$.
+b) Oblicz iloraz szans przy wzroście $x$ o 2. Czy taki sam jest iloraz prawdopodobieństw?
+c) Wyznacz $x$, dla którego prawdopodobieństwo wynosi $0.1$, $0.5$ i $0.9$.
+:::
+
+::: {#exr-logistyczna-interakcja}
+Logit modelu wynosi $-2+0.4x-0.7s+0.3xs$, gdzie $s\in\{0,1\}$.
+
+a) Zinterpretuj zmianę szans na jednostkę $x$ w obu grupach.
+b) Wyznacz iloraz szans grupy $s=1$ względem $s=0$ przy ustalonym $x$.
+c) Dla jakiego $x$ oba prawdopodobieństwa są równe? Wyjaśnij, dlaczego sam współczynnik $-0.7$ nie opisuje różnicy grup dla każdego $x$.
+:::
+
+::: {#exr-logistyczna-granica}
+Niech $q(x_1,x_2)=\sigma(-1+2x_1-x_2)$.
+
+a) Narysuj granice decyzji dla progów $0.5$ i $0.2$ i zaznacz obszary klasy 1.
+b) Zastąp wynik liniowy przez $-1+x_1^2+x_2^2$. Jaki kształt ma granica przy progu $0.5$?
+c) Wyjaśnij, w jakim sensie drugi model nadal jest liniowy względem parametrów.
+:::
+
+::: {#exr-logistyczna-stala}
+Model zawiera tylko wyraz wolny, a w próbie jest $m$ jedynek i $n-m$ zer.
+
+a) Dla $0<m<n$ wyprowadź estymator największej wiarygodności prawdopodobieństwa i wyrazu wolnego.
+b) Zbadaj przypadki $m=0$ i $m=n$. Rozróżnij estymację prawdopodobieństwa w $[0,1]$ od estymacji skończonego logitu.
+c) Sprawdź, że równanie gradientu dla wyrazu wolnego wymusza równość średniej prognozy i częstości zdarzenia w próbie, także w modelu z cechami bez kary, o ile skończone minimum istnieje. Dlaczego nie dowodzi to kalibracji na nowych danych?
+:::
+
+::: {#exr-logistyczna-separacja}
+Dane to $x=(-2,-1,1,2)$ oraz $y=(0,0,1,1)$, a model ma postać $q(x)=\sigma(bx)$.
+
+a) Wykaż, że strata logarytmiczna jest dodatnia dla każdego skończonego $b$ i dąży do zera, gdy $b\to\infty$.
+b) Porównaj błąd klasyfikacji i log-loss dla $b=1,5,20$.
+c) Dodaj karę $\lambda b^2/2$ i numerycznie znajdź minimum dla $\lambda=0.01,0.1,1$. Opisz zmianę współczynnika i prawdopodobieństw.
+:::
+
+::: {#exr-logistyczny-ranking}
+Cztery obserwacje mają etykiety $(0,1,0,1)$ i prognozy $(0.1,0.4,0.3,0.8)$.
+
+a) Oblicz log-loss, AUC i macierz pomyłek przy progu $0.5$.
+b) Przekształć prognozy przez $q\mapsto q^2$ i powtórz obliczenia.
+c) Wyjaśnij, które wyniki muszą pozostać bez zmian dla dowolnego ściśle rosnącego przekształcenia prognoz, a które mogą się zmienić.
+:::
+
+::: {#exr-logistyczny-koszt}
+Zdarzenie występuje z częstością $0.02$. Pewna reguła ma czułość $0.8$ i swoistość $0.95$.
+
+a) Oblicz oczekiwane liczby TP, FP, FN i TN w próbie 10000 osób oraz precyzję i trafność.
+b) Oblicz średni koszt przy $c_{\mathrm{FP}}=1$, $c_{\mathrm{FN}}=20$ i porównaj z regułą zawsze wybierającą 0.
+c) Jaki próg byłby optymalny dla prawdziwych prawdopodobieństw przy tych kosztach? Dlaczego sama znajomość czułości i swoistości nie pozwala ustalić, jaki próg wykorzystano w opisanej regule?
+:::
+
+::: {#exr-default-procedura}
+Przeprowadź analizę Default z nowym, ustalonym ziarnem podziału danych.
+
+a) Przed obliczeniami określ zestawy cech, siatkę regularyzacji i kryterium wyboru. Uwzględnij model z interakcją salda i statusu studenta.
+b) Wybierz model przez CV, ze standaryzacją wewnątrz każdej części uczącej.
+c) Na odłożonym teście porównaj go ze stałą prognozą częstości. Podaj log-loss, AUC i macierz pomyłek dla progu wynikającego z ustalonych wcześniej kosztów.
+d) Porównaj wnioski z przykładem w tekście. Nie zmieniaj procedury na podstawie wyniku testowego; wyjaśnij, jak należałoby ocenić taką zmienioną procedurę.
+:::
+
+::: {#exr-logistyczny-newton}
+**Rozszerzenie: Newton.** Wymagane są rachunek macierzowy i drugie pochodne.
+Dla $x=(-2,-1,1,2)$ i $y=(0,1,0,1)$ dopasuj model z wyrazem wolnym.
+
+a) Wykonaj ręcznie pierwszy krok Newtona od wektora zerowego.
+b) Zaimplementuj iteracje przez rozwiązywanie układów równań i porównaj wynik ze `statsmodels`.
+c) Sprawdzaj stratę po każdym kroku. Wyjaśnij, co trzeba zmienić w algorytmie, jeśli pełny krok zwiększa stratę.
+:::
+
+::: {#exr-logistyczny-softmax}
+**Rozszerzenie: softmax.** Wymagane są własności funkcji wykładniczej i rozkładu dyskretnego.
+Dla trzech klas przyjmij wyniki $s_1=x$, $s_2=-x$, $s_3=0$.
+
+a) Oblicz prawdopodobieństwa dla $x=-1,0,1$.
+b) Dodaj $2+3x$ do wszystkich wyników i sprawdź niezmienniczość prawdopodobieństw.
+c) Wyznacz obszary decyzji przy stracie 0--1, uwzględniając remisy.
+d) Zapisz ujemną log-wiarygodność dla jednej obserwacji z klasy 2 i porównaj ją z sumą trzech niezależnych binarnych strat logistycznych. Dlaczego są to inne modele?
+:::

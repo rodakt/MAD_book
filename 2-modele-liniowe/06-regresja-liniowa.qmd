@@ -1504,7 +1504,7 @@ usunięcie jednej z cech, zastąpienie ich wspólną cechą albo ściąganie
 współczynników, jak w przypadku estymatora $c\bar Y$ z sekcji
 [-@sec-obciazenie-wariancja-estymatora].
 
-## Rozszerzenie: geometria i obliczanie MNK {#sec-mnk-geometria}
+## Rozszerzenie: geometria i obliczanie OLS {#sec-mnk-geometria}
 
 ::: {.callout-note appearance="simple" icon="false"}
 ## Materiał nieobowiązkowy
@@ -2107,7 +2107,7 @@ c) Porównaj własności z punktów a)--b) z macierzą
 
 ::: {#exr-loocv-mnk}
 **Rozszerzenie: reszta „pozostaw jeden”.** Wymagane są wzór
-Shermana--Morrisona i zapis macierzowy MNK. Niech $\widehat{\bbeta}^{(-i)}$ będzie estymatorem OLS wyznaczonym bez
+Shermana--Morrisona i zapis macierzowy OLS. Niech $\widehat{\bbeta}^{(-i)}$ będzie estymatorem OLS wyznaczonym bez
 obserwacji $i$, a $\tilde\x_i^\top$ -- $i$-tym wierszem $\X$.
 
 a) Korzystając ze wzoru Shermana--Morrisona

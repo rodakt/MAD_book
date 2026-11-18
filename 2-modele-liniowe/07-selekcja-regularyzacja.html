@@ -522,7 +522,7 @@ Rysunek&nbsp;7.1: Cechy szumowe i ściąganie: średni błąd uczący oraz błą
 </div>
 <p>Pełny model osiąga najmniejszy błąd uczący, lecz płaci za szacowanie wielu zbędnych współczynników. Ridge częściowo ogranicza ten koszt, a model z właściwą cechą unika go prawie w całości. Gdy wiele cech niesie informację, ich usuwanie może kosztować więcej, niż oszczędza na wariancji.</p>
 <p>Współliniowość dodatkowo utrudnia rozdzielenie efektów cech. Duże zmiany ich współczynników nie muszą jednak oznaczać równie dużych zmian predykcji w obszarze danych: wzrost jednego współczynnika może być równoważony spadkiem drugiego.</p>
-<p>Przy wielu kolumnach pojawia się także problem jednoznaczności MNK. Jeśli macierz projektu z wyrazem wolnym ma więcej kolumn niż wierszy, nie ma pełnego rzędu kolumnowego. Współczynniki nie są wtedy wyznaczone jednoznacznie. Zerowy RSS wymaga dodatkowo, aby <span class="math inline">\(\y\)</span> należał do przestrzeni kolumn tej macierzy. Pełny rząd wierszowy zapewnia to dla każdego <span class="math inline">\(\y\)</span>, ale sama duża liczba cech nie wystarcza: wielokrotne kopie tej samej kolumny nie pozwalają odtworzyć dowolnych wyników.</p>
+<p>Przy wielu kolumnach pojawia się także problem jednoznaczności OLS. Jeśli macierz projektu z wyrazem wolnym ma więcej kolumn niż wierszy, nie ma pełnego rzędu kolumnowego. Współczynniki nie są wtedy wyznaczone jednoznacznie. Zerowy RSS wymaga dodatkowo, aby <span class="math inline">\(\y\)</span> należał do przestrzeni kolumn tej macierzy. Pełny rząd wierszowy zapewnia to dla każdego <span class="math inline">\(\y\)</span>, ale sama duża liczba cech nie wystarcza: wielokrotne kopie tej samej kolumny nie pozwalają odtworzyć dowolnych wyników.</p>
 </section>
 <section id="sec-selekcja-podzbiorow" class="level2" data-number="7.2">
 <h2 data-number="7.2" class="anchored" data-anchor-id="sec-selekcja-podzbiorow"><span class="header-section-number">7.2</span> Selekcja podzbioru predyktorów</h2>
@@ -631,12 +631,75 @@ Tabela&nbsp;7.1: Wszystkie podzbiory trzech cech Credit, dopasowane na 300 obser
 </div>
 </div>
 <p><strong>Przegląd zupełny</strong> (ang. <em>best subset selection</em>) rozdziela dwa pytania. Najpierw, dla każdej liczby <span class="math inline">\(k\)</span> cech, wybieramy podzbiór o najmniejszym RSS. Potem spośród otrzymanych <span class="math inline">\(p+1\)</span> kandydatów wybieramy wielkość modelu według kryterium uwzględniającego jego złożoność lub według walidacji. Sam RSS wybrałby pełny model.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Algorytm: przegląd zupełny
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Niech <span class="math inline">\(\mathcal M_0\)</span> oznacza model pusty.</li>
+<li>Dla <span class="math inline">\(k=1,\ldots,p\)</span>:
+<ol type="a">
+<li>dopasuj metodą OLS wszystkie <span class="math inline">\(\binom pk\)</span> modele z dokładnie <span class="math inline">\(k\)</span> cechami;</li>
+<li>jako <span class="math inline">\(\mathcal M_k\)</span> przyjmij ten z nich, który ma najmniejszy RSS.</li>
+</ol></li>
+<li>Spośród <span class="math inline">\(\mathcal M_0,\ldots,\mathcal M_p\)</span> wybierz jeden model według kryterium z sekcji <a href="#sec-kryteria-selekcji" class="quarto-xref"><span>7.3</span></a> lub według walidacji krzyżowej.</li>
+</ol>
+</div>
+</div>
 <p>W każdym rozmiarze <span class="math inline">\(k\)</span> mamy <span class="math inline">\(\binom pk\)</span> podzbiorów, a łącznie <span class="math inline">\(2^p\)</span>. Dla <span class="math inline">\(p=20\)</span> to ponad milion modeli; dla <span class="math inline">\(p=40\)</span> – ponad bilion. Przegląd znajduje najlepszy podzbiór według kryterium na przeszukanej liście. Nie zapewnia najmniejszego nieznanego ryzyka ani odkrycia właściwych zmiennych w populacji.</p>
 </section>
 <section id="metoda-schodów-w-przód-i-wstecz" class="level3" data-number="7.2.2">
 <h3 data-number="7.2.2" class="anchored" data-anchor-id="metoda-schodów-w-przód-i-wstecz"><span class="header-section-number">7.2.2</span> Metoda schodów w przód i wstecz</h3>
 <p>Przy większej liczbie cech można zbudować krótszą listę kandydatów. <strong>Selekcja w przód</strong> (ang. <em>forward stepwise selection</em>) zaczyna od modelu pustego. W pierwszym kroku dodaje cechę dającą najmniejszy RSS. W kolejnym wybiera najlepsze rozszerzenie tego właśnie modelu o jedną cechę. Cech już wybranych nie usuwa. Buduje w ten sposób zagnieżdżoną ścieżkę modeli o <span class="math inline">\(0,1,\ldots,p\)</span> cechach.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Algorytm: selekcja w przód
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Niech <span class="math inline">\(\mathcal M_0\)</span> oznacza model pusty.</li>
+<li>Dla <span class="math inline">\(k=0,\ldots,p-1\)</span>:
+<ol type="a">
+<li>dopasuj metodą OLS wszystkie <span class="math inline">\(p-k\)</span> modele powstałe przez dodanie do <span class="math inline">\(\mathcal M_k\)</span> jednej cechy, której w nim nie ma;</li>
+<li>jako <span class="math inline">\(\mathcal M_{k+1}\)</span> przyjmij ten z nich, który ma najmniejszy RSS.</li>
+</ol></li>
+<li>Spośród <span class="math inline">\(\mathcal M_0,\ldots,\mathcal M_p\)</span> wybierz jeden model według kryterium z sekcji <a href="#sec-kryteria-selekcji" class="quarto-xref"><span>7.3</span></a> lub według walidacji krzyżowej.</li>
+</ol>
+</div>
+</div>
 <p><strong>Selekcja wstecz</strong> (ang. <em>backward stepwise selection</em>) zaczyna od pełnego modelu. Usuwa cechę, której usunięcie najmniej zwiększa RSS, i powtarza ten krok aż do modelu pustego. W klasycznej wersji wymagamy pełnego rzędu kolumnowego dopasowywanych modeli, więc start z pełnego modelu jest problematyczny, gdy cech jest zbyt wiele względem <span class="math inline">\(n\)</span>.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Algorytm: selekcja wstecz
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Niech <span class="math inline">\(\mathcal M_p\)</span> oznacza pełny model ze wszystkimi <span class="math inline">\(p\)</span> cechami.</li>
+<li>Dla <span class="math inline">\(k=p,p-1,\ldots,1\)</span>:
+<ol type="a">
+<li>dopasuj metodą OLS wszystkie <span class="math inline">\(k\)</span> modele powstałe przez usunięcie z <span class="math inline">\(\mathcal M_k\)</span> jednej cechy;</li>
+<li>jako <span class="math inline">\(\mathcal M_{k-1}\)</span> przyjmij ten z nich, który ma najmniejszy RSS.</li>
+</ol></li>
+<li>Spośród <span class="math inline">\(\mathcal M_0,\ldots,\mathcal M_p\)</span> wybierz jeden model według kryterium z sekcji <a href="#sec-kryteria-selekcji" class="quarto-xref"><span>7.3</span></a> lub według walidacji krzyżowej.</li>
+</ol>
+</div>
+</div>
 <p>W przód sprawdzamy najwyżej <span class="math inline">\(p+(p-1)+\cdots+1=p(p+1)/2\)</span> rozszerzeń. Oszczędność ma cenę: najlepsza para cech nie musi zawierać cechy, która osobno była najlepsza. Pierwszy krok może więc zamknąć drogę do najlepszego podzbioru danej wielkości. Podobnie jest wstecz. Krok wyboru przećwiczymy w <a href="#exr-selekcja-schody" class="quarto-xref">Zadanie&nbsp;<span>7.2</span></a>.</p>
 <p>Liczba cech na ścieżce jest ustawieniem procedury. Gdy wybieramy ją przez CV, <strong>całą ścieżkę budujemy ponownie w części uczącej każdego podziału</strong>. Wybranie podzbiorów na całej próbie, a dopiero potem ocenianie tych ustalonych podzbiorów przez CV ujawnia procedurze wyniki z przyszłych części walidacyjnych (sekcja <a href="../1-fundamenty/05-ocena-modeli.html#sec-wyciek" class="quarto-xref"><span>5.5</span></a>).</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -812,7 +875,7 @@ Tabela&nbsp;7.2: Kryteria dla podzbiorów trzech cech. AIC i BIC pomijają wspó
 \left\{\sum_{i=1}^n(y_i-\beta_0-\x_i^\top\bbeta)^2
 +\lambda\sum_{j=1}^p\beta_j^2\right\},\qquad\lambda\geq0.
 \tag{7.5}\]</span></span></p>
-<p>Kara zniechęca do dużych współczynników. Dla <span class="math inline">\(\lambda=0\)</span> jest to zadanie MNK; zwiększając <span class="math inline">\(\lambda\)</span>, mocniej ograniczamy dopasowanie. <strong>Wyrazu wolnego nie karzemy</strong>: poziom wyniku zależy od umownego początku skali i nie chcemy ściągać go do zera.</p>
+<p>Kara zniechęca do dużych współczynników. Dla <span class="math inline">\(\lambda=0\)</span> jest to zadanie OLS; zwiększając <span class="math inline">\(\lambda\)</span>, mocniej ograniczamy dopasowanie. <strong>Wyrazu wolnego nie karzemy</strong>: poziom wyniku zależy od umownego początku skali i nie chcemy ściągać go do zera.</p>
 <section id="dlaczego-skala-ma-znaczenie" class="level3" data-number="7.4.1">
 <h3 data-number="7.4.1" class="anchored" data-anchor-id="dlaczego-skala-ma-znaczenie"><span class="header-section-number">7.4.1</span> Dlaczego skala ma znaczenie</h3>
 <p>Niech <code>Income</code> oznacza dochód w tysiącach dolarów. Po przeliczeniu go na dolary wartości cechy rosną tysiąckrotnie, a współczynnik tej samej funkcji predykcji maleje tysiąckrotnie. Jego kwadrat maleje milion razy. Przy tych samych predykcjach kara zależy więc od jednostki. OLS nie ma tego problemu, bo minimalizuje tylko RSS.</p>
@@ -830,7 +893,7 @@ Tabela&nbsp;7.2: Kryteria dla podzbiorów trzech cech. AIC i BIC pomijają wspó
 \widehat{\bbeta}_\lambda=(\X^\top\X+\lambda\mathbf I)^{-1}\X^\top\y,
 \tag{7.7}\]</span></span> także wtedy, gdy kolumny <span class="math inline">\(\X\)</span> są liniowo zależne.</p>
 </div>
-<p>Dla <span class="math inline">\(\lambda&gt;0\)</span> macierz układu jest dodatnio określona: <span class="math inline">\(\mathbf v^\top(\X^\top\X+\lambda\mathbf I)\mathbf v=\|\X\mathbf v\|^2+\lambda\|\mathbf v\|^2&gt;0\)</span> dla <span class="math inline">\(\mathbf v\ne\mathbf 0\)</span>. Jest więc odwracalna, a funkcja celu jest ściśle wypukła, zatem punkt zerowania gradientu jest jedynym minimum. W obliczeniach rozwiązujemy układ równań, zamiast jawnie liczyć odwrotność. Dla <span class="math inline">\(\lambda=0\)</span> pozostaje zadanie MNK, które może mieć wiele rozwiązań.</p>
+<p>Dla <span class="math inline">\(\lambda&gt;0\)</span> macierz układu jest dodatnio określona: <span class="math inline">\(\mathbf v^\top(\X^\top\X+\lambda\mathbf I)\mathbf v=\|\X\mathbf v\|^2+\lambda\|\mathbf v\|^2&gt;0\)</span> dla <span class="math inline">\(\mathbf v\ne\mathbf 0\)</span>. Jest więc odwracalna, a funkcja celu jest ściśle wypukła, zatem punkt zerowania gradientu jest jedynym minimum. W obliczeniach rozwiązujemy układ równań, zamiast jawnie liczyć odwrotność. Dla <span class="math inline">\(\lambda=0\)</span> pozostaje zadanie OLS, które może mieć wiele rozwiązań.</p>
 <p>W jednej wycentrowanej cesze oznaczmy <span class="math inline">\(s=\sum_i x_i^2&gt;0\)</span> oraz <span class="math inline">\(z=\sum_i x_i y_i\)</span>. OLS daje <span class="math inline">\(\widehat\beta_{\mathrm{OLS}}=z/s\)</span>, a ridge <span id="eq-ridge-jedna-cecha"><span class="math display">\[
 \widehat\beta_\lambda=\frac{z}{s+\lambda}
 =\frac{s}{s+\lambda}\widehat\beta_{\mathrm{OLS}}.
@@ -914,7 +977,7 @@ Rysunek&nbsp;7.2: Ścieżki współczynników na uczącej części Credit, po st
 \sum_{j=1}^p\beta_j^2\leq t\quad\text{(ridge)},
 \qquad
 \sum_{j=1}^p|\beta_j|\leq t\quad\text{(LASSO)}.
-\tag{7.12}\]</span></span> Liczba <span class="math inline">\(t\)</span> to <strong>budżet</strong> na współczynniki. Duży budżet dopuszcza rozwiązanie MNK; mniejszy wymusza lepszy pod względem RSS punkt w ograniczonym zbiorze. Kara i budżet są dwoma sposobami opisu regularyzacji: rozwiązaniu dla danej dodatniej kary odpowiada budżet równy osiągniętej wielkości wektora. Dla dodatnich budżetów można dobrać odpowiadającą karę; nie jest to ogólnie relacja jeden do jednego. Budżet zerowy może wymagać granicy <span class="math inline">\(\lambda\to\infty\)</span>, jak w ridge.</p>
+\tag{7.12}\]</span></span> Liczba <span class="math inline">\(t\)</span> to <strong>budżet</strong> na współczynniki. Duży budżet dopuszcza rozwiązanie OLS; mniejszy wymusza lepszy pod względem RSS punkt w ograniczonym zbiorze. Kara i budżet są dwoma sposobami opisu regularyzacji: rozwiązaniu dla danej dodatniej kary odpowiada budżet równy osiągniętej wielkości wektora. Dla dodatnich budżetów można dobrać odpowiadającą karę; nie jest to ogólnie relacja jeden do jednego. Budżet zerowy może wymagać granicy <span class="math inline">\(\lambda\to\infty\)</span>, jak w ridge.</p>
 <p>Dla dwóch współczynników budżet ridge wyznacza koło, a LASSO – romb. Poziomice RSS są elipsami wokół rozwiązania OLS (w tym przykładzie okręgami). Szukamy najmniejszej poziomicy, która spotyka zbiór dopuszczalny. Na rysunku <a href="#fig-geometria-kar" class="quarto-xref"><span>7.3</span></a> kontakt z rombem wypada na osi, zatem jeden współczynnik jest zerem. Załamanie granicy daje cały zakres kierunków poziomic, dla których zachodzi taki kontakt. Przy gładkim brzegu koła kontakt na osi wymaga szczególnego ułożenia danych.</p>
 <div id="cell-fig-geometria-kar" class="cell" data-execution_count="6">
 <details class="code-fold">
@@ -962,7 +1025,7 @@ Rysunek&nbsp;7.3: Minimalizacja tej samej funkcji RSS przy dwóch ograniczeniach
 <p>Zerowy współczynnik LASSO oznacza, że przy danej próbie, reprezentacji i karze procedura nie wykorzystuje tej kolumny. Nie dowodzi braku związku cechy z wynikiem. Dwie cechy mogą zastępować się informacyjnie, a niewielka zmiana próby może zmienić wybraną reprezentantkę. Dlatego warto osobno badać stabilność wyboru i stabilność predykcji (<a href="#exr-stabilnosc-selekcji" class="quarto-xref">Zadanie&nbsp;<span>7.8</span></a>).</p>
 <p>Przy zależnych kolumnach współczynniki LASSO mogą być niejednoznaczne. Na przykład dla dwóch identycznych kolumn rozdzielenie dodatniego współczynnika między nie nie zmienia ani RSS, ani sumy modułów. Liczba niezerowych współczynników nie musi też zmieniać się monotonicznie na całej ścieżce kar. Selekcja do predykcji nie identyfikuje przyczyn zjawiska, podobnie jak zwykła regresja.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -971,7 +1034,7 @@ Rysunek&nbsp;7.3: Minimalizacja tej samej funkcji RSS przy dwóch ograniczeniach
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Wymagane są wyłącznie pojęcia ridge i LASSO z tego rozdziału. Można połączyć obie kary, dodając do RSS <span class="math inline">\(\lambda_1\sum_j|\beta_j|+\lambda_2\sum_j\beta_j^2\)</span>. Dodatnia kara kwadratowa zapewnia jednoznaczność wektora współczynników, a kara bezwzględna zachowuje możliwość zerowania. Taka metoda nazywa się <em>elastic net</em> <span class="citation" data-cites="zou2005">(<a href="../references.html#ref-zou2005" role="doc-biblioref">Zou i Hastie 2005</a>)</span>. Dwa parametry wymagają ustalonej procedury strojenia; nie włączamy ich do poniższego porównania.</p>
 </div>

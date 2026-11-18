@@ -20,7 +20,61 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -299,8 +353,36 @@ window.Quarto = {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Spis treści</h2>
+   
+  <ul>
+  <li><a href="#od-odpowiedzi-binarnej-do-prawdopodobieństwa" id="toc-od-odpowiedzi-binarnej-do-prawdopodobieństwa" class="nav-link active" data-scroll-target="#od-odpowiedzi-binarnej-do-prawdopodobieństwa"><span class="header-section-number">8.1</span> Od odpowiedzi binarnej do prawdopodobieństwa</a></li>
+  <li><a href="#sec-model-logistyczny" id="toc-sec-model-logistyczny" class="nav-link" data-scroll-target="#sec-model-logistyczny"><span class="header-section-number">8.2</span> Model, szanse i współczynniki</a>
+  <ul class="collapse">
+  <li><a href="#co-oznacza-jednostkowa-zmiana-cechy" id="toc-co-oznacza-jednostkowa-zmiana-cechy" class="nav-link" data-scroll-target="#co-oznacza-jednostkowa-zmiana-cechy"><span class="header-section-number">8.2.1</span> Co oznacza jednostkowa zmiana cechy?</a></li>
+  <li><a href="#liniowa-granica-decyzji" id="toc-liniowa-granica-decyzji" class="nav-link" data-scroll-target="#liniowa-granica-decyzji"><span class="header-section-number">8.2.2</span> Liniowa granica decyzji</a></li>
+  </ul></li>
+  <li><a href="#sec-logistyczna-wiarygodnosc" id="toc-sec-logistyczna-wiarygodnosc" class="nav-link" data-scroll-target="#sec-logistyczna-wiarygodnosc"><span class="header-section-number">8.3</span> Dopasowanie przez największą wiarygodność</a>
+  <ul class="collapse">
+  <li><a href="#dlaczego-uczymy-prawdopodobieństwa" id="toc-dlaczego-uczymy-prawdopodobieństwa" class="nav-link" data-scroll-target="#dlaczego-uczymy-prawdopodobieństwa"><span class="header-section-number">8.3.1</span> Dlaczego uczymy prawdopodobieństwa?</a></li>
+  <li><a href="#jak-minimalizujemy-stratę" id="toc-jak-minimalizujemy-stratę" class="nav-link" data-scroll-target="#jak-minimalizujemy-stratę"><span class="header-section-number">8.3.2</span> Jak minimalizujemy stratę?</a></li>
+  </ul></li>
+  <li><a href="#sec-logistyczna-separacja" id="toc-sec-logistyczna-separacja" class="nav-link" data-scroll-target="#sec-logistyczna-separacja"><span class="header-section-number">8.4</span> Separacja i regularyzacja</a></li>
+  <li><a href="#sec-logistyczna-ocena" id="toc-sec-logistyczna-ocena" class="nav-link" data-scroll-target="#sec-logistyczna-ocena"><span class="header-section-number">8.5</span> Prawdopodobieństwo, ranking i decyzja</a></li>
+  <li><a href="#sec-logistyczna-default" id="toc-sec-logistyczna-default" class="nav-link" data-scroll-target="#sec-logistyczna-default"><span class="header-section-number">8.6</span> Analiza danych Default</a>
+  <ul class="collapse">
+  <li><a href="#model-prosty-i-wieloraki" id="toc-model-prosty-i-wieloraki" class="nav-link" data-scroll-target="#model-prosty-i-wieloraki"><span class="header-section-number">8.6.1</span> Model prosty i wieloraki</a></li>
+  <li><a href="#wybór-modelu-na-części-uczącej" id="toc-wybór-modelu-na-części-uczącej" class="nav-link" data-scroll-target="#wybór-modelu-na-części-uczącej"><span class="header-section-number">8.6.2</span> Wybór modelu na części uczącej</a></li>
+  <li><a href="#końcowa-ocena-i-dwa-zastosowania" id="toc-końcowa-ocena-i-dwa-zastosowania" class="nav-link" data-scroll-target="#końcowa-ocena-i-dwa-zastosowania"><span class="header-section-number">8.6.3</span> Końcowa ocena i dwa zastosowania</a></li>
+  </ul></li>
+  <li><a href="#sec-logistyczna-newton" id="toc-sec-logistyczna-newton" class="nav-link" data-scroll-target="#sec-logistyczna-newton"><span class="header-section-number">8.7</span> Rozszerzenie: Newton i wnioskowanie o współczynnikach</a></li>
+  <li><a href="#sec-logistyczna-softmax" id="toc-sec-logistyczna-softmax" class="nav-link" data-scroll-target="#sec-logistyczna-softmax"><span class="header-section-number">8.8</span> Rozszerzenie: więcej niż dwie klasy</a></li>
+  <li><a href="#uwagi-bibliograficzne" id="toc-uwagi-bibliograficzne" class="nav-link" data-scroll-target="#uwagi-bibliograficzne">Uwagi bibliograficzne</a></li>
+  <li><a href="#zadania" id="toc-zadania" class="nav-link" data-scroll-target="#zadania">Zadania</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -336,7 +418,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../2-modele-liniowe/06-regresja-liniowa.html">Modele liniowe</a></li><li class="breadcrumb-item"><a href="../2-modele-liniowe/08-regresja-logistyczna.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regresja logistyczna</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-regresja-logistyczna" class="quarto-section-identifier"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regresja logistyczna</span></span></h1>
+<div class="quarto-title-block"><div><h1 class="title"><span id="sec-regresja-logistyczna" class="quarto-section-identifier"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regresja logistyczna</span></span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Kod</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Pokaż cały kod</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Ukryj cały kod</a></li></ul></div></div>
 </div>
 
 
@@ -353,9 +435,786 @@ window.Quarto = {
 </header>
 
 
-<p><em>Rozdział w przygotowaniu.</em></p>
+<p>Czy klient nie spłaci zadłużenia? Odpowiedź jest binarna, ale przed podjęciem decyzji chcielibyśmy znać prawdopodobieństwo zdarzenia. Dwie osoby mogą otrzymać tę samą prognozę klasy i mieć bardzo różne prawdopodobieństwa. Co więcej, ta sama prognoza prawdopodobieństwa może prowadzić do różnych decyzji, jeśli zmienią się koszty pomyłek.</p>
+<p>W rozdziale <a href="../1-fundamenty/02-predyktory-optymalne.html" class="quarto-xref"><span>2</span></a> rozdzieliliśmy prawdopodobieństwo warunkowe od reguły decyzyjnej. Teraz nauczymy się szacować to prawdopodobieństwo w modelu parametrycznym. Regresja logistyczna łączy liniowy opis zależności z rozkładem Bernoulliego. Jej dopasowanie prowadzi do nowej funkcji straty, lecz selekcja, regularyzacja i ocena poza próbą zachowują znaczenie znane z poprzednich rozdziałów.</p>
+<section id="od-odpowiedzi-binarnej-do-prawdopodobieństwa" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="od-odpowiedzi-binarnej-do-prawdopodobieństwa"><span class="header-section-number">8.1</span> Od odpowiedzi binarnej do prawdopodobieństwa</h2>
+<p>Kodujemy zdarzenie przez <span class="math inline">\(Y=1\)</span>, a jego brak przez <span class="math inline">\(Y=0\)</span>. Wtedy <span class="math display">\[
+\eta(\x)=\Prob(Y=1\mid\X=\x)=\E[Y\mid\X=\x].
+\]</span> To nadal funkcja regresji. Można ją przybliżać metodą najmniejszych kwadratów; problemem nie jest samo kodowanie zerem i jedynką. Problemem jest zakres wartości liniowej funkcji: nie ma gwarancji, że jej prognozy pozostaną w przedziale <span class="math inline">\([0,1]\)</span>. Ponadto wariancja warunkowa wynosi <span class="math inline">\(\eta(\x)(1-\eta(\x))\)</span>, więc zwykle nie jest stała.</p>
+<p>Przykłady oprzemy na <em>Default</em>, symulowanym zbiorze używanym w podręczniku <span class="citation" data-cites="islp">James i in. (<a href="../references.html#ref-islp" role="doc-biblioref">2023</a>)</span>. Zawiera on informację o zaleganiu ze spłatą (<code>default</code>), statusie studenta (<code>student</code>), saldzie zadłużenia na karcie (<code>balance</code>) i rocznym dochodzie (<code>income</code>). To dane dydaktyczne, a nie badanie pozwalające formułować wnioski o rzeczywistym rynku kredytowym.</p>
+<p>Od początku odkładamy 25% obserwacji do końcowej oceny. Wszystkie wcześniejsze wykresy i interpretacje wykorzystują tylko część uczącą. Stratyfikacja zachowuje w przybliżeniu częstości obu klas.</p>
+<div id="cell-przygotowanie-default" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display, Markdown</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.special <span class="im">import</span> expit</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split, StratifiedKFold, GridSearchCV</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression, LogisticRegression</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> log_loss, roc_auc_score, roc_curve, confusion_matrix</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>sciezka <span class="op">=</span> Path(<span class="st">'dane/Default.csv'</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> sciezka.exists():</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    sciezka <span class="op">=</span> Path(<span class="st">'../dane/Default.csv'</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>default <span class="op">=</span> pd.read_csv(sciezka, index_col<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> default.shape <span class="op">==</span> (<span class="dv">10000</span>, <span class="dv">4</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="kw">not</span> default.isna().<span class="bu">any</span>().<span class="bu">any</span>()</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> pd.DataFrame({<span class="st">'balance'</span>: default.balance,</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>                  <span class="st">'income'</span>: default.income,</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>                  <span class="st">'student'</span>: (default.student <span class="op">==</span> <span class="st">'Yes'</span>).astype(<span class="bu">int</span>)})</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> (default.default <span class="op">==</span> <span class="st">'Yes'</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>Xu, Xt, yu, yt <span class="op">=</span> train_test_split(X, y, test_size<span class="op">=</span><span class="fl">0.25</span>,</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>                                  stratify<span class="op">=</span>y, random_state<span class="op">=</span><span class="dv">2026</span>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>kolory <span class="op">=</span> [<span class="st">'#0072B2'</span>, <span class="st">'#D55E00'</span>, <span class="st">'#009E73'</span>]</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> tabela(df):</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    display(Markdown(df.to_markdown(index<span class="op">=</span><span class="va">False</span>, floatfmt<span class="op">=</span><span class="st">'.4g'</span>)))</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>tabela(pd.DataFrame({<span class="st">'część'</span>: [<span class="st">'ucząca'</span>, <span class="st">'testowa'</span>],</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>                    <span class="st">'liczba obserwacji'</span>: [<span class="bu">len</span>(yu), <span class="bu">len</span>(yt)],</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>                    <span class="st">'liczba zdarzeń'</span>: [yu.<span class="bu">sum</span>(), yt.<span class="bu">sum</span>()]}))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="przygotowanie-default" class="cell-output cell-output-display cell-output-markdown">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">część</th>
+<th style="text-align: right;">liczba obserwacji</th>
+<th style="text-align: right;">liczba zdarzeń</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">ucząca</td>
+<td style="text-align: right;">7500</td>
+<td style="text-align: right;">250</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">testowa</td>
+<td style="text-align: right;">2500</td>
+<td style="text-align: right;">83</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Na razie dopasujemy oba modele tylko do salda zadłużenia. Kod regresji logistycznej potraktujmy jako zapowiedź: poniżej wyprowadzimy jej model i metodę estymacji. <code>C=np.inf</code> wyłącza regularyzację.</p>
+<div id="cell-fig-default-liniowa-logistyczna" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>prosty <span class="op">=</span> make_pipeline(StandardScaler(),</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                       LogisticRegression(C<span class="op">=</span>np.inf, tol<span class="op">=</span><span class="fl">1e-10</span>, max_iter<span class="op">=</span><span class="dv">2000</span>))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>prosty.fit(Xu[[<span class="st">'balance'</span>]], yu)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>liniowy <span class="op">=</span> LinearRegression().fit(Xu[[<span class="st">'balance'</span>]], yu)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>siatka <span class="op">=</span> pd.DataFrame({<span class="st">'balance'</span>: np.linspace(<span class="dv">0</span>, Xu.balance.<span class="bu">max</span>(), <span class="dv">300</span>)})</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>grupy <span class="op">=</span> pd.DataFrame({<span class="st">'balance'</span>: Xu.balance, <span class="st">'y'</span>: yu})</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>grupy[<span class="st">'grupa'</span>] <span class="op">=</span> pd.qcut(grupy.balance, <span class="dv">10</span>, duplicates<span class="op">=</span><span class="st">'drop'</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>srednie <span class="op">=</span> grupy.groupby(<span class="st">'grupa'</span>, observed<span class="op">=</span><span class="va">True</span>)[[<span class="st">'balance'</span>, <span class="st">'y'</span>]].mean()</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">4</span>))</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>ax.plot(siatka.balance, liniowy.predict(siatka), label<span class="op">=</span><span class="st">'OLS'</span>, color<span class="op">=</span>kolory[<span class="dv">0</span>])</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>ax.plot(siatka.balance, prosty.predict_proba(siatka)[:, <span class="dv">1</span>],</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        label<span class="op">=</span><span class="st">'regresja logistyczna'</span>, color<span class="op">=</span>kolory[<span class="dv">1</span>])</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>ax.scatter(srednie.balance, srednie.y, color<span class="op">=</span><span class="st">'black'</span>, label<span class="op">=</span><span class="st">'częstości w grupach'</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>ax.axhline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">'0.7'</span>, lw<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">'saldo zadłużenia'</span>, ylabel<span class="op">=</span><span class="st">'prawdopodobieństwo zdarzenia'</span>)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-default-liniowa-logistyczna" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-default-liniowa-logistyczna-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="08-regresja-logistyczna_files/figure-html/fig-default-liniowa-logistyczna-output-1.png" width="664" height="374" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-default-liniowa-logistyczna-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Rysunek&nbsp;8.1: Prognozy dla salda zadłużenia: prosta może dawać ujemne prawdopodobieństwa; sigmoida pozostaje między zerem a jedynką. Punkty przedstawiają częstości w dziesięciu grupach o zbliżonej liczebności, wyznaczonych na danych uczących.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Obcięcie prognoz OLS do <span class="math inline">\([0,1]\)</span> usuwa naruszenie zakresu, ale samo w sobie nie tworzy modelu logistycznego. Zmieniamy zarówno klasę funkcji, jak i kryterium dopasowania.</p>
+</section>
+<section id="sec-model-logistyczny" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="sec-model-logistyczny"><span class="header-section-number">8.2</span> Model, szanse i współczynniki</h2>
+<p>Dla prawdopodobieństwa <span class="math inline">\(q\in(0,1)\)</span> <strong>szansa</strong> zdarzenia wynosi <span class="math inline">\(q/(1-q)\)</span>. Przy <span class="math inline">\(q=0.2\)</span> szansa jest równa <span class="math inline">\(1/4\)</span>: na jedno zdarzenie przypadają przeciętnie cztery przypadki jego braku. Logarytm szans, zwany <strong>logitem</strong>, przyjmuje dowolną wartość rzeczywistą.</p>
+<p>Model logistyczny zakłada <span class="math display">\[
+Y\mid\X=\x\sim\operatorname{Bernoulli}(q_{\boldsymbol\beta}(\x)),
+\qquad
+\log\frac{q_{\boldsymbol\beta}(\x)}{1-q_{\boldsymbol\beta}(\x)}
+=\beta_0+\sum_{j=1}^p\beta_jx_j.
+\]</span> Oznaczmy prawą stronę przez <span class="math inline">\(s_{\boldsymbol\beta}(\x)\)</span>. Odwracając logit, otrzymujemy <strong>funkcję logistyczną</strong>, czyli sigmoidę: <span class="math display">\[
+q_{\boldsymbol\beta}(\x)=\sigma(s_{\boldsymbol\beta}(\x)),
+\qquad \sigma(s)=\frac{1}{1+e^{-s}}.
+\]</span> Liniowy jest logit, nie prawdopodobieństwo. Dla skończonych parametrów model zawsze daje wartości ściśle między zerem a jedynką. Symbol <span class="math inline">\(\eta\)</span> rezerwujemy dla prawdziwego prawdopodobieństwa warunkowego; modelowe <span class="math inline">\(q\)</span> nie musi być mu równe.</p>
+<p>Modelujemy bezpośrednio rozkład <span class="math inline">\(Y\)</span> przy danych cechach, nie określając rozkładu samych cech. Jest to podejście <strong>dyskryminacyjne</strong>. Nie wymaga normalności <code>balance</code> ani <code>income</code>. W rozdziale <a href="../3-probabilistyka/11-modele-generatywne.html" class="quarto-xref"><span>11</span></a> poznamy drugą drogę: modelowanie rozkładów cech w klasach i wyznaczanie prawdopodobieństw klas ze wzoru Bayesa.</p>
+<section id="co-oznacza-jednostkowa-zmiana-cechy" class="level3" data-number="8.2.1">
+<h3 data-number="8.2.1" class="anchored" data-anchor-id="co-oznacza-jednostkowa-zmiana-cechy"><span class="header-section-number">8.2.1</span> Co oznacza jednostkowa zmiana cechy?</h3>
+<p>Jeśli zwiększymy <span class="math inline">\(x_j\)</span> o <span class="math inline">\(\Delta\)</span>, pozostawiając inne cechy bez zmian, to logit wzrośnie o <span class="math inline">\(\beta_j\Delta\)</span>, a szansa zostanie pomnożona przez <span class="math inline">\(e^{\beta_j\Delta}\)</span>. Jest to <strong>iloraz szans</strong>, a nie iloraz prawdopodobieństw. Przy ilorazie szans równym 2 prawdopodobieństwo <span class="math inline">\(0.1\)</span> zmienia się na <span class="math inline">\(2/11\approx0.182\)</span>, a <span class="math inline">\(0.5\)</span> na <span class="math inline">\(2/3\)</span>.</p>
+<p>Ogólnie, gdy wyjściowe prawdopodobieństwo wynosi <span class="math inline">\(q\)</span>, nowe jest równe <span class="math display">\[
+q'=\frac{e^{\beta_j\Delta}q}{1-q+e^{\beta_j\Delta}q}.
+\]</span> Dla cechy ciągłej w modelu bez interakcji <span class="math display">\[
+\frac{\partial q_{\boldsymbol\beta}(\x)}{\partial x_j}
+=\beta_j q_{\boldsymbol\beta}(\x)(1-q_{\boldsymbol\beta}(\x)).
+\]</span> Ta sama zmiana logitu najmocniej zmienia prawdopodobieństwo w okolicy <span class="math inline">\(1/2\)</span>. Dlatego współczynnik nie jest stałą zmianą prawdopodobieństwa.</p>
+<p>Cechy jakościowe kodujemy jak w regresji liniowej. Dla <code>student=1</code> współczynnik opisuje porównanie ze statusem <code>student=0</code> przy tych samych wartościach pozostałych cech. Nie jest to efekt przyczynowy podjęcia studiów. Przy interakcji <code>balance * student</code> zmiana logitu na jednostkę salda wynosi <span class="math inline">\(\beta_{\mathrm{balance}}\)</span> dla niestudenta i sumę tego współczynnika oraz współczynnika interakcji dla studenta.</p>
+</section>
+<section id="liniowa-granica-decyzji" class="level3" data-number="8.2.2">
+<h3 data-number="8.2.2" class="anchored" data-anchor-id="liniowa-granica-decyzji"><span class="header-section-number">8.2.2</span> Liniowa granica decyzji</h3>
+<p>Dla progu <span class="math inline">\(t\in(0,1)\)</span> przewidujemy klasę 1, gdy <span class="math inline">\(q_{\boldsymbol\beta}(\x)\ge t\)</span>. Monotoniczność sigmoidy daje równoważny warunek <span class="math display">\[
+\beta_0+\sum_{j=1}^p\beta_jx_j\ge\log\frac{t}{1-t}.
+\]</span> Przy niezerowym wektorze współczynników granicą jest hiperpłaszczyzna; zmiana progu przesuwa ją równolegle. Nie oznacza to, że regresja logistyczna potrafi opisywać wyłącznie proste granice w oryginalnych zmiennych: dodanie kwadratów lub interakcji daje granice nieliniowe, choć model pozostaje liniowy względem współczynników.</p>
+</section>
+</section>
+<section id="sec-logistyczna-wiarygodnosc" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="sec-logistyczna-wiarygodnosc"><span class="header-section-number">8.3</span> Dopasowanie przez największą wiarygodność</h2>
+<p>Dla niezależnych obserwacji rozpatrujemy warunkową wiarygodność etykiet przy ustalonych cechach. Niech <span class="math inline">\(q_i=q_{\boldsymbol\beta}(\x_i)\)</span>. Wtedy <span class="math display">\[
+L(\boldsymbol\beta)=\prod_{i=1}^n q_i^{y_i}(1-q_i)^{1-y_i}.
+\]</span> Każdy czynnik jest prawdopodobieństwem rzeczywiście zaobserwowanej etykiety. <strong>Metoda największej wiarygodności</strong> wybiera parametry, dla których iloczyn jest największy. Logarytm jest rosnący, więc można równoważnie maksymalizować sumę logarytmów. Zmieniając znak i dzieląc przez <span class="math inline">\(n\)</span>, otrzymujemy minimalizację średniej straty: <span id="eq-logistyczna-strata"><span class="math display">\[
+J(\boldsymbol\beta)=\frac1n\sum_{i=1}^n
+\left[-y_i\log q_i-(1-y_i)\log(1-q_i)\right].
+\tag{8.1}\]</span></span></p>
+<p>Wyrażenie w nawiasie to <strong>strata logarytmiczna</strong> (<em>log-loss</em>, binarna entropia krzyżowa). Dla <span class="math inline">\(y=1\)</span> wynosi <span class="math inline">\(-\log q\)</span>, a dla <span class="math inline">\(y=0\)</span>: <span class="math inline">\(-\log(1-q)\)</span>. Zdecydowanie błędna prognoza otrzymuje dużą karę. Przykładowo dla zdarzenia <span class="math inline">\(y=1\)</span> prognozy <span class="math inline">\(q=0.5\)</span> i <span class="math inline">\(q=0.01\)</span> dają straty około <span class="math inline">\(0.693\)</span> i <span class="math inline">\(4.605\)</span>.</p>
+<section id="dlaczego-uczymy-prawdopodobieństwa" class="level3" data-number="8.3.1">
+<h3 data-number="8.3.1" class="anchored" data-anchor-id="dlaczego-uczymy-prawdopodobieństwa"><span class="header-section-number">8.3.1</span> Dlaczego uczymy prawdopodobieństwa?</h3>
+<p>Przy ustalonym <span class="math inline">\(\x\)</span> i prawdziwym prawdopodobieństwie <span class="math inline">\(\eta=\eta(\x)\)</span> oczekiwana strata prognozy <span class="math inline">\(q\)</span> wynosi <span class="math display">\[
+r(q)=-\eta\log q-(1-\eta)\log(1-q).
+\]</span> Dla <span class="math inline">\(0&lt;\eta&lt;1\)</span> mamy <span class="math display">\[
+r'(q)=\frac{q-\eta}{q(1-q)}.
+\]</span> Pochodna jest ujemna przed <span class="math inline">\(\eta\)</span> i dodatnia za <span class="math inline">\(\eta\)</span>, więc minimum przypada dokładnie w <span class="math inline">\(q=\eta\)</span>. Dla <span class="math inline">\(\eta=0\)</span> lub <span class="math inline">\(1\)</span> minimum leży na odpowiednim brzegu, z naturalnym rozszerzeniem definicji straty. To własność ściśle właściwej reguły oceny <span class="citation" data-cites="gneiting2007">(<a href="../references.html#ref-gneiting2007" role="doc-biblioref">Gneiting i Raftery 2007</a>)</span>.</p>
+<p>Własność dotyczy wyboru spośród wszystkich prawdopodobieństw. Jeśli prawdziwy logit nie ma założonej postaci, model logistyczny może go tylko przybliżać. Dopasowanie w próbie nie gwarantuje ani małego błędu poza próbą, ani poprawnej kalibracji.</p>
+</section>
+<section id="jak-minimalizujemy-stratę" class="level3" data-number="8.3.2">
+<h3 data-number="8.3.2" class="anchored" data-anchor-id="jak-minimalizujemy-stratę"><span class="header-section-number">8.3.2</span> Jak minimalizujemy stratę?</h3>
+<p>Do wektora cech dołączamy jedynkę: <span class="math inline">\(\widetilde{\x}_i=(1,\x_i^\top)^\top\)</span>, a przez <span class="math inline">\(Z\)</span> oznaczamy macierz tych wierszy. Wektor parametrów obejmuje teraz wyraz wolny. Dla <span class="math inline">\(s_i=\widetilde{\x}_i^\top\boldsymbol\beta\)</span> pojedynczą stratę można zapisać jako <span class="math display">\[
+\log(1+e^{s_i})-y_i s_i.
+\]</span> Jej pochodna względem <span class="math inline">\(s_i\)</span> jest równa <span class="math inline">\(\sigma(s_i)-y_i\)</span>, stąd <span class="math display">\[
+\nabla J(\boldsymbol\beta)=\frac1n Z^\top(\boldsymbol q-\boldsymbol y).
+\]</span> To ważny związek z regresją liniową: aktualizacja zależy od różnic między prognozami a obserwacjami. Tutaj prognozy zależą jednak nieliniowo od parametrów. Nie otrzymujemy jednego układu równań liniowych, który rozwiązywałby całe zadanie. Stosujemy algorytm iteracyjny, na przykład metodę gradientową lub Newtona.</p>
+<p>Macierz drugich pochodnych wynosi <span class="math display">\[
+\nabla^2J(\boldsymbol\beta)=\frac1n Z^\top WZ,
+\qquad W=\operatorname{diag}(q_i(1-q_i)).
+\]</span> Jest dodatnio półokreślona, ponieważ dla każdego wektora <span class="math inline">\(v\)</span> <span class="math inline">\(v^\top Z^\top WZv=\sum_i q_i(1-q_i)(\widetilde{\x}_i^\top v)^2\ge0\)</span>. Strata jest więc wypukła: nie ma różnych izolowanych minimów lokalnych. Przy pełnym rzędzie kolumnowym <span class="math inline">\(Z\)</span> jest ściśle wypukła dla skończonych parametrów. Nie zapewnia to jeszcze istnienia minimum.</p>
+<p>W obliczeniach warto używać <code>np.logaddexp(0, s)</code> zamiast dosłownego <code>np.log(1 + np.exp(s))</code>: duży dodatni wynik liniowy może spowodować przepełnienie funkcji wykładniczej. Biblioteki rozwiązują również problemy stabilnego obliczania sigmoidy.</p>
+</section>
+</section>
+<section id="sec-logistyczna-separacja" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="sec-logistyczna-separacja"><span class="header-section-number">8.4</span> Separacja i regularyzacja</h2>
+<p>Rozważmy cztery obserwacje z cechami <span class="math inline">\(-2,-1,1,2\)</span> i etykietami <span class="math inline">\(0,0,1,1\)</span>. Model <span class="math inline">\(q(x)=\sigma(bx)\)</span> dla każdego <span class="math inline">\(b&gt;0\)</span> klasyfikuje je bezbłędnie przy progu <span class="math inline">\(1/2\)</span>. Gdy <span class="math inline">\(b\)</span> rośnie, prawdopodobieństwa obserwowanych klas zbliżają się do jedności, a strata do zera. Dla żadnego skończonego <span class="math inline">\(b\)</span> nie osiąga zera. <strong>Nie istnieje skończony estymator największej wiarygodności</strong>, mimo że problem jest wypukły.</p>
+<p>Ogólnie pełna separacja zachodzi, gdy istnieje wektor <span class="math inline">\(v\)</span> taki, że <span class="math inline">\((2y_i-1)\widetilde{\x}_i^\top v&gt;0\)</span> dla wszystkich obserwacji. Wzdłuż parametrów <span class="math inline">\(av\)</span>, przy <span class="math inline">\(a\to\infty\)</span>, strata dąży do zera. Występuje też separacja częściowa (quasi-separacja), z nierównościami nieostrymi i co najmniej jedną ostrą, która również może uniemożliwić skończoną estymację. Sam komunikat o zbieżności programu nie zastępuje sprawdzenia wielkości współczynników i struktury danych.</p>
+<div id="cell-fig-logistyczna-separacja" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>xs <span class="op">=</span> np.array([<span class="op">-</span><span class="fl">2.</span>, <span class="op">-</span><span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">2.</span>])</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>ys <span class="op">=</span> np.array([<span class="fl">0.</span>, <span class="fl">0.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>])</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">300</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> b[:, <span class="va">None</span>] <span class="op">*</span> xs</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>strata <span class="op">=</span> (np.logaddexp(<span class="dv">0</span>, s) <span class="op">-</span> ys <span class="op">*</span> s).mean(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="fl">3.7</span>))</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>ax.plot(b, strata, label<span class="op">=</span><span class="st">'bez kary'</span>, color<span class="op">=</span>kolory[<span class="dv">0</span>])</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>ax.plot(b, strata <span class="op">+</span> <span class="fl">0.05</span> <span class="op">*</span> b<span class="op">**</span><span class="dv">2</span> <span class="op">/</span> <span class="dv">2</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        label<span class="op">=</span><span class="vs">r'z karą </span><span class="dv">$</span><span class="er">\</span><span class="vs">lambda=0</span><span class="dv">.</span><span class="vs">05</span><span class="dv">$</span><span class="vs">'</span>, color<span class="op">=</span>kolory[<span class="dv">1</span>])</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">'współczynnik b'</span>, ylabel<span class="op">=</span><span class="st">'funkcja celu'</span>, ylim<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-logistyczna-separacja" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-logistyczna-separacja-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="08-regresja-logistyczna_files/figure-html/fig-logistyczna-separacja-output-1.png" width="663" height="346" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-logistyczna-separacja-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Rysunek&nbsp;8.2: Przy separacji strata bez kary maleje w kierunku nieskończonego współczynnika. Kara kwadratowa zapewnia skończone minimum.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Przenosimy teraz pomysł z rozdziału <a href="07-selekcja-regularyzacja.html" class="quarto-xref"><span>7</span></a>: <span id="eq-logistyczna-kara"><span class="math display">\[
+J_\lambda(\boldsymbol\beta)=J(\boldsymbol\beta)
++\frac\lambda2\sum_{j=1}^p\beta_j^2.
+\tag{8.2}\]</span></span></p>
+<p>Nie karzemy wyrazu wolnego. Przy <span class="math inline">\(\lambda&gt;0\)</span> i obecności obu klas kara kwadratowa daje skończone, jednoznaczne rozwiązanie także przy separacji i współliniowości. Gdy wszystkie etykiety są jednakowe, niekarany wyraz wolny nadal może uciekać do nieskończoności. Alternatywą jest kara <span class="math inline">\(\lambda\sum_{j=1}^p|\beta_j|\)</span>, sprzyjająca zerowym współczynnikom. Jej geometria jest taka sama jak dla LASSO, ale część opisująca dopasowanie jest teraz stratą logarytmiczną.</p>
+<p>Skala cech wpływa na karę, więc standaryzujemy je wewnątrz każdej części uczącej CV. Siłę regularyzacji wybieramy według straty odpowiadającej celowi analizy. Do przewidywania prawdopodobieństw naturalny jest log-loss; trafność przy progu <span class="math inline">\(1/2\)</span> ignoruje wiele różnic między nimi.</p>
+<p>W użytej implementacji <code>LogisticRegression</code> z karą <span class="math inline">\(L_2\)</span> parametr <code>C</code> kontroluje odwrotność siły regularyzacji. Bez wag obserwacji konwencji <a href="#eq-logistyczna-kara" class="quarto-xref">Równanie&nbsp;<span>8.2</span></a> odpowiada <span class="math inline">\(\lambda=1/(nC)\)</span>, gdzie <span class="math inline">\(n\)</span> jest liczbą obserwacji użytych w danym dopasowaniu. Większe <code>C</code> oznacza słabszą karę; nie jest to parametr <code>alpha</code> z regresji grzbietowej. Szczegóły tej normalizacji podaje <a href="https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression">dokumentacja scikit-learn</a>.</p>
+</section>
+<section id="sec-logistyczna-ocena" class="level2" data-number="8.5">
+<h2 data-number="8.5" class="anchored" data-anchor-id="sec-logistyczna-ocena"><span class="header-section-number">8.5</span> Prawdopodobieństwo, ranking i decyzja</h2>
+<p>Dobry model prawdopodobieństw, dobry ranking i dobra decyzja przy ustalonym progu to trzy powiązane, ale różne cele.</p>
+<p><strong>Prawdopodobieństwa</strong> oceniamy na nowych danych przez średnią stratę logarytmiczną. Możemy też sprawdzić <strong>kalibrację</strong>: czy wśród przypadków z prognozą bliską <span class="math inline">\(q\)</span> zdarzenie występuje z częstością bliską <span class="math inline">\(q\)</span>? Wykres częstości w grupach jest przybliżeniem takiej oceny. Zależy od podziału na grupy i przy małej liczbie zdarzeń może silnie się wahać. Stała prognoza częstości populacyjnej może być skalibrowana, choć nie rozróżnia osób o różnym ryzyku.</p>
+<p><strong>Decyzje</strong> wymagają progu. Przy zerowych kosztach poprawnych odpowiedzi, koszcie <span class="math inline">\(c_{\mathrm{FP}}&gt;0\)</span> fałszywego alarmu i koszcie <span class="math inline">\(c_{\mathrm{FN}}&gt;0\)</span> przeoczenia zdarzenia, warunkowe koszty decyzji 1 i 0 wynoszą odpowiednio <span class="math inline">\(c_{\mathrm{FP}}(1-q)\)</span> oraz <span class="math inline">\(c_{\mathrm{FN}}q\)</span>. Wybieramy klasę 1, gdy <span class="math display">\[
+q\ge t=\frac{c_{\mathrm{FP}}}{c_{\mathrm{FP}}+c_{\mathrm{FN}}}.
+\]</span> To reguła z sekcji <a href="../1-fundamenty/02-predyktory-optymalne.html#sec-od-prawdopodobienstw-do-decyzji" class="quarto-xref"><span>2.8</span></a> <span class="citation" data-cites="elkan2001">(<a href="../references.html#ref-elkan2001" role="doc-biblioref">Elkan 2001</a>)</span>. Jest optymalna dla prawdziwego prawdopodobieństwa; podstawienie oszacowania tworzy regułę przybliżoną. Sam niski udział klasy 1 nie uzasadnia konkretnego progu ani automatycznego ważenia klas. Wagi klas zmieniają kryterium dopasowania i mogą zmienić interpretację otrzymanych prawdopodobieństw.</p>
+<p>Dla ustalonego progu zapisujemy wyniki w macierzy pomyłek:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Rzeczywista klasa</th>
+<th style="text-align: right;">Decyzja 0</th>
+<th style="text-align: right;">Decyzja 1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td style="text-align: right;">TN: poprawne odrzucenie</td>
+<td style="text-align: right;">FP: fałszywy alarm</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td style="text-align: right;">FN: przeoczenie</td>
+<td style="text-align: right;">TP: wykryte zdarzenie</td>
+</tr>
+</tbody>
+</table>
+<p>Stąd <strong>czułość</strong> wynosi <span class="math inline">\(\mathrm{TP}/(\mathrm{TP}+\mathrm{FN})\)</span>, <strong>swoistość</strong> <span class="math inline">\(\mathrm{TN}/(\mathrm{TN}+\mathrm{FP})\)</span>, <strong>precyzja</strong> <span class="math inline">\(\mathrm{TP}/(\mathrm{TP}+\mathrm{FP})\)</span>, a <strong>trafność</strong> <span class="math inline">\((\mathrm{TP}+\mathrm{TN})/n\)</span>. Przy zerowym mianowniku dana miara jest nieokreślona. Jeśli zdarzenie jest rzadkie, reguła zawsze wybierająca 0 ma wysoką trafność i zerową czułość.</p>
+<p><strong>Ranking</strong> ocenia krzywa ROC: wraz ze zmianą progu wykreślamy czułość w funkcji odsetka fałszywych alarmów <span class="math inline">\(1-\text{swoistość}\)</span>. Pole pod tą krzywą, AUC, ma interpretację prawdopodobieństwa, że losowy przypadek klasy 1 otrzyma wyższy wynik niż losowy przypadek klasy 0; remis liczymy z wagą <span class="math inline">\(1/2\)</span>. Ściśle rosnące przekształcenie wyniku nie zmienia AUC, ale może zepsuć kalibrację i decyzje przy ustalonym progu.</p>
+<p>ROC nie uwzględnia kosztów ani częstości klas w ocenie konkretnej decyzji. Przy rzadkich zdarzeniach warto równolegle oglądać precyzję i czułość. Nie wybieramy progu na końcowym zbiorze testowym: jeśli ma wynikać z danych, staje się kolejnym elementem strojenia.</p>
+</section>
+<section id="sec-logistyczna-default" class="level2" data-number="8.6">
+<h2 data-number="8.6" class="anchored" data-anchor-id="sec-logistyczna-default"><span class="header-section-number">8.6</span> Analiza danych Default</h2>
+<section id="model-prosty-i-wieloraki" class="level3" data-number="8.6.1">
+<h3 data-number="8.6.1" class="anchored" data-anchor-id="model-prosty-i-wieloraki"><span class="header-section-number">8.6.1</span> Model prosty i wieloraki</h3>
+<p>Najpierw oszacujemy współczynniki bez kary na części uczącej. Saldo wyrazimy w setkach jednostek pieniężnych, a dochód w dziesiątkach tysięcy. To zmiana jednostek, która ułatwia interpretację, nie zmiana klasy nieregularyzowanych modeli. <code>statsmodels</code> wymaga jawnego dodania wyrazu wolnego.</p>
+<div class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Xi <span class="op">=</span> pd.DataFrame({<span class="st">'saldo / 100'</span>: Xu.balance <span class="op">/</span> <span class="dv">100</span>,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'dochód / 10000'</span>: Xu.income <span class="op">/</span> <span class="dv">10000</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'student'</span>: Xu.student})</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>modele_opisowe <span class="op">=</span> {</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'tylko student'</span>: sm.Logit(yu, sm.add_constant(Xi[[<span class="st">'student'</span>]])).fit(disp<span class="op">=</span><span class="va">False</span>),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'wieloraki'</span>: sm.Logit(yu, sm.add_constant(Xi)).fit(disp<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>wsp <span class="op">=</span> []</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> nazwa, model <span class="kw">in</span> modele_opisowe.items():</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> cecha, wartosc <span class="kw">in</span> model.params.items():</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        wsp.append([nazwa, cecha, wartosc, np.exp(wartosc)])</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>tabela(pd.DataFrame(wsp, columns<span class="op">=</span>[<span class="st">'model'</span>, <span class="st">'parametr'</span>, <span class="st">'współczynnik'</span>, <span class="st">'exp(współczynnik)'</span>]))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-default-wspolczynniki" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="5">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-default-wspolczynniki-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;8.1: Współczynniki modeli bez kary na danych uczących. Wiersze oznaczają przyrost logitu na wskazaną jednostkę cechy.
+</figcaption>
+<div aria-describedby="tbl-default-wspolczynniki-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display cell-output-markdown">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 23%">
+<col style="width: 23%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">model</th>
+<th style="text-align: left;">parametr</th>
+<th style="text-align: right;">współczynnik</th>
+<th style="text-align: right;">exp(współczynnik)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">tylko student</td>
+<td style="text-align: left;">const</td>
+<td style="text-align: right;">-3.528</td>
+<td style="text-align: right;">0.02936</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tylko student</td>
+<td style="text-align: left;">student</td>
+<td style="text-align: right;">0.4702</td>
+<td style="text-align: right;">1.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">wieloraki</td>
+<td style="text-align: left;">const</td>
+<td style="text-align: right;">-10.6</td>
+<td style="text-align: right;">2.487e-05</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">wieloraki</td>
+<td style="text-align: left;">saldo / 100</td>
+<td style="text-align: right;">0.5574</td>
+<td style="text-align: right;">1.746</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">wieloraki</td>
+<td style="text-align: left;">dochód / 10000</td>
+<td style="text-align: right;">0.01327</td>
+<td style="text-align: right;">1.013</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">wieloraki</td>
+<td style="text-align: left;">student</td>
+<td style="text-align: right;">-0.6163</td>
+<td style="text-align: right;">0.5399</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>W modelu wielorakim wzrost salda o 100 jednostek mnoży szansę zdarzenia przez około 1.75 przy ustalonym dochodzie i statusie studenta. Iloraz szans studentów względem niestudentów wynosi około 0.54, podczas gdy w modelu z samym statusem studenta wynosi około 1.60.</p>
+<p>Porównanie współczynnika <code>student</code> w obu modelach ilustruje różnicę między porównaniem grup a porównaniem przy ustalonych innych cechach. Zmiana znaku nie jest sprzecznością: modele odpowiadają na inne pytania. Studentów i niestudentów mogą różnić również rozkłady salda i dochodu. Samo porównanie tych współczynników nie identyfikuje mechanizmu przyczynowego.</p>
+<p>Wartości <code>exp(współczynnik)</code> przy wyrazie wolnym są szansami dla zerowych wartości wszystkich cech. Nie zawsze jest to interesujący profil osoby; centrowanie cech pozwala nadać wyrazowi wolnemu dogodniejszą interpretację.</p>
+</section>
+<section id="wybór-modelu-na-części-uczącej" class="level3" data-number="8.6.2">
+<h3 data-number="8.6.2" class="anchored" data-anchor-id="wybór-modelu-na-części-uczącej"><span class="header-section-number">8.6.2</span> Wybór modelu na części uczącej</h3>
+<p>Porównamy model z samym saldem i model ze wszystkimi trzema cechami, w obu przypadkach dla tej samej siatki siły regularyzacji, obejmującej brak kary. Kryterium wyboru ustalamy przed oceną: średni log-loss w pięcioczęściowej stratyfikowanej CV. Modelem odniesienia jest stała prognoza częstości zdarzenia na części uczącej.</p>
+<div class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cv <span class="op">=</span> StratifiedKFold(n_splits<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">2027</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>cechy <span class="op">=</span> {<span class="st">'saldo'</span>: [<span class="st">'balance'</span>], <span class="st">'wszystkie'</span>: [<span class="st">'balance'</span>, <span class="st">'income'</span>, <span class="st">'student'</span>]}</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>siatka_C <span class="op">=</span> [<span class="fl">0.001</span>, <span class="fl">0.01</span>, <span class="fl">0.1</span>, <span class="fl">1.</span>, <span class="fl">10.</span>, <span class="fl">100.</span>, np.inf]</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>wyszukiwania <span class="op">=</span> {}</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>wiersze <span class="op">=</span> []</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> nazwa, kolumny <span class="kw">in</span> cechy.items():</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    procedura <span class="op">=</span> make_pipeline(StandardScaler(),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        LogisticRegression(max_iter<span class="op">=</span><span class="dv">2000</span>, tol<span class="op">=</span><span class="fl">1e-9</span>))</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    szukanie <span class="op">=</span> GridSearchCV(procedura, {<span class="st">'logisticregression__C'</span>: siatka_C},</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>                           scoring<span class="op">=</span><span class="st">'neg_log_loss'</span>, cv<span class="op">=</span>cv, n_jobs<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    szukanie.fit(Xu[kolumny], yu)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    wyszukiwania[nazwa] <span class="op">=</span> szukanie</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    wiersze.append([nazwa, szukanie.best_params_[<span class="st">'logisticregression__C'</span>],</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>                    <span class="op">-</span>szukanie.best_score_])</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>tabela(pd.DataFrame(wiersze, columns<span class="op">=</span>[<span class="st">'cechy'</span>, <span class="st">'wybrane C'</span>, <span class="st">'log-loss CV'</span>]))</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>wybrany <span class="op">=</span> <span class="bu">max</span>(wyszukiwania, key<span class="op">=</span><span class="kw">lambda</span> k: wyszukiwania[k].best_score_)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>model_koncowy <span class="op">=</span> wyszukiwania[wybrany].best_estimator_</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>kolumny_koncowe <span class="op">=</span> cechy[wybrany]</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>display(Markdown(<span class="ss">f'Według ustalonego kryterium wybieramy zestaw **</span><span class="sc">{</span>wybrany<span class="sc">}</span><span class="ss">**.'</span>))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-default-cv" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="6">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-default-cv-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;8.2: Wybór siły regularyzacji i zestawu cech według log-loss w CV.
+</figcaption>
+<div aria-describedby="tbl-default-cv-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display cell-output-markdown">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">cechy</th>
+<th style="text-align: right;">wybrane C</th>
+<th style="text-align: right;">log-loss CV</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">saldo</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0821</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">wszystkie</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.08143</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output cell-output-display cell-output-markdown">
+<p>Według ustalonego kryterium wybieramy zestaw <strong>wszystkie</strong>.</p>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>CV wybiera wszystkie trzy cechy i <code>C=1</code>. Różnica względem najlepszego modelu z samym saldem jest niewielka (około 0.0007 jednostki log-loss); nie traktujemy jej jako dowodu istotnej przewagi.</p>
+<p>Skaler jest częścią procedury, więc w każdej iteracji CV dopasowuje się wyłącznie do jej części uczącej. <code>GridSearchCV</code> po wyborze <code>C</code> dopasowuje wybrany wariant ponownie do wszystkich 7500 obserwacji uczących. Wynik CV służy do wyboru, a nie jako niezależna końcowa ocena zwycięzcy.</p>
+</section>
+<section id="końcowa-ocena-i-dwa-zastosowania" class="level3" data-number="8.6.3">
+<h3 data-number="8.6.3" class="anchored" data-anchor-id="końcowa-ocena-i-dwa-zastosowania"><span class="header-section-number">8.6.3</span> Końcowa ocena i dwa zastosowania</h3>
+<p>Przyjmijmy dwa z góry określone zastosowania: jednakowe koszty pomyłek oraz przeoczenie dziewięć razy droższe od fałszywego alarmu. Dają one progi <span class="math inline">\(0.5\)</span> i <span class="math inline">\(0.1\)</span>. Są to dydaktyczne założenia, nie oszacowania rzeczywistych kosztów kredytowych. Nie wybieramy lepszego zastosowania na podstawie wyników testu.</p>
+<div class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>q_test <span class="op">=</span> model_koncowy.predict_proba(Xt[kolumny_koncowe])[:, <span class="dv">1</span>]</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>q_stale <span class="op">=</span> np.full(<span class="bu">len</span>(yt), yu.mean())</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>tabela(pd.DataFrame({</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'model'</span>: [<span class="st">'stała częstość'</span>, <span class="st">'wybrany logistyczny'</span>],</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'log-loss'</span>: [log_loss(yt, q_stale), log_loss(yt, q_test)],</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'AUC'</span>: [roc_auc_score(yt, q_stale), roc_auc_score(yt, q_test)]}))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-default-test" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="7">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-default-test-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;8.3: Końcowa ocena prawdopodobieństw na odłożonym zbiorze testowym. Mniejszy log-loss i większe AUC oznaczają lepszy wynik danej miary.
+</figcaption>
+<div aria-describedby="tbl-default-test-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display cell-output-markdown">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">model</th>
+<th style="text-align: right;">log-loss</th>
+<th style="text-align: right;">AUC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">stała częstość</td>
+<td style="text-align: right;">0.1457</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">wybrany logistyczny</td>
+<td style="text-align: right;">0.07189</td>
+<td style="text-align: right;">0.961</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>wyniki_progow <span class="op">=</span> []</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> prog <span class="kw">in</span> [<span class="fl">0.5</span>, <span class="fl">0.1</span>]:</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    tn, fp, fn, tp <span class="op">=</span> confusion_matrix(yt, q_test <span class="op">&gt;=</span> prog, labels<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">1</span>]).ravel()</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    wyniki_progow.append([prog, tn, fp, fn, tp, (tn<span class="op">+</span>tp)<span class="op">/</span><span class="bu">len</span>(yt),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                           tp<span class="op">/</span>(tp<span class="op">+</span>fn), tn<span class="op">/</span>(tn<span class="op">+</span>fp), tp<span class="op">/</span>(tp<span class="op">+</span>fp),</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                           (fp<span class="op">+</span><span class="dv">9</span><span class="op">*</span>fn)<span class="op">/</span><span class="bu">len</span>(yt)])</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>tabela(pd.DataFrame(wyniki_progow, columns<span class="op">=</span>[</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'próg'</span>, <span class="st">'TN'</span>, <span class="st">'FP'</span>, <span class="st">'FN'</span>, <span class="st">'TP'</span>, <span class="st">'trafność'</span>, <span class="st">'czułość'</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'swoistość'</span>, <span class="st">'precyzja'</span>, <span class="st">'średni koszt 1:9'</span>]))</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>display(Markdown(<span class="ss">f'Reguła zawsze wybierająca 0 ma trafność **</span><span class="sc">{</span><span class="dv">1</span><span class="op">-</span>yt<span class="sc">.</span>mean()<span class="sc">:.3%}</span><span class="ss">** '</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>                 <span class="st">'i czułość równą zero.'</span>))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-default-progi" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="8">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-default-progi-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;8.4: Decyzje tego samego modelu dla dwóch z góry ustalonych progów. Ostatnia kolumna odpowiada kosztom FP = 1, FN = 9.
+</figcaption>
+<div aria-describedby="tbl-default-progi-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display cell-output-markdown">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 12%">
+<col style="width: 11%">
+<col style="width: 13%">
+<col style="width: 12%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">próg</th>
+<th style="text-align: right;">TN</th>
+<th style="text-align: right;">FP</th>
+<th style="text-align: right;">FN</th>
+<th style="text-align: right;">TP</th>
+<th style="text-align: right;">trafność</th>
+<th style="text-align: right;">czułość</th>
+<th style="text-align: right;">swoistość</th>
+<th style="text-align: right;">precyzja</th>
+<th style="text-align: right;">średni koszt 1:9</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">2411</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">54</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">0.976</td>
+<td style="text-align: right;">0.3494</td>
+<td style="text-align: right;">0.9975</td>
+<td style="text-align: right;">0.8286</td>
+<td style="text-align: right;">0.1968</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">2308</td>
+<td style="text-align: right;">109</td>
+<td style="text-align: right;">22</td>
+<td style="text-align: right;">61</td>
+<td style="text-align: right;">0.9476</td>
+<td style="text-align: right;">0.7349</td>
+<td style="text-align: right;">0.9549</td>
+<td style="text-align: right;">0.3588</td>
+<td style="text-align: right;">0.1228</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output cell-output-display cell-output-markdown">
+<p>Reguła zawsze wybierająca 0 ma trafność <strong>96.680%</strong> i czułość równą zero.</p>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Przy progu 0.5 wykrywamy 29 z 83 zdarzeń, a przy progu 0.1 – 61. Liczba fałszywych alarmów rośnie przy tym z 6 do 109. Dla kosztów 1:9 średni koszt maleje z 0.1968 do 0.1228, mimo spadku trafności.</p>
+<p>Niższy próg zwiększa zbiór osób zaklasyfikowanych do klasy 1: nie może zmniejszyć czułości ani zwiększyć swoistości na tej samej próbie. Trafność może przy tym spaść. Ocena powinna więc odpowiadać kosztom konkretnej decyzji, a nie jednej uniwersalnej liczbie.</p>
+<div id="cell-fig-default-roc-kalibracja" class="cell" data-execution_count="9">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fpr, tpr, _ <span class="op">=</span> roc_curve(yt, q_test)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>kal <span class="op">=</span> pd.DataFrame({<span class="st">'q'</span>: q_test, <span class="st">'y'</span>: np.asarray(yt)})</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>kal[<span class="st">'grupa'</span>] <span class="op">=</span> pd.qcut(kal.q, <span class="dv">8</span>, duplicates<span class="op">=</span><span class="st">'drop'</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>kal <span class="op">=</span> kal.groupby(<span class="st">'grupa'</span>, observed<span class="op">=</span><span class="va">True</span>).agg(q<span class="op">=</span>(<span class="st">'q'</span>, <span class="st">'mean'</span>),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                                           czestosc<span class="op">=</span>(<span class="st">'y'</span>, <span class="st">'mean'</span>), n<span class="op">=</span>(<span class="st">'y'</span>, <span class="st">'size'</span>))</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">4</span>))</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].plot(fpr, tpr, color<span class="op">=</span>kolory[<span class="dv">0</span>])</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].plot([<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">0</span>, <span class="dv">1</span>], <span class="st">'--'</span>, color<span class="op">=</span><span class="st">'0.6'</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">'odsetek fałszywych alarmów'</span>, ylabel<span class="op">=</span><span class="st">'czułość'</span>, title<span class="op">=</span><span class="st">'ROC'</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>granica <span class="op">=</span> <span class="bu">max</span>(kal.q.<span class="bu">max</span>(), kal.czestosc.<span class="bu">max</span>()) <span class="op">*</span> <span class="fl">1.15</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].plot([<span class="dv">0</span>, granica], [<span class="dv">0</span>, granica], <span class="st">'--'</span>, color<span class="op">=</span><span class="st">'0.6'</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].scatter(kal.q, kal.czestosc, color<span class="op">=</span>kolory[<span class="dv">1</span>])</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">'średnia prognoza w grupie'</span>, ylabel<span class="op">=</span><span class="st">'częstość zdarzenia'</span>,</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>            title<span class="op">=</span><span class="st">'Kalibracja w grupach'</span>)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-default-roc-kalibracja" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-default-roc-kalibracja-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="08-regresja-logistyczna_files/figure-html/fig-default-roc-kalibracja-output-1.png" width="952" height="374" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-default-roc-kalibracja-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Rysunek&nbsp;8.3: Dwie oceny prognoz na zbiorze testowym: ranking (ROC) i kalibracja w grupach równych kwantylowo. Każda grupa kalibracji zawiera 312 lub 313 obserwacji.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Punkty kalibracji opisują średnie w grupach, nie weryfikują poprawności każdej indywidualnej prognozy. Zwłaszcza górna grupa może obejmować szeroki zakres ryzyka. Wykres służy tu końcowej diagnozie. Gdyby skłonił nas do zmiany modelu lub dodatkowej kalibracji, potrzebowalibyśmy nowych danych do niezależnej oceny zmienionej procedury.</p>
+</section>
+</section>
+<section id="sec-logistyczna-newton" class="level2" data-number="8.7">
+<h2 data-number="8.7" class="anchored" data-anchor-id="sec-logistyczna-newton"><span class="header-section-number">8.7</span> Rozszerzenie: Newton i wnioskowanie o współczynnikach</h2>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Materiał nieobowiązkowy
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Wymagane są rachunek macierzowy, drugie pochodne i przybliżenie normalne estymatorów. Tekst główny i zadania podstawowe z tej sekcji nie korzystają.</p>
+</div>
+</div>
+<p>Dla modelu bez kary krok Newtona rozwiązuje układ <span class="math display">\[
+Z^\top WZ\,\Delta=Z^\top(\boldsymbol y-\boldsymbol q),
+\qquad \boldsymbol\beta_{\mathrm{nowa}}=\boldsymbol\beta+\Delta.
+\]</span> Nie trzeba obliczać jawnej macierzy odwrotnej. Definiując roboczą odpowiedź <span class="math inline">\(\boldsymbol z=Z\boldsymbol\beta+W^{-1}(\boldsymbol y-\boldsymbol q)\)</span>, możemy ten sam krok zapisać jako ważone najmniejsze kwadraty: <span class="math display">\[
+Z^\top WZ\,\boldsymbol\beta_{\mathrm{nowa}}=Z^\top W\boldsymbol z.
+\]</span> Ponieważ zarówno odpowiedź robocza, jak i wagi zależą od aktualnych parametrów, powtarzamy dopasowanie. Stąd nazwa <strong>iteracyjnie ważone najmniejsze kwadraty</strong> (IRLS). W praktyce tłumienie kroku może zapobiegać wzrostowi straty; bardzo małe wagi i separacja utrudniają obliczenia.</p>
+<p>Przy poprawnym modelu, niezależnych obserwacjach, identyfikowalności i warunkach regularności estymator największej wiarygodności ma asymptotycznie rozkład normalny. Szacujemy jego macierz kowariancji przez <span class="math inline">\((Z^\top\widehat W Z)^{-1}\)</span>. Nie dzielimy jej ponownie przez <span class="math inline">\(n\)</span>: macierz <span class="math inline">\(Z^\top\widehat W Z\)</span> jest informacją dla całej próby. Przybliżony przedział Walda dla współczynnika ma postać <span class="math inline">\(\widehat\beta_j\pm1.96\,\mathrm{SE}(\widehat\beta_j)\)</span>; końce przedziału ilorazu szans otrzymujemy przez potęgowanie podstawy <span class="math inline">\(e\)</span>.</p>
+<div class="cell" data-execution_count="10">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> modele_opisowe[<span class="st">'wieloraki'</span>]</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>przedzialy <span class="op">=</span> m.conf_int()</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>tabela(pd.DataFrame({<span class="st">'cecha'</span>: m.params.index[<span class="dv">1</span>:],</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                     <span class="st">'iloraz szans'</span>: np.exp(m.params.iloc[<span class="dv">1</span>:]),</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                     <span class="st">'dolny koniec'</span>: np.exp(przedzialy.iloc[<span class="dv">1</span>:, <span class="dv">0</span>]),</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>                     <span class="st">'górny koniec'</span>: np.exp(przedzialy.iloc[<span class="dv">1</span>:, <span class="dv">1</span>])}))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-default-przedzialy" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="10">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-default-przedzialy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;8.5: Przybliżone przedziały 95% ilorazów szans w z góry określonym modelu wielorakim bez kary.
+</figcaption>
+<div aria-describedby="tbl-default-przedzialy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display cell-output-markdown">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">cecha</th>
+<th style="text-align: right;">iloraz szans</th>
+<th style="text-align: right;">dolny koniec</th>
+<th style="text-align: right;">górny koniec</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">saldo / 100</td>
+<td style="text-align: right;">1.746</td>
+<td style="text-align: right;">1.659</td>
+<td style="text-align: right;">1.838</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">dochód / 10000</td>
+<td style="text-align: right;">1.013</td>
+<td style="text-align: right;">0.8437</td>
+<td style="text-align: right;">1.217</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">student</td>
+<td style="text-align: right;">0.5399</td>
+<td style="text-align: right;">0.3202</td>
+<td style="text-align: right;">0.9103</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>To przedziały dla modelu ustalonego przed dopasowaniem, nie dla współczynników zwycięzcy CV. Automatyczne przeniesienie tych wzorów na estymator z karą lub po selekcji pomija wpływ procedury wyboru. Przy separacji, niewielkiej liczbie zdarzeń lub bardzo dużych współczynnikach przybliżenie Walda może być szczególnie zawodne.</p>
+</section>
+<section id="sec-logistyczna-softmax" class="level2" data-number="8.8">
+<h2 data-number="8.8" class="anchored" data-anchor-id="sec-logistyczna-softmax"><span class="header-section-number">8.8</span> Rozszerzenie: więcej niż dwie klasy</h2>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Adnotacja</span>Materiał nieobowiązkowy
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Wymagane są rachunek prawdopodobieństwa dla rozkładu dyskretnego i własności logarytmu. Tekst główny i zadania podstawowe z tej sekcji nie korzystają.</p>
+</div>
+</div>
+<p>Dla klas <span class="math inline">\(1,\ldots,K\)</span> przypisujemy każdej wynik liniowy <span class="math inline">\(s_k(\x)=\beta_{k0}+\sum_j\beta_{kj}x_j\)</span> i definiujemy <strong>softmax</strong>: <span class="math display">\[
+q_k(\x)=\frac{e^{s_k(\x)}}{\sum_{l=1}^K e^{s_l(\x)}}.
+\]</span> Prawdopodobieństwa są dodatnie i sumują się do jedności. Dodanie tej samej funkcji liniowej do wszystkich wyników niczego nie zmienia, więc pełna parametryzacja nie jest identyfikowalna. Możemy ustalić <span class="math inline">\(s_K=0\)</span> i interpretować pozostałe wyniki jako <span class="math inline">\(\log(q_k/q_K)\)</span>. Dla dwóch klas otrzymujemy model logistyczny.</p>
+<p>Minimalizujemy <span class="math inline">\(-n^{-1}\sum_i\log q_{y_i}(\x_i)\)</span>. Przy stracie 0–1 wybieramy klasę o największym prawdopodobieństwie. Przy ogólnej macierzy kosztów <span class="math inline">\(C_{ka}\)</span> (prawdziwa klasa <span class="math inline">\(k\)</span>, decyzja <span class="math inline">\(a\)</span>) minimalizujemy <span class="math inline">\(\sum_k C_{ka}q_k(\x)\)</span>. Nie ma wtedy jednego wspólnego progu binarnego.</p>
+<p>Osobne modele „jedna klasa przeciw reszcie” są inną konstrukcją: ich surowe prognozy nie muszą sumować się do jedności. Nie należy utożsamiać ich z jednym modelem softmax. W implementacji softmax odejmujemy od wszystkich wyników ich maksimum przed potęgowaniem, co zachowuje prawdopodobieństwa i ogranicza ryzyko przepełnienia.</p>
+</section>
+<section id="uwagi-bibliograficzne" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="uwagi-bibliograficzne">Uwagi bibliograficzne</h2>
+<p>Przystępne omówienie regresji logistycznej, interpretacji współczynników i danych Default przedstawiają <span class="citation" data-cites="islp">James i in. (<a href="../references.html#ref-islp" role="doc-biblioref">2023</a>)</span>. Szersze ujęcie klasyfikacji liniowej, estymacji i regularyzacji dają <span class="citation" data-cites="esl">Hastie i in. (<a href="../references.html#ref-esl" role="doc-biblioref">2009</a>)</span>. Przy lekturze warto porównywać konwencje normalizacji funkcji celu: suma i średnia strat wymagają innej skali współczynnika kary.</p>
+<p>Ujęcie przez warunkowy rozkład Bernoulliego, entropię krzyżową i model wieloklasowy rozwijają <span class="citation" data-cites="bishop2006">Bishop (<a href="../references.html#ref-bishop2006" role="doc-biblioref">2006</a>)</span> oraz <span class="citation" data-cites="murphy2022">Murphy (<a href="../references.html#ref-murphy2022" role="doc-biblioref">2022</a>)</span>. Ta perspektywa prowadzi do uogólnionych modeli liniowych w następnym rozdziale, a później do sieci neuronowych: sigmoida zastosowana do wyniku liniowego będzie punktem wyjścia do budowania kolejnych warstw.</p>
+<p>Własności reguł oceny prawdopodobieństw analizują <span class="citation" data-cites="gneiting2007">Gneiting i Raftery (<a href="../references.html#ref-gneiting2007" role="doc-biblioref">2007</a>)</span>. Rozróżnienie estymacji prawdopodobieństw i decyzji przy różnych kosztach omawia <span class="citation" data-cites="elkan2001">Elkan (<a href="../references.html#ref-elkan2001" role="doc-biblioref">2001</a>)</span>. Wspólny wniosek metodologiczny jest istotny dla praktyki: wybór progu i ocena rankingu nie zastępują sprawdzenia jakości samych prawdopodobieństw.</p>
+</section>
+<section id="zadania" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="zadania">Zadania</h2>
+<div id="exr-logistyczne-szanse" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 8.1</strong></span> Model ma postać <span class="math inline">\(q(x)=\sigma(-3+0.8x)\)</span>.</p>
+<ol type="a">
+<li>Oblicz prawdopodobieństwo i szansę zdarzenia dla <span class="math inline">\(x=0,2,4\)</span>.</li>
+<li>Oblicz iloraz szans przy wzroście <span class="math inline">\(x\)</span> o 2. Czy taki sam jest iloraz prawdopodobieństw?</li>
+<li>Wyznacz <span class="math inline">\(x\)</span>, dla którego prawdopodobieństwo wynosi <span class="math inline">\(0.1\)</span>, <span class="math inline">\(0.5\)</span> i <span class="math inline">\(0.9\)</span>.</li>
+</ol>
+</div>
+<div id="exr-logistyczna-interakcja" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 8.2</strong></span> Logit modelu wynosi <span class="math inline">\(-2+0.4x-0.7s+0.3xs\)</span>, gdzie <span class="math inline">\(s\in\{0,1\}\)</span>.</p>
+<ol type="a">
+<li>Zinterpretuj zmianę szans na jednostkę <span class="math inline">\(x\)</span> w obu grupach.</li>
+<li>Wyznacz iloraz szans grupy <span class="math inline">\(s=1\)</span> względem <span class="math inline">\(s=0\)</span> przy ustalonym <span class="math inline">\(x\)</span>.</li>
+<li>Dla jakiego <span class="math inline">\(x\)</span> oba prawdopodobieństwa są równe? Wyjaśnij, dlaczego sam współczynnik <span class="math inline">\(-0.7\)</span> nie opisuje różnicy grup dla każdego <span class="math inline">\(x\)</span>.</li>
+</ol>
+</div>
+<div id="exr-logistyczna-granica" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 8.3</strong></span> Niech <span class="math inline">\(q(x_1,x_2)=\sigma(-1+2x_1-x_2)\)</span>.</p>
+<ol type="a">
+<li>Narysuj granice decyzji dla progów <span class="math inline">\(0.5\)</span> i <span class="math inline">\(0.2\)</span> i zaznacz obszary klasy 1.</li>
+<li>Zastąp wynik liniowy przez <span class="math inline">\(-1+x_1^2+x_2^2\)</span>. Jaki kształt ma granica przy progu <span class="math inline">\(0.5\)</span>?</li>
+<li>Wyjaśnij, w jakim sensie drugi model nadal jest liniowy względem parametrów.</li>
+</ol>
+</div>
+<div id="exr-logistyczna-stala" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 8.4</strong></span> Model zawiera tylko wyraz wolny, a w próbie jest <span class="math inline">\(m\)</span> jedynek i <span class="math inline">\(n-m\)</span> zer.</p>
+<ol type="a">
+<li>Dla <span class="math inline">\(0&lt;m&lt;n\)</span> wyprowadź estymator największej wiarygodności prawdopodobieństwa i wyrazu wolnego.</li>
+<li>Zbadaj przypadki <span class="math inline">\(m=0\)</span> i <span class="math inline">\(m=n\)</span>. Rozróżnij estymację prawdopodobieństwa w <span class="math inline">\([0,1]\)</span> od estymacji skończonego logitu.</li>
+<li>Sprawdź, że równanie gradientu dla wyrazu wolnego wymusza równość średniej prognozy i częstości zdarzenia w próbie, także w modelu z cechami bez kary, o ile skończone minimum istnieje. Dlaczego nie dowodzi to kalibracji na nowych danych?</li>
+</ol>
+</div>
+<div id="exr-logistyczna-separacja" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 8.5</strong></span> Dane to <span class="math inline">\(x=(-2,-1,1,2)\)</span> oraz <span class="math inline">\(y=(0,0,1,1)\)</span>, a model ma postać <span class="math inline">\(q(x)=\sigma(bx)\)</span>.</p>
+<ol type="a">
+<li>Wykaż, że strata logarytmiczna jest dodatnia dla każdego skończonego <span class="math inline">\(b\)</span> i dąży do zera, gdy <span class="math inline">\(b\to\infty\)</span>.</li>
+<li>Porównaj błąd klasyfikacji i log-loss dla <span class="math inline">\(b=1,5,20\)</span>.</li>
+<li>Dodaj karę <span class="math inline">\(\lambda b^2/2\)</span> i numerycznie znajdź minimum dla <span class="math inline">\(\lambda=0.01,0.1,1\)</span>. Opisz zmianę współczynnika i prawdopodobieństw.</li>
+</ol>
+</div>
+<div id="exr-logistyczny-ranking" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 8.6</strong></span> Cztery obserwacje mają etykiety <span class="math inline">\((0,1,0,1)\)</span> i prognozy <span class="math inline">\((0.1,0.4,0.3,0.8)\)</span>.</p>
+<ol type="a">
+<li>Oblicz log-loss, AUC i macierz pomyłek przy progu <span class="math inline">\(0.5\)</span>.</li>
+<li>Przekształć prognozy przez <span class="math inline">\(q\mapsto q^2\)</span> i powtórz obliczenia.</li>
+<li>Wyjaśnij, które wyniki muszą pozostać bez zmian dla dowolnego ściśle rosnącego przekształcenia prognoz, a które mogą się zmienić.</li>
+</ol>
+</div>
+<div id="exr-logistyczny-koszt" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 8.7</strong></span> Zdarzenie występuje z częstością <span class="math inline">\(0.02\)</span>. Pewna reguła ma czułość <span class="math inline">\(0.8\)</span> i swoistość <span class="math inline">\(0.95\)</span>.</p>
+<ol type="a">
+<li>Oblicz oczekiwane liczby TP, FP, FN i TN w próbie 10000 osób oraz precyzję i trafność.</li>
+<li>Oblicz średni koszt przy <span class="math inline">\(c_{\mathrm{FP}}=1\)</span>, <span class="math inline">\(c_{\mathrm{FN}}=20\)</span> i porównaj z regułą zawsze wybierającą 0.</li>
+<li>Jaki próg byłby optymalny dla prawdziwych prawdopodobieństw przy tych kosztach? Dlaczego sama znajomość czułości i swoistości nie pozwala ustalić, jaki próg wykorzystano w opisanej regule?</li>
+</ol>
+</div>
+<div id="exr-default-procedura" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 8.8</strong></span> Przeprowadź analizę Default z nowym, ustalonym ziarnem podziału danych.</p>
+<ol type="a">
+<li>Przed obliczeniami określ zestawy cech, siatkę regularyzacji i kryterium wyboru. Uwzględnij model z interakcją salda i statusu studenta.</li>
+<li>Wybierz model przez CV, ze standaryzacją wewnątrz każdej części uczącej.</li>
+<li>Na odłożonym teście porównaj go ze stałą prognozą częstości. Podaj log-loss, AUC i macierz pomyłek dla progu wynikającego z ustalonych wcześniej kosztów.</li>
+<li>Porównaj wnioski z przykładem w tekście. Nie zmieniaj procedury na podstawie wyniku testowego; wyjaśnij, jak należałoby ocenić taką zmienioną procedurę.</li>
+</ol>
+</div>
+<div id="exr-logistyczny-newton" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 8.9</strong></span> <strong>Rozszerzenie: Newton.</strong> Wymagane są rachunek macierzowy i drugie pochodne. Dla <span class="math inline">\(x=(-2,-1,1,2)\)</span> i <span class="math inline">\(y=(0,1,0,1)\)</span> dopasuj model z wyrazem wolnym.</p>
+<ol type="a">
+<li>Wykonaj ręcznie pierwszy krok Newtona od wektora zerowego.</li>
+<li>Zaimplementuj iteracje przez rozwiązywanie układów równań i porównaj wynik ze <code>statsmodels</code>.</li>
+<li>Sprawdzaj stratę po każdym kroku. Wyjaśnij, co trzeba zmienić w algorytmie, jeśli pełny krok zwiększa stratę.</li>
+</ol>
+</div>
+<div id="exr-logistyczny-softmax" class="theorem exercise">
+<p><span class="theorem-title"><strong>Zadanie 8.10</strong></span> <strong>Rozszerzenie: softmax.</strong> Wymagane są własności funkcji wykładniczej i rozkładu dyskretnego. Dla trzech klas przyjmij wyniki <span class="math inline">\(s_1=x\)</span>, <span class="math inline">\(s_2=-x\)</span>, <span class="math inline">\(s_3=0\)</span>.</p>
+<ol type="a">
+<li>Oblicz prawdopodobieństwa dla <span class="math inline">\(x=-1,0,1\)</span>.</li>
+<li>Dodaj <span class="math inline">\(2+3x\)</span> do wszystkich wyników i sprawdź niezmienniczość prawdopodobieństw.</li>
+<li>Wyznacz obszary decyzji przy stracie 0–1, uwzględniając remisy.</li>
+<li>Zapisz ujemną log-wiarygodność dla jednej obserwacji z klasy 2 i porównaj ją z sumą trzech niezależnych binarnych strat logistycznych. Dlaczego są to inne modele?</li>
+</ol>
+</div>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-bishop2006" class="csl-entry" role="listitem">
+Bishop, Christopher M. 2006. <em>Pattern Recognition and Machine Learning</em>. <span>Information Science and Statistics</span>. Springer.
+</div>
+<div id="ref-elkan2001" class="csl-entry" role="listitem">
+Elkan, Charles. 2001. <span>„The Foundations of Cost-Sensitive Learning”</span>. <em>Proceedings of the Seventeenth International Joint Conference on Artificial Intelligence (IJCAI)</em>, 973–78.
+</div>
+<div id="ref-gneiting2007" class="csl-entry" role="listitem">
+Gneiting, Tilmann i Adrian E. Raftery. 2007. <span>„Strictly Proper Scoring Rules, Prediction, and Estimation”</span>. <em>Journal of the American Statistical Association</em> 102 (477): 359–78. <a href="https://doi.org/10.1198/016214506000001437">https://doi.org/10.1198/016214506000001437</a>.
+</div>
+<div id="ref-esl" class="csl-entry" role="listitem">
+Hastie, Trevor, Robert Tibshirani i Jerome Friedman. 2009. <em>The Elements of Statistical Learning: Data Mining, Inference, and Prediction</em>. 2. wyd. Springer.
+</div>
+<div id="ref-islp" class="csl-entry" role="listitem">
+James, Gareth, Daniela Witten, Trevor Hastie, Robert Tibshirani i Jonathan Taylor. 2023. <em>An Introduction to Statistical Learning with Applications in Python</em>. <span>Springer Texts in Statistics</span>. Springer.
+</div>
+<div id="ref-murphy2022" class="csl-entry" role="listitem">
+Murphy, Kevin P. 2022. <em>Probabilistic Machine Learning: An Introduction</em>. MIT Press.
+</div>
+</div>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
